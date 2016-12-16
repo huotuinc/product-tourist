@@ -19,10 +19,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <artifactId>tourist-web</artifactId>
     <description>
-        MVC以及页面资源,和静态资源,是一个典型的EWP
+        MVC以及页面资源,和静态资源,是一个典型的war
     </description>
 
 </project>
