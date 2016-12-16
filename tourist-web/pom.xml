@@ -25,5 +25,13 @@
         MVC以及页面资源,和静态资源,是一个典型的war
         同时是一个EWP宿主
     </description>
+    <dependencies>
+        <dependency>
+            <groupId>com.huotu.product-tourist</groupId>
+            <artifactId>tourist-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
 
 </project>

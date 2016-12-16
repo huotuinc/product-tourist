@@ -20,14 +20,8 @@
     <modules>
         <module>tourist-service</module>
         <module>tourist-web</module>
-        <module>tourist-startup</module>
         <module>tourist-supplier</module>
     </modules>
-    <!--<modules>-->
-    <!--<module>api</module>-->
-    <!--<module>service</module>-->
-    <!--<module>test</module>-->
-    <!--</modules>-->
 
 
     <properties>
@@ -35,12 +29,19 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+        <logging.version>1.2</logging.version>
         <slf4j.version>1.7.19</slf4j.version>
         <http.version>4.5.2</http.version>
         <javaee.version>7.0</javaee.version>
         <spring.version>4.2.5.RELEASE</spring.version>
         <log4j2.version>2.4.1</log4j2.version>
         <jiangcai.version>2.2</jiangcai.version>
+        <luffy.version>2.2</luffy.version>
+        <thymeleaf.version>3.0.0.RELEASE</thymeleaf.version>
+        <io.version>2.4</io.version>
+        <codec.version>1.10</codec.version>
+        <javaee.version>7.0</javaee.version>
+        <dhcp.version>1.4</dhcp.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +55,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -61,6 +63,63 @@
             <version>1.16.6</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${codec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring4</artifactId>
+            <version>${thymeleaf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+            <version>${thymeleaf.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.31</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>

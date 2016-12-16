@@ -24,5 +24,13 @@
         提供线路供应商发布线路,技术上属于EWP;不包括实体
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.huotu.product-tourist</groupId>
+            <artifactId>tourist-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
 
 </project>
