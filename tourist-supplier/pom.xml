@@ -21,7 +21,7 @@
 
     <artifactId>tourist-supplier</artifactId>
     <description>
-        提供线路供应商发布线路,技术上属于EWP
+        提供线路供应商发布线路,技术上属于EWP;不包括实体
     </description>
 
 
