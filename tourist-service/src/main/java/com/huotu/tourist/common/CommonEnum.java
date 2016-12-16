@@ -7,17 +7,20 @@
  * 2013-2016. All rights reserved.
  */
 
-package com.huotu.tourist.entity;
+package com.huotu.tourist.common;
 
-/**
- * 线路订单
- * @author CJ
- */
-public class TouristOrder {
+public interface CommonEnum {
+    /**
+     * @return 编码
+     */
+    Object getCode();
 
     /**
-     * 线路
+     * @return 用于显示的值
      */
-    private TouristGood touristGood;
+    Object getValue();
 
+    default String getDescription() {
+        return "";
+    }
 }
