@@ -9,10 +9,13 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 线路订单
@@ -26,14 +29,44 @@ public class TouristOrder extends BaseModel {
     private TouristGood touristGood;
 
     /**
+     * 采购商
+     */
+    private TouristBuyer touristBuyer;
+
+    /**
      * 订单号
      */
     private String orderNo;
 
     /**
+     * 订单状态
+     */
+    private OrderStateEnum orderState;
+
+    /**
      * 订单总金额
      */
     private String orderMoney;
+
+    /**
+     * 返还佣金
+     */
+    private BigDecimal returnCommission;
+
+    /**
+     * 单价
+     */
+    private BigDecimal unitPrice;
+
+    /**
+     * 购买数量
+     */
+    private int buyCount;
+
+    /**
+     * 人员信息 todo 不妥
+     */
+    private List<Map<String,Object>> persons;
 
     /**
      * 支付时间
@@ -54,16 +87,6 @@ public class TouristOrder extends BaseModel {
      * 小金库抵扣
      */
     private BigDecimal coffersDeduction;
-
-    /**
-     * 购买数量
-     */
-    private int buyCount;
-
-    /**
-     * 返还佣金
-     */
-    private BigDecimal returnCommission;
 
     /**
      * 备注

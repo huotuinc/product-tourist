@@ -101,6 +101,7 @@ public class TouristGood {
     /**
      * 出行时间及人数
      * 时间，人数
+     * todo 不妥
      */
     private List<Map<LocalDateTime,Integer>>  departureTimeAndNumber;
 
