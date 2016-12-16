@@ -19,11 +19,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <packaging>war</packaging>
-    <artifactId>tourist-web</artifactId>
+    <artifactId>tourist-supplier</artifactId>
     <description>
-        MVC以及页面资源,和静态资源,是一个典型的war
-        同时是一个EWP宿主
+        提供线路供应商发布线路,技术上属于EWP
     </description>
+
 
 </project>

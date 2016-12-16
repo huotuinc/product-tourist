@@ -21,6 +21,7 @@
         <module>tourist-service</module>
         <module>tourist-web</module>
         <module>tourist-startup</module>
+        <module>tourist-supplier</module>
     </modules>
     <!--<modules>-->
     <!--<module>api</module>-->
