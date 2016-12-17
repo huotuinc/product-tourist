@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<configuration status="OFF">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </appenders>
+    <loggers>
+        <logger name="org.springframework.web" level="debug"/>
+        <!--<logger name="org.springframework.orm.jpa" level="debug"/>-->
+        <!--<logger name="org.apache.http" level="debug"/>-->
+        <!--<logger name="org.springframework.security" level="debug"/>-->
+        <!--<logger name="org.springframework.orm.jpa" level="debug"/>-->
+        <logger name="me.jiangcai.dating" level="debug"/>
+        <logger name="me.jiangcai.chanpay" level="debug"/>
+        <root level="info">
+            <appender-ref ref="Console"/>
+        </root>
+
+    </loggers>
+</configuration>

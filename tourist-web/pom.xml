@@ -33,11 +33,6 @@
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
-            <artifactId>spring</artifactId>
-            <version>${jiangcai.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.jiangcai.lib</groupId>
             <artifactId>test</artifactId>
             <version>${jiangcai.version}</version>
             <scope>test</scope>
