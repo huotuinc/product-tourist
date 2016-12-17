@@ -24,25 +24,23 @@
     <description>
         包括实体,JPA仓库,和服务
     </description>
+
     <dependencies>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
             <artifactId>upgrade</artifactId>
-            <version>${luffy.version}</version>
+            <version>${jiangcai.version}</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
             <artifactId>resource</artifactId>
-            <version>${luffy.version}</version>
+            <version>${jiangcai.version}</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
             <artifactId>jdbc</artifactId>
-            <version>${luffy.version}</version>
+            <version>${jiangcai.version}</version>
         </dependency>
-    </dependencies>
-
-    <dependencies>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -85,9 +83,12 @@
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.10.1.RELEASE</version>
         </dependency>
     </dependencies>
 
