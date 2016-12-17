@@ -14,7 +14,9 @@ import com.huotu.tourist.common.TravelerTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 /**
@@ -38,22 +40,29 @@ public class Traveler {
     @ManyToOne
     private TouristOrder order;
 
+    @Column(length = 20)
     private String name;
 
     /**
      * 身份证号
      */
+    @Column(length = 18)
     private String IDNo;
 
     /**
      * 性别
      */
+    @Column
     private SexEnum sex;
 
+    @Column
     private TravelerTypeEnum travelerType;
 
+    @Column(length = 15)
     private String telPhone;
 
+    @Lob
+    @Column
     private String remarks;
 
 
