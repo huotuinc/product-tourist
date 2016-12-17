@@ -20,6 +20,6 @@ public class ActivityType extends BaseModel {
     /**
      * 活动名称
      */
-    @Column(name = "activityName", length = 200)
+    @Column(length = 200)
     private String activityName;
 }

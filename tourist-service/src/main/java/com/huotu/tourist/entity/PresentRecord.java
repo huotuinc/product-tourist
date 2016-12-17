@@ -27,18 +27,18 @@ public class PresentRecord extends BaseModel{
     /**
      * 提现金额
      */
-    @Column(name = "amountOfMoney")
+    @Column
     private BigDecimal amountOfMoney;
 
     /**
      * 账户余额
      */
-    @Column(name = "accountBalance")
+    @Column
     private BigDecimal accountBalance;
 
     /**
      * 提现状态
      */
-    @Column(name = "presentState")
+    @Column
     private PresentStateEnum presentState;
 }

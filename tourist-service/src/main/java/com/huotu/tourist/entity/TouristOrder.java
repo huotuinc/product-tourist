@@ -11,7 +11,10 @@ package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,76 +24,97 @@ import java.util.Map;
  * 线路订单
  * @author CJ
  */
+@Entity
+@Table(name = "Tourist_Order")
+@Getter
+@Setter
 public class TouristOrder extends BaseModel {
 
     /**
      * 线路
      */
+    @ManyToOne
+    @JoinColumn
     private TouristGood touristGood;
 
     /**
      * 采购商
      */
+    @ManyToOne
+    @JoinColumn
     private TouristBuyer touristBuyer;
 
     /**
      * 订单号
      */
+    @Column(unique = true, length = 50)
     private String orderNo;
 
     /**
      * 订单状态
      */
+    @Column
     private OrderStateEnum orderState;
 
     /**
      * 订单总金额
      */
-    private String orderMoney;
+    @Column
+    private BigDecimal orderMoney;
 
     /**
      * 返还佣金
      */
+    @Column
     private BigDecimal returnCommission;
 
     /**
      * 单价
      */
+    @Column
     private BigDecimal unitPrice;
 
     /**
      * 购买数量
      */
+    @Column
     private int buyCount;
 
     /**
      * 人员信息 todo 不妥
      */
+    @Column
     private List<Map<String,Object>> persons;
 
     /**
      * 支付时间
      */
+    @Column
     private LocalDateTime payTime;
 
     /**
      * 支付方式
      */
+    @Column
     private PayTypeEnum payType;
 
     /**
      * 余额抵扣
      */
+    @Column
     private BigDecimal balanceDeduction;
 
     /**
      * 小金库抵扣
      */
+    @Column
     private BigDecimal coffersDeduction;
 
     /**
      * 备注
      */
+    @Lob
+    @Column
     private String remarks;
 
 }

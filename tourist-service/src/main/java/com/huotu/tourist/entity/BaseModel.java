@@ -21,17 +21,17 @@ public abstract class BaseModel {
     /**
      * 创建时间
      */
-    @Column(name = "createTime")
+    @Column
     private LocalDateTime createTime;
     /**
      * 更新时间
      */
-    @Column(name = "updateTime")
+    @Column
     private LocalDateTime updateTime;
     /**
      * 是否已删除
      */
-    @Column(name = "deleted")
+    @Column
     private boolean deleted;
 
 }

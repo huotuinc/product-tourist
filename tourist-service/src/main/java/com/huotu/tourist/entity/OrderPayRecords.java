@@ -7,4 +7,5 @@ package com.huotu.tourist.entity;
 
 public class OrderPayRecords {
 
+
 }

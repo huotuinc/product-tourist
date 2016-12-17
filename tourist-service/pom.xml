@@ -24,5 +24,22 @@
     <description>
         包括实体,JPA仓库,和服务
     </description>
+    <dependencies>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>upgrade</artifactId>
+            <version>${luffy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>resource</artifactId>
+            <version>${luffy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>${luffy.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
