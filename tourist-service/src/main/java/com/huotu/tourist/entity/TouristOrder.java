@@ -17,8 +17,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 线路订单
@@ -62,29 +60,23 @@ public class TouristOrder extends BaseModel {
     @Column
     private BigDecimal orderMoney;
 
-    /**
-     * 返还佣金
-     */
-    @Column
-    private BigDecimal returnCommission;
+//    /**
+//     * 返还佣金
+//     */
+//    @Column
+//    private BigDecimal returnCommission;
 
-    /**
-     * 单价
-     */
-    @Column
-    private BigDecimal unitPrice;
+//    /**
+//     * 单价
+//     */
+//    @Column
+//    private BigDecimal unitPrice;
 
-    /**
-     * 购买数量
-     */
-    @Column
-    private int buyCount;
-
-    /**
-     * 人员信息 todo 不妥
-     */
-    @Column
-    private List<Map<String,Object>> persons;
+//    /**
+//     * 购买数量
+//     */
+//    @Column
+//    private int buyCount;
 
     /**
      * 支付时间
@@ -98,17 +90,17 @@ public class TouristOrder extends BaseModel {
     @Column
     private PayTypeEnum payType;
 
-    /**
-     * 余额抵扣
-     */
-    @Column
-    private BigDecimal balanceDeduction;
-
-    /**
-     * 小金库抵扣
-     */
-    @Column
-    private BigDecimal coffersDeduction;
+//    /**
+//     * 余额抵扣
+//     */
+//    @Column
+//    private BigDecimal balanceDeduction;
+//
+//    /**
+//     * 小金库抵扣
+//     */
+//    @Column
+//    private BigDecimal coffersDeduction;
 
     /**
      * 备注

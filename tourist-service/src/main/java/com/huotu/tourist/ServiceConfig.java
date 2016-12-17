@@ -1,7 +1,6 @@
 package com.huotu.tourist;
 
 import com.huotu.tourist.config.JpaConfig;
-import com.huotu.tourist.config.MVCConfig;
 import com.huotu.tourist.config.SecurityConfig;
 import me.jiangcai.lib.jdbc.JdbcSpringConfig;
 import me.jiangcai.lib.resource.ResourceSpringConfig;
@@ -23,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ImportResource({"classpath:spring_dev.xml", "classpath:spring_prod.xml"})
 @Import({ResourceSpringConfig.class, UpgradeSpringConfig.class
-        , JdbcSpringConfig.class, JpaConfig.class, SecurityConfig.class, MVCConfig.class})
+        , JdbcSpringConfig.class, JpaConfig.class, SecurityConfig.class})
 public class ServiceConfig {
 
 }

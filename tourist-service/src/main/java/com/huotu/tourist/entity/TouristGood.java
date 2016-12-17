@@ -15,9 +15,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 线路商品
@@ -68,6 +65,7 @@ public class TouristGood {
      * 线路特色
      */
     @Column
+    @Lob
     private String touristFeatures;
 
     /**
@@ -91,7 +89,7 @@ public class TouristGood {
     /**
      * 价格
      */
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal price;
 
     /**
@@ -114,7 +112,7 @@ public class TouristGood {
     /**
      * 地方接待人
      */
-    @Column
+    @Column(length = 15)
     private String receptionPerson;
 
     /**
@@ -122,14 +120,6 @@ public class TouristGood {
      */
     @Column(length = 15)
     private String receptionTelephone;
-
-    /**
-     * 出行时间及人数
-     * 时间，人数
-     * todo 不妥
-     */
-    @Column
-    private List<Map<LocalDateTime,Integer>>  departureTimeAndNumber;
 
 
     /**

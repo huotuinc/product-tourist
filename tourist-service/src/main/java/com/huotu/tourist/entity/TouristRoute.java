@@ -28,12 +28,19 @@ import java.time.LocalDate;
 @Getter
 public class TouristRoute {
 
+    @Column(unique = true, length = 100)
+    private String routeNo;
+
     @ManyToOne
     private TouristGood good;
+
     @Column(columnDefinition = "date")
     private LocalDate fromDate;
+
     @Column(columnDefinition = "date")
     private LocalDate toDate;
+
+    private int maxPeople;
 
 
 }
