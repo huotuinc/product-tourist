@@ -9,6 +9,8 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.common.SexEnum;
+import com.huotu.tourist.common.TravelerTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
- * 游客
+ * 旅游游客
  * 应当是属于订单的
  * 已经声明了行程的
  * 姓名，身份证号码，性别，手机号，备注
@@ -35,4 +37,24 @@ public class Traveler {
     private TouristRoute route;
     @ManyToOne
     private TouristOrder order;
+
+    private String name;
+
+    /**
+     * 身份证号
+     */
+    private String IDNo;
+
+    /**
+     * 性别
+     */
+    private SexEnum sex;
+
+    private TravelerTypeEnum travelerType;
+
+    private String telPhone;
+
+    private String remarks;
+
+
 }
