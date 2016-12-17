@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<!--suppress ALL -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" profile="container"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="persistenceUnitName" value="basePu"/>
+        <property name="packagesToScan">
+            <array>
+                <value>com.huotu.hotcms.service.entity</value>
+                <value>com.huotu.hotcms.widget.entity</value>
+                <value>com.huotu.hotcms.service.config</value>
+            </array>
+        </property>
+        <property name="persistenceProvider">
+            <bean class="org.eclipse.persistence.jpa.PersistenceProvider"/>
+        </property>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect"/>
+        </property>
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="javax.persistence.schema-generation.database.action" value="create"/>
+                <entry key="eclipselink.weaving" value="false"/>
+                <entry key="eclipselink.logging.level" value="INFO"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>jdbc/hotcms</value>
+        </property>
+        <property name="resourceRef">
+            <value>true</value>
+        </property>
+    </bean>
+    <!--读取properties文件-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath*:config.properties"/>
+    </bean>
+    <!--<aop:aspectj-autoproxy proxy-target-class="true" />-->
+    <!--事务管理器配置 -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+</beans>
