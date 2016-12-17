@@ -9,10 +9,15 @@
 
 package com.huotu.tourist.service;
 
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.function.Consumer;
 
 /**
@@ -32,4 +37,21 @@ public interface OrderService {
      */
     URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed);
 
+    /**
+     *
+     * @param supplier
+     * @param pageable
+     * @param orderId
+     * @param name
+     * @param buyer
+     * @param tel
+     * @param payTypeEnum
+     * @param orderDate
+     * @param payDate
+     * @param touristDate
+     * @return
+     */
+    Page<TouristOrder> supplieOrders(TouristSupplier supplier, Pageable pageable, String orderId, String name
+            , String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate,LocalDate payDate
+            ,LocalDate touristDate);
 }
