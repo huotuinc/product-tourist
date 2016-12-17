@@ -17,13 +17,14 @@ import org.junit.Test;
 /**
  * @author CJ
  */
+
 public class OrderServiceTest extends ServiceBaseTest {
 
     private static final Log log = LogFactory.getLog(OrderServiceTest.class);
 
     @Test
     public void runnableTest() {
-        log.info(applicationContext);
+        log.info("sadfasdf");
     }
 
 }

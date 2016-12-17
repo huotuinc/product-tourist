@@ -30,7 +30,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @Setter
 @Getter
-public class Traveler {
+public class Traveler extends BaseModel {
 
     /**
      * 行程会被调整,但是行程的线路是不变的

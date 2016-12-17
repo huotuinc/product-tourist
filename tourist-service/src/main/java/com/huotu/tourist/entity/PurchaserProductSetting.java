@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Table(name = "Purchaser_Product_Setting")
 @Getter
 @Setter
-public class PurchaserProductSetting {
+public class PurchaserProductSetting extends BaseModel {
 
     /**
      * 名称

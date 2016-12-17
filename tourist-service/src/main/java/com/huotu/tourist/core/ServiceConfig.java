@@ -12,6 +12,7 @@ package com.huotu.tourist.core;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Created by lhx on 2016/12/16.
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Import;
         "com.huotu.tourist.converter"
         , "com.huotu.tourist.service"
 })
+@EnableJpaRepositories("com.huotu.tourist.repository")
 @Import({CommonConfig.class, DataSupportConfig.class})
 public class ServiceConfig {
 

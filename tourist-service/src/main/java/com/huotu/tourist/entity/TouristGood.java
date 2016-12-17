@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 @Table(name = "Tourist_Good")
 @Getter
 @Setter
-public class TouristGood {
+public class TouristGood extends BaseModel {
     /**
      * 线路名称
      */

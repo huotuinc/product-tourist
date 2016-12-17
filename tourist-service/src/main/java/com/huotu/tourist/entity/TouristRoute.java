@@ -26,7 +26,7 @@ import java.time.LocalDate;
 @Entity
 @Setter
 @Getter
-public class TouristRoute {
+public class TouristRoute extends BaseModel {
 
     @Column(unique = true, length = 100)
     private String routeNo;
