@@ -14,12 +14,15 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.model.TouristOrderDetailsModel;
+import com.huotu.tourist.model.TouristOrderModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -81,5 +84,22 @@ public interface TouristOrderService {
     Page<TouristOrder> supplierOrders(Pageable pageable, String orderId, String touristName
             , String buyerName, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
             , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum) throws IOException;
+
+
+    /**
+     * TouristOrder与TouristOrderModel转换
+     * @param orders    线路订单列表
+     * @return
+     */
+    List<TouristOrderModel> touristOrderModelConver(List<TouristOrder> orders);
+
+    /**
+     * TouristOrder与TouristOrderDetailsModel转换
+     * @param order     线路订单
+     * @return
+     */
+    TouristOrderDetailsModel touristOrderDetailsModelConver(TouristOrder order);
+
+
 
 }
