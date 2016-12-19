@@ -1,8 +1,6 @@
 package com.huotu.tourist.controller.distributionPlatform;
 
-import com.huotu.tourist.entity.PurchaserPaymentRecord;
-import com.huotu.tourist.entity.PurchaserProductSetting;
-import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -142,6 +140,36 @@ public class DistributionPlatformController {
         return null;
     }
 
+
+    /**
+     * 结算单列表
+     *
+     * @param limit
+     * @param pageNo
+     * @param data
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
+    public ResponseEntity settlementSheetList(int limit, int pageNo, SettlementSheet data, HttpServletRequest request, Model model) {
+        return null;
+    }
+
+    /**
+     * 提现单列表
+     *
+     * @param limit
+     * @param pageNo
+     * @param data
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "presentRecordList", method = RequestMethod.GET)
+    public ResponseEntity presentRecordList(int limit, int pageNo, PresentRecord data, HttpServletRequest request, Model model) {
+        return null;
+    }
 
 
 
