@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
  * Created by lhx on 2016/12/17.
  */
 
-public interface TouristSupplierService {
+public interface TouristSupplierService extends BaseService<TouristSupplier, Long> {
 
     /**
      * 供应商列表
@@ -20,21 +20,7 @@ public interface TouristSupplierService {
      */
     Page<TouristSupplier> supplierList(String name, Pageable pageable);
 
-    /**
-     * 创建一个供应商
-     *
-     * @param supplier 供应商 not null
-     * @return 返回新增的供应商
-     */
-    TouristSupplier createSupplier(TouristSupplier supplier);
 
-    /**
-     * 修改供应商
-     *
-     * @param supplier 供应商 not null
-     * @return 返回修改后的供应商
-     */
-    TouristSupplier updateSupplier(TouristSupplier supplier);
 
 
 }

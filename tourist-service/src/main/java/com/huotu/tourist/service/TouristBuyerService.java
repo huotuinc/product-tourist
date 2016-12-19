@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
  * Created by lhx on 2016/12/19.
  */
 
-public interface TouristBuyerService {
+public interface TouristBuyerService extends BaseService<TouristBuyer, Long> {
     /**
      * 采购商列表
      *
@@ -24,20 +24,6 @@ public interface TouristBuyerService {
     Page<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum checkState
             , Pageable pageable);
 
-    /**
-     * 创建采购商
-     *
-     * @param buyer 采购商 not null
-     * @return 创建后的采购商
-     */
-    TouristBuyer createBuyer(TouristBuyer buyer);
 
-    /**
-     * 修改采购商
-     *
-     * @param buyer 采购商 not null
-     * @return 修改后的采购商
-     */
-    TouristBuyer updateBuyer(TouristBuyer buyer);
 
 }

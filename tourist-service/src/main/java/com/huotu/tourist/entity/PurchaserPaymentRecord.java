@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 采购商支付记录（流水）
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 @Setter
 public class PurchaserPaymentRecord extends BaseModel {
     /**
-     * 供应商
+     * 采购商
      */
     @ManyToOne
     @JoinColumn(name = "touristBuyerId")
@@ -24,5 +25,9 @@ public class PurchaserPaymentRecord extends BaseModel {
 
     @Column(precision = 10, scale = 2)
     private BigDecimal money;
+
+    @Column
+    private LocalDateTime payDate;
+
 
 }

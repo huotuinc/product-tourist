@@ -27,8 +27,6 @@ import java.util.function.Consumer;
  */
 public interface OrderService {
 
-    // 建立订单
-
     /**
      * 用户意图建立订单
      *
@@ -39,6 +37,7 @@ public interface OrderService {
      */
     URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed);
 
+
     /**
      * 根据某个供应商的订单列表，
      * @param supplier      供应商(必须)
@@ -47,16 +46,18 @@ public interface OrderService {
      * @param name          路线名称
      * @param buyer         购买人
      * @param tel           购买人电话
-     * @param orderStateEnum 结算状态
      * @param payTypeEnum   付款状态
      * @param orderDate     下单时间
+     * @param endOrderDate  结束下单时间
      * @param payDate       支付时间
+     * @param endPayDate    结束支付时间
      * @param touristDate   出行时间
+     * @param orderStateEnum 结算状态
      * @throws IOException  获取订单列表发生错误
      * @return              返回带分页信息的订单列表
      */
     Page<TouristOrder> supplierOrders(TouristSupplier supplier, Pageable pageable, String orderId, String name
-            , String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate payDate
-            , LocalDate touristDate, OrderStateEnum orderStateEnum) throws IOException;
+            , String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
+            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum) throws IOException;
 
 }

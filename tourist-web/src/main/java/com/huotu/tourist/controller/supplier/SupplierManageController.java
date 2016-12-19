@@ -80,7 +80,7 @@ public class SupplierManageController {
         TouristSupplier supplier= touristSupplierRepository.findOne(supplierId);
 
         Page<TouristOrder> orders=orderService.supplierOrders(supplier,new PageRequest(pageNo+1,pageSize),
-                orderId,name,buyer,tel,payTypeEnum,orderDate,payDate,touristDate,orderStateEnum);
+                orderId, name, buyer, tel, payTypeEnum, orderDate, null, payDate, null, touristDate, orderStateEnum);
 
         List<TouristOrderModel> touristOrderModels=new ArrayList<>();
 
