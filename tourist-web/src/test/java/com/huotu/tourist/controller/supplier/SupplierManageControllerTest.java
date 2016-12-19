@@ -19,6 +19,10 @@ public class SupplierManageControllerTest extends WebTest {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 显示订单列表
+     * @throws Exception
+     */
     @Test
     public void orderList() throws Exception {
         //
@@ -34,5 +38,70 @@ public class SupplierManageControllerTest extends WebTest {
                     }
                 }));
     }
+
+    /**
+     * 导出订单信息
+     * @throws Exception
+     */
+    @Test
+    public void exportOrder() throws Exception{
+
+    }
+
+
+    /**
+     * 显示所有与他相同的线路订单的出行时间
+     * @throws Exception
+     */
+    @Test
+    public void showAllOrderTouristDate() throws Exception{
+
+    }
+
+    /**
+     * 修改某个订单的出行时间
+     * @throws Exception
+     */
+    @Test
+    public void modifyOrderTouristDate() throws Exception{
+
+    }
+
+    /**
+     * 查看订单详情测试
+     * @throws Exception
+     */
+    @Test
+    public void showOrder() throws Exception{
+
+    }
+
+    /**
+     * 修改订单备注
+     * @throws Exception
+     */
+    @Test
+    public void modifyRemarks() throws Exception{
+
+    }
+
+    /**
+     * 显示某个订单的游客列表
+     * @throws Exception
+     */
+    @Test
+    public void showOrderTravelerList() throws Exception{
+
+    }
+
+    /**
+     * 保存某个订单游客
+     * @throws Exception
+     */
+    @Test
+    public void saveOrderTraveler() throws Exception{
+
+    }
+
 
 }
