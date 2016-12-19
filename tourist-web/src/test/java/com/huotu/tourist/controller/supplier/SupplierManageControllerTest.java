@@ -12,7 +12,7 @@ package com.huotu.tourist.controller.supplier;
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.service.OrderService;
+import com.huotu.tourist.service.TouristOrderService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SupplierManageControllerTest extends WebTest {
 
     @Autowired
-    private OrderService orderService;
+    private TouristOrderService touristOrderService;
 
     /**
      * 显示订单列表

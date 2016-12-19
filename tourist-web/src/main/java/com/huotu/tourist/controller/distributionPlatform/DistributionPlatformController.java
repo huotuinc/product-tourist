@@ -1,10 +1,11 @@
 package com.huotu.tourist.controller.distributionPlatform;
 
+import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.service.TouristSupplierService;
+import com.huotu.tourist.entity.*;
+import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +28,27 @@ import java.util.Map;
 public class DistributionPlatformController {
     @Autowired
     TouristSupplierService touristSupplierService;
+
+    @Autowired
+    TouristBuyerService touristBuyerService;
+
+    @Autowired
+    PurchaserPaymentRecordService purchaserPaymentRecordService;
+
+    @Autowired
+    PurchaserProductSettingService purchaserProductSettingService;
+
+    @Autowired
+    TouristGoodService touristGoodService;
+
+    @Autowired
+    ActivityTypeService activityTypeService;
+
+    @Autowired
+    TouristTypeService touristTypeService;
+
+    @Autowired
+    TouristOrderService touristOrderService;
 
     /**
      * 供应商列表
@@ -47,17 +70,24 @@ public class DistributionPlatformController {
     /**
      * 采购商列表
      *
-     * @param buyerName 采购商名称
-     * @param pageSize  每页显示条数
-     * @param pageNo    页码
+     * @param buyerName       采购商名称
+     * @param buyerDirector   采购负责人
+     * @param telPhone        采购负责人电话
+     * @param buyerCheckState 采购状态
+     * @param pageSize        每页显示条数
+     * @param pageNo          页码
      * @param request
      * @param model
      * @return
      */
     @RequestMapping(value = "buyerList", method = RequestMethod.GET)
-    public ResponseEntity buyerList(String buyerName, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    public ResponseEntity buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum buyerCheckState
+            , int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
+                , new PageRequest(pageNo, pageSize));
         return null;
     }
+
 
     /**
      * 采购商支付记录列表
@@ -76,6 +106,9 @@ public class DistributionPlatformController {
     public ResponseEntity purchaserPaymentRecordList(String startPayDate, String endPayDate, String buyerName,
                                                      String buyerDirector, String telPhone, int pageSize, int pageNo,
                                                      HttpServletRequest request, Model model) {
+        Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
+                , buyerName, buyerDirector, telPhone, new PageRequest(pageNo, pageSize));
+
         return null;
     }
 
@@ -96,6 +129,8 @@ public class DistributionPlatformController {
     public void exportPurchaserPaymentRecord(String startPayDate, String endPayDate, String buyerName,
                                              String buyerDirector, String telPhone
             , int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        List<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
+                , buyerName, buyerDirector, telPhone);
 
     }
 
@@ -112,26 +147,39 @@ public class DistributionPlatformController {
     @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET)
     public ResponseEntity purchaserProductSettingList(String name, int pageSize, int pageNo
             , HttpServletRequest request, Model model) {
+        Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
+                , new PageRequest(pageNo, pageSize));
+
         return null;
     }
-
 
     /**
      * 线路列表
      *
      * @param touristName       线路名称
+     * @param supplierName      供应商名称
      * @param touristTypeId     线路类型ID
      * @param activityTypeId    活动ID
      * @param touristCheckState 线路审核状态
      * @param pageSize          每页显示条数
      * @param pageNo            页码
      * @param request
-     * @param model
-     * @return
+     * @param model             @return
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
-    public ResponseEntity touristGoodList(String touristName, Long touristTypeId, Long activityTypeId
+    public ResponseEntity touristGoodList(String touristName, String supplierName, Long touristTypeId, Long activityTypeId
             , TouristCheckStateEnum touristCheckState, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        ActivityType activityType = null;
+        TouristType touristType = null;
+        if (touristTypeId != null) {
+            touristType = touristTypeService.getOne(touristTypeId);
+        }
+        if (activityTypeId != null) {
+            activityType = activityTypeService.getOne(touristTypeId);
+        }
+        Page<TouristGood> page = touristGoodService.touristGoodList(touristName, supplierName, touristType, activityType
+                , touristCheckState, new PageRequest(pageNo, pageSize));
+
         return null;
     }
 
@@ -139,6 +187,7 @@ public class DistributionPlatformController {
      * 推荐线路列表
      *
      * @param touristName       线路名称
+     * @param supplierName      供应商名称
      * @param touristTypeId     线路类型ID
      * @param activityTypeId    活动ID
      * @param touristCheckState 线路审核状态
@@ -149,14 +198,24 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "recommendTouristGoodList", method = RequestMethod.GET)
-    public ResponseEntity recommendTouristGoodList(String touristName, Long touristTypeId, Long activityTypeId
+    public ResponseEntity recommendTouristGoodList(String touristName, String supplierName, Long touristTypeId, Long activityTypeId
             , TouristCheckStateEnum touristCheckState, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        ActivityType activityType = null;
+        TouristType touristType = null;
+        if (touristTypeId != null) {
+            touristType = touristTypeService.getOne(touristTypeId);
+        }
+        if (activityTypeId != null) {
+            activityType = activityTypeService.getOne(touristTypeId);
+        }
+        Page<TouristGood> page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
+                , touristCheckState, true, new PageRequest(pageNo, pageSize));
+
         return null;
     }
 
     /**
      * 活动类型列表
-     *
      *
      * @param name     活动名称
      * @param pageSize 每页显示条数
@@ -167,14 +226,14 @@ public class DistributionPlatformController {
      */
     @RequestMapping(value = "activityTypeList", method = RequestMethod.GET)
     public ResponseEntity activityTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        Page<ActivityType> page = activityTypeService.activityTypeList(name, new PageRequest(pageNo, pageSize));
         return null;
     }
 
     /**
      * 线路类型列表
      *
-     *
-     * @param name      线路名称
+     * @param name     线路名称
      * @param pageSize 每页显示条数
      * @param pageNo   页码
      * @param request
@@ -183,6 +242,7 @@ public class DistributionPlatformController {
      */
     @RequestMapping(value = "touristTypeList", method = RequestMethod.GET)
     public ResponseEntity touristTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        Page<TouristType> page = touristTypeService.touristTypeList(name, new PageRequest(pageNo, pageSize));
         return null;
     }
 
@@ -208,7 +268,7 @@ public class DistributionPlatformController {
     public ResponseEntity supplierOrders(String orderNo, String touristName, String buyerName, String orderState
             , String startCreateTime, String endCreateTime, String startPayTime, String endPayTime, String fromDate
             , int pageSize, int pageNo, HttpServletRequest request, Model model) {
-
+//        touristOrderService.supplierOrders(new PageRequest(pageNo,pageSize),orderNo,touristName,buyerName,null,)
         return null;
     }
 
@@ -232,11 +292,11 @@ public class DistributionPlatformController {
     /**
      * 提现单列表
      *
-     * @param supplierName     供应商名称
-     * @param presentState     提现状态
-     * @param createTime       提现单创建时间
-     * @param pageSize 每页显示条数
-     * @param pageNo   页码
+     * @param supplierName 供应商名称
+     * @param presentState 提现状态
+     * @param createTime   提现单创建时间
+     * @param pageSize     每页显示条数
+     * @param pageNo       页码
      * @param request
      * @param model
      * @return

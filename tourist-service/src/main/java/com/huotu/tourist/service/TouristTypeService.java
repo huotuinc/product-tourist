@@ -1,6 +1,6 @@
 package com.huotu.tourist.service;
 
-import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.TouristType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
  * Created by lhx on 2016/12/17.
  */
 
-public interface ActivityTypeService extends BaseService<ActivityType, Long> {
+public interface TouristTypeService extends BaseService<TouristType, Long> {
 
-    Page<ActivityType> activityTypeList(String name, Pageable pageable);
+    Page<TouristType> touristTypeList(String name, Pageable pageable);
 }

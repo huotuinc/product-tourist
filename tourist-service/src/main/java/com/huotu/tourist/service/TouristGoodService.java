@@ -3,7 +3,6 @@ package com.huotu.tourist.service;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
     /**
      * 线路列表
      *
-     * @param goodName          线路名称 可以为null
+     * @param touristName       线路名称 可以为null
      * @param supplierName      供应商名称
      * @param touristType       路线类型
      * @param activityType      活动类型
@@ -26,7 +25,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param pageable
      * @return
      */
-    Page<TouristSupplier> touristGoodList(String goodName, String supplierName, TouristType touristType
+    Page<TouristGood> touristGoodList(String touristName, String supplierName, TouristType touristType
             , ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable);
 
     /**
@@ -35,7 +34,8 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param pageable
      * @return
      */
-    Page<TouristSupplier> recommendTouristGoodList(Pageable pageable);
+    Page<TouristGood> recommendTouristGoodList(String touristName, String supplierName, TouristType touristType
+            , ActivityType activityType, TouristCheckStateEnum touristCheckState, Boolean recommend, Pageable pageable);
 
 
 }
