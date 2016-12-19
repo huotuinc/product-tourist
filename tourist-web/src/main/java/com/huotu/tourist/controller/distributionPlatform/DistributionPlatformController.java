@@ -24,12 +24,12 @@ public class DistributionPlatformController {
     }
 
     @RequestMapping(value = "createSupplier", method = RequestMethod.POST)
-    public ResponseEntity createSupplier(TouristSupplier data, HttpServletRequest request, Model model) {
+    public String createSupplier(TouristSupplier data, HttpServletRequest request, Model model) {
         return null;
     }
 
     @RequestMapping(value = "updateSupplier", method = RequestMethod.PUT)
-    public ResponseEntity updateSupplier(TouristSupplier data, HttpServletRequest request, Model model) {
+    public String updateSupplier(TouristSupplier data, HttpServletRequest request, Model model) {
         return null;
     }
 
@@ -39,12 +39,12 @@ public class DistributionPlatformController {
     }
 
     @RequestMapping(value = "createBuyer", method = RequestMethod.POST)
-    public ResponseEntity createBuyer(TouristBuyer data, HttpServletRequest request, Model model) {
+    public String createBuyer(TouristBuyer data, HttpServletRequest request, Model model) {
         return null;
     }
 
     @RequestMapping(value = "updateBuyer", method = RequestMethod.PUT)
-    public ResponseEntity updateBuyer(TouristBuyer data, HttpServletRequest request, Model model) {
+    public String updateBuyer(TouristBuyer data, HttpServletRequest request, Model model) {
         return null;
     }
 
