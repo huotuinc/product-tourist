@@ -15,7 +15,6 @@ import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.service.OrderService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -42,8 +41,7 @@ public class SupplierManageControllerTest extends WebTest {
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>(){
                     @Override
                     public boolean matches(Object o) {
-                        return orderService.supplieOrders(currentSupplier, new PageRequest(0, pageSize), null, null, null, null
-                                ,null,null,null,null).equals(o);
+                        return false;
                     }
                 }));
 
