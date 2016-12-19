@@ -5,6 +5,7 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.model.TouristOrderDetailsModel;
 import com.huotu.tourist.model.TouristOrderModel;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristOrderRepository;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,20 +96,20 @@ public class SupplierManageController {
         Page<TouristOrder> orders=orderService.supplierOrders(supplier,new PageRequest(pageNo+1,pageSize),
                 orderId, name, buyer, tel, payTypeEnum, orderDate, null, payDate, null, touristDate, orderStateEnum);
 
-        List<TouristOrderModel> touristOrderModels=new ArrayList<>();
+        List<TouristOrderModel> touristOrderModels=orderService.touristOrderModelConver(orders.getContent());
 
-        orders.forEach(order->{
-            TouristOrderModel model=new TouristOrderModel();
-            model.setId(order.getId());
-            model.setBuyerName(order.getTouristBuyer().getBuyerName());
-            model.setTouristName(order.getTouristGood().getTouristName());
-            model.setOrderMoney(order.getOrderMoney().doubleValue());
-            model.setOrderState(order.getOrderState().getDescription());
-            model.setTouristDate("");//todo 计算
-            model.setPeopleNumber(0);//todo 计算
-            model.setRemarks(order.getRemarks());
-            touristOrderModels.add(model);
-        });
+//        orders.forEach(order->{
+//            TouristOrderModel model=new TouristOrderModel();
+//            model.setId(order.getId());
+//            model.setBuyerName(order.getTouristBuyer().getBuyerName());
+//            model.setTouristName(order.getTouristGood().getTouristName());
+//            model.setOrderMoney(order.getOrderMoney().doubleValue());
+//            model.setOrderState(order.getOrderState().getDescription());
+//            model.setTouristDate("");//todo 计算
+//            model.setPeopleNumber(0);//todo 计算
+//            model.setRemarks(order.getRemarks());
+//            touristOrderModels.add(model);
+//        });
 
         ModelMap modelMap=new ModelMap();
         modelMap.addAttribute("rows",touristOrderModels);
@@ -131,19 +131,19 @@ public class SupplierManageController {
 
         List<TouristRoute> routes=touristRouteRepository.findByGood(order.getTouristGood());
 
-        List<TouristRouteModel> touristRouteModels=new ArrayList<>();
+        List<TouristRouteModel> touristRouteModels=touristRouteService.touristRouteModelConver(routes);
 
-        for(TouristRoute route :routes){
-            //排除自己的线路订单
-            if(route.getId().equals(id)){
-                continue;
-            }
-            TouristRouteModel model=new TouristRouteModel();
-            model.setId(route.getId());
-            model.setFromDate(route.getFromDate());
-            model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
-            touristRouteModels.add(model);
-        }
+//        for(TouristRoute route :routes){
+//            //排除自己的线路订单
+//            if(route.getId().equals(id)){
+//                continue;
+//            }
+//            TouristRouteModel model=new TouristRouteModel();
+//            model.setId(route.getId());
+//            model.setFromDate(route.getFromDate());
+//            model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
+//            touristRouteModels.add(model);
+//        }
 
         ModelMap modelMap=new ModelMap();
         modelMap.addAttribute("data",touristRouteModels);
@@ -172,14 +172,32 @@ public class SupplierManageController {
      * @return      线路订单视图
      * @throws IOException
      */
+    @RequestMapping("/showOrder")
     public String showOrder(@RequestParam Long id,Model model) throws IOException{
 
         TouristOrder order=touristOrderRepository.findOne(id);
 
-        
+        TouristOrderDetailsModel touristOrderDetailsModel=orderService.touristOrderDetailsModelConver(order);
+
+        model.addAttribute("data",touristOrderDetailsModel);
 
         return "";
 
+    }
+
+    /**
+     * 修改订单备注
+     * @param id        线路订单号
+     * @param remark    新的备注
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/modifyRemarks")
+    public ModelMap modifyRemarks(@RequestParam Long id,@RequestParam String remark) throws IOException{
+        int number=touristOrderRepository.modifyRemarks(remark,id);
+        ModelMap modelMap=new ModelMap();
+        modelMap.addAttribute("data",number);
+        return modelMap;
     }
 
 

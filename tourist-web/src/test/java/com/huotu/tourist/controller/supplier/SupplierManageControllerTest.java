@@ -12,7 +12,13 @@ package com.huotu.tourist.controller.supplier;
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.OrderService;
+import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TravelerService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +31,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SupplierManageControllerTest extends WebTest {
 
     @Autowired
+    private TouristSupplierRepository touristSupplierRepository;
+
+    @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private TouristOrderRepository touristOrderRepository;
+
+    @Autowired
+    private TouristRouteRepository touristRouteRepository;
+
+    @Autowired
+    private TravelerService travelerService;
+
+    @Autowired
+    private TouristRouteService touristRouteService;
+
+    @Autowired
+    private TravelerRepository travelerRepository;
 
     /**
      * 显示订单列表
@@ -33,8 +57,8 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void orderList() throws Exception {
-        //
-        TouristSupplier currentSupplier = null;
+        TouristSupplier currentSupplier = new TouristSupplier();
+        
         int pageSize = random.nextInt(100)+10;
 
         mockMvc.perform(get("/supplier/orderList").param("size",""+pageSize))
@@ -90,24 +114,6 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void modifyRemarks() throws Exception{
-
-    }
-
-    /**
-     * 显示某个订单的游客列表
-     * @throws Exception
-     */
-    @Test
-    public void showOrderTravelerList() throws Exception{
-
-    }
-
-    /**
-     * 保存某个订单游客
-     * @throws Exception
-     */
-    @Test
-    public void saveOrderTraveler() throws Exception{
 
     }
 
