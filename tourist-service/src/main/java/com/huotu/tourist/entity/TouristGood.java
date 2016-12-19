@@ -46,7 +46,6 @@ public class TouristGood extends BaseModel {
     @JoinColumn
     private TouristType touristType;
 
-
     /**
      * 线路所属供应商
      */
@@ -59,7 +58,6 @@ public class TouristGood extends BaseModel {
      */
     @Column
     private TouristCheckStateEnum touristCheckState;
-
 
     /**
      * 线路特色
@@ -95,18 +93,18 @@ public class TouristGood extends BaseModel {
     /**
      * 成人折扣
      */
-    @Column
+    @Column(precision = 4, scale = 2)
     private BigDecimal AdultDiscount;
     /**
      * 儿童折扣
      */
-    @Column
+    @Column(precision = 4, scale = 2)
     private BigDecimal childrenDiscount;
 
     /**
      * 按路线价格的比例返佣比例。0-100。不得大于100
      */
-    @Column
+    @Column(precision = 4, scale = 2)
     private BigDecimal rebate;
 
     /**
@@ -120,7 +118,6 @@ public class TouristGood extends BaseModel {
      */
     @Column(length = 15)
     private String receptionTelephone;
-
 
     /**
      * 活动详情
@@ -136,7 +133,11 @@ public class TouristGood extends BaseModel {
     @Column
     private String beCareful;
 
-
+    /**
+     * 推荐
+     */
+    @Column
+    private Boolean recommend;
 
 
 }

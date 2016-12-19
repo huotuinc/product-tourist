@@ -26,7 +26,7 @@ public class SettlementSheet extends BaseModel{
     /**
      * 应收款
      */
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal receivableAccount;
 
     /**

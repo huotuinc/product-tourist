@@ -33,6 +33,7 @@ public class SupplierManageControllerTest extends WebTest {
                                 ,null,null,null,null).equals(o);
                     }
                 }));
+
     }
 
 }

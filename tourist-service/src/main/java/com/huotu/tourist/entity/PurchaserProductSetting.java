@@ -34,7 +34,7 @@ public class PurchaserProductSetting extends BaseModel {
     /**
      * 价格
      */
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal price;
 
     /**

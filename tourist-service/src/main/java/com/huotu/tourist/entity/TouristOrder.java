@@ -57,26 +57,8 @@ public class TouristOrder extends BaseModel {
     /**
      * 订单总金额
      */
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal orderMoney;
-
-//    /**
-//     * 返还佣金
-//     */
-//    @Column
-//    private BigDecimal returnCommission;
-
-//    /**
-//     * 单价
-//     */
-//    @Column
-//    private BigDecimal unitPrice;
-
-//    /**
-//     * 购买数量
-//     */
-//    @Column
-//    private int buyCount;
 
     /**
      * 支付时间
@@ -89,18 +71,6 @@ public class TouristOrder extends BaseModel {
      */
     @Column
     private PayTypeEnum payType;
-
-//    /**
-//     * 余额抵扣
-//     */
-//    @Column
-//    private BigDecimal balanceDeduction;
-//
-//    /**
-//     * 小金库抵扣
-//     */
-//    @Column
-//    private BigDecimal coffersDeduction;
 
     /**
      * 备注

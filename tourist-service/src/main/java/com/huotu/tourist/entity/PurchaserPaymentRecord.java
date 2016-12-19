@@ -22,7 +22,7 @@ public class PurchaserPaymentRecord extends BaseModel {
     @JoinColumn(name = "touristBuyerId")
     private TouristBuyer touristBuyer;
 
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal money;
 
 }

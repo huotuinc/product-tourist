@@ -27,13 +27,13 @@ public class PresentRecord extends BaseModel{
     /**
      * 提现金额
      */
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal amountOfMoney;
 
     /**
      * 账户余额
      */
-    @Column
+    @Column(precision = 10, scale = 2)
     private BigDecimal accountBalance;
 
     /**
