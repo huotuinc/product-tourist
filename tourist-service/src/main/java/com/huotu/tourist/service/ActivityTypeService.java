@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
  * Created by lhx on 2016/12/17.
  */
 
-public interface ActiviTypeService extends BaseService<ActivityType, Long> {
+public interface ActivityTypeService extends BaseService<ActivityType, Long> {
 
     Page<ActivityType> activityTypeList(Pageable pageable);
 }

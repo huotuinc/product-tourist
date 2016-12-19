@@ -40,7 +40,7 @@ public interface OrderService {
 
     /**
      * 根据某个供应商的订单列表，
-     * @param supplier      供应商(必须)
+     * @param supplier      供应商
      * @param pageable      分页信息(必须)
      * @param orderId       订单ID
      * @param name          路线名称
