@@ -3,9 +3,14 @@ package com.huotu.tourist.controller.supplier;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.model.TouristOrderModel;
+import com.huotu.tourist.model.TouristRouteModel;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.OrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TravelerService;
@@ -16,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -38,10 +44,19 @@ public class SupplierManageController {
     private OrderService orderService;
 
     @Autowired
+    private TouristOrderRepository touristOrderRepository;
+
+    @Autowired
+    private TouristRouteRepository touristRouteRepository;
+
+    @Autowired
     private TravelerService travelerService;
 
     @Autowired
     private TouristRouteService touristRouteService;
+
+    @Autowired
+    private TravelerRepository travelerRepository;
 
 
     /**
@@ -52,7 +67,6 @@ public class SupplierManageController {
     public String showOrderList(Model model){
         return "";
     }
-
 
     /**
      * 根据某个供应商的订单列表
@@ -113,13 +127,60 @@ public class SupplierManageController {
     @ResponseBody
     public ModelMap getAllOrderTouristDate(@RequestParam Long id) throws IOException{
 
+        TouristOrder order=touristOrderRepository.findOne(id);
 
+        List<TouristRoute> routes=touristRouteRepository.findByGood(order.getTouristGood());
 
+        List<TouristRouteModel> touristRouteModels=new ArrayList<>();
 
+        for(TouristRoute route :routes){
+            //排除自己的线路订单
+            if(route.getId().equals(id)){
+                continue;
+            }
+            TouristRouteModel model=new TouristRouteModel();
+            model.setId(route.getId());
+            model.setFromDate(route.getFromDate());
+            model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
+            touristRouteModels.add(model);
+        }
 
-        return null;
+        ModelMap modelMap=new ModelMap();
+        modelMap.addAttribute("data",touristRouteModels);
+        return modelMap;
     }
 
+    /**
+     * 修改游客的线路行程
+     * @param formerId  原先的线路行程ID
+     * @param laterId   之后的线路行程ID
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/modifyOrderTouristDate",method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap modifyOrderTouristDate(@RequestParam Long formerId,@RequestParam Long laterId) throws IOException{
+        int modifyNumber=travelerRepository.modifyRouteIdByRouteId(laterId,formerId);
+        ModelMap modelMap=new ModelMap();
+        modelMap.addAttribute("data",modifyNumber);
+        return modelMap;
+    }
+
+    /**
+     * 返回某个订单的视图信息
+     * @param id    线路订单
+     * @return      线路订单视图
+     * @throws IOException
+     */
+    public String showOrder(@RequestParam Long id,Model model) throws IOException{
+
+        TouristOrder order=touristOrderRepository.findOne(id);
+
+        
+
+        return "";
+
+    }
 
 
 
