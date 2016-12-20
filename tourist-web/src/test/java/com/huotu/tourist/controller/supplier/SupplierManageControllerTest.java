@@ -12,7 +12,6 @@ package com.huotu.tourist.controller.supplier;
 import com.google.gson.Gson;
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
-import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristRouteRepository;
@@ -23,7 +22,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +34,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SupplierManageControllerTest extends WebTest {
 
 
+
     @Autowired
     private TouristRouteRepository touristRouteRepository;
 
     @Autowired
-    private TouristRouteService touristRouteService;
+    private TravelerRepository travelerRepository;
 
     @Autowired
-    private TravelerRepository travelerRepository;
+    private TouristRouteService touristRouteService;
 
     /**
      * 显示订单列表
@@ -60,7 +59,8 @@ public class SupplierManageControllerTest extends WebTest {
             TouristOrder order=new TouristOrder();
             order.setOrderNo(randomString());
             order.setOrderState(randomOrderStateEnum());
-            order.setPayTime(randomLocalDateTime(order));
+            order.setPayTime(randomLocalDateTime(order.getOrderState()));
+
 //            order.set
         }
 
@@ -76,34 +76,7 @@ public class SupplierManageControllerTest extends WebTest {
 
     }
 
-    private LocalDateTime randomLocalDateTime(TouristOrder order){
-        OrderStateEnum orderStateEnum=order.getOrderState();
-        if(!OrderStateEnum.NotPay.equals(orderStateEnum)){
-            return LocalDateTime.now();
-        }else {
-            return null;
-        }
-    }
 
-    private OrderStateEnum randomOrderStateEnum(){
-        int orderStateNo=random.nextInt(7);
-        switch (orderStateNo){
-            case 0:
-                return OrderStateEnum.NotPay;
-            case 1:
-                return OrderStateEnum.PayFinish;
-            case 2:
-                return OrderStateEnum.NotFinish;
-            case 3:
-                return OrderStateEnum.Finish;
-            case 4:
-                return OrderStateEnum.Invalid;
-            case 5:
-                return OrderStateEnum.Refunds;
-            default:
-                return OrderStateEnum.RefundsFinish;
-        }
-    }
 
 
 
@@ -124,7 +97,6 @@ public class SupplierManageControllerTest extends WebTest {
     @Test
     public void showAllOrderTouristDate() throws Exception{
         List<TouristRoute> routes=new ArrayList<>();
-//        Map<Long,List<Traveler>> map=new HashMap<>();
         for(int i=0;i<10;i++){
             TouristRoute route=new TouristRoute();
             route.setMaxPeople(random.nextInt(50)+20);
@@ -140,7 +112,6 @@ public class SupplierManageControllerTest extends WebTest {
                 travelers.add(travelerRepository.saveAndFlush(traveler));
             }
             routes.add(route);
-//            map.put(route.getId(),travelers);
         }
 
         TouristRoute ownRoute=routes.get(random.nextInt(routes.size()));
@@ -151,6 +122,7 @@ public class SupplierManageControllerTest extends WebTest {
                 .param("id",""+ownRoute.getId()))
                 .andReturn().getResponse().getContentAsString();
         Gson gson=new Gson();
+        //实际
         List<TouristRouteModel> touristRouteModelsActual=JsonPath.read(result,"$.data");
 
 
