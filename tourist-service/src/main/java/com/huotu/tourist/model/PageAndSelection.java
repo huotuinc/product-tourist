@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.model;
 
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -21,7 +22,9 @@ import java.util.List;
  */
 public class PageAndSelection<T> {
 
+    @Getter
     private final Page<T> page;
+    @Getter
     private final List<Selection<T, ?>> selectionList;
 
     public PageAndSelection(Page<T> page, List<Selection<T, ?>> selectionList) {
