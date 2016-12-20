@@ -55,6 +55,11 @@ public class Traveler extends BaseModel {
     @Column
     private SexEnum sex;
 
+    /**
+     * 年龄
+     */
+    private Integer age;
+
     @Column
     private TravelerTypeEnum travelerType;
 

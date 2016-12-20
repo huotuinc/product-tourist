@@ -18,6 +18,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * 线路列表
      *
      * @param touristName       线路名称 可以为null
+     * @param supplierId        供应商ID
      * @param supplierName      供应商名称
      * @param touristType       路线类型
      * @param activityType      活动类型
@@ -25,7 +26,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param pageable
      * @return
      */
-    Page<TouristGood> touristGoodList(String touristName, String supplierName, TouristType touristType
+    Page<TouristGood> touristGoodList(Long supplierId,String touristName, String supplierName, TouristType touristType
             , ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable);
 
     /**

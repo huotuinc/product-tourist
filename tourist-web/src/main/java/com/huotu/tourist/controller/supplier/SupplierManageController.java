@@ -3,20 +3,20 @@ package com.huotu.tourist.controller.supplier;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -53,6 +53,9 @@ public class SupplierManageController {
 
     @Autowired
     private TravelerRepository travelerRepository;
+
+    @Autowired
+    private TouristGoodService touristGoodService;
 
 
     /**
@@ -231,12 +234,28 @@ public class SupplierManageController {
     @RequestMapping(value = "/modifyTravelerBaseInfo",method = RequestMethod.POST)
     public void modifyTravelerBaseInfo(@RequestParam Long id, String name, SexEnum sex,Integer age,String tel,String IDNo)
         throws IOException{
-
         Traveler traveler=travelerRepository.findOne(id);
+        traveler.setName(name);
+        traveler.setSex(sex);
+        traveler.setAge(age);
+        traveler.setTelPhone(tel);
+        traveler.setIDNo(IDNo);
+        travelerRepository.save(traveler);
+    }
 
 
+    /**
+     * 显示某供应商的线路商品信息
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/TouristGoodList")
+    public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId,String touristName, String supplierName
+            , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState
+            , Pageable pageable)throws Exception{
+        Page<TouristGood> goods=touristGoodService.touristGoodList(supplierId,touristName,supplierName,touristType,activityType
+        ,touristCheckState,pageable);
 
-
-
+        return new PageAndSelection<>(goods,TouristGood.selections);
     }
 }
