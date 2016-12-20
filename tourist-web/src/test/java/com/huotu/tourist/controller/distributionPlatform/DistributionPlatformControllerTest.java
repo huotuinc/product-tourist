@@ -12,6 +12,7 @@ package com.huotu.tourist.controller.distributionPlatform;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.*;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
@@ -61,21 +62,139 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
 
         assertThat(list.size()).isGreaterThan(0).as("第二页数据加载完成，分页验证完成");
+
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("name为空也能够查询列表");
     }
 
 
     @Test
     public void buyerList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        String buyerName = UUID.randomUUID().toString().replace("-", "");
+        String buyerDirector = UUID.randomUUID().toString().replace("-", "");
+        String telPhone = "13000000000";
+        BuyerCheckStateEnum checkStateEnum = randomBuyerCheckState();
+        createTouristBuyer(null, null, null, checkStateEnum);
         String json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerName", "" + UUID.randomUUID().toString())
-                .param("buyerDirector", "" + UUID.randomUUID().toString())
-                .param("telPhone", "" + UUID.randomUUID().toString())
                 .param("buyerCheckState", "" + BuyerCheckStateEnum.CheckFinish)
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            Map checkState = (Map) m.get("checkState");
+            if (checkState.get("code").equals(checkStateEnum.getCode())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("找到添加的数据完成");
+
+        createTouristBuyer(null, buyerDirector, null, null);
+        json = mockMvc.perform(get("/distributionPlatform/buyerList")
+                        .param("pageSize", "" + pageSize)
+                        .param("pageNo", "" + pageNo)
+                        .param("buyerDirector", "" + buyerDirector)
+//                .param("buyerName", "" + buyerName)
+//                .param("telPhone", "" + UUID.randomUUID().toString())
+//                .param("buyerCheckState", "" + BuyerCheckStateEnum.CheckFinish)
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("buyerDirector").equals(buyerDirector)) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("找到添加的数据完成");
+
+        createTouristBuyer(null, null, telPhone, null);
+        json = mockMvc.perform(get("/distributionPlatform/buyerList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("telPhone", "" + UUID.randomUUID().toString())
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("telPhone").equals(telPhone)) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("找到添加的数据完成");
+
+        createTouristBuyer(buyerName, null, null, null);
+        json = mockMvc.perform(get("/distributionPlatform/buyerList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("buyerName", "" + buyerName)
+
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("buyerName").equals(buyerName)) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("找到添加的数据完成");
+
+        TouristBuyer touristBuyer = createTouristBuyer(null, null, null, null);
+        json = mockMvc.perform(get("/distributionPlatform/buyerList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("buyerDirector", "" + touristBuyer.getBuyerDirector())
+                .param("buyerName", "" + touristBuyer.getBuyerName())
+                .param("telPhone", "" + touristBuyer.getTelPhone())
+                .param("buyerCheckState", "" + touristBuyer.getCheckState())
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("buyerDirector").equals(touristBuyer.getBuyerDirector())
+                    && m.get("buyerName").equals(touristBuyer.getBuyerName())
+                    && m.get("telPhone").equals(touristBuyer.getTelPhone())
+                    && ((Map) m.get("buyerCheckState")).get("code").equals(touristBuyer.getCheckState().getCode())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("找到添加的数据完成");
+
+
+        json = mockMvc.perform(get("/distributionPlatform/buyerList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有条件也能够查询列表");
+
+
+        json = mockMvc.perform(get("/distributionPlatform/buyerList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("能够分页查询列表");
+
+
     }
 
 
@@ -83,8 +202,6 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void purchaserPaymentRecordList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-
-
         String json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
@@ -94,6 +211,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("buyerDirector", "" + UUID.randomUUID().toString())
                 .param("telPhone", "" + UUID.randomUUID().toString())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
 
 
     }
@@ -111,6 +230,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("buyerDirector", "" + UUID.randomUUID().toString())
                 .param("telPhone", "" + UUID.randomUUID().toString())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
@@ -122,6 +243,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
@@ -137,6 +260,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("activityTypeId", "" + 1)
                 .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
@@ -152,6 +277,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("activityTypeId", "" + 1)
                 .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
@@ -163,6 +290,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
 
@@ -175,6 +304,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
 
@@ -197,6 +328,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("endPayDate", "" + LocalDate.MAX)
                 .param("touristDate", "" + LocalDate.now())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
@@ -211,6 +344,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("createTime", "" + LocalDate.now())
         ).andReturn().getResponse().getContentAsString();
         JsonPath.read(json, "$.rows");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
@@ -224,6 +359,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("presentState", "" + PresentStateEnum.CheckFinish)
                 .param("createTime", "" + LocalDate.now())
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
     }
 
 
