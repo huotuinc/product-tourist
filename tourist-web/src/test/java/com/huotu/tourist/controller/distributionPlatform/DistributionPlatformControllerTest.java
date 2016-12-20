@@ -55,6 +55,8 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void purchaserPaymentRecordList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
+
+
         String json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
@@ -64,6 +66,8 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("buyerDirector", "" + UUID.randomUUID().toString())
                 .param("telPhone", "" + UUID.randomUUID().toString())
         ).andReturn().getResponse().getContentAsString();
+
+
     }
 
     @Test

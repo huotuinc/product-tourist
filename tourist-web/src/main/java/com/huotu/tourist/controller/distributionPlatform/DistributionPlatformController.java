@@ -9,8 +9,11 @@
 
 package com.huotu.tourist.controller.distributionPlatform;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.common.*;
 import com.huotu.tourist.entity.*;
+import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,6 +75,7 @@ public class DistributionPlatformController {
 
     /**
      * 跳转到供应商列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
@@ -91,14 +95,15 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "supplierList", method = RequestMethod.GET)
-    public ResponseEntity supplierList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    public PageAndSelection supplierList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<TouristSupplier> page = touristSupplierService.supplierList(name, new PageRequest(pageNo, pageSize));
-        Map map = new HashMap();
-        return null;
+        PageAndSelection<TouristSupplier> pageAndSelection = new PageAndSelection<>(page, TouristSupplier.selections);
+        return pageAndSelection;
     }
 
     /**
      * 跳转到采购商列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
@@ -121,16 +126,18 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "buyerList", method = RequestMethod.GET)
-    public ResponseEntity buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum buyerCheckState
+    public PageAndSelection<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum buyerCheckState
             , int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
                 , new PageRequest(pageNo, pageSize));
-        return null;
+        PageAndSelection<TouristBuyer> pageAndSelection = new PageAndSelection<>(page, TouristBuyer.selections);
+        return pageAndSelection;
     }
 
 
     /**
      * 跳转到 采购商支付记录列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
@@ -153,13 +160,13 @@ public class DistributionPlatformController {
      * @param model         @return
      */
     @RequestMapping(value = "purchaserPaymentRecordList", method = RequestMethod.GET)
-    public ResponseEntity purchaserPaymentRecordList(String startPayDate, String endPayDate, String buyerName,
-                                                     String buyerDirector, String telPhone, int pageSize, int pageNo,
-                                                     HttpServletRequest request, Model model) {
+    public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(String startPayDate, String endPayDate
+            , String buyerName, String buyerDirector, String telPhone, int pageSize, int pageNo,
+                                                                               HttpServletRequest request, Model model) {
         Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
                 , buyerName, buyerDirector, telPhone, new PageRequest(pageNo, pageSize));
-
-        return null;
+        PageAndSelection<PurchaserPaymentRecord> pageAndSelection = new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
+        return pageAndSelection;
     }
 
     /**
@@ -181,11 +188,13 @@ public class DistributionPlatformController {
             , int pageSize, int pageNo, HttpServletRequest request, Model model) {
         List<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
                 , buyerName, buyerDirector, telPhone);
+        //todo
 
     }
 
     /**
      * 跳转到采购商产品设置列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
@@ -204,17 +213,22 @@ public class DistributionPlatformController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET)
+    @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity purchaserProductSettingList(String name, int pageSize, int pageNo
-            , HttpServletRequest request, Model model) {
+            , HttpServletRequest request, Model model) throws JsonProcessingException {
         Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
                 , new PageRequest(pageNo, pageSize));
-
-        return null;
+        Map<String, Object> map = new HashMap();
+        map.put(TOTAL, page.getTotalPages());
+        map.put(ROWS, page.getContent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValueAsString(map);
+        return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
 
     /**
      * 跳转到线路列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
@@ -237,8 +251,9 @@ public class DistributionPlatformController {
      * @param model             @return
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
-    public ResponseEntity touristGoodList(String touristName, String supplierName, Long touristTypeId, Long activityTypeId
-            , TouristCheckStateEnum touristCheckState, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    public PageAndSelection<TouristGood> touristGoodList(String touristName, String supplierName, Long touristTypeId
+            , Long activityTypeId, TouristCheckStateEnum touristCheckState, int pageSize, int pageNo
+            , HttpServletRequest request, Model model) {
         ActivityType activityType = null;
         TouristType touristType = null;
         if (touristTypeId != null) {
@@ -250,7 +265,8 @@ public class DistributionPlatformController {
         Page<TouristGood> page = touristGoodService.touristGoodList(touristName, supplierName, touristType, activityType
                 , touristCheckState, new PageRequest(pageNo, pageSize));
 
-        return null;
+        PageAndSelection<TouristGood> pageAndSelection = new PageAndSelection<>(page, TouristGood.selections);
+        return pageAndSelection;
     }
 
     /**
@@ -268,7 +284,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "recommendTouristGoodList", method = RequestMethod.GET)
-    public ResponseEntity recommendTouristGoodList(String touristName, String supplierName, Long touristTypeId, Long activityTypeId
+    public PageAndSelection<TouristGood> recommendTouristGoodList(String touristName, String supplierName, Long touristTypeId, Long activityTypeId
             , TouristCheckStateEnum touristCheckState, int pageSize, int pageNo, HttpServletRequest request, Model model) {
         ActivityType activityType = null;
         TouristType touristType = null;
@@ -280,12 +296,13 @@ public class DistributionPlatformController {
         }
         Page<TouristGood> page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
                 , touristCheckState, true, new PageRequest(pageNo, pageSize));
-
-        return null;
+        PageAndSelection<TouristGood> pageAndSelection = new PageAndSelection<>(page, TouristGood.selections);
+        return pageAndSelection;
     }
 
     /**
      * 跳转到活动类型列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
@@ -304,14 +321,21 @@ public class DistributionPlatformController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "activityTypeList", method = RequestMethod.GET)
-    public ResponseEntity activityTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    @RequestMapping(value = "activityTypeList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public ResponseEntity activityTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model)
+            throws JsonProcessingException {
         Page<ActivityType> page = activityTypeService.activityTypeList(name, new PageRequest(pageNo, pageSize));
-        return null;
+        Map<String, Object> map = new HashMap();
+        map.put(TOTAL, page.getTotalPages());
+        map.put(ROWS, page.getContent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValueAsString(map);
+        return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
 
     /**
      * 跳转到线路类型列表页面
+     *
      * @return
      */
     @RequestMapping(value = "toTouristTypeList", method = RequestMethod.GET)
@@ -330,10 +354,16 @@ public class DistributionPlatformController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "touristTypeList", method = RequestMethod.GET)
-    public ResponseEntity touristTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    @RequestMapping(value = "touristTypeList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public ResponseEntity touristTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model)
+            throws JsonProcessingException {
         Page<TouristType> page = touristTypeService.touristTypeList(name, new PageRequest(pageNo, pageSize));
-        return null;
+        Map<String, Object> map = new HashMap();
+        map.put(TOTAL, page.getTotalPages());
+        map.put(ROWS, page.getContent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValueAsString(map);
+        return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
 
     /**
@@ -373,6 +403,7 @@ public class DistributionPlatformController {
             , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
         Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo, touristName, buyerName, tel, payType,
                 orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
+
         return null;
     }
 
@@ -470,7 +501,6 @@ public class DistributionPlatformController {
 
         return toSupplierList();
     }
-
 
 
 }

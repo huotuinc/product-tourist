@@ -10,11 +10,17 @@
 package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.model.Selection;
+import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 线路商品
@@ -26,70 +32,117 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class TouristGood extends BaseModel {
+    public static final List<Selection<TouristGood, ?>> selections = Arrays.asList(
+            new SimpleSelection<TouristGood, String>("id", "id"),
+            new SimpleSelection<TouristGood, String>("touristName", "touristName")
+            , new SimpleSelection<TouristGood, String>("price", "price")
+            , new SimpleSelection<TouristGood, String>("destination", "destination")
+            , new SimpleSelection<TouristGood, String>("rebate", "rebate")
+            , new SimpleSelection<TouristGood, String>("touristImgUri", "touristImgUri")
+            , new SimpleSelection<TouristGood, String>("recommend", "recommend")
+            , new Selection<TouristGood, String>() {
+                @Override
+                public String apply(TouristGood touristGood) {
+                    return touristGood.getTouristSupplier().getSupplierName();
+                }
+
+                @Override
+                public String getName() {
+                    return "supplierName";
+                }
+            }
+            , new Selection<TouristGood, String>() {
+                @Override
+                public String apply(TouristGood touristGood) {
+                    return touristGood.getActivityType().getActivityName();
+                }
+
+                @Override
+                public String getName() {
+                    return "activityType";
+                }
+            }
+            , new Selection<TouristGood, String>() {
+                @Override
+                public String apply(TouristGood touristGood) {
+                    return touristGood.getTouristType().getTypeName();
+                }
+
+                @Override
+                public String getName() {
+                    return "touristType";
+                }
+            }
+            , new Selection<TouristGood, Map>() {
+                @Override
+                public Map apply(TouristGood touristGood) {
+                    Map map = new HashMap();
+                    map.put("code", touristGood.getTouristCheckState().getCode().toString());
+                    map.put("value", touristGood.getTouristCheckState().getValue().toString());
+                    return map;
+                }
+
+                @Override
+                public String getName() {
+                    return "touristCheckState";
+                }
+            }
+
+    );
     /**
      * 线路名称
      */
     @Column(length = 100)
     private String touristName;
-
     /**
      * 活动类型
      */
     @ManyToOne
     @JoinColumn
     private ActivityType activityType;
-
     /**
      * 线路类型
      */
     @ManyToOne
     @JoinColumn
     private TouristType touristType;
-
     /**
      * 线路所属供应商
      */
     @ManyToOne
     @JoinColumn
     private TouristSupplier touristSupplier;
-
     /**
      * 线路审核状态
      */
     @Column
     private TouristCheckStateEnum touristCheckState;
-
     /**
      * 线路特色
      */
     @Column
     @Lob
     private String touristFeatures;
-
     /**
      * 目的地
      */
     @Column(length = 100)
     private String destination;
-
     /**
      * 出发地
      */
     @Column(length = 100)
     private String placeOfDeparture;
-
     /**
      * 途径地
      */
     @Column(length = 100)
     private String travelledAddress;
-
     /**
      * 价格
      */
     @Column(precision = 10, scale = 2)
     private BigDecimal price;
-
     /**
      * 成人折扣
      */
@@ -100,44 +153,42 @@ public class TouristGood extends BaseModel {
      */
     @Column(precision = 4, scale = 2)
     private BigDecimal childrenDiscount;
-
     /**
-     * 按路线价格的比例返佣比例。0-100。不得大于100
+     * 返佣比例。按路线价格的比例 0-100。不得大于100
      */
     @Column(precision = 4, scale = 2)
     private BigDecimal rebate;
-
     /**
      * 地方接待人
      */
     @Column(length = 15)
     private String receptionPerson;
-
     /**
      * 接待人电话
      */
     @Column(length = 15)
     private String receptionTelephone;
-
     /**
      * 活动详情
      */
     @Lob
     @Column
     private String eventDetails;
-
     /**
      * 注意事项
      */
     @Lob
     @Column
     private String beCareful;
-
+    /**
+     * 线路图片
+     */
+    @Column(length = 200)
+    private String touristImgUri;
     /**
      * 推荐
      */
     @Column
     private Boolean recommend;
-
 
 }
