@@ -11,6 +11,7 @@ package com.huotu.tourist.controller.supplier;
 
 import com.google.gson.Gson;
 import com.huotu.tourist.WebTest;
+import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
@@ -23,11 +24,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
+import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by Administrator on 2016/12/17.
  */
@@ -50,23 +52,88 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void orderList() throws Exception {
+        //预期
         String orderNo=randomString();
-        TouristOrder order=createTouristOrder(null,null,orderNo,null,null,null);
+        TouristOrder order=createTouristOrder(null,null,orderNo,null,null,null,null);
 
 
-        String json=mockMvc.perform(get("/supplier/getAllOrderTouristDate")
-                .param("orderId","orderId"))
+        String json=mockMvc.perform(get("/supplier/orderList")
+                .param("orderId",orderNo))
                 .andReturn().getResponse().getContentAsString();
 
-        //实际订单号
-        String routeNoActual= JsonPath.read(json,"$.row[0].routeNo");
-
-//        assertThat(orderNo,routeNoActual);
-
+        //实际
+        Long idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(order.getId().equals(idActual)).isTrue().as("订单号校验");
 
 
 
+        //预期
+        order=createTouristOrder(createTouristGood("slt"),null,null,null,null,null,null);
 
+        json=mockMvc.perform(get("/supplier/orderList")
+                .param("name","slt"))
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(order.getId().equals(idActual)).isTrue().as("线路名称校验");
+
+        //预期
+        order=createTouristOrder(null,createTouristBuyer("wy",null,null,null),null,null,null,null,null);
+
+        json=mockMvc.perform(get("/supplier/orderList")
+                .param("buyer","wy"))
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(order.getId().equals(idActual)).isTrue().as("购买人校验");
+
+        //预期
+        List<TouristOrder> touristOrders=new ArrayList<>();
+        for(int i=0;i<3;i++){
+            touristOrders.add(createTouristOrder(null,null,null,null,
+                    LocalDateTime.of(2016,i*3+1,1,1,1),null,null));
+        }
+        order=touristOrders.get(1);
+        json=mockMvc.perform(get("/supplier/orderList")
+                .param("orderDate",""+ LocalDateTime.of(2016,3,5,5,5))
+                .param("endOrderDate",""+LocalDateTime.of(2016,6,7,7,7)))
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(order.getId().equals(idActual)).isTrue().as("下单时间校验");
+
+        //预期
+        touristOrders=new ArrayList<>();
+        for(int i=0;i<3;i++){
+            touristOrders.add(createTouristOrder(null,null,null,null,null,
+                    LocalDateTime.of(2016,i*3+1,1,1,1),null));
+        }
+        order=touristOrders.get(1);
+        json=mockMvc.perform(get("/supplier/orderList")
+                .param("payDate",""+ LocalDateTime.of(2016,3,5,5,5))
+                .param("endPayDate",""+LocalDateTime.of(2016,6,7,7,7)))
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(order.getId().equals(idActual)).isTrue().as("支付时间校验");
+
+
+
+        //预期
+        TouristGood touristGood=createTouristGood("slt");
+        TouristRoute touristRoute=createTouristRoute(null,touristGood,LocalDate.of(2016,10,10),null,0);
+        order=createTouristOrder(touristGood,null,null,null,null,null,null);
+        json=mockMvc.perform(get("/supplier/orderList")
+                .param("touristDate",""+ LocalDate.of(2016,10,10)))
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(order.getId().equals(idActual)).isTrue().as("出行时间校验");
     }
 
 
@@ -114,7 +181,6 @@ public class SupplierManageControllerTest extends WebTest {
         String result=mockMvc.perform(get("/supplier/getAllOrderTouristDate")
                 .param("id",""+ownRoute.getId()))
                 .andReturn().getResponse().getContentAsString();
-        Gson gson=new Gson();
         //实际
         List<TouristRouteModel> touristRouteModelsActual=JsonPath.read(result,"$.data");
 

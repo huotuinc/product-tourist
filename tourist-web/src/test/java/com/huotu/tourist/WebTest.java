@@ -13,13 +13,11 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.*;
-import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
-import com.huotu.tourist.repository.TouristBuyerRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.*;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -40,6 +38,12 @@ public abstract class WebTest extends SpringWebTest {
 
     @Autowired
     protected PurchaserPaymentRecordRepository purchaserPaymentRecordRepository;
+
+    @Autowired
+    protected TouristGoodRepository touristGoodRepository;
+
+    @Autowired
+    protected TouristRouteRepository touristRouteRepository;
 
 
     /**
@@ -121,11 +125,12 @@ public abstract class WebTest extends SpringWebTest {
      * @return 测试的线路订单
      */
     protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer, String orderNo
-            , OrderStateEnum orderState, LocalDateTime payTime, PayTypeEnum payType) {
+            , OrderStateEnum orderState,LocalDateTime createTime, LocalDateTime payTime, PayTypeEnum payType) {
         TouristOrder order = new TouristOrder();
         order.setTouristGood(good);
         order.setTouristBuyer(buyer);
         order.setOrderNo(orderNo);
+        order.setCreateTime(createTime);
         order.setOrderState(orderState);
         order.setPayTime(payTime);
         order.setPayType(payType);
@@ -146,6 +151,36 @@ public abstract class WebTest extends SpringWebTest {
         supplier.setAdminPassword("1234567890");
         supplier.setCreateTime(LocalDateTime.now());
         return touristSupplierRepository.saveAndFlush(supplier);
+    }
+
+    /**
+     *  创建一个线路商品
+     * @param name
+     * @return
+     */
+    protected TouristGood createTouristGood(String name){
+        TouristGood touristGood=new TouristGood();
+        touristGood.setTouristName(name);
+        return touristGoodRepository.saveAndFlush(touristGood);
+    }
+
+    /**
+     * 创建一个行程路线
+     * @param routeNo
+     * @param good
+     * @param fromDate
+     * @param toDate
+     * @param maxPeople
+     * @return
+     */
+    protected TouristRoute createTouristRoute(String routeNo,TouristGood good,LocalDate fromDate,LocalDate toDate,int maxPeople){
+        TouristRoute touristRoute=new TouristRoute();
+        touristRoute.setRouteNo(routeNo);
+        touristRoute.setGood(good);
+        touristRoute.setFromDate(fromDate);
+        touristRoute.setToDate(toDate);
+        touristRoute.setMaxPeople(maxPeople);
+        return touristRouteRepository.saveAndFlush(touristRoute);
     }
 
     /**

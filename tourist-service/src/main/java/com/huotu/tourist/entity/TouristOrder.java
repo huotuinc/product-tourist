@@ -39,9 +39,14 @@ import java.util.List;
 public class TouristOrder extends BaseModel {
 
     public static List<Selection<TouristOrder, ?>> htmlSelections = Arrays.asList(
-            new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
+            new SimpleSelection<TouristOrder,Long>("id","id")
+            ,new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
             ,new SimpleSelection<TouristOrder,Double>("orderMoney","orderMoney")
-            ,new SimpleSelection<TouristOrder, String>("payType.value", "payType")
+            ,new SimpleSelection<TouristOrder,String>("orderNo","orderNo")
+            ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
+            ,new SimpleSelection<TouristOrder,String>("remarks", "remarks")
+            ,new SimpleSelection<TouristOrder,String>("orderState.value", "orderState")
+            ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
             ,new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
@@ -51,6 +56,17 @@ public class TouristOrder extends BaseModel {
                 @Override
                 public String apply(TouristOrder touristOrder) {
                     return touristOrder.getTouristBuyer().getBuyerName() + touristOrder.getTouristBuyer().getTelPhone();
+                }
+            }
+            ,new Selection<TouristOrder, String>() {
+                @Override
+                public String getName() {
+                    return "touristDate";
+                }
+
+                @Override
+                public String apply(TouristOrder touristOrder) {
+                    return null;
                 }
             }
     );

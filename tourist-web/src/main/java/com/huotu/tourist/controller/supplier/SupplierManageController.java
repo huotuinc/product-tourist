@@ -7,6 +7,7 @@ import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.currentUser.CurrentUserInfo;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
+import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,15 +93,15 @@ public class SupplierManageController {
 //    @ResponseBody AuthenticationPrincipal需要当前供应商
     public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal CurrentUserInfo userInfo
             , @RequestParam Pageable pageable
-            , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate
-            , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
+            , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
+            , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
             , OrderStateEnum orderStateEnum) throws IOException{
 
         TouristSupplier supplier= touristSupplierRepository.findOne(userInfo.getUserId());
 
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
-                orderId, name, buyer, tel, payTypeEnum, orderDate, endOrderDate, payDate, endPayDate, touristDate,
-                orderStateEnum);
+                orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate()
+                , payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), orderStateEnum);
 
         return new PageAndSelection<>(orders,TouristOrder.htmlSelections);
 
@@ -140,22 +143,22 @@ public class SupplierManageController {
 
         List<TouristRoute> routes=touristRouteRepository.findByGood(order.getTouristGood());
 
-//        List<TouristRouteModel> touristRouteModels=touristRouteService.touristRouteModelConver(routes);
+        List<TouristRouteModel> touristRouteModels=new ArrayList<>();
 
-//        for(TouristRoute route :routes){
-//            //排除自己的线路订单
-//            if(route.getId().equals(id)){
-//                continue;
-//            }
-//            TouristRouteModel model=new TouristRouteModel();
-//            model.setId(route.getId());
-//            model.setFromDate(route.getFromDate());
-//            model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
-//            touristRouteModels.add(model);
-//        }
+        for(TouristRoute route :routes){
+            //排除自己的线路订单
+            if(route.getId().equals(id)){
+                continue;
+            }
+            TouristRouteModel model=new TouristRouteModel();
+            model.setId(route.getId());
+            model.setFromDate(route.getFromDate());
+            model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
+            touristRouteModels.add(model);
+        }
 
         ModelMap modelMap=new ModelMap();
-//        modelMap.addAttribute("data",touristRouteModels);
+        modelMap.addAttribute("data",touristRouteModels);
         return modelMap;
     }
 
