@@ -4,6 +4,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.currentUser.CurrentUserInfo;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.repository.TouristOrderRepository;
@@ -15,8 +16,8 @@ import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -69,9 +70,8 @@ public class SupplierManageController {
 
     /**
      * 根据某个供应商的订单列表
-     * @param supplierId    供应商(必须)
-     * @param pageNo        第几页(必须)
-     * @param pageSize      每页几条信息(必须)
+     * @param userInfo      当前用户信息(必须)
+     * @param pageable      分页信息(必须)
      * @param orderId       订单ID
      * @param name          路线名称
      * @param buyer         购买人
@@ -87,15 +87,16 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/orderList")
-//    @ResponseBody
-    public PageAndSelection<TouristOrder> orderList(@RequestParam Long supplierId, @RequestParam Integer pageNo, @RequestParam Integer pageSize
+//    @ResponseBody AuthenticationPrincipal需要当前供应商
+    public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal CurrentUserInfo userInfo
+            , @RequestParam Pageable pageable
             , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate
             , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
             , OrderStateEnum orderStateEnum) throws IOException{
 
-        TouristSupplier supplier= touristSupplierRepository.findOne(supplierId);
+        TouristSupplier supplier= touristSupplierRepository.findOne(userInfo.getUserId());
 
-        Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, new PageRequest(pageNo + 1, pageSize),
+        Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
                 orderId, name, buyer, tel, payTypeEnum, orderDate, endOrderDate, payDate, endPayDate, touristDate,
                 orderStateEnum);
 
@@ -217,7 +218,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping(value = "/modifyOrderState",method = RequestMethod.POST)
-    public void modifyOrderState(@RequestParam Long id,@RequestParam OrderStateEnum orderState) throws IOException{
+    public void modifyOrderState(@RequestParam Long id, @RequestParam OrderStateEnum orderState) throws IOException{
         touristOrderRepository.modifyOrderState(orderState,id);
     }
 

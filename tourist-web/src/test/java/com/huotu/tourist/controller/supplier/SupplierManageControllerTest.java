@@ -10,9 +10,10 @@
 package com.huotu.tourist.controller.supplier;
 
 import com.google.gson.Gson;
-import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TravelerRepository;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 /**
  * Created by Administrator on 2016/12/17.
@@ -50,29 +50,22 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void orderList() throws Exception {
-        TouristSupplier currentSupplier = new TouristSupplier();
+        String orderNo=randomString();
+        TouristOrder order=createTouristOrder(null,null,orderNo,null,null,null);
 
-        List<TouristBuyer> buyers=new ArrayList<>();
-        List<String> orderNos=new ArrayList<>();
 
-        for(int i=0;i<50;i++){
-            TouristOrder order=new TouristOrder();
-            order.setOrderNo(randomString());
-            order.setOrderState(randomOrderStateEnum());
-            order.setPayTime(randomLocalDateTime(order.getOrderState()));
+        String json=mockMvc.perform(get("/supplier/getAllOrderTouristDate")
+                .param("orderId","orderId"))
+                .andReturn().getResponse().getContentAsString();
 
-//            order.set
-        }
+        //实际订单号
+        String routeNoActual= JsonPath.read(json,"$.row[0].routeNo");
 
-        int pageSize = random.nextInt(100)+10;
+//        assertThat(orderNo,routeNoActual);
 
-        mockMvc.perform(get("/supplier/orderList").param("size",""+pageSize))
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>(){
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+
+
+
 
     }
 
