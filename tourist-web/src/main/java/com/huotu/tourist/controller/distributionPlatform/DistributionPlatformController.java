@@ -260,7 +260,7 @@ public class DistributionPlatformController {
         if (activityTypeId != null) {
             activityType = activityTypeService.getOne(touristTypeId);
         }
-        Page<TouristGood> page = touristGoodService.touristGoodList(touristName, supplierName, touristType, activityType
+        Page<TouristGood> page = touristGoodService.touristGoodList(null,touristName, supplierName, touristType, activityType
                 , touristCheckState, new PageRequest(pageNo, pageSize));
 
         PageAndSelection<TouristGood> pageAndSelection = new PageAndSelection<>(page, TouristGood.selections);

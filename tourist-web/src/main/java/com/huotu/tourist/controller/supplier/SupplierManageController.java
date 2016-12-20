@@ -2,21 +2,21 @@ package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.model.TouristOrderDetailsModel;
-import com.huotu.tourist.model.TouristOrderModel;
-import com.huotu.tourist.model.TouristRouteModel;
+import com.huotu.tourist.common.SexEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.*;
+import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -54,6 +54,9 @@ public class SupplierManageController {
     @Autowired
     private TravelerRepository travelerRepository;
 
+    @Autowired
+    private TouristGoodService touristGoodService;
+
 
     /**
      * 打开订单列表页面
@@ -75,24 +78,33 @@ public class SupplierManageController {
      * @param tel           购买人电话
      * @param payTypeEnum   付款状态
      * @param orderDate     下单时间
+     * @param endOrderDate  结束下单时间
      * @param payDate       支付时间
-     * @param orderStateEnum 结算状态
+     * @param endPayDate    结束支付时间
      * @param touristDate   出行时间
+     * @param orderStateEnum 结算状态
      * @return
      * @throws IOException
      */
     @RequestMapping("/orderList")
-    @ResponseBody
-    public ModelMap orderList(@RequestParam Long supplierId, @RequestParam Integer pageNo, @RequestParam Integer pageSize
+//    @ResponseBody
+    public PageAndSelection<TouristOrder> orderList(@RequestParam Long supplierId, @RequestParam Integer pageNo, @RequestParam Integer pageSize
             , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate
-            , OrderStateEnum orderStateEnum, LocalDate payDate, LocalDate touristDate) throws IOException{
+            , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
+            , OrderStateEnum orderStateEnum) throws IOException{
 
         TouristSupplier supplier= touristSupplierRepository.findOne(supplierId);
 
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, new PageRequest(pageNo + 1, pageSize),
-                orderId, name, buyer, tel, payTypeEnum, orderDate, null, payDate, null, touristDate, orderStateEnum);
+                orderId, name, buyer, tel, payTypeEnum, orderDate, endOrderDate, payDate, endPayDate, touristDate,
+                orderStateEnum);
 
-        List<TouristOrderModel> touristOrderModels = touristOrderService.touristOrderModelConver(orders.getContent());
+        return new PageAndSelection<>(orders,TouristOrder.htmlSelections);
+
+//        List<Selection<TouristOrder, ?>> selectionList;
+//        PageAndSelection<TouristOrder> touristOrderModels =new PageAndSelection<>(orders,)
+
+//        List<TouristOrderModel> touristOrderModels = touristOrderService.touristOrderModelConver(orders.getContent());
 
 //        orders.forEach(order->{
 //            TouristOrderModel model=new TouristOrderModel();
@@ -107,10 +119,10 @@ public class SupplierManageController {
 //            touristOrderModels.add(model);
 //        });
 
-        ModelMap modelMap=new ModelMap();
-        modelMap.addAttribute("rows",touristOrderModels);
-        modelMap.addAttribute("total",orders.getTotalElements());
-        return modelMap;
+//        ModelMap modelMap=new ModelMap();
+//        modelMap.addAttribute("rows",touristOrderModels);
+//        modelMap.addAttribute("total",orders.getTotalElements());
+//        return modelMap;
     }
 
     /**
@@ -127,7 +139,7 @@ public class SupplierManageController {
 
         List<TouristRoute> routes=touristRouteRepository.findByGood(order.getTouristGood());
 
-        List<TouristRouteModel> touristRouteModels=touristRouteService.touristRouteModelConver(routes);
+//        List<TouristRouteModel> touristRouteModels=touristRouteService.touristRouteModelConver(routes);
 
 //        for(TouristRoute route :routes){
 //            //排除自己的线路订单
@@ -142,7 +154,7 @@ public class SupplierManageController {
 //        }
 
         ModelMap modelMap=new ModelMap();
-        modelMap.addAttribute("data",touristRouteModels);
+//        modelMap.addAttribute("data",touristRouteModels);
         return modelMap;
     }
 
@@ -173,9 +185,9 @@ public class SupplierManageController {
 
         TouristOrder order=touristOrderRepository.findOne(id);
 
-        TouristOrderDetailsModel touristOrderDetailsModel=touristOrderService.touristOrderDetailsModelConver(order);
+//        TouristOrderDetailsModel touristOrderDetailsModel=touristOrderService.touristOrderDetailsModelConver(order);
 
-        model.addAttribute("data",touristOrderDetailsModel);
+//        model.addAttribute("data",touristOrderDetailsModel);
 
         return "";
 
@@ -188,7 +200,7 @@ public class SupplierManageController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/modifyRemarks")
+    @RequestMapping(value = "/modifyRemarks",method = RequestMethod.POST)
     public ModelMap modifyRemarks(@RequestParam Long id,@RequestParam String remark) throws IOException{
         int number=touristOrderRepository.modifyRemarks(remark,id);
         ModelMap modelMap=new ModelMap();
@@ -197,5 +209,53 @@ public class SupplierManageController {
     }
 
 
+    /**
+     * 修改订单状态
+     * @param id            订单ID
+     * @param orderState    新的订单状态
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/modifyOrderState",method = RequestMethod.POST)
+    public void modifyOrderState(@RequestParam Long id,@RequestParam OrderStateEnum orderState) throws IOException{
+        touristOrderRepository.modifyOrderState(orderState,id);
+    }
 
+    /**
+     * 修改游客的个人信息
+     * @param id        游客ID(必须)
+     * @param name      游客姓名
+     * @param sex       性别
+     * @param age       年龄
+     * @param tel       电话
+     * @param IDNo      身份证号
+     * @throws IOException
+     */
+    @RequestMapping(value = "/modifyTravelerBaseInfo",method = RequestMethod.POST)
+    public void modifyTravelerBaseInfo(@RequestParam Long id, String name, SexEnum sex,Integer age,String tel,String IDNo)
+        throws IOException{
+        Traveler traveler=travelerRepository.findOne(id);
+        traveler.setName(name);
+        traveler.setSex(sex);
+        traveler.setAge(age);
+        traveler.setTelPhone(tel);
+        traveler.setIDNo(IDNo);
+        travelerRepository.save(traveler);
+    }
+
+
+    /**
+     * 显示某供应商的线路商品信息
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/TouristGoodList")
+    public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId,String touristName, String supplierName
+            , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState
+            , Pageable pageable)throws Exception{
+        Page<TouristGood> goods=touristGoodService.touristGoodList(supplierId,touristName,supplierName,touristType,activityType
+        ,touristCheckState,pageable);
+
+        return new PageAndSelection<>(goods,TouristGood.selections);
+    }
 }

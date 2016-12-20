@@ -39,12 +39,13 @@ import java.util.List;
 public class TouristOrder extends BaseModel {
 
     public static List<Selection<TouristOrder, ?>> htmlSelections = Arrays.asList(
-            new SimpleSelection<TouristOrder, String>("name", "线路名称")
-            , new SimpleSelection<TouristOrder, String>("name", "线路名称")
-            , new Selection<TouristOrder, String>() {
+            new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
+            ,new SimpleSelection<TouristOrder,Double>("orderMoney","orderMoney")
+            ,new SimpleSelection<TouristOrder, String>("payType.value", "payType")
+            ,new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
-                    return "购买人";
+                    return "buyerName";
                 }
 
                 @Override
@@ -104,5 +105,4 @@ public class TouristOrder extends BaseModel {
     @Lob
     @Column
     private String remarks;
-
 }

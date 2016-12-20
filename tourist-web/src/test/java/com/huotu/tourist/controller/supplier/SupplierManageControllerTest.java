@@ -116,7 +116,7 @@ public class SupplierManageControllerTest extends WebTest {
 
         TouristRoute ownRoute=routes.get(random.nextInt(routes.size()));
         //预期
-        List<TouristRouteModel> touristRouteModelsExpect=touristRouteService.touristRouteModelConver(routes);
+//        List<TouristRouteModel> touristRouteModelsExpect=touristRouteService.touristRouteModelConver(routes);
 
         String result=mockMvc.perform(get("/supplier/getAllOrderTouristDate")
                 .param("id",""+ownRoute.getId()))
@@ -159,6 +159,40 @@ public class SupplierManageControllerTest extends WebTest {
     public void modifyRemarks() throws Exception{
 
     }
+
+    //================================================================订单详情页面
+
+    /**
+     * 修改订单状态
+     * @throws Exception
+     */
+    @Test
+    public void modifyOrderState() throws Exception{
+
+    }
+
+    /**
+     * 修改游客的基本信息
+     * @throws Exception
+     */
+    @Test
+    public void modifyTravelerBaseInfo() throws Exception{
+
+    }
+
+    //=================================================================线路商品列表
+
+    /**
+     * 显示线路商品列表
+     * @throws Exception
+     */
+    @Test
+    public void TouristGoodList() throws Exception{
+
+    }
+
+
+
 
 
 }
