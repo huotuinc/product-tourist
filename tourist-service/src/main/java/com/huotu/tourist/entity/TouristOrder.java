@@ -11,15 +11,25 @@ package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.model.Selection;
+import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 线路订单
+ *
  * @author CJ
  */
 @Entity
@@ -27,6 +37,22 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TouristOrder extends BaseModel {
+
+    public static List<Selection<TouristOrder, ?>> htmlSelections = Arrays.asList(
+            new SimpleSelection<TouristOrder, String>("name", "线路名称")
+            , new SimpleSelection<TouristOrder, String>("name", "线路名称")
+            , new Selection<TouristOrder, String>() {
+                @Override
+                public String getName() {
+                    return "购买人";
+                }
+
+                @Override
+                public String apply(TouristOrder touristOrder) {
+                    return touristOrder.getTouristBuyer().getBuyerName() + touristOrder.getTouristBuyer().getTelPhone();
+                }
+            }
+    );
 
     /**
      * 线路
