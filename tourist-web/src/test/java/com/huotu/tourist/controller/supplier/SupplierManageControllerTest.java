@@ -15,13 +15,9 @@ import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.OrderService;
 import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TravelerService;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +35,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class SupplierManageControllerTest extends WebTest {
 
-    @Autowired
-    private TouristSupplierRepository touristSupplierRepository;
 
     @Autowired
-    private TouristOrderService touristOrderService;
+    private TouristRouteRepository touristRouteRepository;
+
+    @Autowired
+    private TouristRouteService touristRouteService;
+
+    @Autowired
+    private TravelerRepository travelerRepository;
 
     /**
      * 显示订单列表
