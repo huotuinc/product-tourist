@@ -1,11 +1,10 @@
 package com.huotu.tourist.controller.distributionPlatform;
 
-import com.huotu.tourist.common.BuyerCheckStateEnum;
-import com.huotu.tourist.common.PresentStateEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.service.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/distributionPlatform/")
 public class DistributionPlatformController {
+    public static final String ROWS = "rows";
+    public static final String TOTAL = "total";
+    private static final Log log = LogFactory.getLog(DistributionPlatformController.class);
     @Autowired
     TouristSupplierService touristSupplierService;
 
@@ -49,6 +53,12 @@ public class DistributionPlatformController {
 
     @Autowired
     TouristOrderService touristOrderService;
+
+    @Autowired
+    SettlementSheetService settlementSheetService;
+
+    @Autowired
+    PresentRecordService presentRecordService;
 
     /**
      * 供应商列表
@@ -250,25 +260,29 @@ public class DistributionPlatformController {
     /**
      * 订单列表
      *
-     * @param orderNo         订单号
-     * @param touristName     线路名称
-     * @param buyerName       采购商名称
-     * @param orderState      订单状态
-     * @param startCreateTime 开始订单创建时间
-     * @param endCreateTime   结束订单创建时间
-     * @param startPayTime    开始支付时间
-     * @param endPayTime      结束支付时间
-     * @param fromDate        线路开始时间
-     * @param pageSize        每页显示条数
-     * @param pageNo          页码
+     * @param orderNo      订单号
+     * @param touristName  线路名称
+     * @param buyerName    采购商名称
+     * @param tel          采购商电话
+     * @param orderState   订单状态
+     * @param orderDate    开始订单创建时间
+     * @param endOrderDate 结束订单创建时间
+     * @param payDate      开始支付时间
+     * @param endPayDate   结束支付时间
+     * @param payType      支付类型
+     * @param touristDate  线路开始时间
+     * @param pageSize     每页显示条数
+     * @param pageNo       页码
      * @param request
-     * @param model           @return
+     * @param model        @return
      */
     @RequestMapping(value = "supplierOrders", method = RequestMethod.GET)
-    public ResponseEntity supplierOrders(String orderNo, String touristName, String buyerName, String orderState
-            , String startCreateTime, String endCreateTime, String startPayTime, String endPayTime, String fromDate
-            , int pageSize, int pageNo, HttpServletRequest request, Model model) {
-//        touristOrderService.supplierOrders(new PageRequest(pageNo,pageSize),orderNo,touristName,buyerName,null,)
+    public ResponseEntity supplierOrders(String orderNo, String touristName, String buyerName, String tel,
+                                         PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
+            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
+            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
+        Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo, touristName, buyerName, tel, payType,
+                orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
         return null;
     }
 
@@ -284,10 +298,14 @@ public class DistributionPlatformController {
      * @param model            @return
      */
     @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
-    public ResponseEntity settlementSheetList(String supplierName, SettlementStateEnum platformChecking, String createTime,
+    public ResponseEntity settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDate createTime,
                                               int pageSize, int pageNo, HttpServletRequest request, Model model) {
+        Page<SettlementSheet> page = settlementSheetService.settlementSheetList(supplierName, platformChecking, createTime
+                , new PageRequest(pageNo, pageSize));
+
         return null;
     }
+
 
     /**
      * 提现单列表
@@ -302,9 +320,14 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "presentRecordList", method = RequestMethod.GET)
-    public ResponseEntity presentRecordList(String supplierName, PresentStateEnum presentState, String createTime,
+    public ResponseEntity presentRecordList(String supplierName, PresentStateEnum presentState, LocalDate createTime,
                                             int pageSize, int pageNo, HttpServletRequest request, Model model) {
-        return null;
+        Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, presentState, createTime
+                , new PageRequest(pageNo, pageSize));
+        Map<String, Object> data = new HashMap<>();
+        data.put("rows", page.getContent());
+        data.put("total", page.getTotalElements());
+        return ResponseEntity.ok(data);
     }
 
 

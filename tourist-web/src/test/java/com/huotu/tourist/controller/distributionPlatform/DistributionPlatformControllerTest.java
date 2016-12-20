@@ -2,10 +2,8 @@ package com.huotu.tourist.controller.distributionPlatform;
 
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PresentStateEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.*;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -44,6 +42,9 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("buyerName", "" + UUID.randomUUID().toString())
+                .param("buyerDirector", "" + UUID.randomUUID().toString())
+                .param("telPhone", "" + UUID.randomUUID().toString())
+                .param("buyerCheckState", "" + BuyerCheckStateEnum.CheckFinish)
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -52,6 +53,7 @@ public class DistributionPlatformControllerTest extends WebTest {
                     }
                 }));
     }
+
 
     @Test
     public void purchaserPaymentRecordList() throws Exception {
@@ -99,11 +101,10 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void purchaserProductSettingList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
+        mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
-
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -121,10 +122,10 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("touristName", "" + UUID.randomUUID().toString())
+                .param("supplierName", "" + UUID.randomUUID().toString())
                 .param("touristTypeId", "" + 1)
                 .param("activityTypeId", "" + 1)
                 .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
-
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -142,10 +143,10 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("touristName", "" + UUID.randomUUID().toString())
+                .param("supplierName", "" + UUID.randomUUID().toString())
                 .param("touristTypeId", "" + 1)
                 .param("activityTypeId", "" + 1)
                 .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
-
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -162,6 +163,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
+                .param("name", "" + UUID.randomUUID().toString())
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -179,6 +181,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
+                .param("name", "" + UUID.randomUUID().toString())
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -198,12 +201,14 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("orderNo", "" + UUID.randomUUID().toString())
                 .param("touristName", "" + UUID.randomUUID().toString())
                 .param("buyerName", "" + UUID.randomUUID().toString())
+                .param("tel", "" + UUID.randomUUID().toString())
                 .param("orderState", "" + OrderStateEnum.Finish)
-                .param("startCreateTime", "" + LocalDate.now())
-                .param("endCreateTime", "" + LocalDate.MAX)
-                .param("startPayTime", "" + LocalDate.now())
-                .param("endPayTime", "" + LocalDate.MAX)
-                .param("fromDate", "" + LocalDate.now())
+                .param("payType", "" + PayTypeEnum.Alipay)
+                .param("orderDate", "" + LocalDate.now())
+                .param("endOrderDate", "" + LocalDate.MAX)
+                .param("payDate", "" + LocalDate.now())
+                .param("endPayDate", "" + LocalDate.MAX)
+                .param("touristDate", "" + LocalDate.now())
         )
                 .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
                     @Override
@@ -217,19 +222,14 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void settlementSheetList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        String json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("supplierName", "" + UUID.randomUUID().toString())
                 .param("platformChecking", "" + SettlementStateEnum.CheckFinish)
                 .param("createTime", "" + LocalDate.now())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
+        JsonPath.read(json, "$.rows");
     }
 
     @Test

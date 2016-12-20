@@ -14,7 +14,6 @@ import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TravelerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,9 +47,6 @@ public class SupplierManageController {
 
     @Autowired
     private TouristRouteRepository touristRouteRepository;
-
-    @Autowired
-    private TravelerService travelerService;
 
     @Autowired
     private TouristRouteService touristRouteService;
@@ -96,7 +92,7 @@ public class SupplierManageController {
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, new PageRequest(pageNo + 1, pageSize),
                 orderId, name, buyer, tel, payTypeEnum, orderDate, null, payDate, null, touristDate, orderStateEnum);
 
-        List<TouristOrderModel> touristOrderModels=orderService.touristOrderModelConver(orders.getContent());
+        List<TouristOrderModel> touristOrderModels = touristOrderService.touristOrderModelConver(orders.getContent());
 
 //        orders.forEach(order->{
 //            TouristOrderModel model=new TouristOrderModel();
@@ -177,7 +173,7 @@ public class SupplierManageController {
 
         TouristOrder order=touristOrderRepository.findOne(id);
 
-        TouristOrderDetailsModel touristOrderDetailsModel=orderService.touristOrderDetailsModelConver(order);
+        TouristOrderDetailsModel touristOrderDetailsModel = touristOrderService.touristOrderDetailsModelConver(order);
 
         model.addAttribute("data",touristOrderDetailsModel);
 

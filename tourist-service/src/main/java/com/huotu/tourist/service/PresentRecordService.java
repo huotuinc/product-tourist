@@ -1,16 +1,18 @@
 package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.PresentStateEnum;
-import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.PresentRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
 
 /**
  * 提现服务
  * Created by lhx on 2016/12/17.
  */
 
-public interface PresentRecordService extends BaseService<SettlementSheet, Long> {
+public interface PresentRecordService extends BaseService<PresentRecord, Long> {
 
 
     /**
@@ -18,10 +20,11 @@ public interface PresentRecordService extends BaseService<SettlementSheet, Long>
      *
      * @param supplierName 供应商名称 可以为null
      * @param presentState 提现状态
+     * @param createTime
      * @param pageable
      * @return 提现列表
      */
-    Page<SettlementSheet> presentRecordList(String supplierName, PresentStateEnum presentState, Pageable pageable);
+    Page<PresentRecord> presentRecordList(String supplierName, PresentStateEnum presentState, LocalDate createTime, Pageable pageable);
 
 
 }
