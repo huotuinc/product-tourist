@@ -1,5 +1,6 @@
 package com.huotu.tourist.repository;
 
+import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,4 +17,9 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder,Long>
     @Modifying
     @Transactional
     int modifyRemarks(String remark,Long id);
+
+    @Query("update TouristOrder as o set o.orderState=?1 where o.id=?2")
+    @Modifying
+    @Transactional
+    int modifyOrderState(OrderStateEnum orderState,Long id);
 }

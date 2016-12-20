@@ -1,10 +1,8 @@
 package com.huotu.tourist.service;
 
 import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.model.TouristRouteModel;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 线路行程路线服务
@@ -20,11 +18,11 @@ public interface TouristRouteService {
      */
     int getRemainPeopleByRoute(TouristRoute route) throws IOException;
 
-    /**
-     * TouristRoute与TouristRouteModel的转换
-     * @param routes    线路行程
-     * @return
-     */
-    List<TouristRouteModel> touristRouteModelConver(List<TouristRoute> routes);
+//    /**
+//     * TouristRoute与TouristRouteModel的转换
+//     * @param routes    线路行程
+//     * @return
+//     */
+//    List<TouristRouteModel> touristRouteModelConver(List<TouristRoute> routes);
 
 }
