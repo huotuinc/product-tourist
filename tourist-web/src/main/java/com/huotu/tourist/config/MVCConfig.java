@@ -11,7 +11,7 @@ package com.huotu.tourist.config;
 
 
 import com.huotu.tourist.converter.AutowireConverter;
-import com.huotu.tourist.converter.DateFormatter;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.core.ServiceConfig;
 import com.huotu.tourist.util.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     private ThymeleafViewResolver cssViewResolver;
 
     @Autowired
-    private DateFormatter dateFormatter;
+    private LocalDateTimeFormatter localDateTimeFormatter;
 
     @Autowired
     private Set<AutowireConverter> commonEnumConverterSet;
@@ -64,7 +64,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
-        registry.addFormatter(dateFormatter);
+        registry.addFormatter(localDateTimeFormatter);
         commonEnumConverterSet.forEach(registry::addConverter);
     }
 

@@ -12,11 +12,15 @@ package com.huotu.tourist.controller.distributionPlatform;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.*;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +33,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  * Created by lhx on 2016/12/17.
  */
 public class DistributionPlatformControllerTest extends WebTest {
+
+    @Test
+    public void testDateTimeFormatter() throws ParseException {
+        System.out.println(LocalDateTimeFormatter.toStr(LocalDateTime.now()));
+    }
 
     @Test
     public void supplierList() throws Exception {
@@ -102,12 +111,9 @@ public class DistributionPlatformControllerTest extends WebTest {
 
         createTouristBuyer(null, buyerDirector, null, null);
         json = mockMvc.perform(get("/distributionPlatform/buyerList")
-                        .param("pageSize", "" + pageSize)
-                        .param("pageNo", "" + pageNo)
-                        .param("buyerDirector", "" + buyerDirector)
-//                .param("buyerName", "" + buyerName)
-//                .param("telPhone", "" + UUID.randomUUID().toString())
-//                .param("buyerCheckState", "" + BuyerCheckStateEnum.CheckFinish)
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("buyerDirector", "" + buyerDirector)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -193,26 +199,107 @@ public class DistributionPlatformControllerTest extends WebTest {
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("能够分页查询列表");
-
-
     }
-
 
     @Test
     public void purchaserPaymentRecordList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
+                , null);
         String json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
+        ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("buyerName").equals(purchaserPaymentRecord.getTouristBuyer().getBuyerName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("采购商名称查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("buyerDirector").equals(purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("采购商负责人查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("telPhone").equals(purchaserPaymentRecord.getTouristBuyer().getTelPhone())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("采购商电话查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("startPayDate", "" + LocalDateTime.now())
+                .param("endPayDate", "" + LocalDate.MAX)
+
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("payDate").equals(purchaserPaymentRecord.getPayDate())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("支付时间查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("startPayDate", "" + LocalDate.now())
                 .param("endPayDate", "" + LocalDate.MAX)
-                .param("buyerName", "" + UUID.randomUUID().toString())
-                .param("buyerDirector", "" + UUID.randomUUID().toString())
-                .param("telPhone", "" + UUID.randomUUID().toString())
+                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
+                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
+                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
         ).andReturn().getResponse().getContentAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(json, Map.class);
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("条件筛选全部筛选也能查找到相关的数据列表");
+
+
+        json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("筛选条件不选也能查询列表相关的数据");
+
+        createPurchaserPaymentRecord(null, null);
+        json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("筛选条件不选下一页也能查询列表相关的数据");
 
 
     }

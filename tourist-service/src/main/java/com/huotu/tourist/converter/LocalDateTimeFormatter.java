@@ -24,12 +24,37 @@ import java.util.Locale;
  * Created by lhx on 2016/12/16
  */
 @Component
-public class DateFormatter implements Formatter<LocalDateTime>   {
+public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
 
+
+    /**
+     * 字符串转换成LocalDateTime
+     *
+     * @param text yyyy-MM-dd hh:mm:ss
+     * @return
+     * @throws ParseException 转换异常
+     */
+    public static LocalDateTime toLocalDateTime(String text) throws ParseException {
+        Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(text);
+        Instant instant = Instant.ofEpochMilli(date.getTime());
+        return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+    }
+
+    /**
+     * 日期转换为字符串
+     *
+     * @param dateTime
+     * @return yyyy-MM-dd hh:mm:ss 格式字符
+     */
+    public static String toStr(LocalDateTime dateTime) {
+        Instant instant = dateTime.toInstant(ZoneOffset.UTC);
+        Date date = Date.from(instant);
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
+    }
 
     @Override
     public LocalDateTime parse(String text, Locale locale) throws ParseException {
-        Date date=new SimpleDateFormat("MM/dd/yyyy").parse(text);
+        Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(text);
         Instant instant = Instant.ofEpochMilli(date.getTime());
         return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
     }
@@ -38,6 +63,6 @@ public class DateFormatter implements Formatter<LocalDateTime>   {
     public String print(LocalDateTime object, Locale locale) {
         Instant instant = object.toInstant(ZoneOffset.UTC);
         Date date = Date.from(instant);
-        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
     }
 }

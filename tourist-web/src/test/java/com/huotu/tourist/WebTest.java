@@ -12,10 +12,8 @@ package com.huotu.tourist;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.*;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
@@ -28,7 +26,8 @@ import java.util.UUID;
 /**
  * 常用web测试基类
  */
-public abstract class WebTest extends SpringWebTest{
+
+public abstract class WebTest extends SpringWebTest {
 
     @Autowired
     protected TouristOrderRepository touristOrderRepository;
@@ -39,14 +38,18 @@ public abstract class WebTest extends SpringWebTest{
     @Autowired
     protected TouristBuyerRepository touristBuyerRepository;
 
+    @Autowired
+    protected PurchaserPaymentRecordRepository purchaserPaymentRecordRepository;
+
 
     /**
      * 创建一个随机的订单状态
-     * @return  订单状态
+     *
+     * @return 订单状态
      */
-    protected OrderStateEnum randomOrderStateEnum(){
-        int orderStateNo=random.nextInt(7);
-        switch (orderStateNo){
+    protected OrderStateEnum randomOrderStateEnum() {
+        int orderStateNo = random.nextInt(7);
+        switch (orderStateNo) {
             case 0:
                 return OrderStateEnum.NotPay;
             case 1:
@@ -66,11 +69,12 @@ public abstract class WebTest extends SpringWebTest{
 
     /**
      * 创建一个随机的支付方式
-     * @return  支付方式
+     *
+     * @return 支付方式
      */
-    protected PayTypeEnum randomPayTypeEnum(){
-        int payTypeNo=random.nextInt(2);
-        switch (payTypeNo){
+    protected PayTypeEnum randomPayTypeEnum() {
+        int payTypeNo = random.nextInt(2);
+        switch (payTypeNo) {
             case 0:
                 return PayTypeEnum.Alipay;
             default:
@@ -98,13 +102,14 @@ public abstract class WebTest extends SpringWebTest{
 
     /**
      * 创建当前的时间，如果状态是未支付则返回null
-     * @param orderStateEnum    支付状态
-     * @return                  当前时间
+     *
+     * @param orderStateEnum 支付状态
+     * @return 当前时间
      */
-    protected LocalDateTime randomLocalDateTime(OrderStateEnum orderStateEnum){
-        if(!OrderStateEnum.NotPay.equals(orderStateEnum)){
+    protected LocalDateTime randomLocalDateTime(OrderStateEnum orderStateEnum) {
+        if (!OrderStateEnum.NotPay.equals(orderStateEnum)) {
             return LocalDateTime.now();
-        }else {
+        } else {
             return null;
         }
     }
@@ -112,11 +117,12 @@ public abstract class WebTest extends SpringWebTest{
 
     /**
      * 创建一个测试线路订单
-     * @return  测试的线路订单
+     *
+     * @return 测试的线路订单
      */
-    protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer,String orderNo
-            ,OrderStateEnum orderState,LocalDateTime payTime,PayTypeEnum payType){
-        TouristOrder order=new TouristOrder();
+    protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer, String orderNo
+            , OrderStateEnum orderState, LocalDateTime payTime, PayTypeEnum payType) {
+        TouristOrder order = new TouristOrder();
         order.setTouristGood(good);
         order.setTouristBuyer(buyer);
         order.setOrderNo(orderNo);
@@ -129,11 +135,12 @@ public abstract class WebTest extends SpringWebTest{
 
     /**
      * 创建一个供应商
+     *
      * @param supplierName
      * @return
      */
-    protected TouristSupplier createTouristSupplier(String supplierName){
-        TouristSupplier supplier=new TouristSupplier();
+    protected TouristSupplier createTouristSupplier(String supplierName) {
+        TouristSupplier supplier = new TouristSupplier();
         supplier.setSupplierName(supplierName);
         supplier.setAdminAccount(supplierName);
         supplier.setAdminPassword("1234567890");
@@ -156,9 +163,26 @@ public abstract class WebTest extends SpringWebTest{
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
         touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);
+        //todo 随机生成手机号码
         touristBuyer.setTelPhone(telPhone == null ? UUID.randomUUID().toString() : telPhone);
         touristBuyer.setCheckState(buyerCheckState == null ? randomBuyerCheckState() : buyerCheckState);
+        touristBuyer.setCreateTime(LocalDateTime.now());
         return touristBuyerRepository.saveAndFlush(touristBuyer);
+    }
+
+    /**
+     * 添加采购商支付记录
+     *
+     * @param touristBuyer 采购商
+     * @param payDate      支付时间
+     * @return
+     */
+    protected PurchaserPaymentRecord createPurchaserPaymentRecord(TouristBuyer touristBuyer, LocalDateTime payDate) {
+        PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
+        purchaserPaymentRecord.setTouristBuyer(touristBuyer == null ? createTouristBuyer(null, null, null, null) : touristBuyer);
+        purchaserPaymentRecord.setPayDate(payDate == null ? LocalDateTime.now() : payDate);
+        purchaserPaymentRecord.setCreateTime(LocalDateTime.now());
+        return purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
     }
 
 
