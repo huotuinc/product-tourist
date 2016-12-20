@@ -173,7 +173,7 @@ public class SupplierManageController {
 
         TouristOrder order=touristOrderRepository.findOne(id);
 
-        TouristOrderDetailsModel touristOrderDetailsModel = touristOrderService.touristOrderDetailsModelConver(order);
+        TouristOrderDetailsModel touristOrderDetailsModel=touristOrderService.touristOrderDetailsModelConver(order);
 
         model.addAttribute("data",touristOrderDetailsModel);
 
