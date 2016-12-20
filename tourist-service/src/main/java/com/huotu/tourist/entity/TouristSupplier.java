@@ -14,10 +14,7 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,10 +31,12 @@ public class TouristSupplier extends BaseModel {
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristSupplier, String>("id", "id"),
             new SimpleSelection<TouristSupplier, String>("supplierName", "supplierName")
-            , new SimpleSelection<TouristSupplier, String>("supplierPlaceAddress", "supplierPlaceAddress")
-            , new SimpleSelection<TouristSupplier, String>("contacts", "contacts")
+            , new SimpleSelection<TouristSupplier, String>("address.province", "province")
+            , new SimpleSelection<TouristSupplier, String>("address.town", "town")
+            , new SimpleSelection<TouristSupplier, String>("address.district", "district")
+            , new SimpleSelection<TouristSupplier, String>("address.contacts", "contacts")
             , new SimpleSelection<TouristSupplier, String>("createTime", "createTime")
-            , new SimpleSelection<TouristSupplier, String>("contactNumber", "contactNumber")
+            , new SimpleSelection<TouristSupplier, String>("address.contactNumber", "contactNumber")
             , new SimpleSelection<TouristSupplier, String>("frozen", "frozen")
     );
     /**
@@ -55,21 +54,27 @@ public class TouristSupplier extends BaseModel {
      */
     @Column(length = 50)
     private String supplierName;
+
     /**
-     * 供应商所在地址 省，市，区
+     * 省市区，联系人，电话
      */
-    @Column(length = 100)
-    private String supplierPlaceAddress;
-    /**
-     * 联系人
-     */
-    @Column(length = 20)
-    private String contacts;
-    /**
-     * 联系电话
-     */
-    @Column(length = 15)
-    private String contactNumber;
+    @Embedded
+    private GenericityAddress address;
+//    /**
+//     * 供应商所在地址 省，市，区
+//     */
+//    @Column(length = 100)
+//    private String supplierPlaceAddress;
+//    /**
+//     * 联系人
+//     */
+//    @Column(length = 20)
+//    private String contacts;
+//    /**
+//     * 联系电话
+//     */
+//    @Column(length = 15)
+//    private String contactNumber;
     /**
      * 营业执照uri
      */
