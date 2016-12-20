@@ -12,7 +12,6 @@ package com.huotu.tourist.controller.supplier;
 import com.google.gson.Gson;
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
-import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristRouteRepository;
@@ -23,7 +22,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +59,8 @@ public class SupplierManageControllerTest extends WebTest {
             TouristOrder order=new TouristOrder();
             order.setOrderNo(randomString());
             order.setOrderState(randomOrderStateEnum());
-            order.setPayTime(randomLocalDateTime(order));
+            order.setPayTime(randomLocalDateTime(order.getOrderState()));
+
 //            order.set
         }
 
