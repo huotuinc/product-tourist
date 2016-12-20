@@ -9,18 +9,21 @@
 
 package com.huotu.tourist;
 
+import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * 常用web测试基类
@@ -32,6 +35,9 @@ public abstract class WebTest extends SpringWebTest{
 
     @Autowired
     protected TouristSupplierRepository touristSupplierRepository;
+
+    @Autowired
+    protected TouristBuyerRepository touristBuyerRepository;
 
 
     /**
@@ -69,6 +75,23 @@ public abstract class WebTest extends SpringWebTest{
                 return PayTypeEnum.Alipay;
             default:
                 return PayTypeEnum.WeixinPay;
+        }
+    }
+
+    /**
+     * 创建一个随机的支付方式
+     *
+     * @return 支付方式
+     */
+    protected BuyerCheckStateEnum randomBuyerCheckState() {
+        int payTypeNo = random.nextInt(3);
+        switch (payTypeNo) {
+            case 0:
+                return BuyerCheckStateEnum.Checking;
+            case 1:
+                return BuyerCheckStateEnum.CheckFinish;
+            default:
+                return BuyerCheckStateEnum.Frozen;
         }
     }
 
@@ -116,6 +139,26 @@ public abstract class WebTest extends SpringWebTest{
         supplier.setAdminPassword("1234567890");
         supplier.setCreateTime(LocalDateTime.now());
         return touristSupplierRepository.saveAndFlush(supplier);
+    }
+
+    /**
+     * 创建一个采购商
+     *
+     * @param buyerName       名称
+     * @param buyerDirector   负责人
+     * @param telPhone        电话
+     * @param buyerCheckState 审核状态
+     * @return
+     */
+    protected TouristBuyer createTouristBuyer(String buyerName, String buyerDirector, String telPhone
+            , BuyerCheckStateEnum buyerCheckState) {
+        TouristBuyer touristBuyer = new TouristBuyer();
+        touristBuyer.setCreateTime(LocalDateTime.now());
+        touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
+        touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);
+        touristBuyer.setTelPhone(telPhone == null ? UUID.randomUUID().toString() : telPhone);
+        touristBuyer.setCheckState(buyerCheckState == null ? randomBuyerCheckState() : buyerCheckState);
+        return touristBuyerRepository.saveAndFlush(touristBuyer);
     }
 
 

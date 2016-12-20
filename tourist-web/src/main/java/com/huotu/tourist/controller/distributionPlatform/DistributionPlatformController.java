@@ -129,8 +129,7 @@ public class DistributionPlatformController {
             , int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
                 , new PageRequest(pageNo, pageSize));
-        PageAndSelection<TouristBuyer> pageAndSelection = new PageAndSelection<>(page, TouristBuyer.selections);
-        return pageAndSelection;
+        return new PageAndSelection<>(page, TouristBuyer.selections);
     }
 
 
