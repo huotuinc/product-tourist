@@ -1,3 +1,12 @@
+/*
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2016. All rights reserved.
+ */
+
 package com.huotu.tourist.controller.distributionPlatform;
 
 import com.huotu.tourist.common.*;
@@ -17,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +71,16 @@ public class DistributionPlatformController {
     PresentRecordService presentRecordService;
 
     /**
+     * 跳转到供应商列表页面
+     * @return
+     */
+    @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
+    public String toSupplierList() {
+        //todo
+        return "";
+    }
+
+    /**
      * 供应商列表
      *
      * @param name     供应商名称
@@ -75,6 +95,16 @@ public class DistributionPlatformController {
         Page<TouristSupplier> page = touristSupplierService.supplierList(name, new PageRequest(pageNo, pageSize));
         Map map = new HashMap();
         return null;
+    }
+
+    /**
+     * 跳转到采购商列表页面
+     * @return
+     */
+    @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
+    public String toBuyerList() {
+        //todo
+        return "";
     }
 
     /**
@@ -98,6 +128,16 @@ public class DistributionPlatformController {
         return null;
     }
 
+
+    /**
+     * 跳转到 采购商支付记录列表页面
+     * @return
+     */
+    @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
+    public String toPurchaserPaymentRecordList() {
+        //todo
+        return "";
+    }
 
     /**
      * 采购商支付记录列表
@@ -145,6 +185,16 @@ public class DistributionPlatformController {
     }
 
     /**
+     * 跳转到采购商产品设置列表页面
+     * @return
+     */
+    @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
+    public String toPurchaserProductSettingList() {
+        //todo
+        return "";
+    }
+
+    /**
      * 采购商产品设置列表
      *
      * @param name     产品设置名称
@@ -161,6 +211,16 @@ public class DistributionPlatformController {
                 , new PageRequest(pageNo, pageSize));
 
         return null;
+    }
+
+    /**
+     * 跳转到线路列表页面
+     * @return
+     */
+    @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
+    public String toTouristGoodList() {
+        //todo
+        return "";
     }
 
     /**
@@ -225,6 +285,16 @@ public class DistributionPlatformController {
     }
 
     /**
+     * 跳转到活动类型列表页面
+     * @return
+     */
+    @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
+    public String toActivityTypeList() {
+        //todo
+        return "";
+    }
+
+    /**
      * 活动类型列表
      *
      * @param name     活动名称
@@ -238,6 +308,16 @@ public class DistributionPlatformController {
     public ResponseEntity activityTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<ActivityType> page = activityTypeService.activityTypeList(name, new PageRequest(pageNo, pageSize));
         return null;
+    }
+
+    /**
+     * 跳转到线路类型列表页面
+     * @return
+     */
+    @RequestMapping(value = "toTouristTypeList", method = RequestMethod.GET)
+    public String toTouristTypeList() {
+        //todo
+        return "";
     }
 
     /**
@@ -256,6 +336,16 @@ public class DistributionPlatformController {
         return null;
     }
 
+    /**
+     * 跳转到订单列表页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
+    public String toSupplierOrders() {
+        //todo
+        return "";
+    }
 
     /**
      * 订单列表
@@ -287,6 +377,18 @@ public class DistributionPlatformController {
     }
 
     /**
+     * 跳转到结算单列表页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "toSettlementSheetList", method = RequestMethod.GET)
+    public String toSettlementSheetList() {
+        //todo
+        return "";
+    }
+
+
+    /**
      * 结算单列表
      *
      * @param supplierName     供应商名称
@@ -306,6 +408,16 @@ public class DistributionPlatformController {
         return null;
     }
 
+    /**
+     * 跳转到提现单列表页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "toPresentRecordList", method = RequestMethod.GET)
+    public String toPresentRecordList() {
+        //todo
+        return "";
+    }
 
     /**
      * 提现单列表
@@ -329,6 +441,36 @@ public class DistributionPlatformController {
         data.put("total", page.getTotalElements());
         return ResponseEntity.ok(data);
     }
+
+    /**-------------------下面新增和修改相关-----------------------*/
+    /**
+     * 新增供应商
+     *
+     * @param supplierName
+     * @param remarks
+     * @param adminAccount
+     * @param adminPassword
+     * @param businessLicenseUri
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "addTouristSupplier", method = RequestMethod.POST)
+    public String addTouristSupplier(String supplierName, String remarks, String adminAccount, String adminPassword,
+                                     String businessLicenseUri, HttpServletRequest request, Model model) {
+        TouristSupplier touristSupplier = new TouristSupplier();
+        touristSupplier.setCreateTime(LocalDateTime.now());
+        touristSupplier.setAdminAccount(adminAccount);
+        touristSupplier.setAdminPassword(adminPassword);
+        touristSupplier.setBusinessLicenseUri(businessLicenseUri);
+        touristSupplier.setRemarks(remarks);
+        touristSupplier.setSupplierName(supplierName);
+        //todo 地址相关
+        touristSupplier = touristSupplierService.create(touristSupplier);
+
+        return toSupplierList();
+    }
+
 
 
 }

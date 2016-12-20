@@ -10,6 +10,7 @@
 package com.huotu.tourist.config;
 
 
+import com.huotu.tourist.converter.AutowireConverter;
 import com.huotu.tourist.converter.DateFormatter;
 import com.huotu.tourist.core.ServiceConfig;
 import com.huotu.tourist.util.ArrayUtil;
@@ -23,12 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -45,6 +41,7 @@ import java.util.Set;
 @ComponentScan({
         "com.huotu.tourist.controller",
         "com.huotu.tourist.interceptor",
+        "com.huotu.tourist.converter"
 })
 @Import({MVCConfig.MVCConfigLoader.class, ServiceConfig.class})
 public class MVCConfig extends WebMvcConfigurerAdapter {
@@ -60,11 +57,15 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private DateFormatter dateFormatter;
 
+    @Autowired
+    private Set<AutowireConverter> commonEnumConverterSet;
+
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
         registry.addFormatter(dateFormatter);
+        commonEnumConverterSet.forEach(registry::addConverter);
     }
 
     /**
@@ -81,8 +82,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
-//        registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
-//        registry.addResourceHandler("/_resources/**").addResourceLocations("/_resources/");
+
     }
 
 

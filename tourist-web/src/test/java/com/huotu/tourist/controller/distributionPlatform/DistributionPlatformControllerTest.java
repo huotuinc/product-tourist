@@ -1,6 +1,14 @@
+/*
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2016. All rights reserved.
+ */
+
 package com.huotu.tourist.controller.distributionPlatform;
 
-import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.*;
 import com.jayway.jsonpath.JsonPath;
@@ -10,7 +18,6 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 /**
  * Created by lhx on 2016/12/17.
@@ -21,37 +28,26 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void supplierList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/supplierList")
+        String json = mockMvc.perform(get("/distributionPlatform/supplierList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
+
 
     @Test
     public void buyerList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/buyerList")
+        String json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("buyerName", "" + UUID.randomUUID().toString())
                 .param("buyerDirector", "" + UUID.randomUUID().toString())
                 .param("telPhone", "" + UUID.randomUUID().toString())
                 .param("buyerCheckState", "" + BuyerCheckStateEnum.CheckFinish)
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
 
@@ -59,7 +55,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void purchaserPaymentRecordList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
+        String json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("startPayDate", "" + LocalDate.now())
@@ -67,20 +63,14 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("buyerName", "" + UUID.randomUUID().toString())
                 .param("buyerDirector", "" + UUID.randomUUID().toString())
                 .param("telPhone", "" + UUID.randomUUID().toString())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
     @Test
     public void exportPurchaserPaymentRecord() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
+        String json = mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("startPayDate", "" + LocalDate.now())
@@ -88,37 +78,25 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("buyerName", "" + UUID.randomUUID().toString())
                 .param("buyerDirector", "" + UUID.randomUUID().toString())
                 .param("telPhone", "" + UUID.randomUUID().toString())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
     @Test
     public void purchaserProductSettingList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
+        String json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
     @Test
     public void touristGoodList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/touristGoodList")
+        String json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("touristName", "" + UUID.randomUUID().toString())
@@ -126,20 +104,14 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("touristTypeId", "" + 1)
                 .param("activityTypeId", "" + 1)
                 .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
     @Test
     public void recommendTouristGoodList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/recommendTouristGoodList")
+        String json = mockMvc.perform(get("/distributionPlatform/recommendTouristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("touristName", "" + UUID.randomUUID().toString())
@@ -147,30 +119,18 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("touristTypeId", "" + 1)
                 .param("activityTypeId", "" + 1)
                 .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
     @Test
     public void activityTypeList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/activityTypeList")
+        String json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
 
@@ -178,24 +138,19 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void touristTypeList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/touristTypeList")
+        String json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("name", "" + UUID.randomUUID().toString())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
+
 
     @Test
     public void supplierOrders() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        String json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("orderNo", "" + UUID.randomUUID().toString())
@@ -209,13 +164,7 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("payDate", "" + LocalDate.now())
                 .param("endPayDate", "" + LocalDate.MAX)
                 .param("touristDate", "" + LocalDate.now())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
     @Test
@@ -236,19 +185,13 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void presentRecordList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
-        mockMvc.perform(get("/distributionPlatform/presentRecordList")
+        String json = mockMvc.perform(get("/distributionPlatform/presentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("supplierName", "" + pageNo)
                 .param("presentState", "" + PresentStateEnum.CheckFinish)
                 .param("createTime", "" + LocalDate.now())
-        )
-                .andExpect(model().attribute("page", new AbstractMatcher<Object>() {
-                    @Override
-                    public boolean matches(Object o) {
-                        return false;
-                    }
-                }));
+        ).andReturn().getResponse().getContentAsString();
     }
 
 
