@@ -9,14 +9,19 @@
 
 package com.huotu.tourist.controller.distributionPlatform;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.*;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import static com.huotu.tourist.controller.distributionPlatform.DistributionPlatformController.ROWS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
@@ -26,13 +31,36 @@ public class DistributionPlatformControllerTest extends WebTest {
 
     @Test
     public void supplierList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        String name = UUID.randomUUID().toString();
+        createTouristSupplier(name);
+        createTouristSupplier(name);
+        int pageSize = 1;
+        int pageNo = 1;
         String json = mockMvc.perform(get("/distributionPlatform/supplierList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", "" + UUID.randomUUID().toString())
+                .param("name", "" + name)
         ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("supplierName").equals(name)) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("找到添加的数据完成");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+                .param("name", name)
+        ).andReturn().getResponse().getContentAsString();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+
+        assertThat(list.size()).isGreaterThan(0).as("第二页数据加载完成，分页验证完成");
     }
 
 

@@ -97,8 +97,7 @@ public class DistributionPlatformController {
     @RequestMapping(value = "supplierList", method = RequestMethod.GET)
     public PageAndSelection supplierList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<TouristSupplier> page = touristSupplierService.supplierList(name, new PageRequest(pageNo, pageSize));
-        PageAndSelection<TouristSupplier> pageAndSelection = new PageAndSelection<>(page, TouristSupplier.selections);
-        return pageAndSelection;
+        return new PageAndSelection<>(page, TouristSupplier.selections);
     }
 
     /**
@@ -401,8 +400,9 @@ public class DistributionPlatformController {
                                          PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
             , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
             , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
-        Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo, touristName, buyerName, tel, payType,
-                orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
+        Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo
+                , touristName, buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
+
 
         return null;
     }
