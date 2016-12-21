@@ -14,7 +14,11 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.util.Arrays;
 import java.util.List;
 
@@ -86,6 +90,10 @@ public class TouristSupplier extends BaseModel {
     @Lob
     @Column
     private String remarks;
+
+    /**
+     * 冻结
+     */
     @Column(insertable = false)
     private Boolean frozen;
 

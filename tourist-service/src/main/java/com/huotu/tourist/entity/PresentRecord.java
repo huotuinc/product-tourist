@@ -4,7 +4,11 @@ import com.huotu.tourist.common.PresentStateEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
@@ -21,8 +25,8 @@ public class PresentRecord extends BaseModel{
      * 供应商
      */
     @ManyToOne
-    @JoinColumn(name = "touristSupplierId")
-    private TouristSupplier touristSupplier;
+    @JoinColumn
+    private SettlementSheet settlementSheet;
 
     /**
      * 提现金额
