@@ -12,8 +12,6 @@ package com.huotu.tourist.controller.distributionPlatform;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
@@ -22,6 +20,7 @@ import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristType;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
@@ -582,25 +581,167 @@ public class DistributionPlatformControllerTest extends WebTest {
 
     @Test
     public void supplierOrders() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
+                ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2012-12-12 05:00:00"), null);
         String json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("orderNo", "" + UUID.randomUUID().toString())
-                .param("touristName", "" + UUID.randomUUID().toString())
-                .param("buyerName", "" + UUID.randomUUID().toString())
-                .param("tel", "" + UUID.randomUUID().toString())
-                .param("orderState", "" + OrderStateEnum.Finish)
-                .param("payType", "" + PayTypeEnum.Alipay)
-                .param("orderDate", "" + LocalDate.now())
-                .param("endOrderDate", "" + LocalDate.MAX)
-                .param("payDate", "" + LocalDate.now())
-                .param("endPayDate", "" + LocalDate.MAX)
-                .param("touristDate", "" + LocalDate.now())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有查询条件查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("orderNo", "" + order.getOrderNo())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("orderNo").equals(order.getOrderNo())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定订单号查询到相应数据列表");
+
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("touristName", order.getTouristGood().getTouristName())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("touristName").equals(order.getTouristGood().getTouristName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定线路名称查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("buyerName", order.getTouristBuyer().getBuyerName())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("buyerName").equals(order.getTouristBuyer().getBuyerName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定采购商名称查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("tel", "" + order.getTouristBuyer().getTelPhone())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("指定采购商电话查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("orderState", order.getOrderState().getCode() + "")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("orderStateCode").equals(order.getOrderState().getCode())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定订单状态查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("payType", "" + order.getPayType().getCode())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("payTypeCode").equals(order.getPayType().getCode())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定支付类型查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("orderDate", "2016-12-12 00:00:00")
+                .param("endOrderDate", "2016-12-12 22:00:00")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("指定创建时间范围查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("payDate", "2016-12-12 00:00:00")
+                .param("endPayDate", "2016-12-12 22:00:00")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("指定支付时间范围查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("orderNo", order.getOrderNo())
+                .param("touristName", order.getTouristGood().getTouristName())
+                .param("buyerName", order.getTouristBuyer().getBuyerName())
+                .param("tel", order.getTouristBuyer().getTelPhone())
+                .param("orderState", LocalDateTimeFormatter.toStr(order.getCreateTime()))
+                .param("payType", order.getPayType().getCode() + "")
+                .param("orderDate", "2012-12-12 00:00:00")
+                .param("endOrderDate", "2012-12-12 22:00:00")
+                .param("payDate", "2012-12-12 00:00:00")
+                .param("endPayDate", "2012-12-12 22:00:00")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("id").equals(order.getId())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("查询条件全部指定查询到相应数据列表");
+
+        createTouristOrder(null, null, null, null, null, null, null);
+        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有筛选条件的分页查询到相应数据列表");
+
     }
 
     @Test

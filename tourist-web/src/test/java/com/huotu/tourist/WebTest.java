@@ -13,8 +13,26 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.*;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.TouristBuyerRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -156,13 +174,13 @@ public abstract class WebTest extends SpringWebTest {
     protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer, String orderNo
             , OrderStateEnum orderState,LocalDateTime createTime, LocalDateTime payTime, PayTypeEnum payType) {
         TouristOrder order = new TouristOrder();
-        order.setTouristGood(good);
-        order.setTouristBuyer(buyer);
-        order.setOrderNo(orderNo);
-        order.setCreateTime(createTime);
-        order.setOrderState(orderState);
-        order.setPayTime(payTime);
-        order.setPayType(payType);
+        order.setTouristGood(good == null ? createTouristGood(null, null, null, null, null) : good);
+        order.setTouristBuyer(buyer == null ? createTouristBuyer(null, null, null, null) : buyer);
+        order.setOrderNo(orderNo == null ? UUID.randomUUID().toString() : orderNo);
+        order.setCreateTime(createTime == null ? LocalDateTime.now() : createTime);
+        order.setOrderState(orderState == null ? randomOrderStateEnum() : orderState);
+        order.setPayTime(payTime == null ? LocalDateTime.now() : payTime);
+        order.setPayType(payType == null ? randomPayTypeEnum() : payType);
 
         return touristOrderRepository.saveAndFlush(order);
     }

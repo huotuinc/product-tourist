@@ -45,8 +45,10 @@ public class TouristOrder extends BaseModel {
             ,new SimpleSelection<TouristOrder,String>("orderNo","orderNo")
             ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
             ,new SimpleSelection<TouristOrder,String>("remarks", "remarks")
-            ,new SimpleSelection<TouristOrder,String>("orderState.value", "orderState")
-            ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
+            , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
+            , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
+            , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
+            , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
             ,new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
