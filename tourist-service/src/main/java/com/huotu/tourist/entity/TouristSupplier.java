@@ -38,9 +38,9 @@ public class TouristSupplier extends BaseModel {
             , new SimpleSelection<TouristSupplier, String>("address.province", "province")
             , new SimpleSelection<TouristSupplier, String>("address.town", "town")
             , new SimpleSelection<TouristSupplier, String>("address.district", "district")
-            , new SimpleSelection<TouristSupplier, String>("address.contacts", "contacts")
+            , new SimpleSelection<TouristSupplier, String>("contacts", "contacts")
             , new SimpleSelection<TouristSupplier, String>("createTime", "createTime")
-            , new SimpleSelection<TouristSupplier, String>("address.contactNumber", "contactNumber")
+            , new SimpleSelection<TouristSupplier, String>("contactNumber", "contactNumber")
             , new SimpleSelection<TouristSupplier, String>("frozen", "frozen")
     );
     /**
@@ -63,7 +63,18 @@ public class TouristSupplier extends BaseModel {
      * 省市区，联系人，电话
      */
     @Embedded
-    private GenericityAddress address;
+    private Address address;
+
+    /**
+     * 联系人
+     */
+    @Column(length = 20)
+    private String contacts;
+    /**
+     * 联系电话
+     */
+    @Column(length = 15)
+    private String contactNumber;
 //    /**
 //     * 供应商所在地址 省，市，区
 //     */

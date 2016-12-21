@@ -9,10 +9,7 @@ import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
@@ -61,6 +58,9 @@ public class SupplierManageController {
 
     @Autowired
     private TouristGoodService touristGoodService;
+
+    @Autowired
+    private TouristGoodRepository touristGoodRepository;
 
 
     /**
@@ -299,4 +299,26 @@ public class SupplierManageController {
 
         return new PageAndSelection<>(goods,TouristGood.selections);
     }
+
+    /**
+     * 显示线路商品
+     * @param id        商品ID
+     * @param model     返回的model
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/showTouristGood")
+    public String showTouristGood(@RequestParam Long id,Model model) throws IOException{
+        TouristGood touristGood=touristGoodRepository.findOne(id);
+
+        List<TouristRoute> routes=touristRouteRepository.findByGood(touristGood);
+        model.addAttribute("routes",routes);
+        model.addAttribute("good",touristGood);
+        return "";
+    }
+
+//    public Model modifyTouristGood
+
+
+
 }

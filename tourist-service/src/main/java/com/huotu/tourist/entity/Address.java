@@ -16,36 +16,29 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * 线路供应商
+ * 省市区
  * Created by lhx on 2016/12/16.
  */
 @Getter
 @Setter
 @Embeddable
-public class GenericityAddress {
+public class Address {
     /**
      * 省
      */
+    @Column(length = 10)
     private String province;
 
     /**
      * 市
      */
+    @Column(length = 10)
     private String town;
 
     /**
      * 区
      */
+    @Column(length = 10)
     private String district;
 
-    /**
-     * 联系人
-     */
-    @Column(length = 20)
-    private String contacts;
-    /**
-     * 联系电话
-     */
-    @Column(length = 15)
-    private String contactNumber;
 }
