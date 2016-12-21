@@ -199,6 +199,7 @@ public abstract class WebTest extends SpringWebTest {
         touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
+        touristGood.setRecommend(null);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 
