@@ -1,9 +1,6 @@
 package com.huotu.tourist.controller.supplier;
 
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SexEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.currentUser.CurrentUserInfo;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -98,7 +96,7 @@ public class SupplierManageController {
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
             , OrderStateEnum orderStateEnum) throws IOException{
 
-        TouristSupplier supplier= touristSupplierRepository.findOne(userInfo.getUserId());
+        TouristSupplier supplier= touristSupplierRepository.findOne(userInfo.getSupplierId());
 
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
                 orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate()
@@ -204,11 +202,11 @@ public class SupplierManageController {
      */
     @RequestMapping(value = "/modifyOrderTouristDate",method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap modifyOrderTouristDate(@RequestParam Long formerId,@RequestParam Long laterId) throws IOException{
+    public void modifyOrderTouristDate(@RequestParam Long formerId,@RequestParam Long laterId) throws IOException{
         int modifyNumber=travelerRepository.modifyRouteIdByRouteId(laterId,formerId);
-        ModelMap modelMap=new ModelMap();
-        modelMap.addAttribute("data",modifyNumber);
-        return modelMap;
+//        ModelMap modelMap=new ModelMap();
+//        modelMap.addAttribute("data",modifyNumber);
+//        return modelMap;
     }
 
     /**
@@ -242,11 +240,9 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping(value = "/modifyRemarks",method = RequestMethod.POST)
-    public ModelMap modifyRemarks(@RequestParam Long id,@RequestParam String remark) throws IOException{
-        int number=touristOrderRepository.modifyRemarks(remark,id);
-        ModelMap modelMap=new ModelMap();
-        modelMap.addAttribute("data",number);
-        return modelMap;
+    public void modifyRemarks(@RequestParam Long id,@RequestParam String remark) throws IOException{
+        TouristOrder touristOrder=touristOrderRepository.getOne(id);
+        touristOrder.setRemarks(remark);
     }
 
 
@@ -260,6 +256,8 @@ public class SupplierManageController {
     @RequestMapping(value = "/modifyOrderState",method = RequestMethod.POST)
     public void modifyOrderState(@RequestParam Long id, @RequestParam OrderStateEnum orderState) throws IOException{
         touristOrderRepository.modifyOrderState(orderState,id);
+        TouristOrder order=touristOrderRepository.getOne(id);
+        order.setOrderState(orderState);
     }
 
     /**
@@ -275,13 +273,13 @@ public class SupplierManageController {
     @RequestMapping(value = "/modifyTravelerBaseInfo",method = RequestMethod.POST)
     public void modifyTravelerBaseInfo(@RequestParam Long id, String name, SexEnum sex,Integer age,String tel,String IDNo)
         throws IOException{
-        Traveler traveler=travelerRepository.findOne(id);
+        Traveler traveler=travelerRepository.getOne(id);
         traveler.setName(name);
         traveler.setSex(sex);
         traveler.setAge(age);
         traveler.setTelPhone(tel);
         traveler.setIDNo(IDNo);
-        travelerRepository.save(traveler);
+//        travelerRepository.save(traveler);
     }
 
 
@@ -317,7 +315,100 @@ public class SupplierManageController {
         return "";
     }
 
-//    public Model modifyTouristGood
+    /**
+     * 修改线路商品的状态
+     * @param id        线路商品ID
+     * @param stateEnum 状态
+     * @throws IOException
+     */
+    @RequestMapping("/modifyTouristGoodState")
+    @ResponseBody
+    public void modifyTouristGoodState(@RequestParam Long id,TouristCheckStateEnum stateEnum) throws IOException{
+        TouristGood touristGood=touristGoodRepository.getOne(id);
+        touristGood.setTouristCheckState(stateEnum);
+//        touristGoodRepository.save(touristGood);
+    }
+
+
+    /**
+     * 结算列表显示 todo 目前需求还不确定
+     * @param supplierId        供应商ID
+     * @param platformChecking
+     * @param createTime
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
+    public PageAndSelection<SettlementSheet> settlementSheetList(Long supplierId
+            , SettlementStateEnum platformChecking, LocalDate createTime, Pageable pageable)throws IOException{
+        return null;
+    }
+
+
+    /**
+     * 销售统计页面
+     * @param userInfo  当前用户信息
+     * @param model     返回的数据
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/showSaleStatistics")
+    public String showSaleStatistics(@AuthenticationPrincipal CurrentUserInfo userInfo,Model model) throws IOException{
+        model.addAttribute("moneyTotal",touristOrderService.countMoneyTotal(userInfo.getSupplierId()));
+        model.addAttribute("commissionTotal",touristOrderService.countCommissionTotal(userInfo.getSupplierId()));
+        model.addAttribute("refundTotal",touristOrderService.countRefundTotal(userInfo.getSupplierId()));
+        model.addAttribute("orderTotal",touristOrderService.countOrderTotal(userInfo.getSupplierId()));
+        return "";
+
+    }
+
+
+    @RequestMapping("/orderDetailsList")
+    public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal CurrentUserInfo userInfo
+            , @RequestParam Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
+            , LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate) throws IOException{
+
+        TouristSupplier supplier= touristSupplierRepository.findOne(userInfo.getSupplierId());
+
+        Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
+                null, null, null, null, null, orderDate.toLocalDate(), endOrderDate.toLocalDate()
+                , payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), null);
+
+        List<Selection<TouristOrder,?>> selections=new ArrayList<>();
+
+        //人数处理
+        Selection<TouristOrder,Long> peopleNumberSelection=new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "peopleNumber";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.countByOrder_Id(order.getId());
+            }
+        };
+        //佣金处理
+        Selection<TouristOrder,BigDecimal> commissionSelection=new Selection<TouristOrder, BigDecimal>() {
+            @Override
+            public String getName() {
+                return "commission";
+            }
+
+            @Override
+            public BigDecimal apply(TouristOrder order) {
+                BigDecimal commission=order.getTouristGood().getRebate().multiply(
+                        order.getTouristGood().getPrice());
+                return commission;
+            }
+        };
+        selections.add(peopleNumberSelection);
+        selections.add(commissionSelection);
+        selections.addAll(TouristOrder.htmlSelections);
+        return new PageAndSelection<>(orders,selections);
+    }
+
+
 
 
 

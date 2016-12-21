@@ -1,11 +1,17 @@
 package com.huotu.tourist.currentUser;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 当前用户身份信息
  * Created by slt on 2016/12/20.
  */
-public interface CurrentUserInfo {
+@Getter
+@Setter
+public class CurrentUserInfo {
 
-    Long getUserId();
+    private Long supplierId;
+
 
 }

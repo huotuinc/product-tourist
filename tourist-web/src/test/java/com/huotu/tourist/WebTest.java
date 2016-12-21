@@ -143,12 +143,16 @@ public abstract class WebTest extends SpringWebTest {
      * @return 线路审核的状态
      */
     protected TouristCheckStateEnum randomTouristCheckStateEnum() {
-        int checkStateNo = random.nextInt(2);
+        int checkStateNo = random.nextInt(4);
         switch (checkStateNo) {
             case 0:
                 return TouristCheckStateEnum.NotChecking;
-            default:
+            case 1:
                 return TouristCheckStateEnum.CheckFinish;
+            case 2:
+                return TouristCheckStateEnum.Saved;
+            default:
+                return TouristCheckStateEnum.Recycle;
         }
     }
 

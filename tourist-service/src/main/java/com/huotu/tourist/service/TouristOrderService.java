@@ -83,6 +83,38 @@ public interface TouristOrderService {
             , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum) throws IOException;
 
 
+    /**
+     * 计算订单总金额
+     * @param supplierId  供应商ID(必须)
+     * @return            总金额
+     * @throws IOException
+     */
+    long countMoneyTotal(Long supplierId) throws IOException;
+
+    /**
+     * 计算总佣金
+     * @param supplierId    供应商ID(必须)
+     * @return              总佣金
+     * @throws IOException
+     */
+    long countCommissionTotal(Long supplierId) throws IOException;
+
+    /**
+     * 计算总退款
+     * @param supplierId    供应商ID(必须)
+     * @return              总退款
+     * @throws IOException
+     */
+    long countRefundTotal(Long supplierId) throws IOException;
+
+    /**
+     * 计算总订单数
+     * @param supplierId    供应商ID(必须)
+     * @return              总订单数
+     * @throws IOException
+     */
+    long countOrderTotal(Long supplierId) throws IOException;
+
 //    /**
 //     * TouristOrder与TouristOrderModel转换
 //     * @param orders    线路订单列表
