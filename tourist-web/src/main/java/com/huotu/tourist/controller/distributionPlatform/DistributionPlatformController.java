@@ -406,15 +406,13 @@ public class DistributionPlatformController {
      * @param model        @return
      */
     @RequestMapping(value = "supplierOrders", method = RequestMethod.GET)
-    public ResponseEntity supplierOrders(String orderNo, String touristName, String buyerName, String tel,
-                                         PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
+    public PageAndSelection supplierOrders(String orderNo, String touristName, String buyerName, String tel,
+                                           PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
             , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
             , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
         Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo
                 , touristName, buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
-
-
-        return null;
+        return new PageAndSelection<>(page, TouristOrder.htmlSelections);
     }
 
     /**
