@@ -157,31 +157,38 @@ public class SupplierManageControllerTest extends WebTest {
     public void showAllOrderTouristDate() throws Exception{
         List<TouristRoute> routes=new ArrayList<>();
         for(int i=0;i<10;i++){
-            TouristRoute route=new TouristRoute();
-            route.setMaxPeople(random.nextInt(50)+20);
-            route.setFromDate(LocalDate.now());
-
-            route=touristRouteRepository.saveAndFlush(route);
+            TouristRoute route=createTouristRoute(null,null,LocalDate.now(),null,random.nextInt(50)+20);
             int peopleNumber=random.nextInt(route.getMaxPeople());
 
             List<Traveler> travelers=new ArrayList<>();
             for(int j=0;j<peopleNumber;j++){
-                Traveler traveler=new Traveler();
-                traveler.setRoute(route);
-                travelers.add(travelerRepository.saveAndFlush(traveler));
+                Traveler traveler=createTraveler(route,null);
+                travelers.add(traveler);
             }
             routes.add(route);
         }
 
         TouristRoute ownRoute=routes.get(random.nextInt(routes.size()));
         //预期
-//        List<TouristRouteModel> touristRouteModelsExpect=touristRouteService.touristRouteModelConver(routes);
+        List<TouristRouteModel> touristRouteModelsExpect=new ArrayList<>();
+        for(TouristRoute route :routes){
+            //排除自己的线路订单
+            if(route.getId().equals(ownRoute.getId())){
+                continue;
+            }
+            TouristRouteModel model=new TouristRouteModel();
+            model.setId(route.getId());
+            model.setFromDate(route.getFromDate());
+            model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
+            touristRouteModelsExpect.add(model);
+        }
 
         String result=mockMvc.perform(get("/supplier/getAllOrderTouristDate")
                 .param("id",""+ownRoute.getId()))
                 .andReturn().getResponse().getContentAsString();
         //实际
         List<TouristRouteModel> touristRouteModelsActual=JsonPath.read(result,"$.data");
+        assertThat(touristRouteModelsExpect.equals(touristRouteModelsActual)).isTrue().as("其他路线校验");
 
 
 //        JSONObject object=JSONObject.
@@ -197,6 +204,16 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void modifyOrderTouristDate() throws Exception{
+
+        TouristOrder order=createTouristOrder(null,null,null,null,null,null,null);
+        TouristRoute routeF=createTouristRoute(null,null,LocalDate.now(),null,4);
+        TouristRoute routeL=createTouristRoute(null,null,LocalDate.of(2016,10,10),null,4);
+        Traveler traveler=createTraveler(routeF,order);
+        mockMvc.perform(get("/supplier/modifyOrderTouristDate")
+                .param("formerId",""+routeF.getId()).param("laterId",""+routeL.getId()));
+        Traveler travelerA=travelerRepository.findOne(traveler.getId());
+        assertThat(routeL.getFromDate().equals(travelerA.getRoute().getFromDate())).isTrue().as("出行人数校验");
+
 
     }
 

@@ -7,6 +7,7 @@ import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.currentUser.CurrentUserInfo;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
+import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
@@ -103,7 +104,39 @@ public class SupplierManageController {
                 orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate()
                 , payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), orderStateEnum);
 
-        return new PageAndSelection<>(orders,TouristOrder.htmlSelections);
+        List<Selection<TouristOrder,?>> selections=new ArrayList<>();
+
+
+        //出行时间特殊处理
+        Selection<TouristOrder,LocalDate> touristDateSelection=new Selection<TouristOrder, LocalDate>() {
+            @Override
+            public String getName() {
+                return "touristDate";
+            }
+
+            @Override
+            public LocalDate apply(TouristOrder order) {
+                Traveler traveler=travelerRepository.findByOrder_Id(order.getId()).get(0);
+                return traveler.getRoute().getFromDate();
+            }
+        };
+
+        //人数处理
+        Selection<TouristOrder,Long> peopleNumberSelection=new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "peopleNumber";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.countByOrder_Id(order.getId());
+            }
+        };
+        selections.add(touristDateSelection);
+        selections.add(peopleNumberSelection);
+        selections.addAll(TouristOrder.htmlSelections);
+        return new PageAndSelection<>(orders,selections);
 
 //        List<Selection<TouristOrder, ?>> selectionList;
 //        PageAndSelection<TouristOrder> touristOrderModels =new PageAndSelection<>(orders,)
@@ -180,7 +213,7 @@ public class SupplierManageController {
 
     /**
      * 返回某个订单的视图信息
-     * @param id    线路订单
+     * @param id    线路订单ID
      * @return      线路订单视图
      * @throws IOException
      */
@@ -189,9 +222,13 @@ public class SupplierManageController {
 
         TouristOrder order=touristOrderRepository.findOne(id);
 
-//        TouristOrderDetailsModel touristOrderDetailsModel=touristOrderService.touristOrderDetailsModelConver(order);
+        model.addAttribute("order",order);
 
-//        model.addAttribute("data",touristOrderDetailsModel);
+        List<Traveler> travelers=travelerRepository.findByOrder_Id(id);
+
+        model.addAttribute("route",travelers.get(0).getRoute());
+
+        model.addAttribute("travelers",travelers);
 
         return "";
 
