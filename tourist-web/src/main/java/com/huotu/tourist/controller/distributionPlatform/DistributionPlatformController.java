@@ -266,7 +266,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
-    public String toTouristGoodList() {
+    public String toTouristGoodList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -297,9 +297,7 @@ public class DistributionPlatformController {
         }
         Page<TouristGood> page = touristGoodService.touristGoodList(null, touristName, supplierName, touristType, activityType
                 , touristCheckState, new PageRequest(pageNo, pageSize));
-
-        PageAndSelection<TouristGood> pageAndSelection = new PageAndSelection<>(page, TouristGood.selections);
-        return pageAndSelection;
+        return new PageAndSelection<>(page, TouristGood.selections);
     }
 
     /**

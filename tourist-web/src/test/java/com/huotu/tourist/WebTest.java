@@ -12,6 +12,8 @@ package com.huotu.tourist;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
@@ -19,6 +21,8 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.PurchaserProductSettingRepository;
 import com.huotu.tourist.repository.TouristBuyerRepository;
@@ -26,6 +30,7 @@ import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -62,6 +67,11 @@ public abstract class WebTest extends SpringWebTest {
     @Autowired
     protected PurchaserProductSettingRepository purchaserProductSettingRepository;
 
+    @Autowired
+    protected ActivityTypeRepository activityTypeRepository;
+
+    @Autowired
+    protected TouristTypeRepository touristTypeRepository;
 
     /**
      * 创建一个随机的订单状态
@@ -100,6 +110,21 @@ public abstract class WebTest extends SpringWebTest {
                 return PayTypeEnum.Alipay;
             default:
                 return PayTypeEnum.WeixinPay;
+        }
+    }
+
+    /**
+     * 创建一个线路审核的状态
+     *
+     * @return 线路审核的状态
+     */
+    protected TouristCheckStateEnum randomTouristCheckStateEnum() {
+        int checkStateNo = random.nextInt(2);
+        switch (checkStateNo) {
+            case 0:
+                return TouristCheckStateEnum.NotChecking;
+            default:
+                return TouristCheckStateEnum.CheckFinish;
         }
     }
 
@@ -172,12 +197,21 @@ public abstract class WebTest extends SpringWebTest {
 
     /**
      *  创建一个线路商品
-     * @param name
-     * @return
+     * @param name 线路名称
+     * @param activityType 活动类型
+     * @param touristType 线路类型
+     * @param checkState  线路审核状态
+     * @param touristSupplier 线路供应商
+     * @return 线路
      */
-    protected TouristGood createTouristGood(String name){
+    protected TouristGood createTouristGood(String name, ActivityType activityType, TouristType touristType
+            , TouristCheckStateEnum checkState, TouristSupplier touristSupplier) {
         TouristGood touristGood=new TouristGood();
-        touristGood.setTouristName(name);
+        touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
+        touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
+        touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
+        touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
+        touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 
@@ -238,11 +272,43 @@ public abstract class WebTest extends SpringWebTest {
     }
 
 
+    /**
+     * 采购商产品设置
+     *
+     * @param name 采购商产品设置名称
+     * @return
+     */
     protected PurchaserProductSetting createPurchaserProductSetting(String name) {
         PurchaserProductSetting purchaserProductSetting = new PurchaserProductSetting();
         purchaserProductSetting.setName(name == null ? UUID.randomUUID().toString().replace("-", "") : name);
         purchaserProductSetting.setPrice(new BigDecimal(100));
         return purchaserProductSettingRepository.saveAndFlush(purchaserProductSetting);
+    }
+
+    /**
+     * 创建活动类型
+     *
+     * @param activityName
+     * @return
+     */
+    protected ActivityType createActivityType(String activityName) {
+        ActivityType activityType = new ActivityType();
+        activityType.setActivityName(activityName == null ? UUID.randomUUID().toString() : activityName);
+        activityType.setCreateTime(LocalDateTime.now());
+        return activityTypeRepository.saveAndFlush(activityType);
+    }
+
+    /**
+     * 创建线路类型
+     *
+     * @param typeName
+     * @return
+     */
+    protected TouristType createTouristType(String typeName) {
+        TouristType touristType = new TouristType();
+        touristType.setTypeName(typeName == null ? UUID.randomUUID().toString() : typeName);
+        touristType.setCreateTime(LocalDateTime.now());
+        return touristTypeRepository.saveAndFlush(touristType);
     }
 
 }

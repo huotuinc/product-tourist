@@ -21,6 +21,7 @@ import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
@@ -377,17 +378,121 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void touristGoodList() throws Exception {
         int pageSize = random.nextInt(100) + 10;
         int pageNo = random.nextInt(10) + 1;
+        TouristGood touristGood = createTouristGood("123", null, null, null, null);
         String json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("touristName", "" + UUID.randomUUID().toString())
-                .param("supplierName", "" + UUID.randomUUID().toString())
-                .param("touristTypeId", "" + 1)
-                .param("activityTypeId", "" + 1)
-                .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
+                .param("touristName", touristGood.getTouristName())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("touristName").equals(touristGood.getTouristName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("名称查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("supplierName", touristGood.getTouristSupplier().getSupplierName())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("supplierName").equals(touristGood.getTouristSupplier().getSupplierName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("供应商名称查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("activityTypeId", "" + touristGood.getTouristType().getId())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("activityType").equals(touristGood.getActivityType().getActivityName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("活动类型查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("touristTypeId", "" + touristGood.getTouristType().getId())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("touristType").equals(touristGood.getTouristType().getTypeName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("线路类型查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("touristCheckState", "" + touristGood.getTouristCheckState())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (((Map) m.get("touristCheckState")).get("code").equals(touristGood.getTouristCheckState().getCode())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("审核类型查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("touristName", touristGood.getTouristName())
+                .param("supplierName", touristGood.getTouristSupplier().getSupplierName())
+                .param("touristTypeId", "" + touristGood.getTouristType().getId())
+                .param("activityTypeId", "" + touristGood.getTouristType().getId())
+                .param("touristCheckState", "" + touristGood.getTouristCheckState())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("查询条件全部精确查询条件查找到相关的数据");
+
+
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有查询条件查找到相关的数据");
+
+
+        createTouristGood(null, null, null, null, null);
+        json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有查询条件进行第二页查找到相关的数据");
     }
 
     @Test

@@ -9,7 +9,6 @@
 
 package com.huotu.tourist.controller.supplier;
 
-import com.google.gson.Gson;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
@@ -28,8 +27,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 /**
  * Created by Administrator on 2016/12/17.
  */
@@ -68,7 +67,7 @@ public class SupplierManageControllerTest extends WebTest {
 
 
         //预期
-        order=createTouristOrder(createTouristGood("slt"),null,null,null,null,null,null);
+        order = createTouristOrder(createTouristGood("slt", null, null, null, null), null, null, null, null, null, null);
 
         json=mockMvc.perform(get("/supplier/orderList")
                 .param("name","slt"))
@@ -124,7 +123,7 @@ public class SupplierManageControllerTest extends WebTest {
 
 
         //预期
-        TouristGood touristGood=createTouristGood("slt");
+        TouristGood touristGood = createTouristGood("slt", null, null, null, null);
         TouristRoute touristRoute=createTouristRoute(null,touristGood,LocalDate.of(2016,10,10),null,0);
         order=createTouristOrder(touristGood,null,null,null,null,null,null);
         json=mockMvc.perform(get("/supplier/orderList")
