@@ -421,7 +421,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toSettlementSheetList", method = RequestMethod.GET)
-    public String toSettlementSheetList() {
+    public String toSettlementSheetList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -439,12 +439,11 @@ public class DistributionPlatformController {
      * @param model            @return
      */
     @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
-    public ResponseEntity settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDate createTime,
-                                              int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDate createTime,
+                                                int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<SettlementSheet> page = settlementSheetService.settlementSheetList(supplierName, platformChecking, createTime
                 , new PageRequest(pageNo, pageSize));
-
-        return null;
+        return new PageAndSelection<>(page, SettlementSheet.selections);
     }
 
     /**
@@ -453,7 +452,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toPresentRecordList", method = RequestMethod.GET)
-    public String toPresentRecordList() {
+    public String toPresentRecordList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }

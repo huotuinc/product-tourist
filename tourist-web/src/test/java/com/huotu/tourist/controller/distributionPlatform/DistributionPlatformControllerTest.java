@@ -13,16 +13,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristType;
-import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -584,7 +583,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         int pageSize = 1;
         int pageNo = 1;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
-                ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2012-12-12 05:00:00"), null);
+                ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"), null);
         String json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
@@ -746,18 +745,122 @@ public class DistributionPlatformControllerTest extends WebTest {
 
     @Test
     public void settlementSheetList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        SettlementSheet settlementSheet = createSettlementSheet(LocalDateTimeFormatter.toLocalDateTime("2016-12-12 " +
+                "08:00:00"), null, "ss");
         String json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("supplierName", "" + UUID.randomUUID().toString())
-                .param("platformChecking", "" + SettlementStateEnum.CheckFinish)
-                .param("createTime", "" + LocalDate.now())
         ).andReturn().getResponse().getContentAsString();
-        JsonPath.read(json, "$.rows");
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有查询条件查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("supplierName", settlementSheet.getTouristOrder().getTouristGood().getTouristSupplier
+                        ().getSupplierName())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("id").equals(settlementSheet.getId())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("供应商名称查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("platformChecking", settlementSheet.getPlatformChecking().getCode() + "")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("id").equals(settlementSheet.getId())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定状态查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("createTime", "2016-12-12 08:00:00")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("id").equals(settlementSheet.getId())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("指定日期到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("supplierName", settlementSheet.getTouristOrder().getTouristGood().getTouristSupplier()
+                        .getSupplierName())
+                .param("platformChecking", settlementSheet.getPlatformChecking().getCode().toString())
+                .param("createTime", "2016-12-12 08:00:00")
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("id").equals(settlementSheet.getId())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("全部指定查询条件查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("supplierName", UUID.randomUUID().toString())
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        flag = false;
+        for (Map m : list) {
+            if (m.get("id").equals(settlementSheet.getId())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isFalse().as("错误的供应商名称查询不到到相应数据列表");
+
+        createSettlementSheet(null, null, null);
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("分页无查询条件查询到相应数据列表");
+
+        json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 2)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isEqualTo(0).as("分页无查询条件查询不到到相应数据列表");
+
     }
 
     @Test

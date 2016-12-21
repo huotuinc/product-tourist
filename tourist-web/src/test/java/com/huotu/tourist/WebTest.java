@@ -12,10 +12,12 @@ package com.huotu.tourist;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
@@ -26,6 +28,7 @@ import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.SettlementSheetRepository;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
@@ -76,7 +79,8 @@ public abstract class WebTest extends SpringWebTest {
     protected TouristTypeRepository touristTypeRepository;
     @Autowired
     protected TravelerRepository travelerRepository;
-
+    @Autowired
+    SettlementSheetRepository settlementSheetRepository;
 
     /**
      * 创建一个随机的订单状态
@@ -119,6 +123,21 @@ public abstract class WebTest extends SpringWebTest {
     }
 
     /**
+     * 创建一个审查状态
+     *
+     * @return 审查状态
+     */
+    protected SettlementStateEnum randomSettlementStateEnum() {
+        int stateNo = random.nextInt(2);
+        switch (stateNo) {
+            case 0:
+                return SettlementStateEnum.NotChecking;
+            default:
+                return SettlementStateEnum.CheckFinish;
+        }
+    }
+
+    /**
      * 创建一个线路审核的状态
      *
      * @return 线路审核的状态
@@ -150,7 +169,6 @@ public abstract class WebTest extends SpringWebTest {
         }
     }
 
-
     /**
      * 创建当前的时间，如果状态是未支付则返回null
      *
@@ -164,7 +182,6 @@ public abstract class WebTest extends SpringWebTest {
             return null;
         }
     }
-
 
     /**
      * 创建一个测试线路订单
@@ -183,6 +200,30 @@ public abstract class WebTest extends SpringWebTest {
         order.setPayType(payType == null ? randomPayTypeEnum() : payType);
 
         return touristOrderRepository.saveAndFlush(order);
+    }
+
+    /**
+     * 创建一个结算单
+     *
+     * @param createTime       创建时间
+     * @param platformChecking 平台审核状态
+     * @param supplierName     供应商名称
+     * @return
+     */
+    protected SettlementSheet createSettlementSheet(LocalDateTime createTime, SettlementStateEnum platformChecking,
+                                                    String supplierName) {
+        SettlementSheet settlementSheet = new SettlementSheet();
+        settlementSheet.setCreateTime(createTime == null ? LocalDateTime.now() : createTime);
+        settlementSheet.setPlatformChecking(platformChecking == null ? randomSettlementStateEnum() : platformChecking);
+        settlementSheet.setTouristOrder(
+                createTouristOrder(
+                        createTouristGood(null, null, null, null,
+                                createTouristSupplier(supplierName)
+                        )
+                        , null, null, null, null, null, null
+                )
+        );
+        return settlementSheetRepository.saveAndFlush(settlementSheet);
     }
 
     /**
