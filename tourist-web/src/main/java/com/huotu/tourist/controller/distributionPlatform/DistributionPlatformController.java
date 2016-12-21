@@ -272,20 +272,22 @@ public class DistributionPlatformController {
     }
 
     /**
-     * 线路列表
+     * 线路列表/推荐线路列表通过是否推荐属性进行判断是否推荐
      *
      * @param touristName       线路名称
      * @param supplierName      供应商名称
      * @param touristTypeId     线路类型ID
      * @param activityTypeId    活动ID
      * @param touristCheckState 线路审核状态
+     * @param recommend         是否推荐 null全部，true推荐列表
      * @param pageSize          每页显示条数
      * @param pageNo            页码
      * @param request
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
     public PageAndSelection<TouristGood> touristGoodList(String touristName, String supplierName, Long touristTypeId
-            , Long activityTypeId, TouristCheckStateEnum touristCheckState, int pageSize, int pageNo
+            , Long activityTypeId, TouristCheckStateEnum touristCheckState, Boolean recommend, int pageSize, int
+                                                                 pageNo
             , HttpServletRequest request) {
         ActivityType activityType = null;
         TouristType touristType = null;
@@ -295,41 +297,17 @@ public class DistributionPlatformController {
         if (activityTypeId != null) {
             activityType = activityTypeService.getOne(touristTypeId);
         }
-        Page<TouristGood> page = touristGoodService.touristGoodList(null, touristName, supplierName, touristType, activityType
-                , touristCheckState, new PageRequest(pageNo, pageSize));
+        Page<TouristGood> page;
+        if (recommend) {
+            page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
+                    , touristCheckState, recommend, new PageRequest(pageNo, pageSize));
+        } else {
+            page = touristGoodService.touristGoodList(null, touristName, supplierName, touristType, activityType
+                    , touristCheckState, new PageRequest(pageNo, pageSize));
+        }
         return new PageAndSelection<>(page, TouristGood.selections);
     }
 
-    /**
-     * 推荐线路列表
-     *
-     * @param touristName       线路名称
-     * @param supplierName      供应商名称
-     * @param touristTypeId     线路类型ID
-     * @param activityTypeId    活动ID
-     * @param touristCheckState 线路审核状态
-     * @param pageSize          每页显示条数
-     * @param pageNo            页码
-     * @param request
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "recommendTouristGoodList", method = RequestMethod.GET)
-    public PageAndSelection<TouristGood> recommendTouristGoodList(String touristName, String supplierName, Long touristTypeId, Long activityTypeId
-            , TouristCheckStateEnum touristCheckState, int pageSize, int pageNo, HttpServletRequest request, Model model) {
-        ActivityType activityType = null;
-        TouristType touristType = null;
-        if (touristTypeId != null) {
-            touristType = touristTypeService.getOne(touristTypeId);
-        }
-        if (activityTypeId != null) {
-            activityType = activityTypeService.getOne(touristTypeId);
-        }
-        Page<TouristGood> page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
-                , touristCheckState, true, new PageRequest(pageNo, pageSize));
-        PageAndSelection<TouristGood> pageAndSelection = new PageAndSelection<>(page, TouristGood.selections);
-        return pageAndSelection;
-    }
 
     /**
      * 跳转到活动类型列表页面

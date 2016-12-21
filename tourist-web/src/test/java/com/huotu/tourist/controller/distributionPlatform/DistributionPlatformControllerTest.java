@@ -16,7 +16,6 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
@@ -473,7 +472,6 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("查询条件全部精确查询条件查找到相关的数据");
 
-
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
@@ -493,23 +491,6 @@ public class DistributionPlatformControllerTest extends WebTest {
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("没有查询条件进行第二页查找到相关的数据");
-    }
-
-    @Test
-    public void recommendTouristGoodList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
-        String json = mockMvc.perform(get("/distributionPlatform/recommendTouristGoodList")
-                .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
-                .param("touristName", "" + UUID.randomUUID().toString())
-                .param("supplierName", "" + UUID.randomUUID().toString())
-                .param("touristTypeId", "" + 1)
-                .param("activityTypeId", "" + 1)
-                .param("touristCheckState", "" + TouristCheckStateEnum.CheckFinish)
-        ).andReturn().getResponse().getContentAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(json, Map.class);
     }
 
     @Test
