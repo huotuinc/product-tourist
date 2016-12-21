@@ -12,10 +12,21 @@ package com.huotu.tourist;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.entity.*;
-import com.huotu.tourist.repository.*;
-import me.jiangcai.lib.test.SpringWebTest;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
+import com.huotu.tourist.repository.TouristBuyerRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import me.jiangcai.dating.ServiceBaseTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,8 +35,8 @@ import java.util.UUID;
 /**
  * 常用web测试基类
  */
-
-public abstract class WebTest extends SpringWebTest {
+@WebAppConfiguration
+public abstract class WebTest extends ServiceBaseTest {
 
     @Autowired
     protected TouristOrderRepository touristOrderRepository;
