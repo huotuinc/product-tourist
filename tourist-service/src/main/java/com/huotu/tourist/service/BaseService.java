@@ -13,15 +13,8 @@ public interface BaseService<T, ID extends Serializable> {
      * @param data 数据 not null
      * @return 创建的对象
      */
-    T create(T data);
+    T save(T data);
 
-    /**
-     * 更新数据
-     *
-     * @param data 实体 not null
-     * @return 更新后的对象
-     */
-    T update(T data);
 
     /**
      * 获取数据

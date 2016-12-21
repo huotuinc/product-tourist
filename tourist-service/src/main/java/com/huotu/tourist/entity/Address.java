@@ -23,6 +23,7 @@ import javax.persistence.Embeddable;
 @Setter
 @Embeddable
 public class Address {
+
     /**
      * 省
      */

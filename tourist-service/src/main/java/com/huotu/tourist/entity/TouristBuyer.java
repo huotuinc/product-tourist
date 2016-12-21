@@ -84,6 +84,7 @@ public class TouristBuyer extends BaseModel {
                 }
             }
     );
+
     /**
      * 采购商名称
      */
@@ -114,16 +115,19 @@ public class TouristBuyer extends BaseModel {
      */
     @Column(length = 200)
     private String IDInverseUri;
+
     /**
      * 采购商ID
      */
     @Column(length = 100, unique = true)
     private String buyerId;
+
     /**
      * 昵称
      */
     @Column(length = 100)
     private String nickname;
+
     /**
      * 审核状态
      */

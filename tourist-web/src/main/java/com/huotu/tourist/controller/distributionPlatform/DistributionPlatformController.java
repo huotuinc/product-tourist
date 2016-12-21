@@ -17,8 +17,10 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.PresentRecord;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
@@ -52,10 +54,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -67,7 +71,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/distributionPlatform/")
-public class DistributionPlatformController {
+public class DistributionPlatformController extends BaseController {
     public static final String ROWS = "rows";
     public static final String TOTAL = "total";
     private static final Log log = LogFactory.getLog(DistributionPlatformController.class);
@@ -108,8 +112,9 @@ public class DistributionPlatformController {
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
     public String toSupplierList(HttpServletRequest request, Model model) {
+        model.addAttribute("", 1000);
         //todo
-        return "";
+        return "index.html";
     }
 
     /**
@@ -214,15 +219,17 @@ public class DistributionPlatformController {
         headers.setContentType(new MediaType("text/csv"));
         headers.setContentDispositionFormData("attachment", "采购商支付记录.csv");
         StringBuffer sb = new StringBuffer();
+        sb.append("采购商,").append("采购商负责人,").append("采购商电话,").append("采购商id,").append("用户昵称,")
+                .append("支付状态,").append("支付金额,").append("支付时间/n");
         for (PurchaserPaymentRecord paymentRecord : list) {
-            sb.append("采购商：").append(paymentRecord.getTouristBuyer().getBuyerName()).append(",")
-                    .append("采购商负责人：").append(paymentRecord.getTouristBuyer().getBuyerDirector()).append(",")
-                    .append("采购商电话：").append(paymentRecord.getTouristBuyer().getTelPhone()).append(",")
-                    .append("采购商id：").append(paymentRecord.getTouristBuyer().getBuyerId()).append(",")
-                    .append("用户昵称：").append(paymentRecord.getTouristBuyer().getNickname()).append(",")
-                    .append("支付状态：").append(paymentRecord.getTouristBuyer().getPayState().getValue()).append(",")
-                    .append("支付金额：").append(paymentRecord.getMoney()).append(",")
-                    .append("支付时间：").append(LocalDateTimeFormatter.toStr(paymentRecord.getPayDate())).append("/n");
+            sb.append(paymentRecord.getTouristBuyer().getBuyerName()).append(",")
+                    .append(paymentRecord.getTouristBuyer().getBuyerDirector()).append(",")
+                    .append(paymentRecord.getTouristBuyer().getTelPhone()).append(",")
+                    .append(paymentRecord.getTouristBuyer().getBuyerId()).append(",")
+                    .append(paymentRecord.getTouristBuyer().getNickname()).append(",")
+                    .append(paymentRecord.getTouristBuyer().getPayState().getValue()).append(",")
+                    .append(paymentRecord.getMoney()).append(",")
+                    .append(LocalDateTimeFormatter.toStr(paymentRecord.getPayDate())).append("/n");
         }
         return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
     }
@@ -482,29 +489,203 @@ public class DistributionPlatformController {
 
     /**-------------------下面新增和修改相关-----------------------*/
     /**
-     * 新增供应商
+     * 跳转至新增供应商页面
      *
-     * @param supplierName
-     * @param remarks
-     * @param adminAccount
-     * @param adminPassword
-     * @param businessLicenseUri
      * @param request
      * @param model
      * @return
      */
-    @RequestMapping(value = "addTouristSupplier", method = RequestMethod.POST)
-    public String addTouristSupplier(String supplierName, String remarks, String adminAccount, String adminPassword,
-                                     String businessLicenseUri, HttpServletRequest request, Model model) {
-        TouristSupplier touristSupplier = new TouristSupplier();
+    @RequestMapping(value = "toAddTouristSupplier", method = RequestMethod.GET)
+    public String toAddTouristSupplier(HttpServletRequest request, Model model) {
+
+        return "";
+    }
+
+    /**
+     * 新增供应商 和 修改供应商
+     *
+     * @param id                 供应商id 为null 代表添加，不为null代表修改
+     * @param supplierName       供应商名称  必须
+     * @param adminAccount       登录名        必须
+     * @param adminPassword      登录密码   必须
+     * @param businessLicenseUri 营业执照uri 必须
+     * @param contacts           联系人    必须
+     * @param contactNumber      联系电话   必须
+     * @param address            所在地    必须
+     * @param remarks            备注
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"addSupplier", "updateSupplier"}, method = RequestMethod.POST)
+    public String addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String adminAccount,
+                                     @RequestParam String adminPassword, @RequestParam String businessLicenseUri
+            , @RequestParam String contacts, @RequestParam String contactNumber, @RequestParam Address address, String remarks,
+                                     HttpServletRequest request, Model model) {
+        TouristSupplier touristSupplier;
+        if (id == null) {
+            touristSupplier = new TouristSupplier();
+        } else {
+            touristSupplier = touristSupplierService.getOne(id);
+        }
         touristSupplier.setCreateTime(LocalDateTime.now());
         touristSupplier.setAdminAccount(adminAccount);
         touristSupplier.setAdminPassword(adminPassword);
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
         touristSupplier.setRemarks(remarks);
         touristSupplier.setSupplierName(supplierName);
-        //todo 地址相关
-        touristSupplier = touristSupplierService.create(touristSupplier);
+        touristSupplier.setContacts(contacts);
+        touristSupplier.setContactNumber(contactNumber);
+        touristSupplier.setAddress(address);
+
+        touristSupplierService.save(touristSupplier);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+
+    /**
+     * 冻结供应商
+     *
+     * @param id     供应商id not null
+     * @param frozen 是否冻结 not null
+     * @return
+     */
+    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST)
+    public String frozenSupplierOrUnFrozenSupplier(@RequestParam Long id, @RequestParam boolean frozen) {
+        TouristSupplier touristSupplier = touristSupplierService.getOne(id);
+        touristSupplier.setFrozen(frozen);
+        touristSupplierService.save(touristSupplier);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+
+    /**
+     * 新增采购产品设置
+     *
+     * @param id        id 为null 代表添加，不为null代表修改
+     * @param name      名称 not null
+     * @param bannerUri 图片 not null
+     * @param price     价格 not null
+     * @param explain   说明 not null
+     * @param agreement 协议 not null
+     * @return
+     */
+    @RequestMapping(value = {"savePurchaserProductSetting", "updatePurchaserProductSetting"}, method = RequestMethod.POST)
+    public String savePurchaserProductSetting(Long id, @RequestParam String name, @RequestParam String bannerUri,
+                                              @RequestParam BigDecimal price, @RequestParam String explain
+            , @RequestParam String agreement) {
+        PurchaserProductSetting purchaserProductSetting;
+        if (id == null) {
+            purchaserProductSetting = new PurchaserProductSetting();
+            purchaserProductSetting.setCreateTime(LocalDateTime.now());
+        } else {
+            purchaserProductSetting = purchaserProductSettingService.getOne(id);
+            purchaserProductSetting.setUpdateTime(LocalDateTime.now());
+        }
+        purchaserProductSetting.setName(name);
+        purchaserProductSetting.setBannerUri(bannerUri);
+        purchaserProductSetting.setPrice(price);
+        purchaserProductSetting.setExplain(explain);
+        purchaserProductSetting.setAgreement(agreement);
+        purchaserProductSettingService.save(purchaserProductSetting);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+    /**
+     * 推荐商品 和 取消推荐
+     *
+     * @param id        id   not null
+     * @param recommend 推荐  not null
+     * @return
+     */
+    @RequestMapping(value = {"recommendTouristGood", "unRecommendTouristGood"}, method = RequestMethod.POST)
+    public String recommendGoodOrUnRecommendGood(@RequestParam Long id, @RequestParam boolean recommend) {
+        TouristGood touristGood = touristGoodService.getOne(id);
+        touristGood.setRecommend(recommend);
+        touristGoodService.save(touristGood);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+    /**
+     * 审核通过 和 未通过审核
+     *
+     * @param id                id   not null
+     * @param touristCheckState 审核状态  not null
+     * @return
+     */
+    @RequestMapping(value = {"notCheck", "FinishCheck"}, method = RequestMethod.POST)
+    public String notCheckOrFinishCheck(@RequestParam Long id, @RequestParam TouristCheckStateEnum
+            touristCheckState) {
+        TouristGood touristGood = touristGoodService.getOne(id);
+        touristGood.setTouristCheckState(touristCheckState);
+        touristGoodService.save(touristGood);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+    /**
+     * 查看线路
+     *
+     * @param id    id   not null
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "seeTouristGood", method = RequestMethod.GET)
+    public String seeTouristGood(@RequestParam Long id, Model model) {
+        TouristGood touristGood = touristGoodService.getOne(id);
+        model.addAttribute("touristGood", touristGood);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+
+    /**
+     * 添加或修改活动类型
+     *
+     * @param id
+     * @param activityName
+     * @return
+     */
+    @RequestMapping(value = {"saveActivityType", "updateActivityType"}, method = RequestMethod.POST)
+    public String saveOrUpdateActivityType(Long id, @RequestParam String activityName) {
+        ActivityType activityType;
+        if (id == null) {
+            activityType = new ActivityType();
+            activityType.setCreateTime(LocalDateTime.now());
+        } else {
+            activityType = activityTypeService.getOne(id);
+            activityType.setUpdateTime(LocalDateTime.now());
+        }
+        activityType.setActivityName(activityName);
+        activityTypeService.save(activityType);
+        // TODO: 2016/12/21
+        return "";
+    }
+
+    /**
+     * 添加或修改线路类型
+     *
+     * @param id
+     * @param typeName
+     * @return
+     */
+    @RequestMapping(value = {"saveTouristType", "updateTouristType"}, method = RequestMethod.POST)
+    public String saveOrUpdateTouristType(Long id, @RequestParam String typeName) {
+        TouristType touristType;
+        if (id == null) {
+            touristType = new TouristType();
+            touristType.setCreateTime(LocalDateTime.now());
+        } else {
+            touristType = touristTypeService.getOne(id);
+            touristType.setUpdateTime(LocalDateTime.now());
+        }
+        touristType.setTypeName(typeName);
+        touristTypeService.save(touristType);
+        // TODO: 2016/12/21
         return "";
     }
 

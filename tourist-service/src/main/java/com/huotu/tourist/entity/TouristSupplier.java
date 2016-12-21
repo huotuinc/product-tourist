@@ -35,12 +35,22 @@ public class TouristSupplier extends BaseModel {
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristSupplier, String>("id", "id"),
             new SimpleSelection<TouristSupplier, String>("supplierName", "supplierName")
-            , new SimpleSelection<TouristSupplier, String>("address.province", "province")
-            , new SimpleSelection<TouristSupplier, String>("address.town", "town")
-            , new SimpleSelection<TouristSupplier, String>("address.district", "district")
+            , new SimpleSelection<TouristSupplier, String>("adminAccount", "adminAccount")
+            , new Selection<TouristSupplier, String>() {
+                @Override
+                public String apply(TouristSupplier touristSupplier) {
+                    return touristSupplier.getAddress().getProvince() + touristSupplier.getAddress().getTown()
+                            + touristSupplier.getAddress().getDistrict();
+                }
+
+                @Override
+                public String getName() {
+                    return "address";
+                }
+            }
             , new SimpleSelection<TouristSupplier, String>("contacts", "contacts")
-            , new SimpleSelection<TouristSupplier, String>("createTime", "createTime")
             , new SimpleSelection<TouristSupplier, String>("contactNumber", "contactNumber")
+            , new SimpleSelection<TouristSupplier, String>("createTime", "createTime")
             , new SimpleSelection<TouristSupplier, String>("frozen", "frozen")
     );
     /**
@@ -60,7 +70,7 @@ public class TouristSupplier extends BaseModel {
     private String supplierName;
 
     /**
-     * 省市区，联系人，电话
+     * 所在地址
      */
     @Embedded
     private Address address;
@@ -70,26 +80,13 @@ public class TouristSupplier extends BaseModel {
      */
     @Column(length = 20)
     private String contacts;
+
     /**
      * 联系电话
      */
     @Column(length = 15)
     private String contactNumber;
-//    /**
-//     * 供应商所在地址 省，市，区
-//     */
-//    @Column(length = 100)
-//    private String supplierPlaceAddress;
-//    /**
-//     * 联系人
-//     */
-//    @Column(length = 20)
-//    private String contacts;
-//    /**
-//     * 联系电话
-//     */
-//    @Column(length = 15)
-//    private String contactNumber;
+
     /**
      * 营业执照uri
      */
