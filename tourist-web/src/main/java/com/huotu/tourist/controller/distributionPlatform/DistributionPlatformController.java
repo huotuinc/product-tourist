@@ -11,15 +11,42 @@ package com.huotu.tourist.controller.distributionPlatform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.huotu.tourist.common.*;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.PresentStateEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.PresentRecord;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.model.PageAndSelection;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.PresentRecordService;
+import com.huotu.tourist.service.PurchaserPaymentRecordService;
+import com.huotu.tourist.service.PurchaserProductSettingService;
+import com.huotu.tourist.service.SettlementSheetService;
+import com.huotu.tourist.service.TouristBuyerService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
+import com.huotu.tourist.service.TouristSupplierService;
+import com.huotu.tourist.service.TouristTypeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -79,7 +107,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
-    public String toSupplierList() {
+    public String toSupplierList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -91,11 +119,10 @@ public class DistributionPlatformController {
      * @param pageSize 每页显示条数
      * @param pageNo   页码
      * @param request
-     * @param model
      * @return
      */
     @RequestMapping(value = "supplierList", method = RequestMethod.GET)
-    public PageAndSelection supplierList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    public PageAndSelection supplierList(String name, int pageSize, int pageNo, HttpServletRequest request) {
         Page<TouristSupplier> page = touristSupplierService.supplierList(name, new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristSupplier.selections);
     }
@@ -106,7 +133,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
-    public String toBuyerList() {
+    public String toBuyerList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -121,12 +148,11 @@ public class DistributionPlatformController {
      * @param pageSize        每页显示条数
      * @param pageNo          页码
      * @param request
-     * @param model
      * @return
      */
     @RequestMapping(value = "buyerList", method = RequestMethod.GET)
     public PageAndSelection<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum buyerCheckState
-            , int pageSize, int pageNo, HttpServletRequest request, Model model) {
+            , int pageSize, int pageNo, HttpServletRequest request) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
                 , new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristBuyer.selections);
@@ -139,7 +165,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
-    public String toPurchaserPaymentRecordList() {
+    public String toPurchaserPaymentRecordList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -155,16 +181,14 @@ public class DistributionPlatformController {
      * @param pageSize      每页显示条数
      * @param pageNo        页码
      * @param request
-     * @param model         @return
      */
     @RequestMapping(value = "purchaserPaymentRecordList", method = RequestMethod.GET)
     public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(String startPayDate, String endPayDate
             , String buyerName, String buyerDirector, String telPhone, int pageSize, int pageNo,
-                                                                               HttpServletRequest request, Model model) {
+                                                                               HttpServletRequest request) {
         Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
                 , buyerName, buyerDirector, telPhone, new PageRequest(pageNo, pageSize));
-        PageAndSelection<PurchaserPaymentRecord> pageAndSelection = new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
-        return pageAndSelection;
+        return new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
     }
 
     /**
@@ -181,13 +205,26 @@ public class DistributionPlatformController {
      * @param model
      */
     @RequestMapping(value = "exportPurchaserPaymentRecord", method = RequestMethod.GET)
-    public void exportPurchaserPaymentRecord(String startPayDate, String endPayDate, String buyerName,
-                                             String buyerDirector, String telPhone
-            , int pageSize, int pageNo, HttpServletRequest request, Model model) {
-        List<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
+    public ResponseEntity exportPurchaserPaymentRecord(String startPayDate, String endPayDate, String buyerName,
+                                                       String buyerDirector, String telPhone
+            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws UnsupportedEncodingException {
+        List<PurchaserPaymentRecord> list = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
                 , buyerName, buyerDirector, telPhone);
-        //todo
-
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "采购商支付记录.csv");
+        StringBuffer sb = new StringBuffer();
+        for (PurchaserPaymentRecord paymentRecord : list) {
+            sb.append("采购商：").append(paymentRecord.getTouristBuyer().getBuyerName()).append(",")
+                    .append("采购商负责人：").append(paymentRecord.getTouristBuyer().getBuyerDirector()).append(",")
+                    .append("采购商电话：").append(paymentRecord.getTouristBuyer().getTelPhone()).append(",")
+                    .append("采购商id：").append(paymentRecord.getTouristBuyer().getBuyerId()).append(",")
+                    .append("用户昵称：").append(paymentRecord.getTouristBuyer().getNickname()).append(",")
+                    .append("支付状态：").append(paymentRecord.getTouristBuyer().getPayState().getValue()).append(",")
+                    .append("支付金额：").append(paymentRecord.getMoney()).append(",")
+                    .append("支付时间：").append(LocalDateTimeFormatter.toStr(paymentRecord.getPayDate())).append("/n");
+        }
+        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
     }
 
     /**
@@ -196,7 +233,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
-    public String toPurchaserProductSettingList() {
+    public String toPurchaserProductSettingList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -208,15 +245,14 @@ public class DistributionPlatformController {
      * @param pageSize 每页显示条数
      * @param pageNo   页码
      * @param request
-     * @param model
      * @return
      */
     @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity purchaserProductSettingList(String name, int pageSize, int pageNo
-            , HttpServletRequest request, Model model) throws JsonProcessingException {
+            , HttpServletRequest request) throws JsonProcessingException {
         Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
                 , new PageRequest(pageNo, pageSize));
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
         ObjectMapper objectMapper = new ObjectMapper();
@@ -246,12 +282,11 @@ public class DistributionPlatformController {
      * @param pageSize          每页显示条数
      * @param pageNo            页码
      * @param request
-     * @param model             @return
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
     public PageAndSelection<TouristGood> touristGoodList(String touristName, String supplierName, Long touristTypeId
             , Long activityTypeId, TouristCheckStateEnum touristCheckState, int pageSize, int pageNo
-            , HttpServletRequest request, Model model) {
+            , HttpServletRequest request) {
         ActivityType activityType = null;
         TouristType touristType = null;
         if (touristTypeId != null) {
@@ -260,7 +295,7 @@ public class DistributionPlatformController {
         if (activityTypeId != null) {
             activityType = activityTypeService.getOne(touristTypeId);
         }
-        Page<TouristGood> page = touristGoodService.touristGoodList(null,touristName, supplierName, touristType, activityType
+        Page<TouristGood> page = touristGoodService.touristGoodList(null, touristName, supplierName, touristType, activityType
                 , touristCheckState, new PageRequest(pageNo, pageSize));
 
         PageAndSelection<TouristGood> pageAndSelection = new PageAndSelection<>(page, TouristGood.selections);
@@ -497,8 +532,7 @@ public class DistributionPlatformController {
         touristSupplier.setSupplierName(supplierName);
         //todo 地址相关
         touristSupplier = touristSupplierService.create(touristSupplier);
-
-        return toSupplierList();
+        return "";
     }
 
 

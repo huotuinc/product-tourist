@@ -13,21 +13,24 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
-import me.jiangcai.dating.ServiceBaseTest;
+import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -36,7 +39,7 @@ import java.util.UUID;
  * 常用web测试基类
  */
 @WebAppConfiguration
-public abstract class WebTest extends ServiceBaseTest {
+public abstract class WebTest extends SpringWebTest {
 
     @Autowired
     protected TouristOrderRepository touristOrderRepository;
@@ -55,6 +58,9 @@ public abstract class WebTest extends ServiceBaseTest {
 
     @Autowired
     protected TouristRouteRepository touristRouteRepository;
+
+    @Autowired
+    protected PurchaserProductSettingRepository purchaserProductSettingRepository;
 
 
     /**
@@ -209,7 +215,7 @@ public abstract class WebTest extends ServiceBaseTest {
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
         touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);
-        //todo 随机生成手机号码
+        touristBuyer.setBuyerId(UUID.randomUUID().toString().replace("-", ""));
         touristBuyer.setTelPhone(telPhone == null ? UUID.randomUUID().toString() : telPhone);
         touristBuyer.setCheckState(buyerCheckState == null ? randomBuyerCheckState() : buyerCheckState);
         touristBuyer.setCreateTime(LocalDateTime.now());
@@ -231,5 +237,12 @@ public abstract class WebTest extends ServiceBaseTest {
         return purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
     }
 
+
+    protected PurchaserProductSetting createPurchaserProductSetting(String name) {
+        PurchaserProductSetting purchaserProductSetting = new PurchaserProductSetting();
+        purchaserProductSetting.setName(name == null ? UUID.randomUUID().toString().replace("-", "") : name);
+        purchaserProductSetting.setPrice(new BigDecimal(100));
+        return purchaserProductSettingRepository.saveAndFlush(purchaserProductSetting);
+    }
 
 }

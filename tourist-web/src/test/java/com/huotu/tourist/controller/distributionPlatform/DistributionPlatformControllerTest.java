@@ -11,9 +11,15 @@ package com.huotu.tourist.controller.distributionPlatform;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.WebTest;
-import com.huotu.tourist.common.*;
+import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.PresentStateEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
@@ -206,7 +212,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         int pageSize = 1;
         int pageNo = 1;
         PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
-                , null);
+                , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
         String json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
@@ -256,8 +262,8 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("startPayDate", "" + LocalDateTime.now())
-                .param("endPayDate", "" + LocalDate.MAX)
+                .param("startPayDate", "2016-12-12 08:00:00")
+                .param("endPayDate", "2016-12-12 23:00:00")
 
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
@@ -273,8 +279,8 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("startPayDate", "" + LocalDate.now())
-                .param("endPayDate", "" + LocalDate.MAX)
+                .param("startPayDate", "2016-12-12 08:00:00")
+                .param("endPayDate", "2016-12-12 23:00:00")
                 .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
                 .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
                 .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
@@ -304,34 +310,67 @@ public class DistributionPlatformControllerTest extends WebTest {
 
     }
 
+
     @Test
     public void exportPurchaserPaymentRecord() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
+                , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
         String json = mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("startPayDate", "" + LocalDate.now())
-                .param("endPayDate", "" + LocalDate.MAX)
-                .param("buyerName", "" + UUID.randomUUID().toString())
-                .param("buyerDirector", "" + UUID.randomUUID().toString())
-                .param("telPhone", "" + UUID.randomUUID().toString())
+                .param("startPayDate", "2016-12-12 08:00:00")
+                .param("endPayDate", "2016-12-12 23:00:00")
+                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
+                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
+                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        // TODO: 2016/12/21
     }
 
     @Test
     public void purchaserProductSettingList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        PurchaserProductSetting productSetting = createPurchaserProductSetting(UUID.randomUUID().toString());
         String json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", "" + UUID.randomUUID().toString())
+                .param("name", productSetting.getName().toString())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("buyerName").equals(productSetting.getName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("名称查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("未输入名称查找到相关的数据");
+
+        createPurchaserProductSetting(UUID.randomUUID().toString());
+        json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("下一页查找到相关的数据");
+
     }
 
     @Test
