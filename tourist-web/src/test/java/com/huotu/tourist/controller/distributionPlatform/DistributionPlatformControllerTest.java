@@ -17,10 +17,12 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristType;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 
@@ -495,29 +497,86 @@ public class DistributionPlatformControllerTest extends WebTest {
 
     @Test
     public void activityTypeList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        ActivityType activityType = createActivityType(UUID.randomUUID().toString());
         String json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", "" + UUID.randomUUID().toString())
+                .param("name", activityType.getActivityName())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("activityName").equals(activityType.getActivityName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("名称查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("未输入名称查找到相关的数据");
+
+        createActivityType(UUID.randomUUID().toString());
+        json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有查询条件进行第二页查找到相关的数据");
+
     }
 
 
     @Test
     public void touristTypeList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 1;
+        TouristType type = createTouristType(UUID.randomUUID().toString());
         String json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", "" + UUID.randomUUID().toString())
+                .param("name", type.getTypeName())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        List<Map> list = (List<Map>) map.get(ROWS);
+        boolean flag = false;
+        for (Map m : list) {
+            if (m.get("typeName").equals(type.getTypeName())) {
+                flag = true;
+            }
+        }
+        assertThat(flag).isTrue().as("名称查找到相关的数据");
+
+        json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("未输入名称查找到相关的数据");
+
+        createTouristType(UUID.randomUUID().toString());
+        json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo + 1)
+        ).andReturn().getResponse().getContentAsString();
+        objectMapper = new ObjectMapper();
+        map = objectMapper.readValue(json, Map.class);
+        list = (List<Map>) map.get(ROWS);
+        assertThat(list.size()).isGreaterThan(0).as("没有查询条件进行第二页查找到相关的数据");
     }
 
 

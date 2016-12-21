@@ -315,7 +315,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
-    public String toActivityTypeList() {
+    public String toActivityTypeList(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
@@ -381,7 +381,7 @@ public class DistributionPlatformController {
      * @return
      */
     @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
-    public String toSupplierOrders() {
+    public String toSupplierOrders(HttpServletRequest request, Model model) {
         //todo
         return "";
     }
