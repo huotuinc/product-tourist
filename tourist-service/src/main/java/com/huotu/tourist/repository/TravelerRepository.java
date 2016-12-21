@@ -21,4 +21,8 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long> {
     @Modifying
     @Transactional
     int modifyRouteIdByRouteId(Long laterId,Long formerId);
+
+    List<Traveler> findByOrder_Id(Long orderId);
+
+    Long countByOrder_Id(Long orderId);
 }

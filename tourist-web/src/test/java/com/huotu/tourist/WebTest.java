@@ -13,24 +13,8 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.PurchaserPaymentRecord;
-import com.huotu.tourist.entity.PurchaserProductSetting;
-import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
-import com.huotu.tourist.repository.PurchaserProductSettingRepository;
-import com.huotu.tourist.repository.TouristBuyerRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.entity.*;
+import com.huotu.tourist.repository.*;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -72,6 +56,9 @@ public abstract class WebTest extends SpringWebTest {
 
     @Autowired
     protected TouristTypeRepository touristTypeRepository;
+    @Autowired
+    protected TravelerRepository travelerRepository;
+
 
     /**
      * 创建一个随机的订单状态
@@ -233,6 +220,19 @@ public abstract class WebTest extends SpringWebTest {
         touristRoute.setToDate(toDate);
         touristRoute.setMaxPeople(maxPeople);
         return touristRouteRepository.saveAndFlush(touristRoute);
+    }
+
+    /**
+     * 创建一个游客
+     * @param touristRoute
+     * @param order
+     * @return
+     */
+    protected Traveler createTraveler(TouristRoute touristRoute, TouristOrder order){
+        Traveler traveler=new Traveler();
+        traveler.setOrder(order);
+        traveler.setRoute(touristRoute);
+        return travelerRepository.saveAndFlush(traveler);
     }
 
     /**
