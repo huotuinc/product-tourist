@@ -1,11 +1,14 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 /**
  * 线路订单持久层
@@ -22,4 +25,9 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder,Long>
     @Modifying
     @Transactional
     int modifyOrderState(OrderStateEnum orderState,Long id);
+
+    Long countByTouristGood(TouristGood good);
+
+    @Query("select sum(t.orderMoney) from TouristGood as t where t.touristGood=?1")
+    BigDecimal countOrderMoney(TouristGood good);
 }

@@ -4,6 +4,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.currentUser.SystemUser;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
@@ -27,6 +28,7 @@ import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TouristSupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +52,7 @@ import java.util.List;
  * Created by slt on 2016/12/17.
  */
 @Controller("/supplier")
-public class SupplierManageController {
+public class SupplierManageController extends BaseController {
 
     @Autowired
     private TouristSupplierRepository touristSupplierRepository;
@@ -81,6 +83,9 @@ public class SupplierManageController {
 
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
+
+    @Autowired
+    private TouristSupplierService touristSupplierService;
 
 
     /**
@@ -335,6 +340,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/orderDetailsList")
+    @ResponseBody
     public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal SystemUser userInfo
             , @RequestParam Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
             , LocalDateTime payDate, LocalDateTime endPayDate) throws IOException {
@@ -377,16 +383,91 @@ public class SupplierManageController {
         return new PageAndSelection<>(orders, selections);
     }
 
+    /**
+     * 商品销售排行
+     * @param userInfo  当前用户
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/goodsSalesRanking")
+    @ResponseBody
+    public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo)
+            throws IOException{
+        TouristSupplier supplier =(TouristSupplier)userInfo;
+        Page<TouristGood> touristGoods=touristGoodService.modifySupplierInfo(supplier.getId());
 
+        //人数处理
+        Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {
+            @Override
+            public String getName() {
+                return "buyTotal";
+            }
+
+            @Override
+            public Long apply(TouristGood good) {
+                return touristOrderRepository.countByTouristGood(good);
+            }
+        };
+
+        //总金额处理
+        Selection<TouristGood,BigDecimal> moneyTotal=new Selection<TouristGood, BigDecimal>() {
+            @Override
+            public String getName() {
+                return "moneyTotal";
+            }
+
+            @Override
+            public BigDecimal apply(TouristGood good) {
+                return touristOrderRepository.countOrderMoney(good);
+            }
+        };
+
+        //总佣金处理
+        Selection<TouristGood,BigDecimal> commissionTotal=new Selection<TouristGood, BigDecimal>() {
+            @Override
+            public String getName() {
+                return "commissionTotal";
+            }
+
+            @Override
+            public BigDecimal apply(TouristGood good) {
+                return touristOrderRepository.countOrderMoney(good).multiply(good.getRebate());
+            }
+        };
+
+        List<Selection<TouristGood, ?>> selections = new ArrayList<>();
+
+        selections.add(buyTotal);
+        selections.add(moneyTotal);
+        selections.add(commissionTotal);
+        selections.addAll(TouristGood.selections);
+
+        return new PageAndSelection<>(touristGoods,selections);
+
+    }
+
+
+
+
+    /**
+     * 修改供应商信息
+     * @param id                    供应商ID
+     * @param address               地址
+     * @param contacts              联系人
+     * @param contactNumber         联系电话
+     * @param businessLicenseUri    营业执照uri
+     * @param remarks               备注
+     * @return                      视图
+     * @throws Exception
+     */
     @RequestMapping("/modifySupplierInfo")
     @ResponseBody
     public String modifySupplierInfo(Long id,Address address,String contacts,String contactNumber
             ,String businessLicenseUri,String remarks)throws Exception{
 
-        return "";
+        touristSupplierService.modifySupplier(id,address,contacts,contactNumber,businessLicenseUri,remarks);
 
-
-
+        return "";  //todo 视图
     }
 
 

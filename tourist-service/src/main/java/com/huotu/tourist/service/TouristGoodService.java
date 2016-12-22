@@ -44,6 +44,14 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
 
 
     /**
+     * 商品销售排行，默认降序
+     * @param supplierId    供应商ID
+     * @return              商品列表
+     */
+    Page<TouristGood> modifySupplierInfo(Long supplierId);
+
+
+    /**
      * 保存一个线路商品(包含新增和修改)
      * @param id                商品ID，有：是修改，无：新增
      * @param touristName           线路名称(必须)
