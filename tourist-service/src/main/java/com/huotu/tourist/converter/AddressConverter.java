@@ -10,22 +10,23 @@
 package com.huotu.tourist.converter;
 
 import com.huotu.tourist.entity.Address;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 /**
  * 地址转换器
- *
+ *  字符串格式如："浙江省,杭州市,滨江区"，使用“,”分割.
  * @author slt
  */
 @Component
-public class AddressConverter implements Converter<String[],Address> {
+public class AddressConverter extends AutowireConverter<Address> {
+
     @Override
-    public Address convert(String[] source) {
+    public Address convert(String source) {
+        String[] strings=source.split(",");
         Address address=new Address();
-        address.setProvince(source[0]);
-        address.setTown(source[1]);
-        address.setDistrict(source[2]);
+        address.setProvince(strings[0]);
+        address.setTown(strings[1]);
+        address.setDistrict(strings[2]);
         return address;
     }
 }

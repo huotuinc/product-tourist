@@ -138,29 +138,6 @@ public class SupplierManageController {
         selections.add(peopleNumberSelection);
         selections.addAll(TouristOrder.htmlSelections);
         return new PageAndSelection<>(orders, selections);
-
-//        List<Selection<TouristOrder, ?>> selectionList;
-//        PageAndSelection<TouristOrder> touristOrderModels =new PageAndSelection<>(orders,)
-
-//        List<TouristOrderModel> touristOrderModels = touristOrderService.touristOrderModelConver(orders.getContent());
-
-//        orders.forEach(order->{
-//            TouristOrderModel model=new TouristOrderModel();
-//            model.setId(order.getId());
-//            model.setBuyerName(order.getTouristBuyer().getBuyerName());
-//            model.setTouristName(order.getTouristGood().getTouristName());
-//            model.setOrderMoney(order.getOrderMoney().doubleValue());
-//            model.setOrderState(order.getOrderState().getDescription());
-//            model.setTouristDate("");//todo 计算
-//            model.setPeopleNumber(0);//todo 计算
-//            model.setRemarks(order.getRemarks());
-//            touristOrderModels.add(model);
-//        });
-
-//        ModelMap modelMap=new ModelMap();
-//        modelMap.addAttribute("rows",touristOrderModels);
-//        modelMap.addAttribute("total",orders.getTotalElements());
-//        return modelMap;
     }
 
     /**
