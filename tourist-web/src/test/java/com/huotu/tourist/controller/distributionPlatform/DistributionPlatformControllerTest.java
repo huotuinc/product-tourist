@@ -21,8 +21,10 @@ import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -34,6 +36,7 @@ import java.util.UUID;
 import static com.huotu.tourist.controller.distributionPlatform.DistributionPlatformController.ROWS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Created by lhx on 2016/12/17.
@@ -749,14 +752,9 @@ public class DistributionPlatformControllerTest extends WebTest {
         int pageNo = 1;
         PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
                 , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
-        String json = mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
+        String json = mockMvc.perform(get("/distributionPlatform/exportTouristOrdersOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("startPayDate", "2016-12-12 08:00:00")
-                .param("endPayDate", "2016-12-12 23:00:00")
-                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
-                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
-                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -896,6 +894,35 @@ public class DistributionPlatformControllerTest extends WebTest {
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+    }
+
+
+    //    --------------------------------------------------------
+    @Test
+    public void addTouristSupplierAndUpdateSupplier() throws Exception {
+        String supplierName = UUID.randomUUID().toString();
+        String adminAccount = UUID.randomUUID().toString();
+        String adminPassword = UUID.randomUUID().toString();
+        String contacts = UUID.randomUUID().toString();
+        String contactNumber = "13000000000";
+        String address = null;
+        String remarks = UUID.randomUUID().toString();
+        int status = mockMvc.perform(post("/distributionPlatform/addSupplier")
+                .param("supplierName", supplierName)
+                .param("adminAccount", adminAccount)
+                .param("adminPassword", adminPassword)
+                .param("contacts", contacts)
+                .param("contactNumber", contactNumber)
+                .param("address", address)
+                .param("remarks", remarks)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
+        TouristSupplier touristSupplier = touristSupplierRepository.findByAdminAccount(adminAccount);
+        assertThat(touristSupplier).isNotNull().as("查找到对应实体");
+        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
+
+
+
     }
 
 
