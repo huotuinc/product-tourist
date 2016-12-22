@@ -36,6 +36,7 @@ import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
+import me.jiangcai.dating.ServiceBaseTest;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -48,7 +49,7 @@ import java.util.UUID;
  * 常用web测试基类
  */
 @WebAppConfiguration
-public abstract class WebTest extends SpringWebTest {
+public abstract class WebTest extends ServiceBaseTest {
 
     @Autowired
     protected TouristOrderRepository touristOrderRepository;
