@@ -17,7 +17,7 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long> {
 
     List<Traveler> findByRoute_Id(Long routeId);
 
-    @Query("update Traveler as t set t.route=?1 where t.route=?2")
+    @Query("update Traveler as t set t.route=?1 where t.route=?2 ")
     @Modifying
     @Transactional
     int modifyRouteIdByRouteId(Long laterId,Long formerId);

@@ -6,11 +6,10 @@ package com.huotu.tourist.common;
  */
 
 public enum TouristCheckStateEnum implements CommonEnum  {
-
-    NotChecking(0, "未审核", "未审核"),
-    CheckFinish(1, "已审核", "已审核，审核通过"),
-    Saved(1, "已保存", "已保存"),
-    Recycle(1, "已回收", "已回收");
+    Saved(0, "已保存", "已保存"),
+    NotChecking(1, "未审核", "未审核"),
+    CheckFinish(2, "已审核", "已审核，审核通过"),
+    Recycle(3, "已回收", "已回收");
 
     private final int code;
     private final String value;

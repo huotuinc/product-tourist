@@ -1,7 +1,12 @@
 package com.huotu.tourist.controller;
 
 import com.huotu.tourist.WebTest;
+import com.huotu.tourist.common.SexEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.Traveler;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -46,12 +51,61 @@ public class BaseControllerTest extends WebTest {
 
     @Test
     public void modifyTravelerBaseInfo() throws Exception {
+        TouristGood good = createTouristGood(null, null, null, null, null);
+        Traveler traveler = createTraveler(createTouristRoute(UUID.randomUUID().toString(), good,
+                null, null, 0), createTouristOrder(good, createTouristBuyer(null, null, null, null), null, null, null, null,
+                null));
 
+        String name = UUID.randomUUID().toString();
+        SexEnum sex = SexEnum.man;
+        String age = UUID.randomUUID().toString();
+        String tel = "13030638993";
+        String IDNo = "13000000000";
+        int status = mockMvc.perform(post("/base/modifyTravelerBaseInfo")
+                .param("id", traveler.getId().toString())
+                .param("name", name)
+                .param("sex", sex.getCode().toString())
+                .param("age", age)
+                .param("tel", tel)
+                .param("IDNo", IDNo)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        traveler = travelerRepository.getOne(traveler.getId());
+        assertThat(traveler).isNotNull().as("查找到对应实体");
+        assertThat(traveler.getName()).isEqualTo(name);
+        assertThat(traveler.getSex()).isEqualTo(sex);
+        assertThat(traveler.getAge()).isEqualTo(age);
+        assertThat(traveler.getTelPhone()).isEqualTo(tel);
+        assertThat(traveler.getIDNo()).isEqualTo(IDNo);
+
+        status = mockMvc.perform(post("/base/modifyTravelerBaseInfo")
+                .param("id", traveler.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("系统应当报错");
     }
 
     @Test
     public void modifyOrderTouristDate() throws Exception {
+        TouristGood good = createTouristGood(null, null, null, null, null);
+        TouristRoute route1 = createTouristRoute(UUID.randomUUID().toString(), good,
+                null, null, 0);
+        TouristRoute route2 = createTouristRoute(UUID.randomUUID().toString(), good,
+                null, null, 0);
+        TouristOrder order = createTouristOrder(good, createTouristBuyer(null, null, null, null), null, null, null, null, null);
+        Traveler traveler = createTraveler(route1, order);
+        int status = mockMvc.perform(post("/base/modifyTravelerBaseInfo")
+                .param("formerId", route1.getId().toString())
+                .param("laterId", route2.getId().toString())
 
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        traveler = travelerRepository.getOne(traveler.getId());
+        assertThat(traveler.getRoute().getId()).isEqualTo(route2.getId()).as("修改成功");
+
+        status = mockMvc.perform(post("/base/modifyTravelerBaseInfo")
+                .param("formerId", route2.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("系统应当报错");
     }
 
     @Test
@@ -61,6 +115,39 @@ public class BaseControllerTest extends WebTest {
 
     @Test
     public void modifyTouristGoodState() throws Exception {
+        TouristGood touristGood = createTouristGood(null, null, null, TouristCheckStateEnum.NotChecking, null);
+
+        int status = mockMvc.perform(post("/base/modifyTouristGoodState")
+                .param("id", touristGood.getId().toString())
+                .param("checkState", TouristCheckStateEnum.CheckFinish.getCode().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.BAD_REQUEST).as("相应正确");
+
+        // TODO: 2016/12/22 模拟平台登陆
+
+        status = mockMvc.perform(post("/base/modifyTouristGoodState")
+                .param("id", touristGood.getId().toString())
+                .param("checkState", TouristCheckStateEnum.CheckFinish.getCode().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+
+        status = mockMvc.perform(post("/base/modifyTouristGoodState")
+                .param("id", touristGood.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("缺少参数系统报错相应");
+
+        // TODO: 2016/12/22 模拟供应商登陆
+        status = mockMvc.perform(post("/base/modifyTouristGoodState")
+                .param("id", touristGood.getId().toString())
+                .param("checkState", TouristCheckStateEnum.Recycle.getCode().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+
+        status = mockMvc.perform(post("/base/modifyTouristGoodState")
+                .param("id", touristGood.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("缺少参数系统报错相应");
+
 
     }
 

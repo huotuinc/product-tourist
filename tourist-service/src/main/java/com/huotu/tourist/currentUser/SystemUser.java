@@ -8,4 +8,11 @@ public interface SystemUser {
 
     boolean isSupplier();
 
+    /**
+     * 是否是平台管理
+     *
+     * @return
+     */
+    boolean isPlatformUser();
+
 }

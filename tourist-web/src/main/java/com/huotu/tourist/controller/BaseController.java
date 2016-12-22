@@ -5,6 +5,7 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.currentUser.SystemUser;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
@@ -82,31 +83,35 @@ public class BaseController {
     /**
      * 订单列表
      * // TODO: 2016/12/22 加入用户体系，接口最大化
-     * @param touristSupplier
-     * @param orderNo         订单号
-     * @param touristName     线路名称
-     * @param buyerName       采购商名称
-     * @param tel             采购商电话
-     * @param payType         支付类型
-     * @param orderDate       开始订单创建时间
-     * @param endOrderDate    结束订单创建时间
-     * @param payDate         开始支付时间
-     * @param endPayDate      结束支付时间
-     * @param touristDate     线路开始时间
-     * @param orderState      订单状态
-     * @param pageSize        每页显示条数
-     * @param pageNo          页码
+     *
+     * @param user
+     * @param orderNo      订单号
+     * @param touristName  线路名称
+     * @param buyerName    采购商名称
+     * @param tel          采购商电话
+     * @param payType      支付类型
+     * @param orderDate    开始订单创建时间
+     * @param endOrderDate 结束订单创建时间
+     * @param payDate      开始支付时间
+     * @param endPayDate   结束支付时间
+     * @param touristDate  线路开始时间
+     * @param orderState   订单状态
+     * @param pageSize     每页显示条数
+     * @param pageNo       页码
      * @param request
-     * @param model           @return
+     * @param model        @return
      */
     @RequestMapping(value = "touristOrders", method = RequestMethod.GET)
-    public PageAndSelection touristOrders(@AuthenticationPrincipal TouristSupplier touristSupplier, String orderNo,
+    public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo,
                                           String touristName
             , String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate
             , LocalDate payDate, LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
             , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
-
-        Page<TouristOrder> page = touristOrderService.touristOrders(touristSupplier, orderNo, touristName, buyerName, tel,
+        TouristSupplier supplier = null;
+        if (user.isSupplier()) {
+            supplier = (TouristSupplier) user;
+        }
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, orderNo, touristName, buyerName, tel,
                 payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
                 new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristOrder.htmlSelections);
@@ -115,29 +120,33 @@ public class BaseController {
     /**
      * 导出订单列表
      *
+     * @param user
      * @param orderNo      订单号
      * @param touristName  线路名称
      * @param buyerName    采购商名称
      * @param tel          采购商电话
-     * @param orderState   订单状态
+     * @param payType      支付类型
      * @param orderDate    开始订单创建时间
      * @param endOrderDate 结束订单创建时间
      * @param payDate      开始支付时间
      * @param endPayDate   结束支付时间
-     * @param payType      支付类型
      * @param touristDate  线路开始时间
+     * @param orderState   订单状态
      * @param pageSize     每页显示条数
      * @param pageNo       页码
      * @param request
      * @param model        @return
      */
     @RequestMapping(value = "exportTouristOrdersOrders", method = RequestMethod.GET)
-    public ResponseEntity exportTouristOrdersOrders(@AuthenticationPrincipal TouristSupplier touristSupplier
+    public ResponseEntity exportTouristOrdersOrders(@AuthenticationPrincipal SystemUser user
             , String orderNo, String touristName, String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate
             , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
             , OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
-
-        Page<TouristOrder> page = touristOrderService.touristOrders(touristSupplier, orderNo, touristName, buyerName, tel,
+        TouristSupplier supplier = null;
+        if (user.isSupplier()) {
+            supplier = (TouristSupplier) user;
+        }
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, orderNo, touristName, buyerName, tel,
                 payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
                 new PageRequest(pageNo, pageSize));
         HttpHeaders headers = new HttpHeaders();
@@ -168,7 +177,8 @@ public class BaseController {
     /**
      * 线路列表/推荐线路列表通过是否推荐属性进行判断是否推荐
      * // TODO: 2016/12/22 加入用户体系
-     * @param touristSupplier
+     *
+     * @param user
      * @param touristName       线路名称
      * @param supplierName      供应商名称
      * @param touristTypeId     线路类型ID
@@ -180,11 +190,14 @@ public class BaseController {
      * @param request
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
-    public PageAndSelection<TouristGood> touristGoodList(@AuthenticationPrincipal TouristSupplier touristSupplier
+    public PageAndSelection<TouristGood> touristGoodList(@AuthenticationPrincipal SystemUser user
             , String touristName, String supplierName, Long touristTypeId, Long activityTypeId
             , TouristCheckStateEnum touristCheckState, Boolean recommend, int pageSize, int pageNo
             , HttpServletRequest request) {
-
+        TouristSupplier supplier = null;
+        if (user.isSupplier()) {
+            supplier = (TouristSupplier) user;
+        }
         ActivityType activityType = null;
         TouristType touristType = null;
         if (touristTypeId != null) {
@@ -198,9 +211,8 @@ public class BaseController {
             page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
                     , touristCheckState, true, new PageRequest(pageNo, pageSize));
         } else {
-            page = touristGoodService.touristGoodList(touristSupplier.getId(), touristName, supplierName, touristType,
-                    activityType
-                    , touristCheckState, new PageRequest(pageNo, pageSize));
+            page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
+                    activityType, touristCheckState, new PageRequest(pageNo, pageSize));
         }
         return new PageAndSelection<>(page, TouristGood.selections);
     }
@@ -252,8 +264,8 @@ public class BaseController {
      */
     @RequestMapping(value = "/modifyTravelerBaseInfo", method = RequestMethod.POST)
     @Transactional
-    public void modifyTravelerBaseInfo(@RequestParam Long id, String name, SexEnum sex, Integer age, String tel, String IDNo)
-            throws IOException {
+    public void modifyTravelerBaseInfo(@RequestParam Long id, @RequestParam String name, SexEnum sex, Integer age, @RequestParam
+            String tel, @RequestParam String IDNo) throws IOException {
         Traveler traveler = travelerRepository.getOne(id);
         traveler.setName(name);
         traveler.setSex(sex);
@@ -297,17 +309,35 @@ public class BaseController {
     /**
      * 修改线路商品的状态
      *
-     * @param id        线路商品ID
-     * @param stateEnum 状态
+     * @param user
+     * @param id         线路商品ID
+     * @param checkState 状态
      * @throws IOException
      */
     @RequestMapping("/modifyTouristGoodState")
     @ResponseBody
     @Transactional
-    public void modifyTouristGoodState(@RequestParam Long id, TouristCheckStateEnum stateEnum) throws IOException {
+    public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,
+                                                 @RequestParam TouristCheckStateEnum checkState) throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(id);
-        // TODO: 2016/12/22 状态的判断业务操作
-        touristGood.setTouristCheckState(stateEnum);
+        if (user.isPlatformUser()) {
+            if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
+                    checkState.equals(TouristCheckStateEnum.CheckFinish)) {
+                touristGood.setTouristCheckState(checkState);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .body("{msg:'当前状态不能进行审核通过'}");
+            }
+            return ResponseEntity.ok().build();
+        }
+
+        if (user.isSupplier() && !checkState.equals(TouristCheckStateEnum.CheckFinish)) {
+            touristGood.setTouristCheckState(checkState);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .body("{msg:'当前状态不能进行审核通过'}");
+        }
     }
 
 

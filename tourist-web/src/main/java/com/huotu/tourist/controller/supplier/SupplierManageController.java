@@ -5,11 +5,25 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.currentUser.SystemUser;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
@@ -216,7 +230,8 @@ public class SupplierManageController {
     public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId, String touristName
             , String supplierName, TouristType touristType, ActivityType activityType
             , TouristCheckStateEnum touristCheckState, Pageable pageable) throws Exception {
-        Page<TouristGood> goods = touristGoodService.touristGoodList(supplierId, touristName, supplierName,
+        TouristSupplier supplier = touristSupplierRepository.getOne(supplierId);
+        Page<TouristGood> goods = touristGoodService.touristGoodList(supplier, touristName, supplierName,
                 touristType,  activityType, touristCheckState, pageable);
 
         return new PageAndSelection<>(goods, TouristGood.selections);
