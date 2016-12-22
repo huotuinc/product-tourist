@@ -28,6 +28,6 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder,Long>
 
     Long countByTouristGood(TouristGood good);
 
-    @Query("select sum(t.orderMoney) from TouristGood as t where t.touristGood=?1")
+    @Query("select sum(t.orderMoney) as om from TouristOrder as t where t.touristGood=?1")
     BigDecimal countOrderMoney(TouristGood good);
 }

@@ -110,4 +110,9 @@ public class TouristSupplier extends BaseModel implements SystemUser {
     public boolean isSupplier() {
         return true;
     }
+
+    @Override
+    public boolean isPlatformUser() {
+        return false;
+    }
 }
