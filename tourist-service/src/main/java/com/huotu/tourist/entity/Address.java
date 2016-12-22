@@ -42,4 +42,8 @@ public class Address {
     @Column(length = 10)
     private String district;
 
+    @Override
+    public String toString() {
+        return province + "," + town + "," + district;
+    }
 }

@@ -26,17 +26,18 @@ import com.huotu.tourist.entity.TouristType;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import static com.huotu.tourist.controller.distributionPlatform.DistributionPlatformController.ROWS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 /**
  * Created by lhx on 2016/12/17.
@@ -90,7 +91,6 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("name为空也能够查询列表");
     }
-
 
     @Test
     public void buyerList() throws Exception {
@@ -583,6 +583,7 @@ public class DistributionPlatformControllerTest extends WebTest {
 
     @Test
     public void touristOrders() throws Exception {
+
         int pageSize = 1;
         int pageNo = 1;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
@@ -747,12 +748,12 @@ public class DistributionPlatformControllerTest extends WebTest {
     }
 
     @Test
-    public void exportTouristOrdersOrders() throws Exception {
+    public void exportTouristOrders() throws Exception {
         int pageSize = 1;
         int pageNo = 1;
         PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
                 , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
-        String json = mockMvc.perform(get("/distributionPlatform/exportTouristOrdersOrders")
+        String json = mockMvc.perform(get("/distributionPlatform/exportTouristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
         ).andReturn().getResponse().getContentAsString();
@@ -905,7 +906,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         String adminPassword = UUID.randomUUID().toString();
         String contacts = UUID.randomUUID().toString();
         String contactNumber = "13000000000";
-        String address = null;
+        String address = "浙江省,杭州市,滨江区";
         String remarks = UUID.randomUUID().toString();
         int status = mockMvc.perform(post("/distributionPlatform/addSupplier")
                 .param("supplierName", supplierName)
@@ -920,10 +921,222 @@ public class DistributionPlatformControllerTest extends WebTest {
         TouristSupplier touristSupplier = touristSupplierRepository.findByAdminAccount(adminAccount);
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
         assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(adminPassword);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(contacts);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(contactNumber);
+        assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
+        assertThat(touristSupplier.getRemarks()).isEqualTo(remarks);
 
+        status = mockMvc.perform(post("/distributionPlatform/updateSupplier")
+                .param("id", touristSupplier.getId() + "")
+                .param("supplierName", supplierName = UUID.randomUUID().toString())
+                .param("adminAccount", adminAccount = UUID.randomUUID().toString())
+                .param("adminPassword", adminPassword = UUID.randomUUID().toString())
+                .param("contacts", contacts = "123123")
+                .param("contactNumber", contactNumber = "14000000000")
+                .param("address", address = "安徽省,合肥市,庐山区")
+                .param("remarks", remarks = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
+        touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
+        assertThat(touristSupplier).isNotNull().as("查找到对应实体");
+        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(adminPassword);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(contacts);
+        assertThat(touristSupplier.getSupplierName()).isEqualTo(contactNumber);
+        assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
+        assertThat(touristSupplier.getRemarks()).isEqualTo(remarks);
 
+        status = mockMvc.perform(post("/distributionPlatform/updateSupplier")
+                .param("id", touristSupplier.getId() + "")
+                .param("supplierName", supplierName = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("相应成功");
 
     }
 
+    @Test
+    public void frozenSupplierOrUnFrozenSupplier() throws Exception {
+        TouristSupplier touristSupplier = createTouristSupplier(null);
+        int status = mockMvc.perform(post("/distributionPlatform/frozenSupplier")
+                .param("id", touristSupplier.getId().toString())
+                .param("frozen", true + "")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("接口正常成功");
+        touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
+        assertThat(touristSupplier.getFrozen()).isTrue().as("冻结成功");
 
+        status = mockMvc.perform(post("/distributionPlatform/unFrozenSupplier")
+                .param("id", touristSupplier.getId().toString())
+                .param("frozen", false + "")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("接口正常成功");
+        touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
+        assertThat(touristSupplier.getFrozen()).isFalse().as("解除冻结成功");
+
+    }
+
+    @Test
+    public void savePurchaserProductSetting() throws Exception {
+        Random random = new Random(100);
+        String name = UUID.randomUUID().toString();
+        String bannerUri = UUID.randomUUID().toString();
+        BigDecimal price = new BigDecimal(random.nextInt());
+        String explain = UUID.randomUUID().toString();
+        String agreement = UUID.randomUUID().toString();
+        int status = mockMvc.perform(post("/distributionPlatform/savePurchaserProductSetting")
+                .param("name", name)
+                .param("bannerUri", bannerUri)
+                .param("price", price + "")
+                .param("explain", explain)
+                .param("agreement", agreement)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
+        List<PurchaserProductSetting> list = purchaserProductSettingRepository.findByName(name);
+        assertThat(list).isNotEmpty().as("查找到数据");
+        PurchaserProductSetting purchaserProductSetting = list.get(0);
+        assertThat(purchaserProductSetting.getName()).isEqualTo(name);
+        assertThat(purchaserProductSetting.getBannerUri()).isEqualTo(bannerUri);
+        assertThat(purchaserProductSetting.getPrice()).isEqualTo(price);
+        assertThat(purchaserProductSetting.getExplain()).isEqualTo(explain);
+        assertThat(purchaserProductSetting.getAgreement()).isEqualTo(agreement);
+
+        status = mockMvc.perform(post("/distributionPlatform/updatePurchaserProductSetting")
+                .param("id", purchaserProductSetting.getId().toString())
+                .param("name", name = UUID.randomUUID().toString())
+                .param("bannerUri", bannerUri = UUID.randomUUID().toString())
+                .param("price", (price = new BigDecimal(random.nextInt())).toString())
+                .param("explain", explain = UUID.randomUUID().toString())
+                .param("agreement", agreement = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("修改相应成功");
+        purchaserProductSetting = purchaserProductSettingRepository.getOne(purchaserProductSetting.getId());
+        assertThat(purchaserProductSetting).isNotNull().as("查找到数据");
+        assertThat(purchaserProductSetting.getName()).isEqualTo(name);
+        assertThat(purchaserProductSetting.getBannerUri()).isEqualTo(bannerUri);
+        assertThat(purchaserProductSetting.getPrice()).isEqualTo(price);
+        assertThat(purchaserProductSetting.getExplain()).isEqualTo(explain);
+        assertThat(purchaserProductSetting.getAgreement()).isEqualTo(agreement);
+
+        status = mockMvc.perform(post("/distributionPlatform/savePurchaserProductSetting")
+                .param("id", purchaserProductSetting.getId().toString())
+                .param("name", name = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败");
+
+        status = mockMvc.perform(post("/distributionPlatform/updatePurchaserProductSetting")
+                .param("id", purchaserProductSetting.getId().toString())
+                .param("name", name = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败");
+
+    }
+
+    @Test
+    public void recommendGoodOrUnRecommendGood() throws Exception {
+        TouristGood touristGood = createTouristGood(null, null, null, null, null);
+        int status = mockMvc.perform(post("/distributionPlatform/recommendTouristGood")
+                .param("id", touristGood.getId().toString())
+                .param("recommend", true + "")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        touristGood = touristGoodRepository.getOne(touristGood.getId());
+        assertThat(touristGood.getRecommend()).isTrue().as("修改成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/unRecommendTouristGood")
+                .param("id", touristGood.getId().toString())
+                .param("recommend", false + "")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        touristGood = touristGoodRepository.getOne(touristGood.getId());
+        assertThat(touristGood.getRecommend()).isFalse().as("修改成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/recommendTouristGood")
+                .param("id", touristGood.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败");
+
+        status = mockMvc.perform(post("/distributionPlatform/unRecommendTouristGood")
+                .param("id", touristGood.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败");
+
+    }
+
+    @Test
+    public void saveOrUpdateActivityType() throws Exception {
+        String name = UUID.randomUUID().toString();
+        int status = mockMvc.perform(post("/distributionPlatform/saveActivityType")
+                .param("activityName", name)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        List<ActivityType> activityTypes = activityTypeRepository.findByActivityName(name);
+        assertThat(activityTypes).isNotEmpty().as("查找到数据");
+        ActivityType activityType = activityTypes.get(0);
+        assertThat(activityType.getActivityName()).isEqualTo(name).as("添加成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/updateActivityType")
+                .param("id", activityType.getId().toString())
+                .param("activityName", name = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        activityType = activityTypeRepository.getOne(activityType.getId());
+        assertThat(activityType.getActivityName()).isEqualTo(name).as("修改成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/saveActivityType")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败");
+
+        status = mockMvc.perform(post("/distributionPlatform/updateActivityType")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败");
+    }
+
+    @Test
+    public void delActivityType() throws Exception {
+        ActivityType activityType = createActivityType(null);
+        int status = mockMvc.perform(delete("/distributionPlatform/delActivityType")
+                .param("id", activityType.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        activityType = activityTypeRepository.findOne(activityType.getId());
+        assertThat(activityType).as("删除成功").isNull();
+
+        status = mockMvc.perform(delete("/distributionPlatform/delActivityType")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("删除失败");
+    }
+
+    @Test
+    public void saveOrUpdateTouristType() throws Exception {
+        String name = UUID.randomUUID().toString();
+        int status = mockMvc.perform(post("/distributionPlatform/saveTouristType")
+                .param("typeName", name)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        List<TouristType> touristTypes = touristTypeRepository.findByTypeName(name);
+
+        assertThat(touristTypes).isNotEmpty().as("查找到数据");
+        TouristType touristType = touristTypes.get(0);
+        assertThat(touristType.getTypeName()).isEqualTo(name).as("添加成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/updateTouristType")
+                .param("id", touristType.getId().toString())
+                .param("typeName", name = UUID.randomUUID().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        touristType = touristTypeRepository.getOne(touristType.getId());
+        assertThat(touristType.getTypeName()).isEqualTo(name).as("修改成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/saveTouristType")
+                .param("id", touristType.getId().toString())
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败,缺少参数");
+
+        status = mockMvc.perform(post("/distributionPlatform/updateTouristType")
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败,缺少参数");
+    }
 }

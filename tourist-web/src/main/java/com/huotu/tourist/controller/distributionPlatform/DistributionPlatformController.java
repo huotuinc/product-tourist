@@ -460,9 +460,7 @@ public class DistributionPlatformController extends BaseController {
         touristSupplier.setContacts(contacts);
         touristSupplier.setContactNumber(contactNumber);
         touristSupplier.setAddress(address);
-
         touristSupplierService.save(touristSupplier);
-
         return null;
     }
 
@@ -585,7 +583,6 @@ public class DistributionPlatformController extends BaseController {
         return "";
     }
 
-
     /**
      * 删除活动类型
      * // TODO: 2016/12/22
@@ -593,10 +590,12 @@ public class DistributionPlatformController extends BaseController {
      * @param id id not null
      * @return
      */
-    public String delActivityTYpe(@RequestParam Long id) {
+    @RequestMapping(value = "delActivityType", method = RequestMethod.DELETE)
+    public String delActivityType(@RequestParam Long id) {
         activityTypeRepository.delete(id);
         return null;
     }
+
 
     /**
      * 添加或修改线路类型
