@@ -224,9 +224,6 @@ public class SupplierManageController {
 
     }
 
-
-
-
     /**
      * 显示某供应商的线路商品信息
      *
@@ -244,8 +241,17 @@ public class SupplierManageController {
     }
 
 
+    /**
+     * 保存线路商品信息
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/saveTouristGood")
+    public String saveTouristGood() throws IOException{
 
 
+        return "";
+    }
 
 
     /**
@@ -262,6 +268,8 @@ public class SupplierManageController {
             , SettlementStateEnum platformChecking, LocalDate createTime, Pageable pageable) throws IOException {
         return null;
     }
+
+
 
 
     /**
@@ -282,17 +290,27 @@ public class SupplierManageController {
 
     }
 
-
+    /**
+     * 销售统计里面订单详情列表
+     * @param userInfo      当前用户
+     * @param pageable      分页信息
+     * @param orderDate     下单时间
+     * @param endOrderDate  结束下单时间
+     * @param payDate       支付时间
+     * @param endPayDate    结束支付时间
+     * @return              订单列表
+     * @throws IOException
+     */
     @RequestMapping("/orderDetailsList")
     public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal CurrentUserInfo userInfo
             , @RequestParam Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
-            , LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate) throws IOException {
+            , LocalDateTime payDate, LocalDateTime endPayDate) throws IOException {
 
         TouristSupplier supplier = touristSupplierRepository.findOne(userInfo.getSupplierId());
 
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
                 null, null, null, null, null, orderDate.toLocalDate(), endOrderDate.toLocalDate()
-                , payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), null);
+                , payDate.toLocalDate(), endPayDate.toLocalDate(), null, null);
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
@@ -327,6 +345,10 @@ public class SupplierManageController {
         selections.addAll(TouristOrder.htmlSelections);
         return new PageAndSelection<>(orders, selections);
     }
+
+
+
+
 
 
 }
