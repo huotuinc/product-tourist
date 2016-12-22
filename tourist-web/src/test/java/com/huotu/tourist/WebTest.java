@@ -41,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -275,7 +274,8 @@ public abstract class WebTest extends SpringWebTest {
      * @param maxPeople
      * @return
      */
-    protected TouristRoute createTouristRoute(String routeNo,TouristGood good,LocalDate fromDate,LocalDate toDate,int maxPeople){
+    protected TouristRoute createTouristRoute(String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime toDate,
+                                              int maxPeople) {
         TouristRoute touristRoute=new TouristRoute();
         touristRoute.setRouteNo(routeNo);
         touristRoute.setGood(good);

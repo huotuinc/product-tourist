@@ -579,12 +579,12 @@ public class DistributionPlatformControllerTest extends WebTest {
 
 
     @Test
-    public void supplierOrders() throws Exception {
+    public void touristOrders() throws Exception {
         int pageSize = 1;
         int pageNo = 1;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
                 ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"), null);
-        String json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        String json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
         ).andReturn().getResponse().getContentAsString();
@@ -593,7 +593,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         List<Map> list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("没有查询条件查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("orderNo", "" + order.getOrderNo())
@@ -610,7 +610,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         assertThat(flag).isTrue().as("指定订单号查询到相应数据列表");
 
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("touristName", order.getTouristGood().getTouristName())
@@ -626,7 +626,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         }
         assertThat(flag).isTrue().as("指定线路名称查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("buyerName", order.getTouristBuyer().getBuyerName())
@@ -642,7 +642,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         }
         assertThat(flag).isTrue().as("指定采购商名称查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("tel", "" + order.getTouristBuyer().getTelPhone())
@@ -652,7 +652,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("指定采购商电话查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("orderState", order.getOrderState().getCode() + "")
@@ -668,7 +668,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         }
         assertThat(flag).isTrue().as("指定订单状态查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("payType", "" + order.getPayType().getCode())
@@ -684,7 +684,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         }
         assertThat(flag).isTrue().as("指定支付类型查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("orderDate", "2016-12-12 00:00:00")
@@ -695,7 +695,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("指定创建时间范围查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("payDate", "2016-12-12 00:00:00")
@@ -706,7 +706,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("指定支付时间范围查询到相应数据列表");
 
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("orderNo", order.getOrderNo())
@@ -732,7 +732,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         assertThat(flag).isTrue().as("查询条件全部指定查询到相应数据列表");
 
         createTouristOrder(null, null, null, null, null, null, null);
-        json = mockMvc.perform(get("/distributionPlatform/supplierOrders")
+        json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo + 1)
         ).andReturn().getResponse().getContentAsString();
@@ -741,6 +741,26 @@ public class DistributionPlatformControllerTest extends WebTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("没有筛选条件的分页查询到相应数据列表");
 
+    }
+
+    @Test
+    public void exportTouristOrdersOrders() throws Exception {
+        int pageSize = 1;
+        int pageNo = 1;
+        PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
+                , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
+        String json = mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
+                .param("pageSize", "" + pageSize)
+                .param("pageNo", "" + pageNo)
+                .param("startPayDate", "2016-12-12 08:00:00")
+                .param("endPayDate", "2016-12-12 23:00:00")
+                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
+                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
+                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
+        ).andReturn().getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(json, Map.class);
+        // TODO: 2016/12/21
     }
 
     @Test
