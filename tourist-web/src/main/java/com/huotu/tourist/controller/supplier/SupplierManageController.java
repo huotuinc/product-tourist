@@ -5,11 +5,22 @@ import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.currentUser.CurrentUserInfo;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
@@ -102,9 +113,8 @@ public class SupplierManageController {
 
         TouristSupplier supplier = touristSupplierRepository.findOne(userInfo.getSupplierId());
 
-        Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
-                orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate()
-                , payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), orderStateEnum);
+        Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate(), payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), orderStateEnum, pageable
+        );
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
@@ -308,9 +318,8 @@ public class SupplierManageController {
 
         TouristSupplier supplier = touristSupplierRepository.findOne(userInfo.getSupplierId());
 
-        Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
-                null, null, null, null, null, orderDate.toLocalDate(), endOrderDate.toLocalDate()
-                , payDate.toLocalDate(), endPayDate.toLocalDate(), null, null);
+        Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, null, null, null, null, orderDate.toLocalDate(), endOrderDate.toLocalDate(), payDate.toLocalDate(), endPayDate.toLocalDate(), null, null, pageable
+        );
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 

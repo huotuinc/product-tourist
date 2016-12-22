@@ -12,11 +12,8 @@ package com.huotu.tourist.controller.distributionPlatform;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
@@ -27,20 +24,17 @@ import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.model.PageAndSelection;
-import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.service.PresentRecordService;
-import com.huotu.tourist.service.PurchaserPaymentRecordService;
 import com.huotu.tourist.service.PurchaserProductSettingService;
 import com.huotu.tourist.service.SettlementSheetService;
 import com.huotu.tourist.service.TouristBuyerService;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristSupplierService;
-import com.huotu.tourist.service.TouristTypeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +51,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -82,19 +75,10 @@ public class DistributionPlatformController extends BaseController {
     TouristBuyerService touristBuyerService;
 
     @Autowired
-    PurchaserPaymentRecordService purchaserPaymentRecordService;
-
-    @Autowired
     PurchaserProductSettingService purchaserProductSettingService;
 
     @Autowired
     TouristGoodService touristGoodService;
-
-    @Autowired
-    ActivityTypeService activityTypeService;
-
-    @Autowired
-    TouristTypeService touristTypeService;
 
     @Autowired
     TouristOrderService touristOrderService;
@@ -104,6 +88,9 @@ public class DistributionPlatformController extends BaseController {
 
     @Autowired
     PresentRecordService presentRecordService;
+
+    @Autowired
+    ActivityTypeRepository activityTypeRepository;
 
     /**
      * 跳转到供应商列表页面
@@ -156,8 +143,8 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "buyerList", method = RequestMethod.GET)
-    public PageAndSelection<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum buyerCheckState
-            , int pageSize, int pageNo, HttpServletRequest request) {
+    public PageAndSelection<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone
+            , BuyerCheckStateEnum buyerCheckState, int pageSize, int pageNo, HttpServletRequest request) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
                 , new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristBuyer.selections);
@@ -198,6 +185,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 导出采购商支付记录列表
+     * // TODO: 2016/12/22 方法最大化支持供应商，添加用户角色
      *
      * @param startPayDate  开始支付时间
      * @param endPayDate    结束支付时间
@@ -233,6 +221,7 @@ public class DistributionPlatformController extends BaseController {
         }
         return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
     }
+
 
     /**
      * 跳转到采购商产品设置列表页面
@@ -276,43 +265,6 @@ public class DistributionPlatformController extends BaseController {
     public String toTouristGoodList(HttpServletRequest request, Model model) {
         //todo
         return "";
-    }
-
-    /**
-     * 线路列表/推荐线路列表通过是否推荐属性进行判断是否推荐
-     *
-     * @param touristName       线路名称
-     * @param supplierName      供应商名称
-     * @param touristTypeId     线路类型ID
-     * @param activityTypeId    活动ID
-     * @param touristCheckState 线路审核状态
-     * @param recommend         是否推荐 null全部，true推荐列表
-     * @param pageSize          每页显示条数
-     * @param pageNo            页码
-     * @param request
-     */
-    @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
-    public PageAndSelection<TouristGood> touristGoodList(String touristName, String supplierName, Long touristTypeId
-            , Long activityTypeId, TouristCheckStateEnum touristCheckState, Boolean recommend, int pageSize, int
-                                                                 pageNo
-            , HttpServletRequest request) {
-        ActivityType activityType = null;
-        TouristType touristType = null;
-        if (touristTypeId != null) {
-            touristType = touristTypeService.getOne(touristTypeId);
-        }
-        if (activityTypeId != null) {
-            activityType = activityTypeService.getOne(touristTypeId);
-        }
-        Page<TouristGood> page;
-        if (recommend) {
-            page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
-                    , touristCheckState, recommend, new PageRequest(pageNo, pageSize));
-        } else {
-            page = touristGoodService.touristGoodList(null, touristName, supplierName, touristType, activityType
-                    , touristCheckState, new PageRequest(pageNo, pageSize));
-        }
-        return new PageAndSelection<>(page, TouristGood.selections);
     }
 
 
@@ -374,7 +326,7 @@ public class DistributionPlatformController extends BaseController {
     public ResponseEntity touristTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model)
             throws JsonProcessingException {
         Page<TouristType> page = touristTypeService.touristTypeList(name, new PageRequest(pageNo, pageSize));
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
         ObjectMapper objectMapper = new ObjectMapper();
@@ -392,36 +344,6 @@ public class DistributionPlatformController extends BaseController {
         //todo
         return "";
     }
-
-    /**
-     * 订单列表
-     *
-     * @param orderNo      订单号
-     * @param touristName  线路名称
-     * @param buyerName    采购商名称
-     * @param tel          采购商电话
-     * @param orderState   订单状态
-     * @param orderDate    开始订单创建时间
-     * @param endOrderDate 结束订单创建时间
-     * @param payDate      开始支付时间
-     * @param endPayDate   结束支付时间
-     * @param payType      支付类型
-     * @param touristDate  线路开始时间
-     * @param pageSize     每页显示条数
-     * @param pageNo       页码
-     * @param request
-     * @param model        @return
-     */
-    @RequestMapping(value = "supplierOrders", method = RequestMethod.GET)
-    public PageAndSelection supplierOrders(String orderNo, String touristName, String buyerName, String tel,
-                                           PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
-            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
-            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
-        Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo
-                , touristName, buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
-        return new PageAndSelection<>(page, TouristOrder.htmlSelections);
-    }
-
 
     /**
      * 跳转到结算单列表页面
@@ -489,6 +411,7 @@ public class DistributionPlatformController extends BaseController {
     }
 
     /**-------------------下面新增和修改相关-----------------------*/
+
     /**
      * 跳转至新增供应商页面
      *
@@ -504,7 +427,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 新增供应商 和 修改供应商
-     *
+     * // TODO: 2016/12/21
      * @param id                 供应商id 为null 代表添加，不为null代表修改
      * @param supplierName       供应商名称  必须
      * @param adminAccount       登录名        必须
@@ -540,14 +463,14 @@ public class DistributionPlatformController extends BaseController {
         touristSupplier.setAddress(address);
 
         touristSupplierService.save(touristSupplier);
-        // TODO: 2016/12/21
-        return "";
+
+        return null;
     }
 
 
     /**
      * 冻结供应商
-     *
+     * // TODO: 2016/12/21
      * @param id     供应商id not null
      * @param frozen 是否冻结 not null
      * @return
@@ -557,14 +480,13 @@ public class DistributionPlatformController extends BaseController {
         TouristSupplier touristSupplier = touristSupplierService.getOne(id);
         touristSupplier.setFrozen(frozen);
         touristSupplierService.save(touristSupplier);
-        // TODO: 2016/12/21
-        return "";
+        return null;
     }
 
 
     /**
      * 新增采购产品设置
-     *
+     * // TODO: 2016/12/21
      * @param id        id 为null 代表添加，不为null代表修改
      * @param name      名称 not null
      * @param bannerUri 图片 not null
@@ -591,13 +513,12 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setExplain(explain);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);
-        // TODO: 2016/12/21
         return "";
     }
 
     /**
      * 推荐商品 和 取消推荐
-     *
+     * // TODO: 2016/12/21
      * @param id        id   not null
      * @param recommend 推荐  not null
      * @return
@@ -607,10 +528,8 @@ public class DistributionPlatformController extends BaseController {
         TouristGood touristGood = touristGoodService.getOne(id);
         touristGood.setRecommend(recommend);
         touristGoodService.save(touristGood);
-        // TODO: 2016/12/21
         return "";
     }
-
 //    /**
 //     * 审核通过 和 未通过审核
 //     * 推荐使用 {@link BaseController#showTouristGood(Long, Model)}
@@ -645,10 +564,9 @@ public class DistributionPlatformController extends BaseController {
 //        return "";
 //    }
 
-
     /**
      * 添加或修改活动类型
-     *
+     * // TODO: 2016/12/21
      * @param id
      * @param activityName
      * @return
@@ -665,13 +583,25 @@ public class DistributionPlatformController extends BaseController {
         }
         activityType.setActivityName(activityName);
         activityTypeService.save(activityType);
-        // TODO: 2016/12/21
         return "";
+    }
+
+
+    /**
+     * 删除活动类型
+     * // TODO: 2016/12/22
+     *
+     * @param id id not null
+     * @return
+     */
+    public String delActivityTYpe(@RequestParam Long id) {
+        activityTypeRepository.delete(id);
+        return null;
     }
 
     /**
      * 添加或修改线路类型
-     *
+     * // TODO: 2016/12/21
      * @param id
      * @param typeName
      * @return
@@ -688,8 +618,7 @@ public class DistributionPlatformController extends BaseController {
         }
         touristType.setTypeName(typeName);
         touristTypeService.save(touristType);
-        // TODO: 2016/12/21
-        return "";
+        return null;
     }
 
 

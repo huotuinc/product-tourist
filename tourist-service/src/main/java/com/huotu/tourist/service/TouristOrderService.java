@@ -38,32 +38,10 @@ public interface TouristOrderService {
     URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed);
 
 
-    /**
-     * 根据某个供应商的订单列表，
-     * @param supplier      供应商
-     * @param pageable      分页信息(必须)
-     * @param orderId       订单ID
-     * @param name          路线名称
-     * @param buyer         购买人
-     * @param tel           购买人电话
-     * @param payTypeEnum   付款状态
-     * @param orderDate     下单时间
-     * @param endOrderDate  结束下单时间
-     * @param payDate       支付时间
-     * @param endPayDate    结束支付时间
-     * @param touristDate   出行时间
-     * @param orderStateEnum 结算状态
-     * @throws IOException  获取订单列表发生错误
-     * @return              返回带分页信息的订单列表
-     */
-    Page<TouristOrder> supplierOrders(TouristSupplier supplier, Pageable pageable, String orderId, String name
-            , String buyer, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
-            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum) throws IOException;
 
     /**
-     * 根据某个供应商的订单列表，
-     *
-     * @param pageable       分页信息(必须)
+     * 订单列表，
+     * @param supplier
      * @param orderId        订单ID
      * @param touristName    路线名称
      * @param buyerName      购买人
@@ -75,12 +53,13 @@ public interface TouristOrderService {
      * @param endPayDate     结束支付时间
      * @param touristDate    出行时间
      * @param orderStateEnum 结算状态
+     * @param pageable       分页信息(必须)
      * @return 返回带分页信息的订单列表
      * @throws IOException 获取订单列表发生错误
      */
-    Page<TouristOrder> supplierOrders(Pageable pageable, String orderId, String touristName
-            , String buyerName, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
-            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum) throws IOException;
+    Page<TouristOrder> touristOrders(TouristSupplier supplier, String orderId, String touristName, String buyerName, String tel
+            , PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
+            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException;
 
 
     /**
