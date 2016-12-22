@@ -127,30 +127,30 @@ public class TouristGood extends BaseModel {
      * 目的地
      */
     @Embedded
-    @AssociationOverrides(
-            {@AssociationOverride(name = "province",joinColumns = {@JoinColumn(name = "des_province")})
-            ,@AssociationOverride(name = "town",joinColumns = {@JoinColumn(name = "des_town")})
-            ,@AssociationOverride(name = "district",joinColumns = {@JoinColumn(name = "des_district")})
+    @AttributeOverrides(
+            {@AttributeOverride(name = "province",column =@Column(name = "des_province"))
+            ,@AttributeOverride(name = "town",column = @Column(name = "des_town"))
+            ,@AttributeOverride(name = "district",column =@Column(name = "des_district"))
             })
     private Address destination;
     /**
      * 出发地
      */
     @Embedded
-    @AssociationOverrides(
-            {@AssociationOverride(name = "province",joinColumns = {@JoinColumn(name = "pla_province")})
-            ,@AssociationOverride(name = "town",joinColumns = {@JoinColumn(name = "pla_town")})
-            ,@AssociationOverride(name = "district",joinColumns = {@JoinColumn(name = "pla_district")})
+    @AttributeOverrides(
+            {@AttributeOverride(name = "province",column =@Column(name = "pla_province"))
+                    ,@AttributeOverride(name = "town",column = @Column(name = "pla_town"))
+                    ,@AttributeOverride(name = "district",column =@Column(name = "pla_district"))
             })
     private Address placeOfDeparture;
     /**
      * 途径地
      */
     @Embedded
-    @AssociationOverrides(
-            {@AssociationOverride(name = "province",joinColumns = {@JoinColumn(name = "tra_province")})
-            ,@AssociationOverride(name = "town",joinColumns = {@JoinColumn(name = "tra_town")})
-            ,@AssociationOverride(name = "district",joinColumns = {@JoinColumn(name = "tra_district")})
+    @AttributeOverrides(
+            {@AttributeOverride(name = "province",column =@Column(name = "pla_province"))
+                    ,@AttributeOverride(name = "town",column = @Column(name = "pla_town"))
+                    ,@AttributeOverride(name = "district",column =@Column(name = "pla_district"))
             })
     private Address travelledAddress;
     /**
