@@ -4,7 +4,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.currentUser.CurrentUserInfo;
+import com.huotu.tourist.currentUser.SystemUser;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
@@ -94,13 +94,13 @@ public class SupplierManageController {
      */
     @RequestMapping("/orderList")
 //    @ResponseBody AuthenticationPrincipal需要当前供应商
-    public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal CurrentUserInfo userInfo
+    public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal SystemUser userInfo
             , @RequestParam Pageable pageable
             , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
             , OrderStateEnum orderStateEnum) throws IOException {
 
-        TouristSupplier supplier = touristSupplierRepository.findOne(userInfo.getSupplierId());
+        TouristSupplier supplier=(TouristSupplier) userInfo;
 
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
                 orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate()
@@ -268,6 +268,8 @@ public class SupplierManageController {
             ,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson,String receptionTelephone
             ,String eventDetails,String beCareful,String touristImgUri,List<TouristRoute> routes)
             throws IOException{
+
+
         TouristGood touristGood=new TouristGood();
         TouristRoute touristRoute=new TouristRoute();
 
@@ -306,12 +308,13 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSaleStatistics")
-    public String showSaleStatistics(@AuthenticationPrincipal CurrentUserInfo userInfo, Model model) throws IOException {
-        model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(userInfo.getSupplierId()));
-        model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(userInfo.getSupplierId()));
-        model.addAttribute("refundTotal", touristOrderService.countRefundTotal(userInfo.getSupplierId()));
-        model.addAttribute("orderTotal", touristOrderService.countOrderTotal(userInfo.getSupplierId()));
-        return "";
+    public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
+        model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(supplier.getId()));
+        model.addAttribute("refundTotal", touristOrderService.countRefundTotal(supplier.getId()));
+        model.addAttribute("orderTotal", touristOrderService.countOrderTotal(supplier.getId()));
+        return ""; //todo 视图名称
 
     }
 
@@ -327,11 +330,10 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/orderDetailsList")
-    public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal CurrentUserInfo userInfo
+    public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal SystemUser userInfo
             , @RequestParam Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
             , LocalDateTime payDate, LocalDateTime endPayDate) throws IOException {
-
-        TouristSupplier supplier = touristSupplierRepository.findOne(userInfo.getSupplierId());
+        TouristSupplier supplier =(TouristSupplier)userInfo;
 
         Page<TouristOrder> orders = touristOrderService.supplierOrders(supplier, pageable,
                 null, null, null, null, null, orderDate.toLocalDate(), endOrderDate.toLocalDate()

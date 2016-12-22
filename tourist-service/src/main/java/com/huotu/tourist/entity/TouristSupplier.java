@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.currentUser.SystemUser;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
@@ -30,7 +31,7 @@ import java.util.List;
 @Table(name = "Tourist_Supplier")
 @Getter
 @Setter
-public class TouristSupplier extends BaseModel {
+public class TouristSupplier extends BaseModel implements SystemUser {
 
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristSupplier, String>("id", "id"),
@@ -105,5 +106,8 @@ public class TouristSupplier extends BaseModel {
     @Column(insertable = false)
     private Boolean frozen;
 
-
+    @Override
+    public boolean isSupplier() {
+        return true;
+    }
 }
