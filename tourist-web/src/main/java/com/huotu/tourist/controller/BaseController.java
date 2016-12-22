@@ -48,6 +48,7 @@ import java.util.List;
  * 提供公共的controller 方法
  * Created by lhx on 2016/12/21.
  */
+@RequestMapping(value = "/base/")
 public class BaseController {
 
     @Autowired
@@ -70,7 +71,6 @@ public class BaseController {
 
     @Autowired
     public PurchaserPaymentRecordService purchaserPaymentRecordService;
-
 
     @Autowired
     public ActivityTypeService activityTypeService;
@@ -213,10 +213,10 @@ public class BaseController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/modifyRemarks", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyOrderRemarks", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public void modifyRemarks(@RequestParam Long id, @RequestParam String remark) throws IOException {
+    public void modifyOrderRemarks(@RequestParam Long id, @RequestParam String remark) throws IOException {
         TouristOrder touristOrder = touristOrderRepository.getOne(id);
         touristOrder.setRemarks(remark);
     }

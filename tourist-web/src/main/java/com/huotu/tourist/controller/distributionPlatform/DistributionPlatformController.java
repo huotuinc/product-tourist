@@ -180,6 +180,7 @@ public class DistributionPlatformController extends BaseController {
                                                                                HttpServletRequest request) {
         Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
                 , buyerName, buyerDirector, telPhone, new PageRequest(pageNo, pageSize));
+
         return new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
     }
 
