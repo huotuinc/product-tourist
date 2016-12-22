@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 地址转换器
- *  字符串格式如："浙江省,杭州市,滨江区"，使用“,”分割.
+ *  字符串格式如："浙江省,杭州市,滨江区,智慧E谷"，使用“,”分割.
  * @author slt
  */
 @Component
@@ -24,9 +24,16 @@ public class AddressConverter extends AutowireConverter<Address> {
     public Address convert(String source) {
         String[] strings=source.split(",");
         Address address=new Address();
-        address.setProvince(strings[0]);
-        address.setTown(strings[1]);
-        address.setDistrict(strings[2]);
+        switch (strings.length){
+            case 4:
+                address.setDetailedAddress(strings[3]);
+            case 3:
+                address.setDistrict(strings[2]);
+            case 2:
+                address.setTown(strings[1]);
+            case 1:
+                address.setProvince(strings[0]);
+        }
         return address;
     }
 }

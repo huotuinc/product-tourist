@@ -363,4 +363,16 @@ public class SupplierManageController {
     }
 
 
+    @RequestMapping("/modifySupplierInfo")
+    @ResponseBody
+    public String modifySupplierInfo(Long id,Address address,String contacts,String contactNumber
+            ,String businessLicenseUri,String remarks)throws Exception{
+
+        return "";
+
+
+
+    }
+
+
 }

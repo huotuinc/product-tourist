@@ -1,5 +1,6 @@
 package com.huotu.tourist.service;
 
+import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.TouristSupplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,19 @@ public interface TouristSupplierService extends BaseService<TouristSupplier, Lon
      * @return 供应商列表
      */
     Page<TouristSupplier> supplierList(String name, Pageable pageable);
+
+    /**
+     * 修改供应商信息
+     * @param id                    供应商ID
+     * @param address               供应商地址
+     * @param contacts
+     * @param contactNumber
+     * @param businessLicenseUri
+     * @param remarks
+     * @return
+     */
+    TouristSupplier modifySupplier(Long id, Address address, String contacts, String contactNumber
+            , String businessLicenseUri, String remarks);
 
 
 
