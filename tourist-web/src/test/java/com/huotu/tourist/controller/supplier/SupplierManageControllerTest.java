@@ -33,9 +33,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  * Created by Administrator on 2016/12/17.
  */
 public class SupplierManageControllerTest extends WebTest {
-
-
-
     @Autowired
     private TouristRouteRepository touristRouteRepository;
 
@@ -124,7 +121,7 @@ public class SupplierManageControllerTest extends WebTest {
 
         //预期
         TouristGood touristGood = createTouristGood("slt", null, null, null, null);
-        TouristRoute touristRoute=createTouristRoute(null,touristGood,LocalDate.of(2016,10,10),null,0);
+        TouristRoute touristRoute=createTouristRoute(null,touristGood,LocalDateTime.of(2016,10,10,0,0),null,0);
         order=createTouristOrder(touristGood,null,null,null,null,null,null);
         json=mockMvc.perform(get("/supplier/orderList")
                 .param("touristDate",""+ LocalDate.of(2016,10,10)))
@@ -157,7 +154,7 @@ public class SupplierManageControllerTest extends WebTest {
     public void showAllOrderTouristDate() throws Exception{
         List<TouristRoute> routes=new ArrayList<>();
         for(int i=0;i<10;i++){
-            TouristRoute route=createTouristRoute(null,null,LocalDate.now(),null,random.nextInt(50)+20);
+            TouristRoute route=createTouristRoute(null,null,LocalDateTime.now(),null,random.nextInt(50)+20);
             int peopleNumber=random.nextInt(route.getMaxPeople());
 
             List<Traveler> travelers=new ArrayList<>();
@@ -206,8 +203,8 @@ public class SupplierManageControllerTest extends WebTest {
     public void modifyOrderTouristDate() throws Exception{
 
         TouristOrder order=createTouristOrder(null,null,null,null,null,null,null);
-        TouristRoute routeF=createTouristRoute(null,null,LocalDate.now(),null,4);
-        TouristRoute routeL=createTouristRoute(null,null,LocalDate.of(2016,10,10),null,4);
+        TouristRoute routeF=createTouristRoute(null,null,LocalDateTime.now(),null,4);
+        TouristRoute routeL=createTouristRoute(null,null,LocalDateTime.of(2016,10,10,0,0),null,4);
         Traveler traveler=createTraveler(routeF,order);
         mockMvc.perform(get("/supplier/modifyOrderTouristDate")
                 .param("formerId",""+routeF.getId()).param("laterId",""+routeL.getId()));
