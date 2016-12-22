@@ -115,7 +115,6 @@ public class BaseController {
 
     /**
      * 导出订单列表
-     * // TODO: 2016/12/22 加入用户体系，接口最大化
      *
      * @param orderNo      订单号
      * @param touristName  线路名称
@@ -282,7 +281,7 @@ public class BaseController {
 
     /**
      * 显示线路商品
-     * 
+     *
      * @param id    商品ID
      * @param model 返回的model
      * @return

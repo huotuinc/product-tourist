@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *  线路行程模型
@@ -22,9 +22,9 @@ public class TouristRouteModel {
 
     private TouristGood good;
 
-    private LocalDate fromDate;
+    private LocalDateTime fromDate;
 
-    private LocalDate toDate;
+    private LocalDateTime toDate;
 
     private int maxPeople;
 
