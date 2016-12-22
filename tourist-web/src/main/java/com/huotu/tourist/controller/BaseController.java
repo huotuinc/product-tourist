@@ -24,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -121,6 +122,7 @@ public class BaseController {
      */
     @RequestMapping(value = "/modifyRemarks", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional
     public void modifyRemarks(@RequestParam Long id, @RequestParam String remark) throws IOException {
         TouristOrder touristOrder = touristOrderRepository.getOne(id);
         touristOrder.setRemarks(remark);
@@ -137,6 +139,7 @@ public class BaseController {
      */
     @RequestMapping(value = "/modifyOrderState", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional
     public void modifyOrderState(@RequestParam Long id, @RequestParam OrderStateEnum orderState) throws IOException {
         touristOrderRepository.modifyOrderState(orderState, id);
         TouristOrder order = touristOrderRepository.getOne(id);
@@ -155,6 +158,7 @@ public class BaseController {
      * @throws IOException
      */
     @RequestMapping(value = "/modifyTravelerBaseInfo", method = RequestMethod.POST)
+    @Transactional
     public void modifyTravelerBaseInfo(@RequestParam Long id, String name, SexEnum sex, Integer age, String tel, String IDNo)
             throws IOException {
         Traveler traveler = travelerRepository.getOne(id);
@@ -176,7 +180,7 @@ public class BaseController {
     @RequestMapping(value = "/modifyOrderTouristDate", method = RequestMethod.POST)
     @ResponseBody
     public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId) throws IOException {
-        int modifyNumber = travelerRepository.modifyRouteIdByRouteId(laterId, formerId);
+        travelerRepository.modifyRouteIdByRouteId(laterId, formerId);
     }
 
     /**

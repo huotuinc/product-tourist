@@ -110,14 +110,14 @@ public class SupplierManageController {
 
 
         //出行时间特殊处理
-        Selection<TouristOrder, LocalDate> touristDateSelection = new Selection<TouristOrder, LocalDate>() {
+        Selection<TouristOrder, LocalDateTime> touristDateSelection = new Selection<TouristOrder, LocalDateTime>() {
             @Override
             public String getName() {
                 return "touristDate";
             }
 
             @Override
-            public LocalDate apply(TouristOrder order) {
+            public LocalDateTime apply(TouristOrder order) {
                 Traveler traveler = travelerRepository.findByOrder_Id(order.getId()).get(0);
                 return traveler.getRoute().getFromDate();
             }
@@ -243,11 +243,36 @@ public class SupplierManageController {
 
     /**
      * 保存线路商品信息
+     * @param touristName           线路名称
+     * @param activityTypeId        活动类型ID
+     * @param touristTypeId         线路类型ID
+     * @param touristFeatures       线路特色
+     * @param destination           目的地
+     * @param placeOfDeparture      出发地
+     * @param travelledAddress      途经地
+     * @param price                 单价
+     * @param childrenDiscount      儿童折扣
+     * @param rebate                返利比例
+     * @param receptionPerson       地接人
+     * @param receptionTelephone    地接人电话
+     * @param eventDetails          活动详情
+     * @param beCareful             注意事项
+     * @param touristImgUri         商品图片
+     * @param routes                所有线路
      * @return
      * @throws IOException
      */
     @RequestMapping("/saveTouristGood")
-    public String saveTouristGood() throws IOException{
+    public String saveTouristGood(String touristName,Long activityTypeId,Long touristTypeId,String touristFeatures
+            ,Address destination,Address placeOfDeparture,Address travelledAddress,BigDecimal price
+            ,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson,String receptionTelephone
+            ,String eventDetails,String beCareful,String touristImgUri,List<TouristRoute> routes)
+            throws IOException{
+        TouristGood touristGood=new TouristGood();
+        TouristRoute touristRoute=new TouristRoute();
+
+
+
 
 
         return "";
@@ -345,10 +370,6 @@ public class SupplierManageController {
         selections.addAll(TouristOrder.htmlSelections);
         return new PageAndSelection<>(orders, selections);
     }
-
-
-
-
 
 
 }
