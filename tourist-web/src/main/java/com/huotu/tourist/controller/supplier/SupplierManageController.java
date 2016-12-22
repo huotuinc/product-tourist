@@ -241,7 +241,7 @@ public class SupplierManageController {
      * @param eventDetails          活动详情
      * @param beCareful             注意事项
      * @param touristImgUri         商品图片
-     * @param touristDate           出行时间
+     * @param touristRoutes         出行线路列表
      * @param maxPeople             最大人数
      * @return
      * @throws IOException
@@ -251,19 +251,21 @@ public class SupplierManageController {
             ,String touristFeatures,Address destination,Address placeOfDeparture,Address travelledAddress
             ,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson
             ,String receptionTelephone,String eventDetails,String beCareful,String touristImgUri
-            ,LocalDateTime[] touristDate,Integer maxPeople)
+            ,Integer maxPeople,TouristRoute[] touristRoutes)
             throws IOException{
 
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeRepository.getOne(activityTypeId);
-        touristGoodService.saveToursitGood(id,touristName,activityType,touristType,touristFeatures
+        //保存商品
+        TouristGood good=touristGoodService.saveToursitGood(id,touristName,activityType,touristType,touristFeatures
                 ,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri);
+                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
 
-
-
-
-
+        //保存所有线路
+        for (TouristRoute t:touristRoutes){
+            touristRouteService.saveToursitRoute(t.getId(),t.getRouteNo(),good,t.getFromDate(),t.getToDate(),
+                    maxPeople);
+        }
 
         return "";// todo 返回的视图
     }

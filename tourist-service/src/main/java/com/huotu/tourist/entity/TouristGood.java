@@ -200,6 +200,12 @@ public class TouristGood extends BaseModel {
      */
     @Column(length = 200)
     private String touristImgUri;
+
+    /**
+     * 统一最大出行人数
+     */
+    private int maxPeople;
+
     /**
      * 推荐
      */

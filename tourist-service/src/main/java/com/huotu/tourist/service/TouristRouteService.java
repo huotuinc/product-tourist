@@ -21,11 +21,11 @@ public interface TouristRouteService {
     int getRemainPeopleByRoute(TouristRoute route) throws IOException;
 
     /**
-     * 保存一个线路行程
-     * @param id        行程ID
+     * 保存一个线路行程(包括新增和修改)
+     * @param id        行程ID(null:新增,有数据：修改)
      * @param routeNo   行程号
-     * @param good      线路商品
-     * @param fromDate  出行时间
+     * @param good      线路商品(必须)
+     * @param fromDate  出行时间(必须)
      * @param toDate    结束时间
      * @param maxPeople 总人数
      */
