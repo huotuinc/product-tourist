@@ -15,7 +15,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 线路行程
@@ -35,10 +35,10 @@ public class TouristRoute extends BaseModel {
     private TouristGood good;
 
     @Column(columnDefinition = "date")
-    private LocalDate fromDate;
+    private LocalDateTime fromDate;
 
     @Column(columnDefinition = "date")
-    private LocalDate toDate;
+    private LocalDateTime toDate;
 
     private int maxPeople;
 

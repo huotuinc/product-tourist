@@ -1,24 +1,38 @@
 package com.huotu.tourist.controller;
 
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -28,28 +42,74 @@ import java.util.List;
 
 public class BaseController {
     @Autowired
+    public TravelerRepository travelerRepository;
+    @Autowired
     private TouristSupplierRepository touristSupplierRepository;
-
     @Autowired
     private TouristOrderService touristOrderService;
-
     @Autowired
     private TouristOrderRepository touristOrderRepository;
-
     @Autowired
     private TouristRouteRepository touristRouteRepository;
-
     @Autowired
     private TouristRouteService touristRouteService;
-
-    @Autowired
-    private TravelerRepository travelerRepository;
-
     @Autowired
     private TouristGoodService touristGoodService;
 
     @Autowired
     private TouristGoodRepository touristGoodRepository;
+
+
+    /**
+     * 导出订单列表
+     *
+     * @param orderNo      订单号
+     * @param touristName  线路名称
+     * @param buyerName    采购商名称
+     * @param tel          采购商电话
+     * @param orderState   订单状态
+     * @param orderDate    开始订单创建时间
+     * @param endOrderDate 结束订单创建时间
+     * @param payDate      开始支付时间
+     * @param endPayDate   结束支付时间
+     * @param payType      支付类型
+     * @param touristDate  线路开始时间
+     * @param pageSize     每页显示条数
+     * @param pageNo       页码
+     * @param request
+     * @param model        @return
+     */
+    @RequestMapping(value = "exportSupplierOrders", method = RequestMethod.GET)
+    public ResponseEntity exportSupplierOrders(String orderNo, String touristName, String buyerName, String tel,
+                                               PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
+            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
+            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
+        Page<TouristOrder> page = touristOrderService.supplierOrders(new PageRequest(pageNo, pageSize), orderNo
+                , touristName, buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "订单记录.csv");
+        StringBuffer sb = new StringBuffer();
+        sb.append("订单号,").append("下单时间,").append("支付时间,").append("支付方式,").append("供应商,").append("线路名称,")
+                .append("金额,").append("购买人,").append("支付状态,").append("出行时间,").append("购买数量,").append("备注/n");
+        for (TouristOrder touristOrder : page.getContent()) {
+            List<Traveler> travelers = travelerRepository.findByOrder_Id(touristOrder.getId());
+            sb
+                    .append(touristOrder.getOrderNo()).append(",")
+                    .append(LocalDateTimeFormatter.toStr(touristOrder.getCreateTime())).append(",")
+                    .append(LocalDateTimeFormatter.toStr(touristOrder.getPayTime())).append(",")
+                    .append(touristOrder.getPayType().getValue()).append(",")
+                    .append(touristOrder.getTouristGood().getTouristSupplier().getSupplierName()).append(",")
+                    .append(touristOrder.getTouristGood().getTouristName()).append(",")
+                    .append(touristOrder.getOrderMoney()).append(",").append(touristOrder.getTouristBuyer().getBuyerName())
+                    .append("/r").append(touristOrder.getTouristBuyer().getTelPhone()).append(",")
+                    .append(touristOrder.getOrderState()).append(",")
+                    .append(LocalDateTimeFormatter.toStr(travelers.get(0).getRoute().getFromDate())).append(",")
+                    .append(travelers.size()).append(",")
+                    .append(touristOrder.getRemarks());
+        }
+        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
+    }
 
     /**
      * 修改订单备注
@@ -103,7 +163,6 @@ public class BaseController {
         traveler.setAge(age);
         traveler.setTelPhone(tel);
         traveler.setIDNo(IDNo);
-//        travelerRepository.save(traveler);
     }
 
     /**
@@ -118,9 +177,6 @@ public class BaseController {
     @ResponseBody
     public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId) throws IOException {
         int modifyNumber = travelerRepository.modifyRouteIdByRouteId(laterId, formerId);
-//        ModelMap modelMap=new ModelMap();
-//        modelMap.addAttribute("data",modifyNumber);
-//        return modelMap;
     }
 
     /**

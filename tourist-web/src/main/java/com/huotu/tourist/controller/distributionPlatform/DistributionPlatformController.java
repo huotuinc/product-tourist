@@ -422,6 +422,7 @@ public class DistributionPlatformController extends BaseController {
         return new PageAndSelection<>(page, TouristOrder.htmlSelections);
     }
 
+
     /**
      * 跳转到结算单列表页面
      *
@@ -610,37 +611,39 @@ public class DistributionPlatformController extends BaseController {
         return "";
     }
 
-    /**
-     * 审核通过 和 未通过审核
-     *
-     * @param id                id   not null
-     * @param touristCheckState 审核状态  not null
-     * @return
-     */
-    @RequestMapping(value = {"notCheck", "FinishCheck"}, method = RequestMethod.POST)
-    public String notCheckOrFinishCheck(@RequestParam Long id, @RequestParam TouristCheckStateEnum
-            touristCheckState) {
-        TouristGood touristGood = touristGoodService.getOne(id);
-        touristGood.setTouristCheckState(touristCheckState);
-        touristGoodService.save(touristGood);
-        // TODO: 2016/12/21
-        return "";
-    }
-
-    /**
-     * 查看线路
-     *
-     * @param id    id   not null
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "seeTouristGood", method = RequestMethod.GET)
-    public String seeTouristGood(@RequestParam Long id, Model model) {
-        TouristGood touristGood = touristGoodService.getOne(id);
-        model.addAttribute("touristGood", touristGood);
-        // TODO: 2016/12/21
-        return "";
-    }
+//    /**
+//     * 审核通过 和 未通过审核
+//     * 推荐使用 {@link BaseController#showTouristGood(Long, Model)}
+//     * @param id                id   not null
+//     * @param touristCheckState 审核状态  not null
+//     * @return
+//     */
+//    @Deprecated
+//    @RequestMapping(value = {"notCheck", "FinishCheck"}, method = RequestMethod.POST)
+//    public String notCheckOrFinishCheck(@RequestParam Long id, @RequestParam TouristCheckStateEnum
+//            touristCheckState) {
+//        TouristGood touristGood = touristGoodService.getOne(id);
+//        touristGood.setTouristCheckState(touristCheckState);
+//        touristGoodService.save(touristGood);
+//        // TODO: 2016/12/21
+//        return "";
+//    }
+//
+//    /**
+//     * 查看线路
+//     * 推荐使用{@link BaseController#showTouristGood(Long, Model)}
+//     * @param id    id   not null
+//     * @param model
+//     * @return
+//     */
+//    @Deprecated
+//    @RequestMapping(value = "seeTouristGood", method = RequestMethod.GET)
+//    public String seeTouristGood(@RequestParam Long id, Model model) {
+//        TouristGood touristGood = touristGoodService.getOne(id);
+//        model.addAttribute("touristGood", touristGood);
+//        // TODO: 2016/12/21
+//        return "";
+//    }
 
 
     /**
