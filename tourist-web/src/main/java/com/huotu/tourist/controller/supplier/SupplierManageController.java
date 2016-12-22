@@ -62,6 +62,12 @@ public class SupplierManageController {
     @Autowired
     private TouristGoodRepository touristGoodRepository;
 
+    @Autowired
+    private TouristTypeRepository touristTypeRepository;
+
+    @Autowired
+    private ActivityTypeRepository activityTypeRepository;
+
 
     /**
      * 打开订单列表页面
@@ -219,6 +225,7 @@ public class SupplierManageController {
 
     /**
      * 保存线路商品信息
+     * @param id                    线路商品ID
      * @param touristName           线路名称
      * @param activityTypeId        活动类型ID
      * @param touristTypeId         线路类型ID
@@ -234,26 +241,31 @@ public class SupplierManageController {
      * @param eventDetails          活动详情
      * @param beCareful             注意事项
      * @param touristImgUri         商品图片
-     * @param routes                所有线路
+     * @param touristDate           出行时间
+     * @param maxPeople             最大人数
      * @return
      * @throws IOException
      */
     @RequestMapping("/saveTouristGood")
-    public String saveTouristGood(String touristName,Long activityTypeId,Long touristTypeId,String touristFeatures
-            ,Address destination,Address placeOfDeparture,Address travelledAddress,BigDecimal price
-            ,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson,String receptionTelephone
-            ,String eventDetails,String beCareful,String touristImgUri,List<TouristRoute> routes)
+    public String saveTouristGood(Long id,String touristName,Long activityTypeId,Long touristTypeId
+            ,String touristFeatures,Address destination,Address placeOfDeparture,Address travelledAddress
+            ,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson
+            ,String receptionTelephone,String eventDetails,String beCareful,String touristImgUri
+            ,LocalDateTime[] touristDate,Integer maxPeople)
             throws IOException{
 
+        ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
+        TouristType touristType=touristTypeRepository.getOne(activityTypeId);
+        touristGoodService.saveToursitGood(id,touristName,activityType,touristType,touristFeatures
+                ,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
+                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri);
 
-        TouristGood touristGood=new TouristGood();
-        TouristRoute touristRoute=new TouristRoute();
 
 
 
 
 
-        return "";
+        return "";// todo 返回的视图
     }
 
 

@@ -234,7 +234,6 @@ public class BaseController {
     @ResponseBody
     @Transactional
     public void modifyOrderState(@RequestParam Long id, @RequestParam OrderStateEnum orderState) throws IOException {
-        touristOrderRepository.modifyOrderState(orderState, id);
         TouristOrder order = touristOrderRepository.getOne(id);
         order.setOrderState(orderState);
         // TODO: 2016/12/22 状态的判断业务操作

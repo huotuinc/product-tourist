@@ -94,20 +94,6 @@ public interface TouristOrderService {
      */
     long countOrderTotal(Long supplierId) throws IOException;
 
-//    /**
-//     * TouristOrder与TouristOrderModel转换
-//     * @param orders    线路订单列表
-//     * @return
-//     */
-//    List<TouristOrderModel> touristOrderModelConver(List<TouristOrder> orders);
-//
-//    /**
-//     * TouristOrder与TouristOrderDetailsModel转换
-//     * @param order     线路订单
-//     * @return
-//     */
-//    TouristOrderDetailsModel touristOrderDetailsModelConver(TouristOrder order);
-
 
 
 }
