@@ -238,6 +238,7 @@ public class BaseController {
      * 修改订单状态
      *
      * @param id         订单ID
+     * @param user       当前的用户
      * @param orderState 新的订单状态
      * @return
      * @throws IOException
@@ -245,10 +246,12 @@ public class BaseController {
     @RequestMapping(value = "/modifyOrderState", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public void modifyOrderState(@RequestParam Long id, @RequestParam OrderStateEnum orderState) throws IOException {
+    public void modifyOrderState(@AuthenticationPrincipal SystemUser user,@RequestParam Long id, @RequestParam
+    OrderStateEnum orderState) throws IOException {
         TouristOrder order = touristOrderRepository.getOne(id);
-        order.setOrderState(orderState);
-        // TODO: 2016/12/22 状态的判断业务操作
+        if(touristOrderService.checkOrderStatusCanBeModified(user,order.getOrderState(),orderState)){
+            order.setOrderState(orderState);
+        }
     }
 
     /**

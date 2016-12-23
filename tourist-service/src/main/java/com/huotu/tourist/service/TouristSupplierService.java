@@ -25,11 +25,11 @@ public interface TouristSupplierService extends BaseService<TouristSupplier, Lon
      * 修改供应商信息
      * @param id                    供应商ID
      * @param address               供应商地址
-     * @param contacts
-     * @param contactNumber
-     * @param businessLicenseUri
-     * @param remarks
-     * @return
+     * @param contacts              联系人
+     * @param contactNumber         联系电话
+     * @param businessLicenseUri    营业执照uri
+     * @param remarks               备注
+     * @return                      新的供应商
      */
     TouristSupplier modifySupplier(Long id, Address address, String contacts, String contactNumber
             , String businessLicenseUri, String remarks);
