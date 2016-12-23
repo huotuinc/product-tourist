@@ -1,34 +1,14 @@
 package com.huotu.tourist.controller.supplier;
 
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.currentUser.SystemUser;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.Address;
-import com.huotu.tourist.entity.SettlementSheet;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
-import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.TouristGoodService;
-import com.huotu.tourist.service.TouristOrderService;
-import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TouristSupplierService;
+import com.huotu.tourist.repository.*;
+import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -86,6 +67,12 @@ public class SupplierManageController extends BaseController {
 
     @Autowired
     private TouristSupplierService touristSupplierService;
+
+    @Autowired
+    private CollectionAccountRepository collectionAccountRepository;
+
+    @Autowired
+    private CollectionAccountService collectionAccountService;
 
 
     /**
@@ -462,12 +449,46 @@ public class SupplierManageController extends BaseController {
      */
     @RequestMapping("/modifySupplierInfo")
     @ResponseBody
-    public String modifySupplierInfo(Long id,Address address,String contacts,String contactNumber
+    public void modifySupplierInfo(Long id,Address address,String contacts,String contactNumber
             ,String businessLicenseUri,String remarks)throws Exception{
 
         touristSupplierService.modifySupplier(id,address,contacts,contactNumber,businessLicenseUri,remarks);
 
-        return "";  //todo 视图
+    }
+
+
+    /**
+     * 显示供应商的收款账户信息
+     * @param userInfo      当前用户
+     * @return              视图
+     * @throws IOException
+     */
+    @RequestMapping("/showCollectionAccount")
+    public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
+        TouristSupplier supplier =(TouristSupplier)userInfo;
+        CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
+        model.addAttribute("data",collectionAccount);
+        return "";
+    }
+
+    /**
+     * 保存收款账户(包括新增，和修改)
+     * @param id                收款账户ID(null:新增，有数据：修改)
+     * @param accountType       账户类型
+     * @param IDCard            身份证号
+     * @param aliPayName        支付宝姓名
+     * @param aliPayAccount     支付宝账号
+     * @param accountName       银行卡户名
+     * @param bank              开户银行
+     * @param bankBranch        卡户银行
+     * @param bankCard          银行卡号
+     */
+    @RequestMapping(value = "/saveCollectionAccount",method = RequestMethod.POST)
+    @ResponseBody
+    public void saveCollectionAccount(Long id, CollectionAccountTypeEnum accountType,String IDCard,String aliPayName
+            ,String aliPayAccount,String accountName,String bank,String bankBranch,String bankCard){
+        collectionAccountService.saveCollectionAccount(id,accountType,IDCard,aliPayName,aliPayAccount
+                ,accountName,bank,bankBranch,bankCard);
     }
 
 
