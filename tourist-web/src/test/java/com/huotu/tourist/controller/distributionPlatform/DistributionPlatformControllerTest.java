@@ -587,7 +587,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         int pageSize = 1;
         int pageNo = 1;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
-                ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"), null);
+                ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"),null, null);
         String json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
@@ -735,7 +735,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         }
         assertThat(flag).isTrue().as("查询条件全部指定查询到相应数据列表");
 
-        createTouristOrder(null, null, null, null, null, null, null);
+        createTouristOrder(null, null, null, null, null, null, null,null);
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo + 1)
