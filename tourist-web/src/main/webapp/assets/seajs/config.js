@@ -11,9 +11,8 @@ seajs.config({
         "bootstrap-table.min": "//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js",
         "bootstrap-table-zh-CN": "//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js",
         "layer": "libs/layer/layer.js",
-        "supplierList": "js/page/system/supplierList.js",
-        "AddModel": "js/page/system/addModel.js?t=2014544424",
-        "updateModel": "js/page/system/updateModel.js?t=2000",
+        "supplierList": "js/page/platform/supplierList.js",
+        "AddModel": "js/page/platform/addModel.js?t=2014544424",
     },
     preload: ['jquery']
 });
