@@ -11,6 +11,7 @@ package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.currentUser.SystemUser;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
@@ -93,6 +94,15 @@ public interface TouristOrderService {
      * @throws IOException
      */
     long countOrderTotal(Long supplierId) throws IOException;
+
+    /**
+     * 判断订单的状态是否可以被修改,详情请看讨论组共享文件 “行装.doc”
+     * @param user          当前用户权限，如果是null，则看作系统
+     * @param formerStatus  先前的订单状态
+     * @param laterStatus   修改的订单状态
+     * @return              是否可以被修改
+     */
+    boolean checkOrderStatusCanBeModified(SystemUser user,OrderStateEnum formerStatus,OrderStateEnum laterStatus);
 
 
 

@@ -249,15 +249,9 @@ public class BaseController {
     public void modifyOrderState(@AuthenticationPrincipal SystemUser user,@RequestParam Long id, @RequestParam
     OrderStateEnum orderState) throws IOException {
         TouristOrder order = touristOrderRepository.getOne(id);
-        if(user.isSupplier()){
-
+        if(touristOrderService.checkOrderStatusCanBeModified(user,order.getOrderState(),orderState)){
+            order.setOrderState(orderState);
         }
-        if(user.isPlatformUser()){
-
-        }
-
-        order.setOrderState(orderState);
-        // TODO: 2016/12/22 状态的判断业务操作
     }
 
     /**
