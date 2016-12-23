@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<head>
+    <title>火图CMS内容管理系统</title>
+    <meta charset="UTF-8" content="text/html">
+    <link href="../../assets/css/main.css" type="text/css" rel="stylesheet"/>
+    <script src="../../assets/seajs/sea.js"></script>
+    <script src="../../assets/seajs/config.js"></script>
+</head>
+<body>
+<div class="leftpanel">
+    <div class="logopanel">
+        <img src="../../assets/img/bglogo.png" height="48px" style="margin-left: 15px">
+    </div>
+    <!--账号信息BEGIN--->
+    <div class="leftpanelinner" style="border-bottom: 1px dotted #444;">
+        <ul class="nav nav-pills nav-stacked nav-bracket" style="margin-bottom: 0px;">
+            <li style="clear: both; height: 5px"></li>
+            <li>
+                <p style="margin-left: 15px">
+                            <span style="width: 160px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block;">
+                                <a href="javascript:" style="color: #8f939e"></a>
+                            </span>
+
+                    <span style="width: 160px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block;">
+                                <a href="javascript:" style="color: #8f939e">用户编号：10004886</a>
+                            </span>
+                    <br>
+                    <span>
+                                <a href="javascript:void(0)" style="color: #8f939e">设置</a>
+                                <a href="javascript:void(0)" style="color: #8f939e; margin-left: 30px;">退出</a>
+                            </span>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <!--账号信息END--->
+    <!--菜单BEGIN--->
+    <div id="con_left" style="height: 546px;">
+        <div class="leftpanelinner" id="menuContainer" style="height: 778px; overflow-y: auto;">
+            <ul class="nav nav-pills nav-stacked nav-bracket" id="menuList">
+                <li class="nav-parent nav-active active js-cms-menus" style="cursor: pointer;">
+                    <a class="aparent"><i class="fa fa-chevron-circle-right"></i><span>供应商管理</span></a>
+                    <ul class="children">
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>供应商列表<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="addModel.html" target="content"><i class="fa fa-caret-right"></i>新增供应商<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-parent nav-active active js-cms-menus" style="cursor: pointer;">
+                    <a class="aparent"><i class="fa fa-chevron-circle-right"></i><span>采购商管理</span></a>
+                    <ul class="children">
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>采购商审核<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>采购商支付流水<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>线路采购设置<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-parent nav-active active js-cms-menus" style="cursor: pointer;">
+                    <a class="aparent"><i class="fa fa-chevron-circle-right"></i><span>线路管理(商品)</span></a>
+                    <ul class="children">
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>线路产品审核<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>路线类型<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>活动类型<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-parent nav-active active js-cms-menus" style="cursor: pointer;">
+                    <a class="aparent"><i class="fa fa-chevron-circle-right"></i><span>订单管理</span></a>
+                    <ul class="children">
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>订单列表<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-parent nav-active active js-cms-menus" style="cursor: pointer;">
+                    <a class="aparent"><i class="fa fa-chevron-circle-right"></i><span>结算管理</span></a>
+                    <ul class="children">
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>结算/提现审核<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-parent nav-active active js-cms-menus" style="cursor: pointer;">
+                    <a class="aparent"><i class="fa fa-chevron-circle-right"></i><span>前端管理</span></a>
+                    <ul class="children">
+                        <li class="childMenus" style="cursor: pointer;">
+                            <div style="display: none; position: absolute; left: 10px; padding: 10px; top: 43px; color: #fff; z-index: 9999; background: #04B299; width: 180px; height: auto; border-radius: 4px 4px 4px 4px;"></div>
+                            <a href="supplierList.html" target="content"><i class="fa fa-caret-right"></i>首页banner<span
+                                    class="fa pull-right badge badge-success"
+                                    style="display: none;background-color:red;">!
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--菜单END--->
+</div>
+<div class="mainpanel" id="mainpanel">
+    <div class="headerbar">
+        <div class="header-left" style="padding-left: 5px;">
+            <div class="topnav">
+                <ul class="nav nav-horizontal">
+                    <li class="" id="menuDesktop">
+                        <a href="javascript:" id="aDesktop"><i class="fa  fa-home"></i>
+                            <span>桌面</span></a>
+                    </li>
+
+                    <li class="active" id="menu01">
+                        <a style="cursor: pointer;" onclick="clickMenu('01')"><i class="fa fa-folder-o"></i>
+                            <span>商品管理</span><span class="fa pull-right badge badge-success"
+                                                   style="display: none; background-color: red;">!</span></a>
+                    </li>
+
+                    <li class="" id="menu02">
+                        <a style="cursor: pointer;" onclick="clickMenu('02')"><i class="fa fa-folder-o"></i>
+                            <span>订单管理</span><span class="fa pull-right badge badge-success"
+                                                   style="display: none; background-color: red;">!</span></a>
+                    </li>
+
+                    <li class="" id="menu03">
+                        <a style="cursor: pointer;" onclick="clickMenu('03')"><i class="fa fa-folder-o"></i>
+                            <span>营销推广</span><span class="fa pull-right badge badge-success"
+                                                   style="display: none; background-color: red;">!</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="con_right" id="con_right">
+        <iframe id="content" name="content" width="1152" height="100%" class="hide" marginwidth="0" marginheight="0"
+                frameborder="0" scrolling="auto" src="supplierList.html"
+                th:src="@{/distributionPlatform/toSupplierList}"
+                style="display: inline;">
+        </iframe>
+    </div>
+</div>
+<script>seajs.use(["main"]);</script>
+</body>
+</html>
