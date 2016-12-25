@@ -249,6 +249,57 @@ public abstract class WebTest extends ServiceBaseTest {
     }
 
     /**
+     * 创建一个线路商品,详细
+     * @param name 线路名称
+     * @param activityType          活动类型
+     * @param touristType           线路类型
+     * @param checkState            线路审核状态
+     * @param touristSupplier       线路供应商
+     * @param touristFeatures       线路特色
+     * @param destination           目的地
+     * @param placeOfDeparture      出发地
+     * @param travelledAddress      途经地
+     * @param price                 单价
+     * @param childrenDiscount      儿童折扣
+     * @param rebate                返利比例
+     * @param receptionPerson       地接人
+     * @param receptionTelephone    地接人电话
+     * @param eventDetails          活动详情
+     * @param beCareful             注意事项
+     * @param touristImgUri         商品图片
+     * @param maxPeople             最大人数
+     * @return  线路商品
+     */
+    protected TouristGood createTouristGood(String name, ActivityType activityType, TouristType touristType
+            , TouristCheckStateEnum checkState, TouristSupplier touristSupplier,String touristFeatures
+            ,Address destination,Address placeOfDeparture,Address travelledAddress,BigDecimal price
+            ,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson,String receptionTelephone
+            ,String eventDetails,String beCareful,String touristImgUri,Integer maxPeople) {
+        TouristGood touristGood=new TouristGood();
+        touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
+        touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
+        touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
+        touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
+        touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
+        touristGood.setRecommend(null);
+        touristGood.setTouristFeatures(touristFeatures);
+        touristGood.setDestination(destination);
+        touristGood.setPlaceOfDeparture(placeOfDeparture);
+        touristGood.setTravelledAddress(travelledAddress);
+        touristGood.setPrice(price);
+        touristGood.setChildrenDiscount(childrenDiscount);
+        touristGood.setRebate(rebate);
+        touristGood.setReceptionPerson(receptionPerson);
+        touristGood.setReceptionTelephone(receptionTelephone);
+        touristGood.setEventDetails(eventDetails);
+        touristGood.setBeCareful(beCareful);
+        touristGood.setTouristImgUri(touristImgUri);
+        touristGood.setMaxPeople(maxPeople);
+        return touristGoodRepository.saveAndFlush(touristGood);
+    }
+
+
+    /**
      * 创建一个行程路线
      * @param routeNo
      * @param good
