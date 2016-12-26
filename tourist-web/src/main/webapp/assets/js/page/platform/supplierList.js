@@ -3,13 +3,14 @@
  */
 define(function (require, exports, module) {
 
+
     actionFormatter = function (value, row, index) {
         if (row.frozen == false) {
             return '<button class="btn btn-primary resend">修改</button> '
-                + ' <button class="btn btn-primary resend">冻结</button>';
+                + ' <button class="btn btn-primary frozen">冻结</button>';
         } else {
             return [
-                '<button class="btn btn-primary frozen">修改</button>'
+                '<button class="btn btn-primary resend">修改</button>'
             ].join('');
         }
     };
@@ -17,6 +18,7 @@ define(function (require, exports, module) {
     window.actionEvents = {
         'click .resend': function (e, value, row, index) {
             alert('修改操作, row: ' + JSON.stringify(row));
+
             console.log(value, row, index);
         }
         , 'click .frozen': function (e, value, row, index) {

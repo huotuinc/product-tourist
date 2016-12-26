@@ -91,7 +91,7 @@ public class TouristSupplier extends BaseModel implements SystemUser {
     /**
      * 营业执照uri
      */
-    @Column(length = 20)
+    @Column(length = 200)
     private String businessLicenseUri;
     /**
      * 备注

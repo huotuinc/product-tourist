@@ -12,7 +12,7 @@ seajs.config({
         "bootstrap-table-zh-CN": "//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js",
         "layer": "libs/layer/layer.js",
         "supplierList": "js/page/platform/supplierList.js",
-        "AddModel": "js/page/platform/addModel.js?t=2014544424",
+        "addSupplier": "js/page/platform/addSupplier.js?t=2014544424",
     },
     preload: ['jquery']
 });

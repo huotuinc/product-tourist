@@ -134,7 +134,7 @@ a.btn-lit {
     line-height: 23px;
     text-align: center;
     border: none;
-    background: #f00000;
+    background: #337ab7;
     background-repeat: no-repeat;
     background-position: 0px 0px;
     padding: 0px 12px 0px 12px;
@@ -160,7 +160,7 @@ a.btn-lit {
 }
 
 .btn-lit:hover {
-    background: #ff4d4d;
+    background: #286090; /* #ff4d4d ;*/
 }
 
 .btn-lit.disabled {
