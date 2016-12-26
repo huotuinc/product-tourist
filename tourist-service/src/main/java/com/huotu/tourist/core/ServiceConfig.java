@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         , "com.huotu.tourist.service"
 })
 @EnableJpaRepositories("com.huotu.tourist.repository")
-@Import({CommonConfig.class, DataSupportConfig.class, SecurityConfig.class})
+@Import({CommonConfig.class, DataSupportConfig.class})
 public class ServiceConfig {
 
 }
