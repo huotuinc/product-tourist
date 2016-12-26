@@ -9,17 +9,20 @@
 
 package com.huotu.tourist.login;
 
-import com.huotu.tourist.entity.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 
 /**
  * @author CJ
@@ -29,7 +32,26 @@ import javax.persistence.UniqueConstraint;
 @Getter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "loginName")})
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Login extends BaseModel implements UserDetails, SystemUser {
+public abstract class Login implements UserDetails, SystemUser {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    /**
+     * 创建时间
+     */
+    @Column(columnDefinition = "datetime")
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    @Column(columnDefinition = "datetime")
+    private LocalDateTime updateTime;
+
+    /**
+     * 是否已删除
+     */
+    @Column(insertable = false)
+    private boolean deleted;
 
     @Column(length = 20)
     private String loginName;
