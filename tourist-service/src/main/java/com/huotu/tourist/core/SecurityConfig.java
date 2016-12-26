@@ -7,7 +7,7 @@
  * 2013-2016. All rights reserved.
  */
 
-package com.huotu.tourist.config;
+package com.huotu.tourist.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -24,13 +24,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
+ * 目前还没有提供采购商的认证
+ *
  * @author CJ
  */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-@DependsOn("loginService")//需要依赖于userDetailsService 强制userDetailsService优先加载。
-public class SecurityConfig {
+@DependsOn("loginService")
+//需要依赖于userDetailsService 强制userDetailsService优先加载。
+class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
