@@ -1,8 +1,5 @@
-/**
- * Created by Administrator xhl 2015/12/23.
- */
-define(function (require, exports, module) {
-    $("#addModelForm").validate({
+// define(function (require, exports, module) {
+$("#modelForm").validate({
         rules: {
             supplierName: {
                 required: true,
@@ -25,19 +22,13 @@ define(function (require, exports, module) {
                 maxlength: 15
             },
             businessLicenseUri: {
-                required: true,
+                required: true
             },
 
             detailedAddress: {
                 required: true
             },
-            province: {
-                selrequired: "-1"
-            },
-            town: {
-                selrequired: "-1"
-            },
-            district: {
+            address: {
                 selrequired: "-1"
             },
             remarks: {
@@ -71,14 +62,8 @@ define(function (require, exports, module) {
             detailedAddress: {
                 required: "详细地址必输项"
             },
-            province: {
-                selrequired: "请选择省"
-            },
-            town: {
-                selrequired: "请选择市"
-            },
-            district: {
-                selrequired: "请选择区"
+            address: {
+                selrequired: "请选择城市"
             },
             remarks: {
                 maxlength: "长度不能超过200个字符"
@@ -88,16 +73,25 @@ define(function (require, exports, module) {
         submitHandler: function (form, ev) {
             var commonUtil = require("common");
             commonUtil.setDisabled("jq-cms-Save");
-            $("input[name='address']").val($("select[name='province']").val()
-                + "," + $("select[name='town']").val() + ","
-                + $("select[name='district']").val() + "," + $("input[name='detailedAddress']").val());
+
             var layer = require("layer");
             layer.msg("操作成功", {time: 2000});
             commonUtil.cancelDisabled("jq-cms-Save");
             form.submit();
+
         },
         invalidHandler: function () {
             return true;
         }
     });
+
+// uploader
+parent.uploader($('#supplier-uploader'), function (path) {
+    $("#businessLicenseUri").val(path);
+}, {
+    allowedExtensions: ['jpeg', 'jpg', 'png', 'bmp'],
+    itemLimit: 1,
+    sizeLimit: 3 * 1024 * 1024
 });
+
+// });

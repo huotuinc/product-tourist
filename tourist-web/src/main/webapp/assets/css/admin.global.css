@@ -79,12 +79,15 @@ a {
 }
 
 /*#456B0A*/
-a:hover {
-    text-decoration: underline;
-}
+
 
 a.btn-lit {
     text-decoration: none;
+}
+
+a.btn-lit:hover {
+    text-decoration: none;
+    color: #FFFFFF;
 }
 
 /* 三态按钮 */
@@ -130,8 +133,8 @@ a.btn-lit {
 
 .btn-lit {
     display: inline-block;
-    height: 23px;
-    line-height: 23px;
+    height: 30px;
+    line-height: 30px;
     text-align: center;
     border: none;
     background: #337ab7;

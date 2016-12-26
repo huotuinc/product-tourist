@@ -1,27 +1,19 @@
-/**
- * Created by Administrator xhl 2015/12/21.
- */
-define(function (require, exports, module) {
-
-
+// define(function (require, exports, module) {
     actionFormatter = function (value, row, index) {
         if (row.frozen == false) {
-            return '<button class="btn btn-primary resend">修改</button> '
+            return '<a class="btn btn-primary resend" href="supplier.html"' +
+                ' th:href="@{/distributionPlatform/toAddTouristSupplier}">修改</a> '
                 + ' <button class="btn btn-primary frozen">冻结</button>';
         } else {
             return [
-                '<button class="btn btn-primary resend">修改</button>'
+                '<a class="btn btn-primary resend" href="supplier.html"' +
+                ' th:href="@{/distributionPlatform/toAddTouristSupplier}">修改</a> '
             ].join('');
         }
     };
 
     window.actionEvents = {
-        'click .resend': function (e, value, row, index) {
-            alert('修改操作, row: ' + JSON.stringify(row));
-
-            console.log(value, row, index);
-        }
-        , 'click .frozen': function (e, value, row, index) {
+        'click .frozen': function (e, value, row, index) {
             alert('冻结操作, row: ' + JSON.stringify(row));
             console.log(value, row, index);
         }
@@ -41,6 +33,4 @@ define(function (require, exports, module) {
         };
         return temp;
     }
-
-
-});
+// });

@@ -421,8 +421,13 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "toAddTouristSupplier", method = RequestMethod.GET)
-    public String toAddTouristSupplier(HttpServletRequest request, Model model) {
-        return "";
+    public String toAddTouristSupplier(Long id, HttpServletRequest request, Model model) {
+        TouristSupplier supplier = null;
+        if (id != null) {
+            supplier = touristSupplierRepository.getOne(id);
+        }
+        model.addAttribute("supplier", supplier);
+        return "view/supplier.html";
     }
 
     /**
