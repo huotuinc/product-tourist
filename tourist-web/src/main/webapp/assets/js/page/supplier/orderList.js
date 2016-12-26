@@ -1,7 +1,23 @@
 /**
  * Created by Administrator xhl 2015/12/21.
  */
-define(function (require, exports, module) {
+define(["moment.js","daterangepicker.js"],function (require, exports, module) {
+
+    $(function(){
+        $('input[name$="Date"]').daterangepicker(
+            {
+                locale: {
+                    format: 'YYYY-MM-DD'
+                },
+                startDate: '2013-01-01',
+                endDate: '2013-12-31'
+            },
+            function(start, end, label) {
+                alert("A new date range was chosen: " +
+                    start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+
+    });
 
     actionFormatter = function (value, row, index) {
         if (row.frozen == false) {
