@@ -9,7 +9,7 @@
 
 package com.huotu.tourist.entity;
 
-import com.huotu.tourist.currentUser.SystemUser;
+import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
