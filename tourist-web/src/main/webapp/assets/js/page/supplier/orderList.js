@@ -1,55 +1,110 @@
 /**
- * Created by Administrator xhl 2015/12/21.
+ * Created by slt  2016/12/26.
  */
-define(["moment.js","daterangepicker.js"],function (require, exports, module) {
-
     $(function(){
+        dateRangeEdit();
+    });
+
+    /**
+     * 时间控件编辑
+     */
+    var dateRangeEdit=function(){
         $('input[name$="Date"]').daterangepicker(
             {
                 locale: {
-                    format: 'YYYY-MM-DD'
+                    format: 'YYYY-MM-DD:hh:mm:ss'
                 },
-                startDate: '2013-01-01',
-                endDate: '2013-12-31'
-            },
-            function(start, end, label) {
-                alert("A new date range was chosen: " +
-                    start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                startDate: '2017-01-01',
+                endDate: '2017-6-01'
+            }
+        );
+    };
+
+    /**
+     * 将2017-01-01:12:00:00 - 2017-01-01:12:00:00这种格式的字符串转换成两个时间格式的字符串
+     * @param text
+     */
+    var dateRangeFormat=function(text){
+        var s="2017-01-01:12:00:00";
+        var array=[];
+        array[0]=text.substr(0, s.length);
+        array[1]=text.substr(s.length+3);
+        return array;
+
+
+    };
+
+     var actionFormatter = function (value, row, index) {
+            return '<button class="btn btn-link showDetail">详情</button>';
+    };
+
+     var remarkFormatter=function(value,row,index){
+         var txt="";
+         var size=row.remarks.length;
+         if(size>5){
+             txt =row.remarks.substr(0,5)+"...";
+         }else {
+             txt= row.remarks;
+         }
+         return "<a href='#' class=''>"+txt+"</a>";
+
+    };
+
+    var remarkEvents={
+        'click a': function (e, value, row, index) {
+            layer.open({
+                type: 1,
+                title: false,
+                area: ['400px', '200px'],
+                shade: false,
+                btn:['确定'],
+                //closeBtn: 0,
+                shadeClose: true,
+                content: "<p contenteditable='true' class='text-area'>"+value+"</p>",
+                yes: function(index){
+                    //ajax修改备注
+                    var newText=$("p").text();
+                    layer.msg(newText);
+                    value=newText;
+                    layer.close(index);
+                }
             });
-
-    });
-
-    actionFormatter = function (value, row, index) {
-        if (row.frozen == false) {
-            return '<button class="btn btn-primary resend">修改</button> '
-                + ' <button class="btn btn-primary resend">冻结</button>';
-        } else {
-            return [
-                '<button class="btn btn-primary frozen">修改</button>'
-            ].join('');
         }
     };
 
-    window.actionEvents = {
-        'click .resend': function (e, value, row, index) {
-            alert('修改操作, row: ' + JSON.stringify(row));
-            console.log(value, row, index);
-        }
-        , 'click .frozen': function (e, value, row, index) {
-            alert('冻结操作, row: ' + JSON.stringify(row));
-            console.log(value, row, index);
+    var modifyLocalRemark=function(){
+
+    };
+
+    var actionEvents = {
+        'click .showDetail': function (e, value, row, index) {
+            var id=row.id;
+            location.href="orderDetails.html";
+            console.log(id);
         }
     };
 
-    function getParams(params) {
+    var getParams= function(params) {
+        var orderDates=dateRangeFormat($("input[name='orderDate']").val());
+        var payDate=dateRangeFormat($("input[name='payDate']").val());
+        var touristDate=dateRangeFormat($("input[name='touristDate']").val());
         var temp = {
-            //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
             pageSize: params.limit, //页面大小
             pageNo: params.offset, //页码
-            supplierName: $("input[name='supplierName']").val()
+            orderId: $("input[name='orderId']").val(),
+            name:$("input[name='name']").val(),
+            buyer:$("input[name='buyer']").val(),
+            tel:$("input[name='tel']").val(),
+            payTypeEnum:$("select[name='orderStateEnum'] option:selected").val(),
+            orderStateEnum:$("select[name='orderStateEnum'] option:selected").val(),
+            orderDate:orderDates[0],
+            endOrderDate:orderDates[1],
+            payDate:orderDates[0],
+            endPayDate:orderDates[1],
+            touristDate:orderDates[0],
+            endTouristDate:orderDates[1],
         };
+        //console.log(temp);
         return temp;
     }
 
-
-});

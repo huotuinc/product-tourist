@@ -42,9 +42,14 @@ public class TouristOrder extends BaseModel {
             new SimpleSelection<TouristOrder,Long>("id","id")
             ,new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
             ,new SimpleSelection<TouristOrder,BigDecimal>("orderMoney","orderMoney")
+            ,new SimpleSelection<TouristOrder,BigDecimal>("touristBuyer.buyerName","buyerName")
             ,new SimpleSelection<TouristOrder,String>("orderNo","orderNo")
             ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
             ,new SimpleSelection<TouristOrder,String>("remarks", "remarks")
+
+            ,new SimpleSelection<TouristOrder,String>("payTime", "payTime")
+            ,new SimpleSelection<TouristOrder,String>("createTime", "createTime")
+
             , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
             , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")

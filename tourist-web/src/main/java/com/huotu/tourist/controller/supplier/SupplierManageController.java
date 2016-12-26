@@ -14,33 +14,13 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.controller.BaseController;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.Address;
-import com.huotu.tourist.entity.CollectionAccount;
-import com.huotu.tourist.entity.SettlementSheet;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.CollectionAccountRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
-import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.CollectionAccountService;
-import com.huotu.tourist.service.TouristGoodService;
-import com.huotu.tourist.service.TouristOrderService;
-import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TouristSupplierService;
+import com.huotu.tourist.repository.*;
+import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -132,6 +112,7 @@ public class SupplierManageController extends BaseController {
      * @param payDate        支付时间
      * @param endPayDate     结束支付时间
      * @param touristDate    出行时间
+     * @param endTouristDate 结束出行时间
      * @param orderStateEnum 结算状态
      * @return
      * @throws IOException
@@ -142,7 +123,7 @@ public class SupplierManageController extends BaseController {
             , @RequestParam Pageable pageable
             , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
-            , OrderStateEnum orderStateEnum) throws IOException {
+            ,LocalDateTime endTouristDate, OrderStateEnum orderStateEnum) throws IOException {
 
         TouristSupplier supplier=(TouristSupplier) userInfo;
 
