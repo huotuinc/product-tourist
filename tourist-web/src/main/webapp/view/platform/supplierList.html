@@ -23,7 +23,7 @@
                                placeholder="供应商名称">
                     </div>
                     <div class="col-sm-4">
-                        <button class="btn btn-primary">搜 索</button>
+                        <button class="btn btn-primary search">搜 索</button>
                     </div>
                 </div>
             </form>
@@ -42,7 +42,8 @@
         </button>
     </div>
 
-    <table data-toggle="table" data-url="../../mock/modelList.json" data-method="get" data-side-pagination="server"
+    <table id="table" data-toggle="table" data-url="../../mock/modelList.json" data-method="get"
+           data-side-pagination="server"
            data-pagination="true" data-striped="true" data-search="true" data-strict-search="true"
            data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
            data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
