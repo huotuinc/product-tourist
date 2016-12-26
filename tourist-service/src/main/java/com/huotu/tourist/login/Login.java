@@ -7,10 +7,11 @@
  * 2013-2016. All rights reserved.
  */
 
-package com.huotu.tourist.entity;
+package com.huotu.tourist.login;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,17 +21,18 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 
 /**
- * Created by lhx on 2016/12/16.
+ * @author CJ
  */
 @Entity
-@Table(name = "base_model")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Getter
 @Setter
-public abstract class BaseModel {
+@Getter
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "loginName")})
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Login implements UserDetails, SystemUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,4 +53,28 @@ public abstract class BaseModel {
     @Column(insertable = false)
     private boolean deleted;
 
+    @Column(length = 20)
+    private String loginName;
+    private String password;
+    private boolean enabled;
+
+    @Override
+    public String getUsername() {
+        return getLoginName();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 }

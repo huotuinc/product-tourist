@@ -918,9 +918,9 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("remarks", remarks)
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
-        TouristSupplier touristSupplier = touristSupplierRepository.findByAdminAccount(adminAccount);
+        TouristSupplier touristSupplier = touristSupplierRepository.findByLoginName(adminAccount);
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
-        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
+//        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(adminPassword);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(contacts);
@@ -941,7 +941,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
-        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
+//        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(adminPassword);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(contacts);

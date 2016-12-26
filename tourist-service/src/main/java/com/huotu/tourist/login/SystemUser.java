@@ -7,12 +7,21 @@
  * 2013-2016. All rights reserved.
  */
 
-package com.huotu.tourist.supplier;
+package com.huotu.tourist.login;
 
 /**
- * Created by lhx on 2016/12/16.
+ * 可登录本系统的所有角色
+ * Created by slt on 2016/12/20.
  */
-//@Configuration
-//@ComponentScan("com.huotu.tourist.supplier.controller")
-public class SupplierConfig {
+public interface SystemUser {
+
+    boolean isSupplier();
+
+    /**
+     * 是否是平台管理
+     *
+     * @return
+     */
+    boolean isPlatformUser();
+
 }

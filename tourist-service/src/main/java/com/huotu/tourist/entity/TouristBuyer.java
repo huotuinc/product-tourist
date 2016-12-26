@@ -11,6 +11,7 @@ package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
+import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
@@ -18,7 +19,9 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.Map;
 @Table(name = "Tourist_Buyer")
 @Getter
 @Setter
-public class TouristBuyer extends BaseModel {
+public class TouristBuyer implements SystemUser {
 
     public static final List<Selection<TouristBuyer, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristBuyer, String>("id", "id"),
@@ -84,6 +87,22 @@ public class TouristBuyer extends BaseModel {
                 }
             }
     );
+
+    /**
+     * 作为一个采购商，它是来自一个已登录的小伙伴；即他的id是已知的，应该属于分配值
+     */
+    @Id
+    private Long id;
+    /**
+     * 创建时间
+     */
+    @Column(columnDefinition = "datetime")
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    @Column(columnDefinition = "datetime")
+    private LocalDateTime updateTime;
 
     /**
      * 采购商名称
@@ -139,4 +158,13 @@ public class TouristBuyer extends BaseModel {
     @Column
     private BuyerPayStateEnum payState;
 
+    @Override
+    public boolean isSupplier() {
+        return false;
+    }
+
+    @Override
+    public boolean isPlatformUser() {
+        return false;
+    }
 }
