@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link href="../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <script src="../../assets/seajs/sea.js"></script>
+    <script src="../../assets/seajs/config.js"></script>
+    <script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+                    <label class="control-label col-sm-1" for="supplierName">供应商名称</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="supplierName" id="supplierName" class="form-control"
+                               placeholder="供应商名称">
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary">搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toolbar" class="btn-group">
+        <button id="btn_add" type="button" class="btn btn-default">
+            <a href="addModel.html"><span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span></a>
+        </button>
+        <button id="btn_edit" type="button" class="btn btn-default">
+            <a><span class="glyphicon glyphicon-pencil" aria-hidden="true">修改</span></a>
+        </button>
+        <button id="btn_delete" type="button" class="btn btn-default">
+            <a><span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span></a>
+        </button>
+    </div>
+
+    <table data-toggle="table" data-url="../../mock/modelList.json" data-method="get" data-side-pagination="server"
+           data-pagination="true" data-striped="true" data-search="true" data-strict-search="true"
+           data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+           data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+           data-query-params="getParams" data-toolbar="#toolbar">
+        <thead>
+        <tr>
+            <th data-field="supplierName" data-align="center" data-sortable="true">名称</th>
+            <th data-field="adminAccount" data-align="center" data-sortable="true">登陆名</th>
+            <th data-field="address" data-align="center" data-sortable="true">所在地</th>
+            <th data-field="contacts" data-align="center" data-sortable="true">联系人</th>
+            <th data-field="contactNumber" data-align="center" data-sortable="true">电话</th>
+            <th data-field="createTime" data-align="center" data-sortable="true">注册时间</th>
+            <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
+                data-align="center">操作
+            </th>
+        </tr>
+        </thead>
+    </table>
+</div>
+</body>
+</html>
