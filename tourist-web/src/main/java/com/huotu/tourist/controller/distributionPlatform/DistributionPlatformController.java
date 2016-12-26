@@ -453,8 +453,8 @@ public class DistributionPlatformController extends BaseController {
             touristSupplier = touristSupplierService.getOne(id);
         }
         touristSupplier.setCreateTime(LocalDateTime.now());
-        touristSupplier.setAdminAccount(adminAccount);
-        touristSupplier.setAdminPassword(adminPassword);
+//        touristSupplier.setAdminAccount(adminAccount);
+//        touristSupplier.setAdminPassword(adminPassword);
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
         touristSupplier.setRemarks(remarks);
         touristSupplier.setSupplierName(supplierName);

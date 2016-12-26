@@ -9,11 +9,14 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.login.Login;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -21,6 +24,8 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +36,7 @@ import java.util.List;
 @Table(name = "Tourist_Supplier")
 @Getter
 @Setter
-public class TouristSupplier extends BaseModel implements SystemUser {
+public class TouristSupplier extends Login implements SystemUser {
 
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristSupplier, String>("id", "id"),
@@ -54,16 +59,6 @@ public class TouristSupplier extends BaseModel implements SystemUser {
             , new SimpleSelection<TouristSupplier, String>("createTime", "createTime")
             , new SimpleSelection<TouristSupplier, String>("frozen", "frozen")
     );
-    /**
-     * 管理员账户名
-     */
-    @Column(unique = true, length = 50)
-    private String adminAccount;
-    /**
-     * 管理员密码
-     */
-    @Column(length = 50)
-    private String adminPassword;
     /**
      * 供应商名称
      */
@@ -114,5 +109,10 @@ public class TouristSupplier extends BaseModel implements SystemUser {
     @Override
     public boolean isPlatformUser() {
         return false;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_SUPPLIER"));
     }
 }

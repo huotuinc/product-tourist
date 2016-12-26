@@ -9,9 +9,34 @@
 
 package com.huotu.tourist;
 
-import com.huotu.tourist.common.*;
-import com.huotu.tourist.entity.*;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.SettlementSheetRepository;
+import com.huotu.tourist.repository.TouristBuyerRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +82,9 @@ public abstract class WebTest extends ServiceBaseTest {
     @Autowired
     protected TravelerRepository travelerRepository;
     @Autowired
-    SettlementSheetRepository settlementSheetRepository;
-
-    @Autowired
     protected TouristGoodService touristGoodService;
+    @Autowired
+    SettlementSheetRepository settlementSheetRepository;
 
     /**
      * 创建一个随机的订单状态
@@ -221,8 +245,8 @@ public abstract class WebTest extends ServiceBaseTest {
     protected TouristSupplier createTouristSupplier(String supplierName) {
         TouristSupplier supplier = new TouristSupplier();
         supplier.setSupplierName(supplierName);
-        supplier.setAdminAccount(supplierName);
-        supplier.setAdminPassword("1234567890");
+//        supplier.setAdminAccount(supplierName);
+//        supplier.setAdminPassword("1234567890");
         supplier.setCreateTime(LocalDateTime.now());
         return touristSupplierRepository.saveAndFlush(supplier);
     }

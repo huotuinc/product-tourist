@@ -12,7 +12,14 @@ package com.huotu.tourist.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -30,12 +37,12 @@ public abstract class BaseModel {
     /**
      * 创建时间
      */
-    @Column
+    @Column(columnDefinition = "datetime")
     private LocalDateTime createTime;
     /**
      * 更新时间
      */
-    @Column
+    @Column(columnDefinition = "datetime")
     private LocalDateTime updateTime;
 
     /**
