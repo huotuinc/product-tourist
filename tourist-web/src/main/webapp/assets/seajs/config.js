@@ -23,6 +23,11 @@ seajs.config({
         "salesStatistics.js": "js/page/supplier/salesStatistics.js",
         "supplierDetails.js": "js/page/supplier/supplierDetails.js",
         //供应商END
+
+        //时间选择控件
+        "moment.js":"http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js",
+        "daterangepicker.js":"http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js",
+
     },
     preload: ['jquery']
 });

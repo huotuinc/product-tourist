@@ -11,12 +11,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
     <link href="../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
     <script src="../../assets/seajs/sea.js"></script>
     <script src="../../assets/seajs/config.js"></script>
-    <script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>
+    <script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN","layer", "orderList.js"
+        ,"moment.js","daterangepicker.js"]);</script>
 </head>
 <body>
 <div class="panel-body" style="padding-bottom:0;">
@@ -29,36 +32,62 @@
                         <div class="ibox float-e-margins">
                             <div class="ibox-content p-m no-borders">
                                 <div class="form-inline">
-                                    <div class="form-group m-r-sm">
-                                        <label class="control-label" for="circleName">订单号：</label>
-                                        <input type="text" class="form-control input-sm mb10" id="circleName" name="circleName" placeholder="圈子名称"/>
+                                    <div class="form-group">
+                                        <label class="control-label" for="orderId">订单号：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="orderId" name="orderId" placeholder="订单号"/>
                                     </div>
 
-                                    <div class="form-group m-r-sm">
-                                        <label class="control-label" for="circleName">订单号：</label>
-                                        <input type="text" class="form-control input-sm mb10" id="circleName" name="circleName" placeholder="圈子名称"/>
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">线路名称：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="name" name="name" placeholder="线路名称"/>
                                     </div>
 
-                                    <div class="form-group m-r-sm">
-                                        <label class="control-label" for="circleName">订单号：</label>
-                                        <input type="text" class="form-control input-sm mb10" id="circleName" name="circleName" placeholder="圈子名称"/>
+                                    <div class="form-group">
+                                        <label class="control-label" for="buyer">购买人：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="buyer" name="buyer" placeholder="购买人"/>
                                     </div>
 
-                                    <div class="form-group m-r-sm">
-                                        <label class="control-label" for="circleName">订单号：</label>
-                                        <input type="text" class="form-control input-sm mb10" id="circleName" name="circleName" placeholder="圈子名称"/>
+                                    <div class="form-group">
+                                        <label class="control-label" for="tel">购买人电话：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="tel" name="tel" placeholder="购买人电话"/>
                                     </div>
-
-                                    <div class="form-group m-r-sm">
-                                        <label class="control-label" for="suggested">是否热门：</label>
+                                    <!--<p></p>-->
+                                    <div class="form-group">
+                                        <label class="control-label" for="suggested">付款状态：</label>
                                         <select class="form-control" name="suggested" id="suggested">
-                                            <option value="-1">--请选择--</option>
-                                            <option value="1">热门</option>
-                                            <option value="0">普通</option>
+                                            <option value="-1">全部</option>
+                                            <option value="1">未支付</option>
+                                            <option value="1">已支付</option>
+                                            <option value="1">已确认</option>
+                                            <option value="1">已完成</option>
+                                            <option value="1">退款中</option>
+                                            <option value="1">已退款</option>
+                                            <option value="0">已取消</option>
                                         </select>
                                     </div>
+                                    <br/><br/>
 
+                                    <div class="form-group">
+                                        <label class="control-label" for="orderDate">下单时间：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="orderDate" name="orderDate" placeholder="下单时间"/>
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label class="control-label" for="payDate">支付时间：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="payDate" name="payDate" placeholder="支付时间"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="touristDate">出行时间：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="touristDate" name="touristDate" placeholder="出行时间"/>
+                                    </div>
 
                                 </div>
                                 <p style="height: 8px;"></p>
