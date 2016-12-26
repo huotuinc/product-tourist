@@ -10,9 +10,19 @@ seajs.config({
         "JGrid": "libs/JGrid/jquery.JGrid.js",
         "bootstrap-table.min": "//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js",
         "bootstrap-table-zh-CN": "//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js",
-        "layer": "libs/layer/layer.js",
-        "supplierList": "js/page/platform/supplierList.js",
+        "layer": "http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js",
+        "supplierList": "js/page/supplier/supplierList.js",
         "AddModel": "js/page/platform/addModel.js?t=2014544424",
+
+        //供应商
+        "goodsDetails.js": "js/page/supplier/goodsDetails.js",
+        "goodsList.js": "js/page/supplier/goodsList.js",
+        "orderDetails.js": "js/page/supplier/orderDetails.js",
+        "orderList.js": "js/page/supplier/orderList.js",
+        "payeeAccountDetails.js": "js/page/supplier/payeeAccountDetails.js",
+        "salesStatistics.js": "js/page/supplier/salesStatistics.js",
+        "supplierDetails.js": "js/page/supplier/supplierDetails.js",
+        //供应商END
     },
     preload: ['jquery']
 });
