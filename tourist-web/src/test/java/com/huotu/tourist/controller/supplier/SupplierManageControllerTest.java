@@ -11,6 +11,7 @@ package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.WebTest;
+import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristRouteRepository;
@@ -20,6 +21,7 @@ import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -132,9 +134,6 @@ public class SupplierManageControllerTest extends WebTest {
         idActual= JsonPath.read(json,"$.row[0].id");
         assertThat(order.getId().equals(idActual)).isTrue().as("出行时间校验");
     }
-
-
-
 
 
     /**
@@ -257,7 +256,7 @@ public class SupplierManageControllerTest extends WebTest {
     }
 
     /**
-     * 比较两个实体list是否相等
+     * 比较两个实体list是否相等,只匹配实体的id
      * @param exp       预期
      * @param act       实际
      * @return
@@ -286,6 +285,7 @@ public class SupplierManageControllerTest extends WebTest {
     @Test
     public void modifyOrderState() throws Exception{
 
+
     }
 
 
@@ -298,22 +298,61 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void TouristGoodList() throws Exception{
-        //当前测试的登录用户
         TouristSupplier touristSupplier=null;
+        //预期
+        TouristGood touristGood=createTouristGood(null,null,null,null,touristSupplier);
 
-        String json=mockMvc.perform(get("/base/touristGoodList")
-                .param("payDate",""+ LocalDateTime.of(2016,3,5,5,5))
-                .param("endPayDate",""+LocalDateTime.of(2016,6,7,7,7)))
+        String json=mockMvc.perform(get("/base/TouristGoodList"))
                 .andReturn().getResponse().getContentAsString();
 
-
-
+        //实际
+        Long idActual= JsonPath.read(json,"$.row[0].id");
+        assertThat(touristGood.getId().equals(idActual)).isTrue().as("供应商校验");
     }
 
+    /**
+     * 保存线路商品
+     * @throws Exception
+     */
+    @Test
+    public void saveTouristGood() throws Exception{
+        //当前测试的登录用户
+        TouristSupplier touristSupplier=null;
+        ActivityType activityType=createActivityType("sltActivity");
+        TouristType touristType=createTouristType("sltTourist");
+        Address destination=new Address("浙江省","杭州市","滨江区","");
+        Address placeOfDeparture=new Address("浙江省","宁波市","鄞州区","");
+        Address travelledAddress=new Address("浙江省","杭州市","上城区","");
+        String name="sltname";
+        String touristFeatures="线路特色";
+        TouristCheckStateEnum checkState=TouristCheckStateEnum.CheckFinish;
+        BigDecimal price=new BigDecimal(20);
+        BigDecimal childrenDiscount=new BigDecimal(2);
+        BigDecimal rebate=new BigDecimal(30);
+        String receptionPerson="第接人史利挺";
+        String receptionTelephone="13012345678";
+        String eventDetails="活动详情";
+        String beCareful="注意事项";
+        String touristImgUri="图片";
+        Integer maxPeople=40;
+        TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,touristSupplier
+                ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
+                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
 
+        TouristRoute[] touristRoutes=new TouristRoute[2];
 
+        for(int i=0;i<2;i++){
+            TouristRoute touristRoute=createTouristRoute(""+i,touristGood,LocalDateTime.now(),LocalDateTime.now()
+                    ,touristGood.getMaxPeople());
+        }
 
-
+        mockMvc.perform(get("/supplier/saveTouristGood")
+                .param("id",""+ touristGood.getId())
+                .param("touristName","modify")
+                );
+        TouristGood goodsAct=touristGoodRepository.findOne(touristGood.getId());
+        assertThat(goodsAct.getTouristName().equals("modify")).isTrue().as("名称校验");
+    }
 
 
 }

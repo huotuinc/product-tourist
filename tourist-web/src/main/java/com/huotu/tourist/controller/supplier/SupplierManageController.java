@@ -114,8 +114,9 @@ public class SupplierManageController extends BaseController {
 
         TouristSupplier supplier=(TouristSupplier) userInfo;
 
-        Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, orderId, name, buyer, tel, payTypeEnum, orderDate.toLocalDate(), endOrderDate.toLocalDate(), payDate.toLocalDate(), endPayDate.toLocalDate(), touristDate.toLocalDate(), orderStateEnum, pageable
-        );
+        Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, orderId, name, buyer, tel, payTypeEnum
+                , orderDate.toLocalDate(), endOrderDate.toLocalDate(), payDate.toLocalDate(), endPayDate.toLocalDate()
+                , touristDate.toLocalDate(), orderStateEnum, pageable);
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
@@ -212,22 +213,22 @@ public class SupplierManageController extends BaseController {
 
     }
 
-    /**
-     * 显示某供应商的线路商品信息
-     *
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping("/TouristGoodList")
-    public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId, String touristName
-            , String supplierName, TouristType touristType, ActivityType activityType
-            , TouristCheckStateEnum touristCheckState, Pageable pageable) throws Exception {
-        TouristSupplier supplier = touristSupplierRepository.getOne(supplierId);
-        Page<TouristGood> goods = touristGoodService.touristGoodList(supplier, touristName, supplierName,
-                touristType,  activityType, touristCheckState, pageable);
-
-        return new PageAndSelection<>(goods, TouristGood.selections);
-    }
+//    /**
+//     * 显示某供应商的线路商品信息
+//     *
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping("/TouristGoodList")
+//    public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId, String touristName
+//            , String supplierName, TouristType touristType, ActivityType activityType
+//            , TouristCheckStateEnum touristCheckState, Pageable pageable) throws Exception {
+//        TouristSupplier supplier = touristSupplierRepository.getOne(supplierId);
+//        Page<TouristGood> goods = touristGoodService.touristGoodList(supplier, touristName, supplierName,
+//                touristType,  activityType, touristCheckState, pageable);
+//
+//        return new PageAndSelection<>(goods, TouristGood.selections);
+//    }
 
 
     /**
@@ -262,7 +263,7 @@ public class SupplierManageController extends BaseController {
             throws IOException{
 
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
-        TouristType touristType=touristTypeRepository.getOne(activityTypeId);
+        TouristType touristType=touristTypeRepository.getOne(touristTypeId);
         //保存商品
         TouristGood good=touristGoodService.saveToursitGood(id,touristName,activityType,touristType,touristFeatures
                 ,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
