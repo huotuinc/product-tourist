@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>线路产品审核列表</title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+
+                    <div class="col-sm-2">
+                        <input type="text" name="buyerName" class="form-control"
+                               placeholder="供应商名称">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="touristName" class="form-control"
+                               placeholder="线路名称">
+                    </div>
+                    <div class="col-sm-2">
+                        <select name="touristTypeId" class="form-control"
+                                placeholder="线路类型"></select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select name="activityTypeId" class="form-control"
+                                placeholder="活动类型"></select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select name="touristCheckState" class="form-control"
+                                placeholder="审核状态"></select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button class="btn btn-primary btnSearch">搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <ul class="nav nav-tabs" role="tablist" id="myTab">
+        <li role="presentation" class="active"><a href="#all" role="tab" data-toggle="tab">全部</a></li>
+        <li role="presentation"><a href="#recommend" role="tab" data-toggle="tab">推荐商品</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="all">
+            <table id="table" data-toggle="table" data-url="../../../mock/platform/touristGoodList.json"
+                   data-method="get"
+                   data-side-pagination="server"
+                   data-pagination="true" data-striped="true"
+                   data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+                   data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+                   data-query-params="getParams">
+                <thead>
+                <tr>
+                    <th data-field="id" data-align="center" data-sortable="true">id</th>
+                    <th data-field="touristName" data-align="center" data-sortable="true">商品名称</th>
+                    <th data-field="touristImgUri" data-formatter="touristImgUriFormatter" data-align="center">图片</th>
+                    <th data-field="supplierName" data-align="center" data-sortable="true">供应商名称</th>
+                    <th data-field="touristType" data-align="center" data-sortable="true">线路类型</th>
+                    <th data-field="activityType" data-align="center" data-sortable="true">活动类型</th>
+                    <th data-field="price" data-align="center" data-sortable="true">价格</th>
+                    <th data-field="surplus" data-align="center" data-sortable="true">剩余库存</th>
+                    <th data-field="destination" data-align="center" data-sortable="true">目的地</th>
+                    <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
+                    <th data-field="touristCheckState.value" data-align="center" data-sortable="true">审核状态</th>
+                    <th data-field="action" data-formatter="actionFormatter" data-align="center">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="recommend">
+            <table id="recommendTable" data-toggle="table"
+                   data-url="../../../mock/platform/recommendTouristGoodList.json"
+                   data-method="get"
+                   data-side-pagination="server"
+                   data-pagination="true" data-striped="true"
+                   data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+                   data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+                   data-query-params="getParams">
+                <thead>
+                <tr>
+                    <th data-field="id" data-align="center" data-sortable="true">id</th>
+                    <th data-field="touristName" data-align="center" data-sortable="true">商品名称</th>
+                    <th data-field="touristImgUri" data-formatter="touristImgUriFormatter" data-align="center">图片</th>
+                    <th data-field="supplierName" data-align="center" data-sortable="true">供应商名称</th>
+                    <th data-field="touristType" data-align="center" data-sortable="true">线路类型</th>
+                    <th data-field="activityType" data-align="center" data-sortable="true">活动类型</th>
+                    <th data-field="price" data-align="center" data-sortable="true">价格</th>
+                    <th data-field="surplus" data-align="center" data-sortable="true">剩余库存</th>
+                    <th data-field="destination" data-align="center" data-sortable="true">目的地</th>
+                    <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
+                    <th data-field="touristCheckState.value" data-align="center" data-sortable="true">审核状态</th>
+                    <th data-field="action" data-formatter="actionFormatter" data-align="center">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+    </div>
+
+
+</div>
+<script src="../../../assets/js/jquery.min.js"></script>
+<script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../assets/js/page/platform/touristGoodList.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.huotu.tourist.repository;
 
+import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.Traveler;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,4 +26,6 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long> {
     List<Traveler> findByOrder_Id(Long orderId);
 
     Long countByOrder_Id(Long orderId);
+
+    long countByOrder_TouristGood(TouristGood touristGood);
 }

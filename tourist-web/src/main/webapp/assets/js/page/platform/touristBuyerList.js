@@ -1,6 +1,6 @@
 actionFormatter = function (value, row, index) {
     if (row.checkState.code == 0) {
-        return '<a class="btn btn-primary update" href="touristBuyer.html"' +
+        return '<a class="btn btn-primary update" href="touristBuyerList.html"' +
             ' th:href="@{/distributionPlatform/toBuyerList}">审核通过</a> '
             + ' <button class="btn btn-primary frozen">冻结</button>';
     } else if (row.checkState.code == 1) {

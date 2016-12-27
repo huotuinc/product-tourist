@@ -41,7 +41,7 @@
     </div>
     <div id="toolbar" class="btn-group">
         <button id="btn_export" type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-export" aria-hidden="true">导出</span>
+            <a><span class="glyphicon glyphicon-export" aria-hidden="true">导出</span></a>
         </button>
     </div>
 
@@ -69,7 +69,7 @@
     </table>
 </div>
 <script th:inline="javascript">
-    exportsPurchaserPaymentRecordUrl = /*[[@{/distributionPlatform/exportPurchaserPaymentRecord}]]*/ null;
+    exportsPurchaserPaymentRecordUrl = /*[[@{/distributionPlatform/exportPurchaserPaymentRecord}]]*/  "purchaserPaymentRecordList.html";
 </script>
 <script src="../../../assets/js/jquery.min.js"></script>
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>

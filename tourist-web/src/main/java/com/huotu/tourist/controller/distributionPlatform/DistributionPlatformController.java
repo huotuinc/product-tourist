@@ -232,7 +232,7 @@ public class DistributionPlatformController extends BaseController {
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
     public String toPurchaserProductSettingList(HttpServletRequest request, Model model) {
         //todo
-        return "";
+        return "view/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -427,16 +427,17 @@ public class DistributionPlatformController extends BaseController {
             supplier = touristSupplierRepository.getOne(id);
         }
         model.addAttribute("supplier", supplier);
-        return "view/supplier.html";
+        return "view/platform/supplier/supplier.html";
     }
 
     /**
      * 新增供应商 和 修改供应商
      * // TODO: 2016/12/21
+     *
      * @param id                 供应商id 为null 代表添加，不为null代表修改
      * @param supplierName       供应商名称  必须
-     * @param adminAccount       登录名        必须
-     * @param adminPassword      登录密码   必须
+     * @param loginName       登录名        必须
+     * @param password      登录密码   必须
      * @param businessLicenseUri 营业执照uri 必须
      * @param contacts           联系人    必须
      * @param contactNumber      联系电话   必须
@@ -447,8 +448,8 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"addSupplier", "updateSupplier"}, method = RequestMethod.POST)
-    public String addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String adminAccount,
-                                     @RequestParam String adminPassword, @RequestParam String businessLicenseUri
+    public String addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String loginName,
+                                     @RequestParam String password, @RequestParam String businessLicenseUri
             , @RequestParam String contacts, @RequestParam String contactNumber, @RequestParam Address address, String remarks,
                                      HttpServletRequest request, Model model) {
         TouristSupplier touristSupplier;
@@ -458,8 +459,8 @@ public class DistributionPlatformController extends BaseController {
             touristSupplier = touristSupplierService.getOne(id);
         }
         touristSupplier.setCreateTime(LocalDateTime.now());
-//        touristSupplier.setAdminAccount(adminAccount);
-//        touristSupplier.setAdminPassword(adminPassword);
+        touristSupplier.setLoginName(loginName);
+        touristSupplier.setPassword(password);
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
         touristSupplier.setRemarks(remarks);
         touristSupplier.setSupplierName(supplierName);
@@ -474,6 +475,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 冻结供应商
      * // TODO: 2016/12/21
+     *
      * @param id     供应商id not null
      * @param frozen 是否冻结 not null
      * @return
@@ -488,8 +490,40 @@ public class DistributionPlatformController extends BaseController {
 
 
     /**
+     * 新增采购产品设置页面
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "toPurchaserProductSetting", method = RequestMethod.GET)
+    public String toPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
+        PurchaserProductSetting purchaserProductSetting = null;
+        if (id != null) {
+            purchaserProductSetting = purchaserProductSettingService.getOne(id);
+        }
+        model.addAttribute("purchaserProductSetting", purchaserProductSetting);
+        return "view/platform/purchaserProductSetting.html";
+    }
+
+    /**
+     * 新增采购产品设置页面
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "delPurchaserProductSetting", method = RequestMethod.GET)
+    public String delPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
+        purchaserProductSettingService.delete(id);
+        return "view/platform/purchaserProductSetting.html";
+    }
+
+
+    /**
      * 新增采购产品设置
      * // TODO: 2016/12/21
+     *
      * @param id        id 为null 代表添加，不为null代表修改
      * @param name      名称 not null
      * @param bannerUri 图片 not null
@@ -522,6 +556,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 推荐商品 和 取消推荐
      * // TODO: 2016/12/21
+     *
      * @param id        id   not null
      * @param recommend 推荐  not null
      * @return
@@ -570,6 +605,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 添加或修改活动类型
      * // TODO: 2016/12/21
+     *
      * @param id
      * @param activityName
      * @return
@@ -606,6 +642,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 添加或修改线路类型
      * // TODO: 2016/12/21
+     *
      * @param id
      * @param typeName
      * @return

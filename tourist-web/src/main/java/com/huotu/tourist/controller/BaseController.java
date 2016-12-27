@@ -23,7 +23,14 @@ import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.model.Selection;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ActivityTypeService;
 import com.huotu.tourist.service.PurchaserPaymentRecordService;
 import com.huotu.tourist.service.TouristGoodService;
@@ -48,6 +55,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -248,7 +256,10 @@ public class BaseController {
             page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
                     activityType, touristCheckState, new PageRequest(pageNo, pageSize));
         }
-        return new PageAndSelection<>(page, TouristGood.selections);
+        List<Selection<TouristGood, ?>> selects = new ArrayList<>();
+        selects.addAll(TouristGood.selections);
+        selects.add(TouristGood.select);
+        return new PageAndSelection<>(page, selects);
     }
 
     /**

@@ -61,7 +61,7 @@
                             <th>详细地址：</th>
                             <td>
                                 <input type="text" name="detailedAddress" id="detailedAddress"
-                                       th:value="${supplier.address.detailedAddress}" class="input-normal"
+                                       th:value="${supplier.detailedAddress}" class="input-normal"
                                        placeholder="详细地址">
                             </td>
                         </tr>
@@ -100,8 +100,8 @@
                         <tr>
                             <th>管理员账号：</th>
                             <td>
-                                <input type="text" name="adminAccount" id="adminAccount"
-                                       th:value="${supplier.adminAccount}"
+                                <input type="text" name="loginName" id="adminAccount"
+                                       th:value="${supplier.loginName}"
                                        class="input-normal"
                                        placeholder="管理员账号">
                             </td>
@@ -109,8 +109,8 @@
                         <tr>
                             <th>管理员密码：</th>
                             <td>
-                                <input type="password" name="adminPassword" id="adminPassword"
-                                       th:value="${supplier.adminPassword}" class="input-normal"
+                                <input type="password" name="password" id="adminPassword"
+                                       th:value="${supplier.password}" class="input-normal"
                                        placeholder="管理员密码">
                             </td>
                         </tr>

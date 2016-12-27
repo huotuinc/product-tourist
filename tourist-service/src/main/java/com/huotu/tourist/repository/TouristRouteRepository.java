@@ -14,4 +14,5 @@ public interface TouristRouteRepository extends JpaRepository<TouristRoute,Long>
 
     List<TouristRoute> findByGood(TouristGood good);
 
+    long countByGood(TouristGood touristGood);
 }

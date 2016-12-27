@@ -12,10 +12,21 @@ package com.huotu.tourist.entity;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,10 +47,20 @@ public class TouristGood extends BaseModel {
             new SimpleSelection<TouristGood, String>("id", "id"),
             new SimpleSelection<TouristGood, String>("touristName", "touristName")
             , new SimpleSelection<TouristGood, String>("price", "price")
-            , new SimpleSelection<TouristGood, String>("destination", "destination")
             , new SimpleSelection<TouristGood, String>("rebate", "rebate")
             , new SimpleSelection<TouristGood, String>("touristImgUri", "touristImgUri")
-            , new SimpleSelection<TouristGood, String>("recommend", "recommend")
+            , new SimpleSelection<TouristGood, Boolean>("recommend", "recommend")
+            , new Selection<TouristGood, String>() {
+                @Override
+                public String apply(TouristGood touristGood) {
+                    return touristGood.destination.toString();
+                }
+
+                @Override
+                public String getName() {
+                    return "destination";
+                }
+            }
             , new Selection<TouristGood, String>() {
                 @Override
                 public String apply(TouristGood touristGood) {
@@ -89,6 +110,33 @@ public class TouristGood extends BaseModel {
             }
 
     );
+
+    //**剩余库存计算
+    public static final Selection select = new Selection<TouristGood, Long>() {
+        @Autowired
+        TravelerRepository travelerRepository;
+        @Autowired
+        TouristRouteRepository touristRouteRepository;
+
+        @Override
+        public Long apply(TouristGood touristGood) {
+            //商品的游客总人数
+            long travelers = travelerRepository.countByOrder_TouristGood(touristGood);
+            //线路数
+            long routes = touristRouteRepository.countByGood(touristGood);
+
+            //剩余数
+            long surplus = touristGood.maxPeople * routes - travelers;
+
+            return surplus;
+        }
+
+        @Override
+        public String getName() {
+            return "surplus";
+        }
+    };
+
     /**
      * 线路名称
      */
@@ -128,9 +176,9 @@ public class TouristGood extends BaseModel {
      */
     @Embedded
     @AttributeOverrides(
-            {@AttributeOverride(name = "province",column =@Column(name = "des_province"))
-            ,@AttributeOverride(name = "town",column = @Column(name = "des_town"))
-            ,@AttributeOverride(name = "district",column =@Column(name = "des_district"))
+            {@AttributeOverride(name = "province", column = @Column(name = "des_province"))
+                    , @AttributeOverride(name = "town", column = @Column(name = "des_town"))
+                    , @AttributeOverride(name = "district", column = @Column(name = "des_district"))
             })
     private Address destination;
     /**
@@ -138,9 +186,9 @@ public class TouristGood extends BaseModel {
      */
     @Embedded
     @AttributeOverrides(
-            {@AttributeOverride(name = "province",column =@Column(name = "pla_province"))
-                    ,@AttributeOverride(name = "town",column = @Column(name = "pla_town"))
-                    ,@AttributeOverride(name = "district",column =@Column(name = "pla_district"))
+            {@AttributeOverride(name = "province", column = @Column(name = "pla_province"))
+                    , @AttributeOverride(name = "town", column = @Column(name = "pla_town"))
+                    , @AttributeOverride(name = "district", column = @Column(name = "pla_district"))
             })
     private Address placeOfDeparture;
     /**
@@ -148,9 +196,9 @@ public class TouristGood extends BaseModel {
      */
     @Embedded
     @AttributeOverrides(
-            {@AttributeOverride(name = "province",column =@Column(name = "pla_province"))
-                    ,@AttributeOverride(name = "town",column = @Column(name = "pla_town"))
-                    ,@AttributeOverride(name = "district",column =@Column(name = "pla_district"))
+            {@AttributeOverride(name = "province", column = @Column(name = "pla_province"))
+                    , @AttributeOverride(name = "town", column = @Column(name = "pla_town"))
+                    , @AttributeOverride(name = "district", column = @Column(name = "pla_district"))
             })
     private Address travelledAddress;
     /**

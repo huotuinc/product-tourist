@@ -5,7 +5,6 @@
     <title>采购商产品设置</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
 
 </head>
@@ -16,22 +15,12 @@
         <div class="panel-body">
             <form id="formSearch" class="form-horizontal">
                 <div class="form-group" style="margin-top:15px">
+
                     <div class="col-sm-2">
-                        <input type="text" class="form-control datePicker"
-                               id="payDate" name="payDate" placeholder="支付时间"/>
+                        <input type="text" name="name" id="name" class="form-control"
+                               placeholder="名称">
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" name="buyerName" id="buyerName" class="form-control"
-                               placeholder="采购商名称">
-                    </div>
-                    <div class="col-sm-2">
-                        <input type="text" name="buyerDirector" class="form-control"
-                               placeholder="负责人">
-                    </div>
-                    <div class="col-sm-2">
-                        <input type="text" name="telPhone" class="form-control"
-                               placeholder="手机号">
-                    </div>
+
                     <div class="col-sm-2">
                         <button class="btn btn-primary btnSearch">搜 索</button>
                     </div>
@@ -41,42 +30,38 @@
     </div>
     <div id="toolbar" class="btn-group">
         <button id="btn_export" type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-export" aria-hidden="true">导出</span>
+            <a href="purchaserProductSetting.html" th:href="@{/distributionPlatform/toPurchaserProductSetting}">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
+            </a>
         </button>
     </div>
 
-
-    <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserPaymentRecordList.json"
+    <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserProductSetting.json"
            data-method="get"
            data-side-pagination="server"
            data-pagination="true" data-striped="true"
            data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
            data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
-           data-query-params="getParams" data-toolbar="#toolbar">
+           data-query-params="getParams" data-toolbar="#toolbar" data-query-pa>
         <thead>
         <tr>
             <th data-field="id" data-align="center" data-sortable="true">id</th>
-            <th data-field="buyerName" data-align="center" data-sortable="true">采购商名称</th>
-            <th data-field="buyerDirector" data-align="center" data-sortable="true">负责人</th>
-            <th data-field="telPhone" data-align="center" data-sortable="true">手机号</th>
-            <th data-field="buyerId" data-align="center" data-sortable="true">用户id</th>
-            <th data-field="nickname" data-align="center" data-sortable="true">用户昵称</th>
-            <th data-field="payState.value" data-align="center" data-sortable="true">支付状态</th>
-            <th data-field="money" data-align="center" data-sortable="true">支付金额</th>
-            <th data-field="payDate" data-align="center" data-sortable="true">支付时间</th>
+            <th data-field="name" data-align="center" data-sortable="true">名称</th>
+            <th data-field="bannerUri" data-formatter="bannerUriFormatter" data-align="center" data-sortable="true">
+                banner
+            </th>
+            <th data-field="price" data-align="center" data-sortable="true">价格</th>
+            <th data-field="explain" data-align="center" data-sortable="true">说明</th>
+            <th data-field="action" data-formatter="updateFormatter" data-align="center" data-sortable="true">操作</th>
         </tr>
         </thead>
     </table>
 </div>
-<script th:inline="javascript">
-    exportsPurchaserPaymentRecordUrl = /*[[@{/distributionPlatform/exportPurchaserPaymentRecord}]]*/ null;
-</script>
+
 <script src="../../../assets/js/jquery.min.js"></script>
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../assets/js/page/platform/purchaserPaymentRecordList.js"></script>
-<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
-<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../../assets/js/page/platform/purchaserProductSettingList.js"></script>
 </body>
 </html>

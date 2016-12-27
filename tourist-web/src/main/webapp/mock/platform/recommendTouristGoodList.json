@@ -1,0 +1,39 @@
+{
+  "total": 200,
+  "rows": [
+    {
+      "id": 0,
+      "touristName": "Item 0",
+      "price": "王鹤",
+      "rebate": "13000000000",
+      "touristImgUri": "http://placehold.it/100x100?text=营业执照",
+      "destination": "浙江省/杭州市/滨江区",
+      "recommend": true,
+      "supplierName": "小花",
+      "activityType": "爬山",
+      "touristType": "自驾游",
+      "touristCheckState": {
+        "code": 2,
+        "value": "审核通过"
+      },
+      "surplus": 100
+    },
+    {
+      "id": 0,
+      "touristName": "Item 0",
+      "price": "王鹤",
+      "rebate": "13000000000",
+      "touristImgUri": "http://placehold.it/100x100?text=营业执照",
+      "destination": "浙江省/杭州市/滨江区",
+      "recommend": true,
+      "supplierName": "小花",
+      "activityType": "爬山",
+      "touristType": "自驾游",
+      "touristCheckState": {
+        "code": 2,
+        "value": "审核通过"
+      },
+      "surplus": 100
+    }
+  ]
+}
