@@ -12,10 +12,10 @@
         $('input[name$="Date"]').daterangepicker(
             {
                 locale: {
-                    format: 'YYYY-MM-DD:hh:mm:ss'
+                    format: 'YYYY-MM-DD hh:mm:ss'
                 },
                 startDate: '2017-01-01',
-                endDate: '2017-6-01'
+                endDate: '2017-06-01'
             }
         );
     };
@@ -34,6 +34,10 @@
 
      var actionFormatter = function (value, row, index) {
             return '<button class="btn btn-link showDetail">详情</button>';
+    };
+
+    var touristNameFormatter=function(value,row,index){
+        return '<img src="'+row.touristImgUri+'" height="50px" width="80px"><span>'+row.touristName+'</span>';
     };
 
      var remarkFormatter=function(value,row,index){
@@ -97,10 +101,10 @@
             orderStateEnum:$("select[name='orderStateEnum'] option:selected").val(),
             orderDate:orderDates[0],
             endOrderDate:orderDates[1],
-            payDate:orderDates[0],
-            endPayDate:orderDates[1],
-            touristDate:orderDates[0],
-            endTouristDate:orderDates[1],
+            payDate:payDate[0],
+            endPayDate:payDate[1],
+            touristDate:touristDate[0],
+            endTouristDate:touristDate[1],
         };
         //console.log(temp);
         return temp;

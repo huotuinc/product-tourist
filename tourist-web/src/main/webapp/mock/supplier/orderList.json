@@ -14,6 +14,7 @@
       "payTime":"2016-12-12 00:00:00",
       "payType":"支付宝",
       "remarks":"备注备注备注备注备注备,备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注注备注备注备注备注备注",
+      "touristImgUri":"http://img.qqbody.com/uploads/allimg/201410/20141008222752.jpg",
       "frozen": true
     },
     {
@@ -29,6 +30,7 @@
       "payTime":"2016-12-12 00:00:00",
       "payType":"支付宝",
       "remarks":"这是备注",
+      "touristImgUri":"http://img.qqbody.com/uploads/allimg/201410/20141008222752.jpg",
       "frozen": true
     },
     {
@@ -44,6 +46,7 @@
       "payTime":"2016-12-12 00:00:00",
       "payType":"支付宝",
       "remarks":"这是备注",
+      "touristImgUri":"http://img.qqbody.com/uploads/allimg/201410/20141008222752.jpg",
       "frozen": true
     },
     {
@@ -59,6 +62,7 @@
       "payTime":"2016-12-12 00:00:00",
       "payType":"支付宝",
       "remarks":"这是备注",
+      "touristImgUri":"http://img.qqbody.com/uploads/allimg/201410/20141008222752.jpg",
       "frozen": true
     }
   ]

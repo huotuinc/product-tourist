@@ -41,6 +41,7 @@ public class TouristOrder extends BaseModel {
     public static List<Selection<TouristOrder, ?>> htmlSelections = Arrays.asList(
             new SimpleSelection<TouristOrder,Long>("id","id")
             ,new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
+            ,new SimpleSelection<TouristOrder, String>("touristGood.touristImgUri", "touristImgUri")
             ,new SimpleSelection<TouristOrder,BigDecimal>("orderMoney","orderMoney")
             ,new SimpleSelection<TouristOrder,BigDecimal>("touristBuyer.buyerName","buyerName")
             ,new SimpleSelection<TouristOrder,String>("orderNo","orderNo")
