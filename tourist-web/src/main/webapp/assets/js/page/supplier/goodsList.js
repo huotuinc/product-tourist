@@ -7,56 +7,43 @@ $(function(){
 
 var actionFormatter = function (value, row, index) {
     return  '<button class="btn btn-link showDetail">查看</button>' +
-            '<button class="btn btn-link showDetail">回收</button>';
+            '<button class="btn btn-link recycle">回收</button>';
 };
 
 var touristNameFormatter=function(value,row,index){
-    return '<img src="'+row.touristImgUri+'" height="50px" width="80px"><span>'+row.touristName+'</span>';
+    return '<span>'+row.touristName+'</span>';
 };
 
-var remarkFormatter=function(value,row,index){
-    var txt="";
-    var size=row.remarks.length;
-    if(size>5){
-        txt =row.remarks.substr(0,5)+"...";
-    }else {
-        txt= row.remarks;
-    }
-    return "<a href='#' class=''>"+txt+"</a>";
-
-};
-
-var remarkEvents={
-    'click a': function (e, value, row, index) {
-        layer.open({
-            type: 1,
-            title: false,
-            area: ['400px', '200px'],
-            shade: false,
-            btn:['确定'],
-            //closeBtn: 0,
-            shadeClose: true,
-            content: "<p contenteditable='true' class='text-area'>"+value+"</p>",
-            yes: function(index){
-                //ajax修改备注
-                var newText=$("p").text();
-                layer.msg(newText);
-                value=newText;
-                layer.close(index);
-            }
-        });
-    }
-};
-
-var modifyLocalRemark=function(){
-
+var touristImgUriFormatter=function(value,row,index){
+    return '<img src="'+row.touristImgUri+'" height="50px" width="80px">';
 };
 
 var actionEvents = {
     'click .showDetail': function (e, value, row, index) {
         var id=row.id;
-        location.href="orderDetails.html";
-        console.log(id);
+        location.href="goodsDetails.html";
+    },
+    'click .recycle': function (e, value, row, index) {
+        var id=row.id;
+        var tr=$("#goodsTable tr").eq(index+1);
+        var td=$("td",tr).eq(9);
+        if($(td).text()!="已回收"){
+            layer.confirm('确定回收吗？', {
+                btn: ['回收','取消'] //按钮
+            }, function(){
+                //ajax异步回收
+                layer.msg('修改成功', {icon: 1});
+                $(td).text("已回收");
+
+            }, function(index){
+                layer.close(index);
+            });
+        }else {
+            layer.msg("线路商品已回收");
+        }
+
+
+
     }
 };
 

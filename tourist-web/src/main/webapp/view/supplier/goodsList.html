@@ -89,7 +89,7 @@
         </button>
     </div>
 
-    <table data-toggle="table" data-url="../../mock/supplier/goodsList.json"
+    <table id="goodsTable" data-toggle="table" data-url="../../mock/supplier/goodsList.json"
            data-method="get" data-side-pagination="server"
            data-pagination="true" data-striped="true" data-search="true" data-strict-search="true"
            data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
@@ -99,16 +99,16 @@
         <tr>
             <th data-field="id" data-align="center">序号</th>
             <th data-field="touristName" data-align="center" data-formatter="touristNameFormatter">商品名称</th>
-            <th data-field="touristImgUri" data-align="center" data-sortable="true">图片</th>
+            <th data-field="touristImgUri"  data-align="center"data-formatter="touristImgUriFormatter">图片</th>
             <th data-field="touristType" data-align="center" data-sortable="true">线路类型</th>
             <th data-field="activityType" data-align="center" data-sortable="true">活动类型</th>
             <th data-field="price" data-align="center" data-sortable="true">价格</th>
             <th data-field="stock" data-align="center" data-sortable="true">剩余库存</th>
-            <th data-field="destination" data-align="center" data-sortable="true">目的地</th>
+            <th data-field="destination" data-align="center">目的地</th>
             <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
             <th data-field="touristCheckState" data-align="center" data-sortable="true">审核状态</th>
-            <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
-                data-align="center">操作
+            <th data-field="action"  data-align="center"
+                data-formatter="actionFormatter" data-events="actionEvents">操作
             </th>
         </tr>
         </thead>
