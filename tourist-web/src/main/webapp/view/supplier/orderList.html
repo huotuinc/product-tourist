@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
     <link href="../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
 </head>
 <body>
 <div class="panel-body" style="padding-bottom:0;">
@@ -127,7 +128,8 @@
             <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
             <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
             <th data-field="payType" data-align="center" data-sortable="true">支付方式</th>
-            <th data-field="touristDate" data-align="center" data-sortable="true">出行时间</th>
+            <th data-field="touristDate" data-align="center" data-sortable="true"
+                data-formatter="touristDateFormatter" data-events="touristDateEvents">出行时间</th>
             <th data-field="peopleNumber" data-align="center" data-sortable="true">购买数量</th>
             <th data-field="remarks" data-align="center" data-formatter="remarkFormatter"
                 data-events="remarkEvents">备注</th>
@@ -137,6 +139,50 @@
         </tr>
         </thead>
     </table>
+</div>
+
+<div id="modifyTouristDate" style="margin: 10px">
+    <div class="col-sm-4">
+        <div class="panel panel-primary  panel-body">
+            <p>2016-12-11 12:00:00</p>
+            <p>剩余4人</p>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-danger">
+            <div class="panel-body">
+            <p>2016-12-11 12:00:00</p>
+            <p>剩余4人</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div  class="panel panel-primary panel-body">
+            <p style="text-align: center">2016-12-11 12:00:00</p>
+            <p style="text-align: center">剩余4人</p>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="panel panel-primary  panel-body">
+            <p style="text-align: center">2016-12-11 12:00:00</p>
+            <p style="text-align: center">剩余4人</p>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-primary panel-body">
+            <p style="text-align: center">2016-12-11 12:00:00</p>
+            <p style="text-align: center">剩余4人</p>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-primary panel-body">
+            <p style="text-align: center">2016-12-11 12:00:00</p>
+            <p style="text-align: center">剩余4人</p>
+        </div>
+    </div>
+
+
 </div>
 <script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>

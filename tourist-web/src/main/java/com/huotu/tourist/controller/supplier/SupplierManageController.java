@@ -324,7 +324,7 @@ public class SupplierManageController extends BaseController {
         model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(supplier.getId()));
         model.addAttribute("refundTotal", touristOrderService.countRefundTotal(supplier.getId()));
         model.addAttribute("orderTotal", touristOrderService.countOrderTotal(supplier.getId()));
-        return ""; //todo 视图名称
+        return "/view/supplier/salesStatistics";
 
     }
 
@@ -396,7 +396,7 @@ public class SupplierManageController extends BaseController {
         TouristSupplier supplier =(TouristSupplier)userInfo;
         Page<TouristGood> touristGoods=touristGoodService.modifySupplierInfo(supplier.getId());
 
-        //人数处理
+        //购买次数处理
         Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {
             @Override
             public String getName() {
