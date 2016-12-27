@@ -15,11 +15,6 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
     <link href="../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-
-    <script src="../../assets/seajs/sea.js"></script>
-    <script src="../../assets/seajs/config.js"></script>
-    <script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN","layer", "orderList.js"
-        ,"moment.js","daterangepicker.js"]);</script>
 </head>
 <body>
 <div class="panel-body" style="padding-bottom:0;">
@@ -57,35 +52,35 @@
                                     </div>
                                     <!--<p></p>-->
                                     <div class="form-group">
-                                        <label class="control-label" for="suggested">付款状态：</label>
-                                        <select class="form-control" name="suggested" id="suggested">
+                                        <label class="control-label" for="orderStateEnum">付款状态：</label>
+                                        <select class="form-control" name="orderStateEnum" id="orderStateEnum">
                                             <option value="-1">全部</option>
-                                            <option value="1">未支付</option>
+                                            <option value="0">未支付</option>
                                             <option value="1">已支付</option>
-                                            <option value="1">已确认</option>
-                                            <option value="1">已完成</option>
-                                            <option value="1">退款中</option>
-                                            <option value="1">已退款</option>
-                                            <option value="0">已取消</option>
+                                            <option value="2">已确认</option>
+                                            <option value="3">已完成</option>
+                                            <option value="4">退款中</option>
+                                            <option value="5">已退款</option>
+                                            <option value="6">已取消</option>
                                         </select>
                                     </div>
                                     <br/><br/>
 
                                     <div class="form-group">
                                         <label class="control-label" for="orderDate">下单时间：</label>
-                                        <input type="text" class="form-control input-sm mb10"
+                                        <input size="50" class="form-control" type="text" readonly="readonly"
                                                id="orderDate" name="orderDate" placeholder="下单时间"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label" for="payDate">支付时间：</label>
-                                        <input type="text" class="form-control input-sm mb10"
+                                        <input size="50" class="form-control"  type="text" readonly="readonly"
                                                id="payDate" name="payDate" placeholder="支付时间"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label" for="touristDate">出行时间：</label>
-                                        <input type="text" class="form-control input-sm mb10"
+                                        <input size="50" class="form-control" type="text" readonly="readonly"
                                                id="touristDate" name="touristDate" placeholder="出行时间"/>
                                     </div>
 
@@ -116,19 +111,26 @@
         </button>
     </div>
 
-    <table data-toggle="table" data-url="../../mock/modelList.json" data-method="get" data-side-pagination="server"
+    <table data-toggle="table" data-url="../../mock/supplier/orderList.json"
+           data-method="get" data-side-pagination="server"
            data-pagination="true" data-striped="true" data-search="true" data-strict-search="true"
            data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
            data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
            data-query-params="getParams" data-toolbar="#toolbar">
         <thead>
         <tr>
-            <th data-field="supplierName" data-align="center" data-sortable="true">名称</th>
-            <th data-field="adminAccount" data-align="center" data-sortable="true">登陆名</th>
-            <th data-field="address" data-align="center" data-sortable="true">所在地</th>
-            <th data-field="contacts" data-align="center" data-sortable="true">联系人</th>
-            <th data-field="contactNumber" data-align="center" data-sortable="true">电话</th>
-            <th data-field="createTime" data-align="center" data-sortable="true">注册时间</th>
+            <th data-field="orderNo" data-align="center">订单号</th>
+            <th data-field="touristName" data-align="center">路线名称</th>
+            <th data-field="orderMoney" data-align="center" data-sortable="true">金额</th>
+            <th data-field="buyerName" data-align="center" data-sortable="true">购买人</th>
+            <th data-field="payTypeValue" data-align="center" data-sortable="true">支付状态</th>
+            <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
+            <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
+            <th data-field="payType" data-align="center" data-sortable="true">支付方式</th>
+            <th data-field="touristDate" data-align="center" data-sortable="true">出行时间</th>
+            <th data-field="peopleNumber" data-align="center" data-sortable="true">购买数量</th>
+            <th class="showRemark" data-field="remarks" data-align="center" data-formatter="remarkFormatter"
+                data-events="remarkEvents">备注</th>
             <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
                 data-align="center">操作
             </th>
@@ -136,5 +138,14 @@
         </thead>
     </table>
 </div>
+<script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../assets/js/page/supplier/orderList.js"></script>
 </body>
+
 </html>

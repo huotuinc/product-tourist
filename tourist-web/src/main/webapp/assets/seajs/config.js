@@ -1,7 +1,7 @@
 seajs.config({
     alias: {
-        "jquery": "js/jquery.min.js",
-        "bootstrap": "libs/bootstrap/bootstrap.min.js",
+        "jquery": "http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js",
+        "bootstrap": "http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js",
         "validate": "libs/validate/jquery.validate.min.js",
         "message": "libs/validate/jquery.validate.addMethod.js",
         "common": "js/page/common.js?t=552225",
