@@ -68,19 +68,19 @@
 
                                     <div class="form-group">
                                         <label class="control-label" for="orderDate">下单时间：</label>
-                                        <input size="50" class="form-control" type="text" readonly="readonly"
+                                        <input size="50" class="form-control" type="text"
                                                id="orderDate" name="orderDate" placeholder="下单时间"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label" for="payDate">支付时间：</label>
-                                        <input size="50" class="form-control"  type="text" readonly="readonly"
+                                        <input size="50" class="form-control"  type="text"
                                                id="payDate" name="payDate" placeholder="支付时间"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label" for="touristDate">出行时间：</label>
-                                        <input size="50" class="form-control" type="text" readonly="readonly"
+                                        <input size="50" class="form-control" type="text"
                                                id="touristDate" name="touristDate" placeholder="出行时间"/>
                                     </div>
 
@@ -88,8 +88,8 @@
                                 <p style="height: 8px;"></p>
 
                                 <div class="form-inline" style="max-width: 926px; text-align: right;">
-                                    <button type="button" onclick="circleList.searchCondition()" class="btn btn-primary">筛选</button>
-                                    <button type="button" onclick="circleList.searchAll()" class="btn btn-primary">显示全部</button>
+                                    <button type="button" class="btn btn-primary">筛选</button>
+                                    <button type="button" class="btn btn-primary">显示全部</button>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
         <thead>
         <tr>
             <th data-field="orderNo" data-align="center">订单号</th>
-            <th data-field="touristName" data-align="center">路线名称</th>
+            <th data-field="touristName" data-align="center" data-formatter="touristNameFormatter">路线名称</th>
             <th data-field="orderMoney" data-align="center" data-sortable="true">金额</th>
             <th data-field="buyerName" data-align="center" data-sortable="true">购买人</th>
             <th data-field="payTypeValue" data-align="center" data-sortable="true">支付状态</th>
@@ -129,7 +129,7 @@
             <th data-field="payType" data-align="center" data-sortable="true">支付方式</th>
             <th data-field="touristDate" data-align="center" data-sortable="true">出行时间</th>
             <th data-field="peopleNumber" data-align="center" data-sortable="true">购买数量</th>
-            <th class="showRemark" data-field="remarks" data-align="center" data-formatter="remarkFormatter"
+            <th data-field="remarks" data-align="center" data-formatter="remarkFormatter"
                 data-events="remarkEvents">备注</th>
             <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
                 data-align="center">操作

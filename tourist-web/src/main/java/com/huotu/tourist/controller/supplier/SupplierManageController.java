@@ -9,10 +9,7 @@
 
 package com.huotu.tourist.controller.supplier;
 
-import com.huotu.tourist.common.CollectionAccountTypeEnum;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
@@ -96,6 +93,8 @@ public class SupplierManageController extends BaseController {
     public String showOrderList(Model model) {
         return "";
     }
+
+
 
     /**
      * 根据某个供应商的订单列表

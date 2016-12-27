@@ -23,11 +23,7 @@ import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.ActivityTypeService;
 import com.huotu.tourist.service.PurchaserPaymentRecordService;
 import com.huotu.tourist.service.TouristGoodService;
@@ -87,6 +83,35 @@ public class BaseController {
 
     @Autowired
     public TouristTypeService touristTypeService;
+
+    @Autowired
+    private TouristTypeRepository touristTypeRepository;
+
+    @Autowired
+    private ActivityTypeRepository activityTypeRepository;
+
+
+    /**
+     * 打开线路商品页面
+     * @param model
+     * @return
+     */
+    @RequestMapping("/showGoodsList")
+    public String showGoodsList(Model model){
+
+        List<TouristType> touristTypes=touristTypeRepository.findAll();
+
+        List<ActivityType> activityTypes=activityTypeRepository.findAll();
+
+        TouristCheckStateEnum[] checkStates=TouristCheckStateEnum.values();
+
+        model.addAttribute("touristTypes",touristTypes);
+        model.addAttribute("activityTypes",activityTypes);
+        model.addAttribute("checkStates",checkStates);
+
+        return "/view/supplier/goodsList";
+    };
+
 
 
     /**
