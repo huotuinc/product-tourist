@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>供应商列表</title>
@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
 
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
-    <script src="../../../assets/seajs/sea.js"></script>
-    <script src="../../../assets/seajs/config.js"></script>
 
 </head>
 <body>
@@ -18,13 +16,12 @@
         <div class="panel-body">
             <form id="formSearch" class="form-horizontal">
                 <div class="form-group" style="margin-top:15px">
-                    <label class="control-label col-sm-1" for="supplierName">供应商名称</label>
                     <div class="col-sm-2">
                         <input type="text" name="supplierName" id="supplierName" class="form-control"
-                               placeholder="供应商名称">
+                               placeholder="供应商名称" th:value="${supplierName}">
                     </div>
                     <div class="col-sm-4">
-                        <button class="btn btn-primary search">搜 索</button>
+                        <button class="btn btn-primary btnSearch">搜 索</button>
                     </div>
                 </div>
             </form>
@@ -43,7 +40,7 @@
         </button>
     </div>
 
-    <table id="table" data-toggle="table" data-url="../../../mock/modelList.json" data-method="get"
+    <table id="table" data-toggle="table" data-url="../../../mock/platform/supplierList.json" data-method="get"
            data-side-pagination="server"
            data-pagination="true" data-striped="true"
            data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"

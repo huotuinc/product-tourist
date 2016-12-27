@@ -1,0 +1,89 @@
+{
+  "total": 200,
+  "rows": [
+    {
+      "id": 0,
+      "buyerName": "Item 0",
+      "buyerDirector": "王鹤",
+      "telPhone": "13000000000",
+      "businessLicencesUri": "http://placehold.it/100x100?text=营业执照",
+      "IDCardImg": {
+        "IDElevationsUri": "http://placehold.it/40x40?text=身份证正面",
+        "IDInverseUri": "http://placehold.it/40x40?text=身份反面"
+      },
+      "buyerId": "user123",
+      "nickname": "小花",
+      "checkState": {
+        "code": 0,
+        "value": "审核中"
+      },
+      "payState": {
+        "code": 0,
+        "value": "未支付"
+      }
+    },
+    {
+      "id": 1,
+      "buyerName": "Item 1",
+      "buyerDirector": "王鹤",
+      "telPhone": "13000000000",
+      "businessLicencesUri": "http://placehold.it/100x100?text=营业执照",
+      "IDCardImg": {
+        "IDElevationsUri": "http://placehold.it/40x40?text=身份证正面",
+        "IDInverseUri": "http://placehold.it/40x40?text=身份反面"
+      },
+      "buyerId": "user123",
+      "nickname": "小花",
+      "checkState": {
+        "code": 0,
+        "value": "审核中"
+      },
+      "payState": {
+        "code": 1,
+        "value": "以支付"
+      }
+    },
+    {
+      "id": 2,
+      "buyerName": "Item 1",
+      "buyerDirector": "王鹤",
+      "telPhone": "13000000000",
+      "businessLicencesUri": "http://placehold.it/100x100?text=营业执照",
+      "IDCardImg": {
+        "IDElevationsUri": "http://placehold.it/40x40?text=身份证正面",
+        "IDInverseUri": "http://placehold.it/40x40?text=身份反面"
+      },
+      "buyerId": "user123",
+      "nickname": "小花",
+      "checkState": {
+        "code": 1,
+        "value": "审核通过"
+      },
+      "payState": {
+        "code": 1,
+        "value": "以支付"
+      }
+    },
+    {
+      "id": 3,
+      "buyerName": "Item 1",
+      "buyerDirector": "王鹤",
+      "telPhone": "14000000000",
+      "businessLicencesUri": "http://placehold.it/100x100?text=营业执照",
+      "IDCardImg": {
+        "IDElevationsUri": "http://placehold.it/40x40?text=身份证正面",
+        "IDInverseUri": "http://placehold.it/40x40?text=身份反面"
+      },
+      "buyerId": "user123",
+      "nickname": "小花",
+      "checkState": {
+        "code": 1,
+        "value": "审核通过"
+      },
+      "payState": {
+        "code": 1,
+        "value": "以支付"
+      }
+    }
+  ]
+}

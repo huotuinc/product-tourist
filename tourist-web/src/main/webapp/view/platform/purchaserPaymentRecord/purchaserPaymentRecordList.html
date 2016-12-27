@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>线路采购商列表</title>
+    <title>采购商支付流水</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
 
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
 
@@ -16,7 +17,10 @@
         <div class="panel-body">
             <form id="formSearch" class="form-horizontal">
                 <div class="form-group" style="margin-top:15px">
-
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control input-sm mb10"
+                               id="orderDate" name="orderDate" placeholder="支付时间"/>
+                    </div>
                     <div class="col-sm-2">
                         <input type="text" name="buyerName" id="buyerName" class="form-control"
                                placeholder="采购商名称">
@@ -28,10 +32,6 @@
                     <div class="col-sm-2">
                         <input type="text" name="telPhone" class="form-control"
                                placeholder="手机号">
-                    </div>
-                    <div class="col-sm-2">
-                        <select type="text" name="buyerCheckState" class="form-control"
-                                placeholder="采购状态"></select>
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-primary btnSearch">搜 索</button>
@@ -75,6 +75,8 @@
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script src="../../../assets/js/page/platform/touristBuyerList.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
 <!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
 </body>
 </html>
