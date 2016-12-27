@@ -39,34 +39,36 @@
             </form>
         </div>
     </div>
-    <div id="toolbar" class="btn-group">
-        <button id="btn_export" type="button" class="btn btn-default">
-            <a><span class="glyphicon glyphicon-export" aria-hidden="true">导出</span></a>
-        </button>
+    <div class="panel panel-default">
+        <div id="toolbar" class="btn-group">
+            <button id="btn_export" type="button" class="btn btn-default">
+                <a><span class="glyphicon glyphicon-export" aria-hidden="true">导出</span></a>
+            </button>
+        </div>
+
+
+        <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserPaymentRecordList.json"
+               data-method="get"
+               data-side-pagination="server"
+               data-pagination="true" data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+               data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+               data-query-params="getParams" data-toolbar="#toolbar">
+            <thead>
+            <tr>
+                <th data-field="id" data-align="center" data-sortable="true">id</th>
+                <th data-field="buyerName" data-align="center" data-sortable="true">采购商名称</th>
+                <th data-field="buyerDirector" data-align="center" data-sortable="true">负责人</th>
+                <th data-field="telPhone" data-align="center" data-sortable="true">手机号</th>
+                <th data-field="buyerId" data-align="center" data-sortable="true">用户id</th>
+                <th data-field="nickname" data-align="center" data-sortable="true">用户昵称</th>
+                <th data-field="payState.value" data-align="center" data-sortable="true">支付状态</th>
+                <th data-field="money" data-align="center" data-sortable="true">支付金额</th>
+                <th data-field="payDate" data-align="center" data-sortable="true">支付时间</th>
+            </tr>
+            </thead>
+        </table>
     </div>
-
-
-    <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserPaymentRecordList.json"
-           data-method="get"
-           data-side-pagination="server"
-           data-pagination="true" data-striped="true"
-           data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
-           data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
-           data-query-params="getParams" data-toolbar="#toolbar">
-        <thead>
-        <tr>
-            <th data-field="id" data-align="center" data-sortable="true">id</th>
-            <th data-field="buyerName" data-align="center" data-sortable="true">采购商名称</th>
-            <th data-field="buyerDirector" data-align="center" data-sortable="true">负责人</th>
-            <th data-field="telPhone" data-align="center" data-sortable="true">手机号</th>
-            <th data-field="buyerId" data-align="center" data-sortable="true">用户id</th>
-            <th data-field="nickname" data-align="center" data-sortable="true">用户昵称</th>
-            <th data-field="payState.value" data-align="center" data-sortable="true">支付状态</th>
-            <th data-field="money" data-align="center" data-sortable="true">支付金额</th>
-            <th data-field="payDate" data-align="center" data-sortable="true">支付时间</th>
-        </tr>
-        </thead>
-    </table>
 </div>
 <script th:inline="javascript">
     exportsPurchaserPaymentRecordUrl = /*[[@{/distributionPlatform/exportPurchaserPaymentRecord}]]*/  "purchaserPaymentRecordList.html";

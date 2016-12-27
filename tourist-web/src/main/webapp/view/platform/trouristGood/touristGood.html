@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/fine-uploader-new.min.css"
+          property=""/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
+    <link href="../../../assets/css/admin.content.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/css/admin.global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/css/global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/libs/cityPicker/css/city-picker.css" rel="stylesheet"/>
+    <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+
+    <style>
+        .city-picker-span {
+            width: 390px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="block">
+    <!--/*@thymesVar id="touristGood" type="com.huotu.tourist.entity.TouristGood"*/-->
+    <div class="h">
+        <span class="icon-sprite icon-list"></span>
+        <div class="bar">
+            <a class="btn-lit" href="touristGoodList.html" target="content">
+                <span>返回管理列表</span></a>
+        </div>
+    </div>
+    <div class="cnt-wp">
+
+        <form id="modelForm" method="post" class="form-inline" action="touristGoodList.html"
+              th:action="@{/distributionPlatform/updateSupplier}">
+            <div class="cnt form">
+                <ul class="nav nav-tabs" role="tablist" id="myTab">
+                    <li role="presentation" class="active"><a href="#info" role="tab" data-toggle="tab">基本信息</a></li>
+                    <li role="presentation"><a href="#detail" role="tab" data-toggle="tab">活动详情/注意事项</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="info">
+                        <div class="division">
+                            <input type="hidden" name="id" id="id" th:value="${touristGood.id}">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tbody>
+                                <tr>
+                                    <th class="control-label">名称：</th>
+                                    <td>
+                                        <input name="touristName" type="text" id="touristName"
+                                               th:value="${touristGood.touristName}"
+                                               maxlength="50"
+                                               class="form-control" placeholder="名称">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">活动类型：</th>
+                                    <td>
+                                        <select name="activityTypeId" class="form-control"
+                                                th:value="${touristGood.activityType.activityName}"
+                                                placeholder="活动类型">
+
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">线路类型：</th>
+                                    <td>
+                                        <input type="text" name="touristType" id="touristType"
+                                               th:value="${touristGood.touristType.typeName}" class="form-control"
+                                               placeholder="线路类型">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">线路特色：</th>
+                                    <td>
+                                        <input type="text" name="touristFeatures"
+                                               th:value="${touristGood.touristFeatures}"
+                                               class="form-control"
+                                               placeholder="联系人">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">目的地：</th>
+                                    <td>
+                                        <div style="position: relative; "><!-- container -->
+                                            <input readonly type="text" class="form-control" name="destination"
+                                                   id="destination"
+                                                   data-toggle="city-picker"
+                                                   value="北京市/北京市/海淀区" th:value="${touristGood.destination}">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">出发地：</th>
+                                    <td>
+                                        <div style="position: relative; "><!-- container -->
+                                            <input readonly type="text" class="form-control" name="placeOfDeparture"
+                                                   id="placeOfDeparture"
+                                                   data-toggle="city-picker"
+                                                   value="北京市/北京市/海淀区" th:value="${touristGood.placeOfDeparture}">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th class="control-label">途经地：</th>
+                                    <td>
+                                        <div style="position: relative; "><!-- container -->
+                                            <input readonly type="text" class="form-control" name="travelledAddress"
+                                                   id="travelledAddress"
+                                                   data-toggle="city-picker"
+                                                   value="北京市/北京市/海淀区" th:value="${touristGood.travelledAddress}">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">价格：</th>
+                                    <td>
+                                        <input type="number" name="price"
+                                               th:value="${touristGood.price}" class="form-control"
+                                               placeholder="价格">
+                                        成人
+                                        <input type="text" name="loginName"
+                                               th:value="${touristGood.loginName}"
+                                               class="form-control"
+                                               placeholder="折扣"> 儿童
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">返利：</th>
+                                    <td>
+                                        <input type="number" name="rebate"
+                                               th:value="${touristGood.rebate}" class="form-control"
+                                               placeholder="百分比"> %
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">地接人：</th>
+                                    <td>
+                                        <input type="text" name="receptionPerson"
+                                               th:value="${touristGood.receptionPerson}" class="form-control"
+                                               placeholder="地接人">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">联系电话：</th>
+                                    <td>
+                                        <input type="text" name="receptionTelephone"
+                                               th:value="${touristGood.receptionTelephone}" class="form-control"
+                                               placeholder="地接人">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">出行时间：</th>
+                                    <td>
+                                        <input type="text" class="form-control datePicker"
+                                               id="payDate" name="payDate" placeholder="支付时间"/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="detail">
+                        <div class="division">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tbody>
+                                <tr>
+                                    <th class="control-label">活动详情：</th>
+                                    <td>
+                                        <textarea class="form-control editor" th:text="${touristGood.eventDetails}"
+                                                  th:class="${(@environment.acceptsProfiles('no_ck')?'':'editor ')+'form-control'}"
+                                                  rows="4" placeholder="活动详情" name="eventDetails"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="control-label">注意事项：</th>
+                                    <td>
+                                        <textarea class="form-control editor"
+                                                  th:class="${(@environment.acceptsProfiles('no_ck')?'':'editor ')+'form-control'}"
+                                                  rows="4" placeholder="注意事项" name="content"></textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <input type="submit" class="btn-lit" name="btnSave" value="保 存" data-submiting-text="提交中..."
+                           data-text="保存" id="jq-cms-Save">
+                    <input type="submit" class="btn-lit" name="btnSave" value="审核通过" data-submiting-text="提交中..."
+                           data-text="审核通过" id="jq-cms-sh">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../../assets/js/jquery.min.js"></script>
+<script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../assets/libs/validate/jquery.validate.min.js"></script>
+<script src="../../../assets/libs/validate/jquery.validate.addMethod.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
+<script src="../../../assets/libs/fine-upload/jquery.fine-uploader.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+</body>
+</html>

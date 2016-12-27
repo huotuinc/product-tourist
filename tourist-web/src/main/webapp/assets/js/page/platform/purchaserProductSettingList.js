@@ -16,7 +16,7 @@ $('.btnSearch').click(function () {
 
 bannerUriFormatter = function (value, row, index) {
     return [
-        '<img src="' + row.bannerUri + '" style="vertical-align:bottom">banner</img>'
+        '<img src="' + row.bannerUri + '" style="vertical-align:bottom"/>'
     ].join('');
 };
 updateFormatter = function (value, row, index) {

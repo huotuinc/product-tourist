@@ -28,34 +28,37 @@
             </form>
         </div>
     </div>
-    <div id="toolbar" class="btn-group">
-        <button id="btn_export" type="button" class="btn btn-default">
-            <a href="purchaserProductSetting.html" th:href="@{/distributionPlatform/toPurchaserProductSetting}">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
-            </a>
-        </button>
-    </div>
+    <div class="panel panel-default">
+        <div id="toolbar" class="btn-group">
+            <button id="btn_export" type="button" class="btn btn-default">
+                <a href="purchaserProductSetting.html" th:href="@{/distributionPlatform/toPurchaserProductSetting}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
+                </a>
+            </button>
+        </div>
 
-    <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserProductSetting.json"
-           data-method="get"
-           data-side-pagination="server"
-           data-pagination="true" data-striped="true"
-           data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
-           data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
-           data-query-params="getParams" data-toolbar="#toolbar" data-query-pa>
-        <thead>
-        <tr>
-            <th data-field="id" data-align="center" data-sortable="true">id</th>
-            <th data-field="name" data-align="center" data-sortable="true">名称</th>
-            <th data-field="bannerUri" data-formatter="bannerUriFormatter" data-align="center" data-sortable="true">
-                banner
-            </th>
-            <th data-field="price" data-align="center" data-sortable="true">价格</th>
-            <th data-field="explain" data-align="center" data-sortable="true">说明</th>
-            <th data-field="action" data-formatter="updateFormatter" data-align="center" data-sortable="true">操作</th>
-        </tr>
-        </thead>
-    </table>
+        <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserProductSetting.json"
+               data-method="get"
+               data-side-pagination="server"
+               data-pagination="true" data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+               data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+               data-query-params="getParams" data-toolbar="#toolbar" data-query-pa>
+            <thead>
+            <tr>
+                <th data-field="id" data-align="center" data-sortable="true">id</th>
+                <th data-field="name" data-align="center" data-sortable="true">名称</th>
+                <th data-field="bannerUri" data-formatter="bannerUriFormatter" data-align="center" data-sortable="true">
+                    banner
+                </th>
+                <th data-field="price" data-align="center" data-sortable="true">价格</th>
+                <th data-field="explain" data-align="center" data-sortable="true">说明</th>
+                <th data-field="action" data-formatter="updateFormatter" data-align="center" data-sortable="true">操作
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 
 <script src="../../../assets/js/jquery.min.js"></script>

@@ -1,6 +1,6 @@
 actionFormatter = function (value, row, index) {
     var arr = new Array;
-    arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
+    arr.push('<a class="btn btn-primary" href="touristGood.html"' +
         ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">查看</a> ');
     arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
         ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">链接地址</a> ');
@@ -22,7 +22,7 @@ actionFormatter = function (value, row, index) {
 
 touristImgUriFormatter = function (value, row, index) {
     return [
-        '<img src="' + row.touristImgUri + '" >图片</img>'
+        '<img src="' + row.touristImgUri + '" />'
     ].join('');
 };
 
