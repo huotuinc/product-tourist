@@ -25,13 +25,11 @@
      * @param text
      */
     var dateRangeFormat=function(text){
-        var s="2017-01-01:12:00:00";
+        var s = "2017-01-01 12:00:00";
         var array=[];
         array[0]=text.substr(0, s.length);
         array[1]=text.substr(s.length+3);
         return array;
-
-
     };
 
      var actionFormatter = function (value, row, index) {

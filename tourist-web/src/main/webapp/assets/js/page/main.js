@@ -72,4 +72,6 @@ define(function (require, exports, module) {
 
         ui.fineUploader(config);
     }
+
+
 });

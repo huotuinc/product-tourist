@@ -45,3 +45,7 @@ $('.btnSearch').click(function () {
     var $table = $('#table');
     $table.bootstrapTable('refresh');
 });
+
+
+
+

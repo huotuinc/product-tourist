@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/fine-uploader-new.min.css"
+          property=""/>
+    <link href="../../../assets/css/admin.content.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/css/admin.global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/css/global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/libs/cityPicker/css/city-picker.css" rel="stylesheet"/>
+    <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+
+    <style>
+        .city-picker-span {
+            width: 390px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="block">
+    <!--/*@thymesVar id="supplier" type="com.huotu.tourist.entity.TouristSupplier"*/-->
+    <div class="h">
+        <span class="icon-sprite icon-list"></span>
+        <h3 th:if="${supplier!=null}">修改采购商产品设置</h3>
+        <h3 th:if="${supplier==null}">添加采购商产品设置</h3>
+        <div class="bar">
+            <a class="btn-lit" href="purchaserProductSettingList.html" target="content">
+                <span>返回管理列表</span></a>
+        </div>
+    </div>
+    <div class="cnt-wp">
+
+        <form id="modelForm" method="post" class="form-inline" action="purchaserProductSettingList.html"
+              th:action="@{${supplier==null ? '/distributionPlatform/addSupplier' : '/distributionPlatform/updateSupplier'}}">
+            <div class="cnt form">
+                <div class="division">
+                    <input type="hidden" name="id" id="id" th:value="${supplier.id}">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                            <th>供应商名称：</th>
+                            <td>
+                                <input name="supplierName" type="text" id="supplierName"
+                                       th:value="${supplier.supplierName}"
+                                       maxlength="50"
+                                       class="input-normal" placeholder="请输入模型名称">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>所在地：</th>
+                            <td>
+                                <div style="position: relative; "><!-- container -->
+                                    <input readonly type="text" name="address" id="address"
+                                           data-toggle="city-picker"
+                                           value="北京市/北京市/海淀区" th:value="${supplier.address}">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>详细地址：</th>
+                            <td>
+                                <input type="text" name="detailedAddress" id="detailedAddress"
+                                       th:value="${supplier.address.detailedAddress}" class="input-normal"
+                                       placeholder="详细地址">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>联系人：</th>
+                            <td>
+                                <input type="text" name="contacts" id="contacts" th:value="${supplier.contacts}"
+                                       class="input-normal"
+                                       placeholder="联系人">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>联系电话：</th>
+                            <td>
+                                <input type="text" name="contactNumber" id="contactNumber"
+                                       th:value="${supplier.contactNumber}"
+                                       class="input-normal"
+                                       placeholder="联系电话">
+                            </td>
+                        </tr>
+                        <tr th:if="${supplier!=null}">
+                            <th>原营业执照：</th>
+                            <td>
+                                <img res:src="${supplier.businessLicenseUri}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>营业执照：</th>
+                            <td>
+                                <input type="hidden" name="businessLicenseUri" id="businessLicenseUri"
+                                       class="input-normal" placeholder="营业执照"
+                                       th:value="${supplier.businessLicenseUri}">
+                                <div class="col-sm-10" id="supplier-uploader"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>管理员账号：</th>
+                            <td>
+                                <input type="text" name="adminAccount" id="adminAccount"
+                                       th:value="${supplier.adminAccount}"
+                                       class="input-normal"
+                                       placeholder="管理员账号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>管理员密码：</th>
+                            <td>
+                                <input type="password" name="adminPassword" id="adminPassword"
+                                       th:value="${supplier.adminPassword}" class="input-normal"
+                                       placeholder="管理员密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>备注：</th>
+                            <td>
+                                <textarea rows="" cols="" style="width: 250px; height: 60px;" class="input-normal"
+                                          id="remarks" name="remarks" th:value="${supplier.remarks}"
+                                          placeholder="备注"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn-lit" name="btnSave" value="保存" data-submiting-text="提交中..."
+                           data-text="保存" id="jq-cms-Save">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../../assets/js/jquery.min.js"></script>
+<script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../assets/libs/validate/jquery.validate.min.js"></script>
+<script src="../../../assets/libs/validate/jquery.validate.addMethod.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
+<script src="../../../assets/libs/fine-upload/jquery.fine-uploader.min.js"></script>
+<script src="../../../assets/js/page/platform/supplier.js"></script>
+</body>
+</html>
