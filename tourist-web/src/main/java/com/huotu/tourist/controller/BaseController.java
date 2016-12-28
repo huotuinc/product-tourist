@@ -125,9 +125,9 @@ public class BaseController {
     /**
      * 订单列表
      * // TODO: 2016/12/22 加入用户体系，接口最大化
-     *
-     * @param user
+     *  @param user
      * @param orderNo      订单号
+     * @param supplierName
      * @param touristName  线路名称
      * @param buyerName    采购商名称
      * @param tel          采购商电话
@@ -145,7 +145,7 @@ public class BaseController {
      */
     @RequestMapping(value = "touristOrders", method = RequestMethod.GET)
     public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo,
-                                          String touristName
+                                          String supplierName, String touristName
             , String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate
             , LocalDate payDate, LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
             , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
@@ -153,7 +153,7 @@ public class BaseController {
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
         }
-        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, orderNo, touristName, buyerName, tel,
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
                 payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
                 new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristOrder.htmlSelections);
@@ -161,8 +161,8 @@ public class BaseController {
 
     /**
      * 导出订单列表
-     *
-     * @param user
+     *  @param user
+     * @param supplierName
      * @param orderNo      订单号
      * @param touristName  线路名称
      * @param buyerName    采购商名称
@@ -181,14 +181,14 @@ public class BaseController {
      */
     @RequestMapping(value = "exportTouristOrdersOrders", method = RequestMethod.GET)
     public ResponseEntity exportTouristOrdersOrders(@AuthenticationPrincipal SystemUser user
-            , String orderNo, String touristName, String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate
+            , String supplierName, String orderNo, String touristName, String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate
             , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
             , OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
         }
-        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, orderNo, touristName, buyerName, tel,
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
                 payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
                 new PageRequest(pageNo, pageSize));
         HttpHeaders headers = new HttpHeaders();

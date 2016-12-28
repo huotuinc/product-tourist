@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 /**
  * 平台管理员
- *
+ *  ROLE_MA 平台管理员
  * @author CJ
  */
 @Entity

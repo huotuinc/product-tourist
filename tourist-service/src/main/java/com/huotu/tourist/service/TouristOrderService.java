@@ -43,6 +43,7 @@ public interface TouristOrderService {
     /**
      * 订单列表，
      * @param supplier
+     * @param supplierName   当supplier为null时该参数有效，反之无效
      * @param orderId        订单ID
      * @param touristName    路线名称
      * @param buyerName      购买人
@@ -58,7 +59,7 @@ public interface TouristOrderService {
      * @return 返回带分页信息的订单列表
      * @throws IOException 获取订单列表发生错误
      */
-    Page<TouristOrder> touristOrders(TouristSupplier supplier, String orderId, String touristName, String buyerName, String tel
+    Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderId, String touristName, String buyerName, String tel
             , PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
             , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException;
 

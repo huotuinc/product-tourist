@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>线路类型列表</title>
@@ -50,7 +50,7 @@
                 <h4 class="modal-title" id="myModalLabel">添加/修改线路类型名称</h4>
             </div>
             <div class="modal-body">
-                <form action="touristTypeList.html" method="post">
+                <form id="form" action="touristTypeList.html" method="post">
                     <input type="hidden" name="id" value="">
                     <input type="text" name="typeName" class="form-control" placeholder="线路类型名称">
                 </form>
@@ -67,7 +67,8 @@
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../assets/js/page/platform/touristTypeList.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="../../../assets/js/page/platform/touristTypeList.js" th:inline="javascript"></script>
 
 <!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
 </body>
