@@ -72,6 +72,12 @@ public class TouristSupplier extends Login implements SystemUser {
     private Address address;
 
     /**
+     * 详细地址
+     */
+    @Column(length = 100)
+    private String detailedAddress;
+
+    /**
      * 联系人
      */
     @Column(length = 20)

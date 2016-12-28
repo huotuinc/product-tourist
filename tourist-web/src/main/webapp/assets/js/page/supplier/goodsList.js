@@ -2,7 +2,18 @@
  * Created by slt  2016/12/26.
  */
 $(function(){
+    bindSearch();
 });
+
+var bindSearch=function(){
+    $("#searchOrderList").on("click",function(){
+        search();
+    });
+};
+
+var search=function(){
+    $("table").bootstrapTable('refresh');
+};
 
 
 var actionFormatter = function (value, row, index) {

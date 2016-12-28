@@ -55,6 +55,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,7 +157,54 @@ public class BaseController {
         Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
                 payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
                 new PageRequest(pageNo, pageSize));
-        return new PageAndSelection<>(page, TouristOrder.htmlSelections);
+        List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
+
+        //出行时间特殊处理
+        Selection<TouristOrder, LocalDateTime> touristDateSelection = new Selection<TouristOrder, LocalDateTime>() {
+            @Override
+            public String getName() {
+                return "touristDate";
+            }
+
+            @Override
+            public LocalDateTime apply(TouristOrder order) {
+                Traveler traveler = travelerRepository.findByOrder_Id(order.getId()).get(0);
+                return traveler.getRoute().getFromDate();
+            }
+        };
+
+        //人数处理
+        Selection<TouristOrder, Long> peopleNumberSelection = new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "peopleNumber";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.countByOrder_Id(order.getId());
+            }
+        };
+
+        //行程ID
+        Selection<TouristOrder,Long> touristRouteIdSelection=new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "touristRouteId";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
+            }
+        };
+        selections.add(touristDateSelection);
+        selections.add(peopleNumberSelection);
+        selections.add(touristRouteIdSelection);
+        selections.addAll(TouristOrder.htmlSelections);
+
+
+        return new PageAndSelection<>(page,selections);
     }
 
     /**

@@ -183,6 +183,19 @@ public class SupplierManageController extends BaseController {
                 return travelerRepository.countByOrder_Id(order.getId());
             }
         };
+
+        Selection<TouristOrder,Long> touristRouteIdSelection=new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "touristRouteId";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
+            }
+        };
+
         selections.add(touristDateSelection);
         selections.add(peopleNumberSelection);
         selections.addAll(TouristOrder.htmlSelections);
