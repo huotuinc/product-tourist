@@ -58,5 +58,5 @@ var getParams= function(params) {
     };
     //console.log(temp);
     return temp;
-}
+};
 

@@ -40,7 +40,30 @@
         return '<img src="'+row.touristImgUri+'" height="50px" width="80px"><span>'+row.touristName+'</span>';
     };
 
-     var remarkFormatter=function(value,row,index){
+    var touristDateFormatter=function(value,row,index){
+        var html='<span>'+row.touristDate+'</span><p><a class="btn btn-link showDetail">修改出行时间</a></p>';
+        return html;
+    };
+
+    var touristDateEvents={
+        'click .showDetail': function (e, value, row, index) {
+            var id=row.id;
+            layer.open({
+                type:1,
+                area: ['700px', '400px'],
+                title:"修改出行时间",
+                btn:['确定修改','取消'],
+                content:$("#modifyTouristDate"),
+                yes:function(index){
+                    layer.msg("yes");
+                    layer.close(index);
+                }
+            });
+
+        }
+    };
+
+    var remarkFormatter=function(value,row,index){
          var txt="";
          var size=row.remarks.length;
          if(size>5){
@@ -72,10 +95,6 @@
                 }
             });
         }
-    };
-
-    var modifyLocalRemark=function(){
-
     };
 
     var actionEvents = {
