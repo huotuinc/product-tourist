@@ -1,50 +1,186 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-    <title></title>
-    <link href="../../assets/css/admin.content.css" type="text/css" rel="stylesheet"/>
-    <link href="../../assets/css/admin.global.css" type="text/css" rel="stylesheet"/>
-    <link href="../../assets/css/global.css" type="text/css" rel="stylesheet"/>
-    <link href="../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+﻿<!DOCTYPE html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
 
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
+    <link href="../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="../../assets/css/style.min.css?v=4.0.0" rel="stylesheet"/>
 
 </head>
-<body>
-<div class="block">
-    <div class="h">
-        <span class="icon-sprite icon-list"></span>
-        <h3>订单详情</h3>
-        <div class="bar">
-            <a class="btn-lit" href="orderList.html" target="content">
-                <span>返回订单列表</span></a>
+<body class="gray-bg">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="">
+                    <div class="float-e-margins">
+                        <h1>订单号：1913233132131231    已支付 </h1>
+                    </div>
+                    <div class="float-e-margins">
+                        <label>订单操作：</label>
+                        <button class="btn btn-success">确认订单</button>
+                        <button class="btn btn-success">确认订单</button>
+                        <button class="btn btn-success">确认订单</button>
+                        <button class="btn btn-success">确认订单</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
+
     </div>
-    <div class="cnt-wp">
-        <table>
-            <th>
-                路线名称
-            </th>
-            <th>
-                出行日期
-            </th>
-            <th>
-                单价
-            </th>
-            <th>
-                购买数量
-            </th>
-            <th>总金额</th>
-            <th>返佣</th>
-        </table>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-content">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>线路名称</th>
+                        <th>出行日期</th>
+                        <th>单价</th>
+                        <th>购买数量</th>
+                        <th>总金额</th>
+                        <th>返佣</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${order.touristGood.touristName}">22</td>
+                        <td th:text="${route.fromDate}">22</td>
+                        <td th:text="${order.touristGood.price}">22</td>
+                        <td th:text="${travelers.size()}">22</td>
+                        <td th:text="${order.orderMoney}">22</td>
+                        <td th:text="${order.orderMoney}*${order.touristGood.rebate}">22</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-8">
+        <div class="ibox">
+            <div class="ibox-title">
+                <label>订单详情</label>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>11</th>
+                        <td>11</td>
+                        <th>11</th>
+                        <td>11</td>
+
+                    </tr>
+                    <tr>
+                        <th>22</th>
+                        <td>22</td>
+                        <th>22</th>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <th>22</th>
+                        <td>22</td>
+                        <th>22</th>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <th>22</th>
+                        <td>22</td>
+                        <th>22</th>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <th>22</th>
+                        <td>22</td>
+                        <th>22</th>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <th>22</th>
+                        <td>22</td>
+                        <th>22</th>
+                        <td>22</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+        <div class="ibox">
+            <div class="ibox-title">
+                <label>订单详情</label>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>11</th>
+                        <td>11</td>
+                    </tr>
+                    <tr>
+                        <th>22</th>
+                        <td>22</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <label>订单详情</label>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>11</th>
+                        <th>11</th>
+                        <th>11</th>
+                        <th>11</th>
+                        <th>11</th>
+                        <th>11</th>
+                    </tr>
+                    <tr>
+                        <td>22</td>
+                        <td>22</td>
+                        <td>22</td>
+                        <td>22</td>
+                        <td>22</td>
+                        <td>22</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"
-        type="application/javascript"></script>
-<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"
-        type="application/javascript"></script>
-<script src="../../assets/js/page/supplier/orderDetails.js"
-        type="application/javascript"></script>
+
+
+
+<script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../assets/js/page/supplier/orderList.js"></script>
 </body>
+
 </html>
