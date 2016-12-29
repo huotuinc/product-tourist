@@ -44,7 +44,7 @@
                             <button style="width: 120px" class="btn btn-success">提现</button>
                         </div>
                         <div class="col-md-2">
-                            <button class="btn btn-link">设置收款账户</button>
+                            <button onclick="setPaymentAccount()" class="btn btn-link">设置收款账户</button>
                         </div>
                     </div>
                     <div class="row">
@@ -106,7 +106,8 @@
                                             data-sortable="true">自审状态</th>
                                         <th data-field="platformAuditState" data-align="center"
                                             data-sortable="true">平台审核状态</th>
-                                        <th data-align="center" data-sortable="true">操作</th>
+                                        <th data-formatter="actionFormatter" data-events="actionEvents"
+                                            data-align="center" data-sortable="true">操作</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -168,6 +169,7 @@
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
 <script src="../../assets/js/page/supplier/salesStatistics.js"></script>
