@@ -1,0 +1,37 @@
+{
+  "total": 200,
+  "rows": [
+    {
+      "id": 0,
+      "withdrawalNo":"12345688",
+      "withdrawalDate": "2016-12-12 00:00:00",
+      "withdrawalMoney": 78954,
+      "currentAccountBalance": 4867,
+      "withdrawalState": "审核中，已审核，已发放"
+    },
+    {
+      "id": 1,
+      "withdrawalNo":"12345688",
+      "withdrawalDate": "2016-12-12 00:00:00",
+      "withdrawalMoney": 78954,
+      "currentAccountBalance": 4867,
+      "withdrawalState": "审核中，已审核，已发放"
+    },
+    {
+      "id": 2,
+      "withdrawalNo":"12345688",
+      "withdrawalDate": "2016-12-12 00:00:00",
+      "withdrawalMoney": 78954,
+      "currentAccountBalance": 4867,
+      "withdrawalState": "审核中，已审核，已发放"
+    },
+    {
+      "id": 3,
+      "withdrawalNo":"12345688",
+      "withdrawalDate": "2016-12-12 00:00:00",
+      "withdrawalMoney": 78954,
+      "currentAccountBalance": 4867,
+      "withdrawalState": "审核中，已审核，已发放"
+    }
+  ]
+}
