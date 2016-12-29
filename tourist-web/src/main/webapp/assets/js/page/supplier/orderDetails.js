@@ -27,8 +27,6 @@ var modifyTravelerInfo=function(obj){
     $("input[name='tel']","#modifyTravelerInfo").val(tel);
     $("input[name='IDNo']","#modifyTravelerInfo").val(IDNo);
 
-
-
     layer.open({
         type:1,
         title:"修改人员信息",
@@ -59,6 +57,31 @@ var modifyTravelerInfo=function(obj){
         }
     });
 
-    console.log();
+};
+
+var modifyOrderStatus=function(id,obj){
+    layer.confirm('确定修改吗？', {
+        btn: ['确定', '取消']
+    }, function (index) {
+        var orderState=parseInt($(".orderState",obj).text());
+        //修改订单状态
+        var url=/*[['base/modifyOrderState']]*/'../../mock/supplier/orderDetails.json';
+        $.ajax({
+            type:'POST',
+            url: url,
+            dataType: 'json',
+            data: {id:id,orderState:orderState},
+            success:function(result){
+                layer.msg("修改成功！");
+                window.setTimeout("window.location=location.href",1000);
+            },
+            error:function(e){
+                layer.msg("修改出错！");
+            }
+        });
+
+        layer.close(index);
+    });
+
 
 };

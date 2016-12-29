@@ -18,6 +18,7 @@
 </head>
 <!--/*@thymesVar id="order" type="com.huotu.tourist.entity.TouristOrder"*/-->
 <!--/*@thymesVar id="route" type="com.huotu.tourist.entity.TouristRoute"*/-->
+<!--/*@thymesVar id="orderStates" type="java.util.ArrayList<com.huotu.tourist.common.OrderStateEnum>"*/-->
 <!--/*@thymesVar id="travelers" type="java.util.ArrayList<com.huotu.tourist.entity.Traveler>"*/-->
 <body class="gray-bg">
 <div class="row">
@@ -26,14 +27,16 @@
             <div class="ibox-content">
                 <div class="">
                     <div class="float-e-margins">
-                        <h1>订单号：1913233132131231    已支付 </h1>
+                        <h1 th:text="'订单号：'+${order.orderNo}+'   '+${order.orderState.value}">订单号：1913233132131231    已支付 </h1>
                     </div>
                     <div class="float-e-margins">
                         <label>订单操作：</label>
-                        <button class="btn btn-success">确认订单</button>
-                        <button class="btn btn-success">确认订单</button>
-                        <button class="btn btn-success">确认订单</button>
-                        <button class="btn btn-success">确认订单</button>
+                        <button onclick="modifyOrderStatus(1,this)"
+                                th:onclick="'modifyOrderStatus('+${order.id}+',this)'"
+                                th:each="o:${orderStates}" class="btn btn-success">
+                            <span class="orderState" style="display: none" th:text="${o.code}">2</span>
+                            <span th:text="${o.value}">确认订单</span>
+                        </button>
                     </div>
 
                 </div>
@@ -243,7 +246,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/iCheck/icheck.min.js"></script>
-<script src="../../assets/js/page/supplier/orderDetails.js"></script>
+<script src="../../assets/js/page/supplier/orderDetails.js" th:inline="javascript"></script>
 </body>
 
 </html>

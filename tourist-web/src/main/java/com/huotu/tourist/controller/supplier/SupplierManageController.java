@@ -246,7 +246,8 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/showOrder")
-    public String showOrder(@RequestParam Long id, Model model) throws IOException {
+    public String showOrder(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam Long id, Model model) throws IOException {
 
         TouristOrder order = touristOrderRepository.findOne(id);
 
@@ -255,6 +256,10 @@ public class SupplierManageController extends BaseController {
         List<Traveler> travelers = travelerRepository.findByOrder_Id(id);
 
         model.addAttribute("route", travelers.get(0).getRoute());
+
+        List<OrderStateEnum> orderStates=touristOrderService.getModifyState(userInfo,order);
+
+        model.addAttribute("orderStates",orderStates);
 
         model.addAttribute("travelers", travelers);
 
