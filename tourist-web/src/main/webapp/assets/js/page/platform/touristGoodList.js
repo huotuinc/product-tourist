@@ -2,6 +2,13 @@ recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/ "..
 unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
 showTouristGood = /*[[@{/distributionPlatform/showTouristGood}]]*/ "touristGood.html";
 modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/ "../../../mock/platform/httpJson.json";
+var $table = $('#table');
+$(".all").click(function () {
+    $table = $('#table');
+});
+$(".recommend").click(function () {
+    $table = $('#recommendTable');
+});
 
 getParams = function (params) {
     var temp = {
@@ -20,10 +27,8 @@ getParams = function (params) {
 actionFormatter = function (value, row, index) {
     var arr = new Array;
     arr.push('<a class="btn btn-primary" href="' + showTouristGood + '?id=' + row.id + '">查看</a> ');
-
     arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
         ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">链接地址</a> ');
-
     if (row.touristCheckState.code == 2 && row.recommend) {
         arr.push('<button class="btn btn-primary unRecommendTouristGood">取消推荐</button> ');
     }
@@ -43,7 +48,6 @@ touristImgUriFormatter = function (value, row, index) {
 };
 
 $('.btnSearch').click(function () {
-    var $table = $('#table');
     $table.bootstrapTable('refresh');
 });
 
@@ -55,7 +59,6 @@ function updateRecommend(url, row, recommend) {
         data: {id: row.id, recommend: recommend},
         dataType: "json",
         success: function () {
-            var $table = $('#table');
             $table.bootstrapTable('refresh');
         },
         error: function (error) {
@@ -97,7 +100,6 @@ window.actionEvents = {
                 data: {id: row.id, checkState: 2},
                 dataType: "json",
                 success: function () {
-                    var $table = $('#table');
                     $table.bootstrapTable('refresh');
                 },
                 error: function (error) {

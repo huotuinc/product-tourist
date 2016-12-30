@@ -101,7 +101,7 @@
 
                                 <div class="form-inline" style="max-width: 926px; text-align: right;">
                                     <button id="searchList" type="button" class="btn btn-primary">筛选</button>
-                                    <button type="button" class="btn btn-primary">导出订单</button>
+                                    <!--<button type="button" class="btn btn-primary">导出订单</button>-->
                                 </div>
                             </div>
                         </div>
@@ -130,13 +130,24 @@
                 <li class=""><a data-toggle="tab" aria-expanded="false">已取消</a>
                 </li>
             </ul>
+            <div id="toolbar" class="btn-group">
+                <select class="form-control">
+                    <option value="basic">Export Basic</option>
+                    <option value="all">Export All</option>
+                    <option value="selected">Export Selected</option>
+                </select>
+            </div>
             <div class="tab-content">
-                <table data-toggle="table" data-url="../../mock/supplier/orderList.json"
+                <table id="table" data-toggle="table" data-url="../../mock/supplier/orderList.json"
                        data-method="get" data-side-pagination="server" data-pagination="true" data-striped="true"
                        data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
-                       data-escape="true" data-query-params="getParams" data-toolbar="#toolbar">
+                       data-escape="true" data-query-params="getParams"
+                       data-show-export="true"
+                       data-click-to-select="true"
+                       data-toolbar="#toolbar">
                     <thead>
                     <tr>
+                        <th data-field="state" data-checkbox="true"></th>
                         <th data-field="orderNo" data-align="center">订单号</th>
                         <th th:if="${#authorization.expression('hasRole(''ROLE_MA'')')}"
                             data-field="supplierName" data-align="center">供应商名称
@@ -170,8 +181,12 @@
 </div>
 <script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+
+<script src="../../assets/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../assets/libs/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../../assets/libs/bootstrap-table/tableExport.js"></script>
+
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>

@@ -46,6 +46,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -267,8 +268,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
     public String toTouristGoodList(HttpServletRequest request, Model model) {
-        //todo
-        return "";
+        return "view/platform/trouristGood/touristGoodList.html";
     }
 
 
@@ -644,8 +644,10 @@ public class DistributionPlatformController extends BaseController {
      * @param activityName
      * @return
      */
-    @RequestMapping(value = {"saveActivityType", "updateActivityType"}, method = RequestMethod.POST)
-    public String saveOrUpdateActivityType(Long id, @RequestParam String activityName) {
+    @RequestMapping(value = {"saveActivityType", "updateActivityType"}, method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    public void saveOrUpdateActivityType(Long id, @RequestParam String activityName) {
         ActivityType activityType;
         if (id == null) {
             activityType = new ActivityType();
@@ -656,7 +658,6 @@ public class DistributionPlatformController extends BaseController {
         }
         activityType.setActivityName(activityName);
         activityTypeService.save(activityType);
-        return "";
     }
 
     /**
@@ -666,23 +667,25 @@ public class DistributionPlatformController extends BaseController {
      * @param id id not null
      * @return
      */
-    @RequestMapping(value = "delActivityType", method = RequestMethod.DELETE)
-    public String delActivityType(@RequestParam Long id) {
+    @RequestMapping(value = "delActivityType", method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    public void delActivityType(@RequestParam Long id) {
         activityTypeRepository.delete(id);
-        return null;
     }
 
 
     /**
      * 添加或修改线路类型
-     * // TODO: 2016/12/21
-     *
      * @param id
      * @param typeName
      * @return
      */
-    @RequestMapping(value = {"saveTouristType", "updateTouristType"}, method = RequestMethod.POST)
-    public String saveOrUpdateTouristType(Long id, @RequestParam String typeName) {
+    @RequestMapping(value = {"saveTouristType", "updateTouristType"}, method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    @Transactional
+    public void saveOrUpdateTouristType(Long id, @RequestParam String typeName) {
         TouristType touristType;
         if (id == null) {
             touristType = new TouristType();
@@ -693,7 +696,6 @@ public class DistributionPlatformController extends BaseController {
         }
         touristType.setTypeName(typeName);
         touristTypeService.save(touristType);
-        return null;
     }
 
 

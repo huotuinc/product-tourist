@@ -1,6 +1,9 @@
-addUrl = /*[[@{/distributionPlatform/saveActivityType}]]*/ "activityTypeList.html";
-updateUrl = /*[[@{/distributionPlatform/updateActivityType}]]*/ "activityTypeList.html";
-delUrl = /*[[@{/distributionPlatform/delActivityType}]]*/ "activityTypeList.html";
+addUrl = /*[[@{/distributionPlatform/saveActivityType}]]*/ "../../../mock/platform/httpJson.json";
+;
+updateUrl = /*[[@{/distributionPlatform/updateActivityType}]]*/ "../../../mock/platform/httpJson.json";
+;
+delUrl = /*[[@{/distributionPlatform/delActivityType}]]*/ "../../../mock/platform/httpJson.json";
+;
 
 actionFormatter = function (value, row, index) {
     return '<button  class="btn btn-primary update" data-toggle="modal" data-target="#myModal">修改</button> '
@@ -17,7 +20,21 @@ window.actionEvents = {
             btn: ['删除', '取消']
         }, function (index) {
             layer.close(index);
-            window.location.href = delUrl + "?id=" + row.id;
+            var load = layer.load();
+            $.ajax({
+                url: delUrl,
+                method: "post",
+                data: {id: row.id},
+                dataType: "json",
+                success: function () {
+                    var $table = $("#table");
+                    $table.bootstrapTable('refresh');
+                },
+                error: function (error) {
+
+                }
+            });
+            layer.close(load);
         }, function () {
 
         });
@@ -29,17 +46,35 @@ $("#btn_add").click(function () {
     $("input[name='id']").val("");
 });
 
+
+function saveOrUpdate(url, id, activityName) {
+    var load = layer.load();
+    $.ajax({
+        url: url,
+        method: "post",
+        data: {id: id, activityName: activityName},
+        dataType: "json",
+        success: function () {
+            var $table = $("#table");
+            $table.bootstrapTable('refresh');
+        },
+        error: function (error) {
+
+        }
+    })
+    layer.close(load);
+}
+
 $(".saveOrUpdate").click(function () {
     if ($("input[name='activityName']").val() == "") {
         layer.alert("活动名称不能为空");
         return;
     }
     if ($("input[name='id']").val() == "") {
-        $("#form").attr("action", addUrl);
+        saveOrUpdate(addUrl, null, $("input[name='activityName']").val());
     } else {
-        $("#form").attr("action", updateUrl);
+        saveOrUpdate(updateUrl, $("input[name='id']").val(), $("input[name='activityName']").val());
     }
-    $("#form").submit();
 
 });
 

@@ -45,8 +45,8 @@
     </div>
     <div class="panel panel-default">
         <ul class="nav nav-tabs" role="tablist" id="myTab">
-            <li role="presentation" class="active"><a href="#all" role="tab" data-toggle="tab">全 部</a></li>
-            <li role="presentation"><a href="#recommend" role="tab" data-toggle="tab">推荐商品</a></li>
+            <li role="presentation" class="active all"><a href="#all" role="tab" data-toggle="tab">全 部</a></li>
+            <li role="presentation" class="recommend"><a href="#recommend" role="tab" data-toggle="tab">推荐商品</a></li>
         </ul>
 
         <div class="tab-content">
@@ -83,6 +83,7 @@
             <div role="tabpanel" class="tab-pane" id="recommend">
                 <table id="recommendTable" data-toggle="table"
                        data-url="../../../mock/platform/recommendTouristGoodList.json"
+                       th:attr="data-url=@{/distributionPlatform/touristGoodList(recommend=true)}"
                        data-method="get"
                        data-side-pagination="server"
                        data-pagination="true" data-striped="true"
@@ -103,7 +104,9 @@
                         <th data-field="destination" data-align="center" data-sortable="true">目的地</th>
                         <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
                         <th data-field="touristCheckState.value" data-align="center" data-sortable="true">审核状态</th>
-                        <th data-field="action" data-formatter="actionFormatter" data-align="center">操作</th>
+                        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
+                            data-align="center">操作
+                        </th>
                     </tr>
                     </thead>
                 </table>
