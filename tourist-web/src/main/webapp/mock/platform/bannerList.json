@@ -1,0 +1,71 @@
+{
+  "total": 200,
+  "rows": [
+    {
+      "id": 0,
+      "bannerName": "Item 0",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 1,
+      "bannerName": "Item 1",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 2,
+      "bannerName": "Item 2",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 3,
+      "bannerName": "Item 3",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 4,
+      "bannerName": "Item 4",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 5,
+      "bannerName": "Item 5",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 6,
+      "bannerName": "Item 6",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 7,
+      "bannerName": "Item 7",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 8,
+      "bannerName": "Item 8",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 9,
+      "bannerName": "Item 9",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    },
+    {
+      "id": 10,
+      "bannerName": "Item 10",
+      "bannerImgUri": "http://placehold.it/100x100?text=图片",
+      "linkUrl": "http://www.baidu.com"
+    }
+  ]
+}

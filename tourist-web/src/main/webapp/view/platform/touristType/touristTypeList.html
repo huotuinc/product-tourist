@@ -7,20 +7,21 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
 
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
 
 </head>
 <body>
 <div class="panel-body" style="padding-bottom:0;">
     <div class="panel panel-default">
         <div id="toolbar" class="btn-group">
-            <button id="btn_add" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                <a>
+            <button id="btn_add" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
-                </a>
             </button>
         </div>
 
-        <table id="table" data-toggle="table" data-url="../../../mock/platform/touristTypeList.json" data-method="get"
+        <table id="table" data-toggle="table" data-url="../../../mock/platform/touristTypeList.json"
+               th:attr="data-url=@{/distributionPlatform/touristTypeList}"
+               data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
                data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"

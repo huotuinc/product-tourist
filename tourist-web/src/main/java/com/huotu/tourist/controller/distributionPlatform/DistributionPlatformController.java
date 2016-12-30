@@ -18,6 +18,7 @@ import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.Banner;
 import com.huotu.tourist.entity.PresentRecord;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
@@ -29,6 +30,7 @@ import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.BannerRepository;
 import com.huotu.tourist.service.PresentRecordService;
 import com.huotu.tourist.service.PurchaserProductSettingService;
 import com.huotu.tourist.service.SettlementSheetService;
@@ -95,6 +97,10 @@ public class DistributionPlatformController extends BaseController {
 
     @Autowired
     ActivityTypeRepository activityTypeRepository;
+
+
+    @Autowired
+    BannerRepository bannerRepository;
 
     /**
      * 跳转到供应商列表页面
@@ -411,6 +417,23 @@ public class DistributionPlatformController extends BaseController {
         return new PageAndSelection(page, PresentRecord.selections);
     }
 
+    /**
+     * @param pageSize
+     * @param pageNo
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "bannerList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public ResponseEntity bannerList(int pageSize, int pageNo, HttpServletRequest request) throws JsonProcessingException {
+        Page<Banner> page = bannerRepository.findAll(new PageRequest(pageNo, pageSize));
+        Map<String, Object> map = new HashMap<>();
+        map.put(TOTAL, page.getTotalPages());
+        map.put(ROWS, page.getContent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValueAsString(map);
+        return ResponseEntity.ok(objectMapper.writeValueAsString(map));
+    }
+
     /**-------------------下面新增和修改相关-----------------------*/
 
     /**
@@ -492,7 +515,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 修改采购商审核状态
      *
-     * @param id     供应商id not null
+     * @param id         供应商id not null
      * @param checkState 审核状态 not null
      * @return
      */
@@ -540,6 +563,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 新增采购产品设置
+     *
      * @param id        id 为null 代表添加，不为null代表修改
      * @param name      名称 not null
      * @param bannerUri 图片 not null
@@ -677,6 +701,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 添加或修改线路类型
+     *
      * @param id
      * @param typeName
      * @return
@@ -696,6 +721,53 @@ public class DistributionPlatformController extends BaseController {
         }
         touristType.setTypeName(typeName);
         touristTypeService.save(touristType);
+    }
+
+
+    /**
+     * 添加或修改banner
+     *
+     * @param id
+     * @param bannerName
+     * @return
+     */
+    @RequestMapping(value = {"saveBanner", "updateBanner"}, method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    @Transactional
+    public void saveOrUpdateBanner(Long id, @RequestParam String bannerName, @RequestParam String bannerImgUri, String linkUrl) {
+        Banner banner;
+        if (id == null) {
+            banner = new Banner();
+            banner.setCreateTime(LocalDateTime.now());
+        } else {
+            banner = bannerRepository.getOne(id);
+            banner.setUpdateTime(LocalDateTime.now());
+            if (banner.getBannerImgUri() != null) {
+                //// TODO: 2016/12/30 删除图片
+            }
+        }
+        banner.setBannerName(bannerName);
+        banner.setLinkUrl(linkUrl);
+        banner.setBannerImgUri(bannerImgUri);
+        bannerRepository.save(banner);
+    }
+
+    /**
+     * 删除banner
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "delBanner", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    @Transactional
+    public void delBanner(@RequestParam Long id) {
+        Banner banner = bannerRepository.getOne(id);
+        if (banner.getBannerImgUri() != null) {
+            //// TODO: 2016/12/30 删除图片
+        }
+        bannerRepository.delete(banner);
     }
 
 

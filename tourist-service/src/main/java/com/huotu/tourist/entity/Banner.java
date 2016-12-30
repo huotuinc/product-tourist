@@ -25,4 +25,6 @@ public class Banner extends BaseModel {
 
     @Column(length = 200)
     private String linkUrl;
+
+
 }

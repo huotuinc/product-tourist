@@ -5,8 +5,8 @@
     <title>供应商列表</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
-
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
 
 </head>
 <body>
@@ -30,15 +30,15 @@
 
     <div class="panel panel-default">
         <div id="toolbar" class="btn-group">
-            <button id="btn_add" type="button" class="btn btn-default">
-                <a href="supplier.html" th:href="@{/distributionPlatform/toAddTouristSupplier}">
+            <button id="btn_add" type="button" class="btn btn-primary">
+                <a href="supplier.html" style="color:#FFFFFF" th:href="@{/distributionPlatform/toAddTouristSupplier}">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
                 </a>
             </button>
         </div>
 
         <table id="table" data-toggle="table" data-url="../../../mock/platform/supplierList.json"
-               th:attr="data-url=@{/distributionPlatform/supplierList}"
+               th:attr="data-url=@{/distributionPlatform/bannerList}"
                data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
