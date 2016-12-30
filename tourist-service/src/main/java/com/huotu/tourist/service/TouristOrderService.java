@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -104,6 +105,14 @@ public interface TouristOrderService {
      * @return              是否可以被修改
      */
     boolean checkOrderStatusCanBeModified(SystemUser user,OrderStateEnum formerStatus,OrderStateEnum laterStatus);
+
+    /**
+     * 获取所给订单能够修改的状态
+     * @param user          当前用户权限，如果是null，则看作系统
+     * @param touristOrder  订单
+     * @return
+     */
+    List<OrderStateEnum> getModifyState(SystemUser user,TouristOrder touristOrder);
 
 
 

@@ -4,6 +4,7 @@
 $(function(){
     dateRangeEdit();
     bindSearch();
+    bindOrderStateLabel();
     changesStyleTouristDate();
 });
 
@@ -39,6 +40,17 @@ var dateRangeFormat=function(text){
  */
 var bindSearch=function(){
     $("#searchList").on("click",function(){
+        search();
+    });
+};
+
+/**
+ * 绑定单击事件，订单状态切换
+ */
+var bindOrderStateLabel=function(){
+    $("#shortcutSearch").on("click","li",function(){
+        $("#shortcutSearch li").removeClass();
+        $(this).attr("class","active");
         search();
     });
 };
@@ -199,6 +211,7 @@ var changesStyleTouristDate=function(){
     });
 };
 
+
 /**
  * 备注格式化
  * @param value
@@ -232,12 +245,12 @@ var remarkEvents={
             btn:['确定'],
             //closeBtn: 0,
             shadeClose: true,
-            content: "<p contenteditable='true' class='text-area'>"+value+"</p>",
+            content: "<p id='remark' contenteditable='true' class='text-area'>"+value+"</p>",
             yes: function(index){
                 //ajax修改备注
-                var newText=$("p").text();
-                layer.msg(newText);
-                value=newText;
+                var id=row.id;
+                var newText=$("#remark").text();
+                layer.msg(id+newText);
                 layer.close(index);
             }
         });
@@ -262,14 +275,7 @@ var actionEvents = {
  * @returns {{pageSize: *, pageNo: number, orderId: *, name: *, buyer: *, tel: *, orderStateEnum: *, orderDate: undefined, endOrderDate: undefined, payDate: undefined, endPayDate: undefined, touristDate: undefined, endTouristDate: undefined}}
  */
 var getParams= function(params) {
-    var orderStateEnum=0;
-    $("#shortcutSearch li").each(function(index,val){
-        if($(val).hasClass("active")){
-            orderStateEnum=index;
-            return;
-        };
-    });
-
+    var orderStateEnum=$(".active","#shortcutSearch").index();
     var orderDates=dateRangeFormat($("input[name='orderDate']").val());
     var payDate=dateRangeFormat($("input[name='payDate']").val());
     var touristDate=dateRangeFormat($("input[name='touristDate']").val());
@@ -284,7 +290,7 @@ var getParams= function(params) {
         name:name!=""?name:undefined,
         buyer:buyer!=""?buyer:undefined,
         tel:buyer!=""?buyer:undefined,
-        orderStateEnum:orderStateEnum>0?orderStateEnum:undefined,
+        orderStateEnum:orderStateEnum>0?orderStateEnum-1:undefined,
         orderDate:orderDates[0]!=""?orderDates[0]:undefined,
         endOrderDate:orderDates[1]!=""?orderDates[1]:undefined,
         payDate:payDate[0]!=""?payDate[0]:undefined,
@@ -292,7 +298,6 @@ var getParams= function(params) {
         touristDate:touristDate[0]!=""?touristDate[0]:undefined,
         endTouristDate:touristDate[1]!=""?touristDate[1]:undefined
     };
-    //console.log(temp);
     return temp;
 };
 

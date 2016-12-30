@@ -1,0 +1,37 @@
+{
+  "total": 200,
+  "rows": [
+    {
+      "id": 0,
+      "settlementNo":"324234",
+      "settlementDate": "2016-12-12 00:00:00",
+      "receivableAccount": 78654,
+      "selfAuditState": "未审核",
+      "platformAuditState": "已确认"
+    },
+    {
+      "id": 1,
+      "settlementNo":"435355436",
+      "settlementDate": "2016-12-12 00:00:00",
+      "receivableAccount": 78654,
+      "selfAuditState": "已审核",
+      "platformAuditState": "已确认"
+    },
+    {
+      "id": 2,
+      "settlementNo":"54653234233",
+      "settlementDate": "2016-12-12 00:00:00",
+      "receivableAccount": 78654,
+      "selfAuditState": "未审核",
+      "platformAuditState": "已确认"
+    },
+    {
+      "id": 3,
+      "settlementNo":"34363452523",
+      "settlementDate": "2016-12-12 00:00:00",
+      "receivableAccount": 78654,
+      "selfAuditState": "已审核",
+      "platformAuditState": "未审核"
+    }
+  ]
+}

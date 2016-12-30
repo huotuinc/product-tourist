@@ -358,9 +358,10 @@ public class BaseController {
      * @throws IOException
      */
     @RequestMapping(value = "/modifyTravelerBaseInfo", method = RequestMethod.POST)
+    @ResponseBody
     @Transactional
-    public void modifyTravelerBaseInfo(@RequestParam Long id, @RequestParam String name, SexEnum sex, Integer age, @RequestParam
-            String tel, @RequestParam String IDNo) throws IOException {
+    public void modifyTravelerBaseInfo(@RequestParam Long id, @RequestParam String name, SexEnum sex, Integer age
+            , @RequestParam String tel, @RequestParam String IDNo) throws IOException {
         Traveler traveler = travelerRepository.getOne(id);
         traveler.setName(name);
         traveler.setSex(sex);
