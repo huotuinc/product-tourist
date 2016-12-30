@@ -1,46 +1,68 @@
 /**
- * Created by Administrator xhl 2015/12/23.
+ * Created by Administrator slt 2016/12/30.
  */
-define(function (require, exports, module) {
-    $("#addModelForm").validate({
-        rules: {
-            txtModelName: {
-                required: true,
-            },
-            txtModelDescription: {
-                maxlength: 200
-            },
-            txtModelType: {
-                selrequired: "-1"
-            },
-            txtOrderWeight: {
-                digits: true,
-            }
-        },
-        messages: {
-            txtModelName: {
-                required: "模型名称为必输项"
-            },
-            txtModelDescription: {
-                maxlength: "模型描述不能超过200个字符"
-            },
-            txtModelType: {
-                selrequired: "请选择模型类型"
-            },
-            txtOrderWeight: {
-                digits: "请输入数字",
-            }
-        },
-        submitHandler: function (form, ev) {
-            var commonUtil = require("common");
-            commonUtil.setDisabled("jq-cms-Save");
-            var layer = require("layer");
-            layer.msg("操作成功", {time: 2000});
-            commonUtil.cancelDisabled("jq-cms-Save");
-            return false;
-        },
-        invalidHandler: function () {
-            return true;
-        }
-    });
+$(function(){
+    dateRangeEdit($('input[name="toursitDate"]'));
+    bindDelteTouristDate();
+
 });
+
+var dateRangeEdit=function($ele){
+    $ele.daterangepicker(
+        {
+            singleDatePicker: true,
+            showDropdowns: true
+
+        }
+    );
+};
+
+var addTouristDate=function(){
+    $(".goodsTouristDates").append('<div> <input type="hidden" name="routeId"/> ' +
+        '<input  type="text" class="form-control datePicker"' +
+        ' name="toursitDate" placeholder="出行时间"/> ' +
+        '<button type="button" class="btn-lit">删除</button> </div>');
+
+    dateRangeEdit($('input[name="toursitDate"]'));
+
+};
+
+var bindDelteTouristDate=function(){
+    $(".goodsTouristDates").on("click","button",function(){
+
+        var div=$(this).parent();
+        if(!checkStringIsEmpty($("input[name='routeId'][type='hidden']",div).val())){
+            //请求服务器删除行程
+            layer.confirm('确定删除吗？', {
+                btn: ['确定', '取消']
+            }, function (index) {
+                $.ajax({
+                    type:'POST',
+                    url: '',
+                    dataType: 'json',
+                    data: {id:id},
+                    success:function(result){
+                        layer.msg("删除成功！");
+                    },
+                    error:function(e){
+                        layer.msg("删除出错！");
+                    }
+                });
+
+                layer.close(index);
+            });
+        }else {
+            $(div).remove();
+        }
+
+    });
+};
+
+
+var checkStringIsEmpty=function(str){
+    if(str==undefined||str==null||str==""){
+        return true;
+    }else {
+        return false;
+    }
+};

@@ -32,4 +32,9 @@ public class TouristRouteModel {
      * 剩余人数
      */
     private int remainPeople;
+
+    /**
+     * 是否已经出售
+     */
+    private boolean sold;
 }
