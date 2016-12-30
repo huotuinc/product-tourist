@@ -1,30 +1,7 @@
-actionFormatter = function (value, row, index) {
-    var arr = new Array;
-    arr.push('<a class="btn btn-primary" href="touristGood.html"' +
-        ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">查看</a> ');
-    arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
-        ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">链接地址</a> ');
-    if (row.touristCheckState.code == 2 && row.recommend) {
-        arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
-            ' th:href="@{/distributionPlatform/unRecommendTouristGood(id=' + row.id + ',recommend=' + false + ')}">取消推荐</a> ');
-    }
-    if (row.touristCheckState.code < 2) {
-        arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
-            ' th:href="@{/distributionPlatform/modifyTouristGoodState(id=' + row.id + ',checkState=' + 2 + ')}">审核通过</a> ');
-    }
-    if (!row.recommend) {
-        arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
-            ' th:href="@{/distributionPlatform/recommendTouristGood(id=' + row.id + ',recommend=' + true + ')}">推荐</a> ');
-    }
-    return arr.join('');
-};
-
-
-touristImgUriFormatter = function (value, row, index) {
-    return [
-        '<img src="' + row.touristImgUri + '" />'
-    ].join('');
-};
+recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
+unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
+showTouristGood = /*[[@{/distributionPlatform/showTouristGood}]]*/ "touristGood.html";
+modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/ "../../../mock/platform/httpJson.json";
 
 getParams = function (params) {
     var temp = {
@@ -40,11 +17,98 @@ getParams = function (params) {
     return temp;
 };
 
+actionFormatter = function (value, row, index) {
+    var arr = new Array;
+    arr.push('<a class="btn btn-primary" href="' + showTouristGood + '?id=' + row.id + '">查看</a> ');
+
+    arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
+        ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">链接地址</a> ');
+
+    if (row.touristCheckState.code == 2 && row.recommend) {
+        arr.push('<button class="btn btn-primary unRecommendTouristGood">取消推荐</button> ');
+    }
+    if (row.touristCheckState.code < 2) {
+        arr.push('<button class="btn btn-primary modifyCheckState" >审核通过</button> ');
+    }
+    if (!row.recommend) {
+        arr.push('<button class="btn btn-primary recommendTouristGood" >推荐</button> ');
+    }
+    return arr.join('');
+};
+
+touristImgUriFormatter = function (value, row, index) {
+    return [
+        '<img src="' + row.touristImgUri + '" />'
+    ].join('');
+};
+
 $('.btnSearch').click(function () {
     var $table = $('#table');
     $table.bootstrapTable('refresh');
 });
 
+function updateRecommend(url, row, recommend) {
+    var load = layer.load();
+    $.ajax({
+        url: url,
+        method: "post",
+        data: {id: row.id, recommend: recommend},
+        dataType: "json",
+        success: function () {
+            var $table = $('#table');
+            $table.bootstrapTable('refresh');
+        },
+        error: function (error) {
+
+        }
+    })
+    layer.close(load);
+}
+
+window.actionEvents = {
+    'click .recommendTouristGood': function (e, value, row, index) {
+        layer.confirm('确定推荐吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            updateRecommend(recommendTouristGood, row, true);
+        }, function () {
+
+        });
+    },
+    'click .unRecommendTouristGood': function (e, value, row, index) {
+        layer.confirm('确定取消推荐吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            updateRecommend(unRecommendTouristGood, row, false);
+        }, function () {
+
+        });
+    },
+    'click .modifyCheckState': function (e, value, row, index) {
+        layer.confirm('确定取审核通过吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            $.ajax({
+                url: modifyTouristGoodState,
+                method: "post",
+                data: {id: row.id, checkState: 2},
+                dataType: "json",
+                success: function () {
+                    var $table = $('#table');
+                    $table.bootstrapTable('refresh');
+                },
+                error: function (error) {
+
+                }
+            })
+        }, function () {
+
+        });
+    }
+}
 
 
 

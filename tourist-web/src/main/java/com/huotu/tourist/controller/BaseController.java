@@ -17,7 +17,6 @@ import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.entity.Traveler;
@@ -385,22 +384,7 @@ public class BaseController {
         travelerRepository.modifyRouteIdByRouteId(laterId, formerId);
     }
 
-    /**
-     * 显示线路商品
-     *
-     * @param id    商品ID
-     * @param model 返回的model
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/showTouristGood")
-    public String showTouristGood(@RequestParam Long id, Model model) throws IOException {
-        TouristGood touristGood = touristGoodRepository.findOne(id);
-        List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
-        model.addAttribute("routes", routes);
-        model.addAttribute("good", touristGood);
-        return null;
-    }
+
 
     /**
      * 修改线路商品的状态
@@ -410,7 +394,7 @@ public class BaseController {
      * @param checkState 状态
      * @throws IOException
      */
-    @RequestMapping("/modifyTouristGoodState")
+    @RequestMapping(value = "/modifyTouristGoodState", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
     public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,

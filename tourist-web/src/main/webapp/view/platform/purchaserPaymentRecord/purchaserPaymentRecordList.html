@@ -16,7 +16,7 @@
         <div class="panel-body">
             <form id="formSearch" class="form-horizontal">
                 <div class="form-group" style="margin-top:15px">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <input type="text" class="form-control datePicker"
                                id="payDate" name="payDate" placeholder="支付时间"/>
                     </div>
@@ -41,21 +41,27 @@
     </div>
     <div class="panel panel-default">
         <div id="toolbar" class="btn-group">
-            <button id="btn_export" type="button" class="btn btn-default">
-                <a><span class="glyphicon glyphicon-export" aria-hidden="true">导出</span></a>
-            </button>
+            <select class="form-control">
+                <option value="basic">Export Basic</option>
+                <option value="all">Export All</option>
+                <option value="selected">Export Selected</option>
+            </select>
         </div>
-
-
-        <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserPaymentRecordList.json"
+        <table id="table" data-url="../../../mock/platform/purchaserPaymentRecordList.json"
                data-method="get"
                data-side-pagination="server"
-               data-pagination="true" data-striped="true"
-               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+               data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, all]"
                data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
-               data-query-params="getParams" data-toolbar="#toolbar">
+               data-toggle="table"
+               data-show-export="true"
+               data-pagination="true"
+               data-click-to-select="true"
+               data-toolbar="#toolbar"
+               data-query-params="getParams">
             <thead>
             <tr>
+                <th data-field="state" data-checkbox="true"></th>
                 <th data-field="id" data-align="center" data-sortable="true">id</th>
                 <th data-field="buyerName" data-align="center" data-sortable="true">采购商名称</th>
                 <th data-field="buyerDirector" data-align="center" data-sortable="true">负责人</th>
@@ -73,12 +79,16 @@
 <script th:inline="javascript">
     exportsPurchaserPaymentRecordUrl = /*[[@{/distributionPlatform/exportPurchaserPaymentRecord}]]*/  "purchaserPaymentRecordList.html";
 </script>
-<script src="../../../assets/js/jquery.min.js"></script>
+<script src="../../../assets/js/jquery-1.9.1.min.js"></script>
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
-<script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../assets/js/page/platform/purchaserPaymentRecordList.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../../../assets/libs/bootstrap-table/tableExport.js"></script>
+<script src="../../../assets/libs/bootstrap-table/ga.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../../assets/js/page/platform/purchaserPaymentRecordList.js"></script>
+
 </body>
 </html>

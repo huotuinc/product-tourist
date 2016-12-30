@@ -1,3 +1,18 @@
+$(function () {
+    dateRangeEdit();
+    var $table = $('#table');
+    $('#toolbar').find('select').change(function () {
+        var pageSize = $table.bootstrapTable("getOptions").totalRows;
+        if ($(this).val() === 'all') {
+            pageSize = $table.bootstrapTable("getOptions").totalRows;
+        }
+        var a = {
+            exportDataType: $(this).val(), pageSize: pageSize
+        }
+        $table.bootstrapTable('destroy').bootstrapTable(a);
+    });
+});
+
 getParams = function (params) {
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
@@ -16,9 +31,6 @@ $('.btnSearch').click(function () {
     $table.bootstrapTable('refresh');
 });
 
-$(function () {
-    dateRangeEdit();
-});
 
 /**
  * 时间控件编辑
@@ -46,16 +58,16 @@ dateRangeFormat = function (text) {
     array[1] = text ? "" : text.substr(s.length + 3);
     return array;
 };
-
-$("#btn_export").click(function () {
-    var dateArr = dateRangeFormat($("input[name='payDate']").val());
-    var buyerName = $("input[name='buyerName']").val();
-    var buyerDirector = $("input[name='buyerDirector']").val();
-    var telPhone = $("input[name='telPhone']").val();
-
-    window.location.href = exportsPurchaserPaymentRecordUrl + "?startPayDate=" + dateArr[0] + "&endPayDate=" + dateArr[1] + "&buyerName=" + buyerName
-        + "&buyerDirector=" + buyerDirector + "&telPhone=" + telPhone;//+"&pageSize="+"&pageNo=";
-})
+//
+// $("#btn_export").click(function () {
+//     var dateArr = dateRangeFormat($("input[name='payDate']").val());
+//     var buyerName = $("input[name='buyerName']").val();
+//     var buyerDirector = $("input[name='buyerDirector']").val();
+//     var telPhone = $("input[name='telPhone']").val();
+//
+//     window.location.href = exportsPurchaserPaymentRecordUrl + "?startPayDate=" + dateArr[0] + "&endPayDate=" + dateArr[1] + "&buyerName=" + buyerName
+//         + "&buyerDirector=" + buyerDirector + "&telPhone=" + telPhone;//+"&pageSize="+"&pageNo=";
+// })
 
 
 

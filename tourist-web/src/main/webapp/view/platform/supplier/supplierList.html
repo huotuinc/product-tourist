@@ -18,7 +18,7 @@
                 <div class="form-group" style="margin-top:15px">
                     <div class="col-sm-2">
                         <input type="text" name="supplierName" id="supplierName" class="form-control"
-                               placeholder="供应商名称" th:value="${supplierName}">
+                               placeholder="供应商名称">
                     </div>
                     <div class="col-sm-4">
                         <button type="button" class="btn btn-primary btnSearch">搜 索</button>
@@ -37,7 +37,9 @@
             </button>
         </div>
 
-        <table id="table" data-toggle="table" data-url="../../../mock/platform/supplierList.json" data-method="get"
+        <table id="table" data-toggle="table" data-url="../../../mock/platform/supplierList.json"
+               th:attr="data-url=@{/distributionPlatform/supplierList}"
+               data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
                data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
@@ -63,7 +65,8 @@
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../assets/js/page/platform/supplierList.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="../../../assets/js/page/platform/supplierList.js" th:inline="javascript"></script>
 
 <!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
 </body>

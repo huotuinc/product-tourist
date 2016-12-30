@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title></title>
+    <title>商品信息</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/fine-uploader-new.min.css"
           property=""/>
@@ -30,8 +30,7 @@
     </div>
     <div class="cnt-wp">
 
-        <form id="modelForm" method="post" class="form-inline" action="touristGoodList.html"
-              th:action="@{/distributionPlatform/updateSupplier}">
+        <form id="modelForm" method="post" class="form-inline">
             <div class="cnt form">
                 <ul class="nav nav-tabs" role="tablist" id="myTab">
                     <li role="presentation" class="active"><a href="#info" role="tab" data-toggle="tab">基本信息</a></li>
@@ -40,41 +39,57 @@
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="info">
                         <div class="division">
-                            <input type="hidden" name="id" id="id" th:value="${touristGood.id}">
+                            <input type="hidden" name="id" id="id" th:value="${touristGood!=null?touristGood.id:''}">
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
+
                                 <tr>
                                     <th class="control-label">名称：</th>
                                     <td>
-                                        <input name="touristName" type="text" id="touristName"
-                                               th:value="${touristGood.touristName}"
+                                        <input readonly name="touristName" type="text" id="touristName"
+                                               th:value="${touristGood!=null?touristGood.touristName:''}"
                                                maxlength="50"
                                                class="form-control" placeholder="名称">
+                                    </td>
+                                    <td rowspan="12">
+                                        <img th:src="${touristGood!=null?touristGood.getTouristImgUri():''}"
+                                             src="http://placehold.it/100x100?text=照片"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="control-label">活动类型：</th>
                                     <td>
-                                        <select name="activityTypeId" class="form-control"
-                                                th:value="${touristGood.activityType.activityName}"
-                                                placeholder="活动类型">
+                                        <input readonly name="activityType" type="text" id="touristName"
+                                               th:value="${touristGood!=null?touristGood.activityType.activityName:''}"
+                                               maxlength="50"
+                                               class="form-control" placeholder="活动类型">
 
-                                        </select>
+                                        <!--<select readonly name="activityTypeId" class="form-control"-->
+                                        <!--th:value="${touristGood!=null?touristGood.activityType.activityName:''}"-->
+                                        <!--placeholder="活动类型">-->
+
+                                        <!--</select>-->
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="control-label">线路类型：</th>
                                     <td>
-                                        <input type="text" name="touristType" id="touristType"
-                                               th:value="${touristGood.touristType.typeName}" class="form-control"
-                                               placeholder="线路类型">
+                                        <input readonly name="touristType" type="text" id="touristName"
+                                               th:value="${touristGood!=null?touristGood.touristType.typeName:''}"
+                                               maxlength="50"
+                                               class="form-control" placeholder="线路类型">
+                                        <!--<select readonly name="touristType" class="form-control"-->
+                                        <!--th:value="${touristGood!=null?touristGood.touristType.typeName:''}"-->
+                                        <!--placeholder="线路类型">-->
+
+                                        <!--</select>-->
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="control-label">线路特色：</th>
                                     <td>
-                                        <input type="text" name="touristFeatures"
-                                               th:value="${touristGood.touristFeatures}"
+                                        <input readonly type="text" name="touristFeatures"
+                                               th:value="${touristGood!=null?touristGood.touristFeatures:''}"
                                                class="form-control"
                                                placeholder="联系人">
                                     </td>
@@ -83,10 +98,12 @@
                                     <th class="control-label">目的地：</th>
                                     <td>
                                         <div style="position: relative; "><!-- container -->
+                                            <!--data-toggle="city-picker"-->
                                             <input readonly type="text" class="form-control" name="destination"
                                                    id="destination"
-                                                   data-toggle="city-picker"
-                                                   value="北京市/北京市/海淀区" th:value="${touristGood.destination}">
+
+                                                   value="北京市/北京市/海淀区"
+                                                   th:value="${touristGood!=null?touristGood.destination.toString():''}">
                                         </div>
                                     </td>
                                 </tr>
@@ -94,10 +111,12 @@
                                     <th class="control-label">出发地：</th>
                                     <td>
                                         <div style="position: relative; "><!-- container -->
+                                            <!--data-toggle="city-picker"-->
                                             <input readonly type="text" class="form-control" name="placeOfDeparture"
                                                    id="placeOfDeparture"
-                                                   data-toggle="city-picker"
-                                                   value="北京市/北京市/海淀区" th:value="${touristGood.placeOfDeparture}">
+
+                                                   value="北京市/北京市/海淀区"
+                                                   th:value="${touristGood!=null?touristGood.placeOfDeparture.toString():''}">
                                         </div>
                                     </td>
                                 </tr>
@@ -105,23 +124,24 @@
                                 <tr>
                                     <th class="control-label">途经地：</th>
                                     <td>
-                                        <div style="position: relative; "><!-- container -->
+                                        <div style="position: relative; ">
+                                            <!--data-toggle="city-picker"-->
                                             <input readonly type="text" class="form-control" name="travelledAddress"
                                                    id="travelledAddress"
-                                                   data-toggle="city-picker"
-                                                   value="北京市/北京市/海淀区" th:value="${touristGood.travelledAddress}">
+                                                   value="北京市/北京市/海淀区"
+                                                   th:value="${touristGood!=null?touristGood.travelledAddress.toString():''}">
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="control-label">价格：</th>
                                     <td>
-                                        <input type="number" name="price"
-                                               th:value="${touristGood.price}" class="form-control"
+                                        <input readonly type="number" name="price"
+                                               th:value="${touristGood!=null?touristGood.price:''}" class="form-control"
                                                placeholder="价格">
                                         成人
-                                        <input type="text" name="loginName"
-                                               th:value="${touristGood.loginName}"
+                                        <input readonly type="text" name="loginName"
+                                               th:value="${touristGood!=null?touristGood.loginName:''}"
                                                class="form-control"
                                                placeholder="折扣"> 儿童
                                     </td>
@@ -129,8 +149,9 @@
                                 <tr>
                                     <th class="control-label">返利：</th>
                                     <td>
-                                        <input type="number" name="rebate"
-                                               th:value="${touristGood.rebate}" class="form-control"
+                                        <input readonly type="number" name="rebate"
+                                               th:value="${touristGood!=null?touristGood.rebate:''}"
+                                               class="form-control"
                                                placeholder="百分比"> %
 
                                     </td>
@@ -138,8 +159,9 @@
                                 <tr>
                                     <th class="control-label">地接人：</th>
                                     <td>
-                                        <input type="text" name="receptionPerson"
-                                               th:value="${touristGood.receptionPerson}" class="form-control"
+                                        <input readonly type="text" name="receptionPerson"
+                                               th:value="${touristGood!=null?touristGood.receptionPerson:''}"
+                                               class="form-control"
                                                placeholder="地接人">
 
                                     </td>
@@ -147,8 +169,9 @@
                                 <tr>
                                     <th class="control-label">联系电话：</th>
                                     <td>
-                                        <input type="text" name="receptionTelephone"
-                                               th:value="${touristGood.receptionTelephone}" class="form-control"
+                                        <input readonly type="text" name="receptionTelephone"
+                                               th:value="${touristGood!=null?touristGood.receptionTelephone:''}"
+                                               class="form-control"
                                                placeholder="联系电话">
 
                                     </td>
@@ -156,8 +179,16 @@
                                 <tr>
                                     <th class="control-label">出行时间：</th>
                                     <td>
-                                        <input type="text" class="form-control datePicker"
-                                               id="payDate" name="payDate" placeholder="支付时间"/>
+                                        <div th:each="route : ${routes}">
+                                            <!--/*@thymesVar id="route" type="com.huotu.tourist.entity.TouristRoute"*/-->
+                                            <input readonly type="text" class="form-control "
+                                                   id="fromDate" name="fromDate" th:value="${route.fromDate}"
+                                                   placeholder="出发时间"/>-
+                                            <input readonly type="text" class="form-control "
+                                                   id="toDate" name="toDate" th:value="${route.fromDate}"
+                                                   placeholder="结束时间"/>
+                                            人数:<span th:text="${route.maxPeople}">10</span>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -171,17 +202,19 @@
                                 <tr>
                                     <th class="control-label">活动详情：</th>
                                     <td>
-                                        <textarea class="form-control editor" th:text="${touristGood.eventDetails}"
-                                                  th:class="${(@environment.acceptsProfiles('no_ck')?'':'editor ')+'form-control'}"
+                                        <textarea class="form-control editor"
+                                                  th:text="${touristGood!=null?touristGood.eventDetails:''}"
                                                   rows="4" placeholder="活动详情" name="eventDetails"></textarea>
+
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="control-label">注意事项：</th>
                                     <td>
-                                        <textarea class="form-control editor"
-                                                  th:class="${(@environment.acceptsProfiles('no_ck')?'':'editor ')+'form-control'}"
-                                                  rows="4" placeholder="注意事项" name="content"></textarea>
+                                         <textarea class="form-control editor"
+                                                   th:text="${touristGood!=null?touristGood.beCareful:''}"
+                                                   th:class="${(@environment.acceptsProfiles('no_ck')?'':'editor ')+'form-control'}"
+                                                   rows="4" title="注意事项" name="content"></textarea>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -191,10 +224,7 @@
                 </div>
 
                 <div style="text-align: center;">
-                    <input type="submit" class="btn-lit" name="btnSave" value="保 存" data-submiting-text="提交中..."
-                           data-text="保存" id="jq-cms-Save">
-                    <input type="submit" class="btn-lit" name="btnSave" value="审核通过" data-submiting-text="提交中..."
-                           data-text="审核通过" id="jq-cms-sh">
+                    <button type="button" class="btn-lit" name="btnSave" data-text="审核通过" id="jq-cms-sh"></button>
                 </div>
             </div>
         </form>
@@ -209,5 +239,7 @@
 <script src="../../../assets/libs/fine-upload/jquery.fine-uploader.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="http://resali.huobanplus.com/cdn/ckeditor/4.6.1/full/ckeditor.js"></script>
+<script src="http://resali.huobanplus.com/cdn/ckeditor/4.6.1/full/adapters/jquery.js"></script>
 </body>
 </html>

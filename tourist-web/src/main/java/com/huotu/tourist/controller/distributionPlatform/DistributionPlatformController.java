@@ -24,6 +24,7 @@ import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.model.PageAndSelection;
@@ -49,8 +50,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -401,14 +404,11 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "presentRecordList", method = RequestMethod.GET)
-    public ResponseEntity presentRecordList(String supplierName, PresentStateEnum presentState, LocalDate createTime,
-                                            int pageSize, int pageNo, HttpServletRequest request, Model model) {
+    public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, LocalDate createTime,
+                                              int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, presentState, createTime
                 , new PageRequest(pageNo, pageSize));
-        Map<String, Object> data = new HashMap<>();
-        data.put("rows", page.getContent());
-        data.put("total", page.getTotalElements());
-        return ResponseEntity.ok(data);
+        return new PageAndSelection(page, PresentRecord.selections);
     }
 
     /**-------------------下面新增和修改相关-----------------------*/
@@ -436,8 +436,8 @@ public class DistributionPlatformController extends BaseController {
      *
      * @param id                 供应商id 为null 代表添加，不为null代表修改
      * @param supplierName       供应商名称  必须
-     * @param loginName       登录名        必须
-     * @param password      登录密码   必须
+     * @param loginName          登录名        必须
+     * @param password           登录密码   必须
      * @param businessLicenseUri 营业执照uri 必须
      * @param contacts           联系人    必须
      * @param contactNumber      联系电话   必须
@@ -480,12 +480,29 @@ public class DistributionPlatformController extends BaseController {
      * @param frozen 是否冻结 not null
      * @return
      */
-    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST)
-    public String frozenSupplierOrUnFrozenSupplier(@RequestParam Long id, @RequestParam boolean frozen) {
+    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public void frozenSupplierOrUnFrozenSupplier(@RequestParam Long id, @RequestParam boolean frozen) {
         TouristSupplier touristSupplier = touristSupplierService.getOne(id);
         touristSupplier.setFrozen(frozen);
         touristSupplierService.save(touristSupplier);
-        return null;
+    }
+
+
+    /**
+     * 修改采购商审核状态
+     *
+     * @param id     供应商id not null
+     * @param checkState 审核状态 not null
+     * @return
+     */
+    @RequestMapping(value = {"updateBuyerCheckState"}, method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    public void updateBuyerCheckState(@RequestParam Long id, @RequestParam BuyerCheckStateEnum checkState) {
+        TouristBuyer touristBuyer = touristBuyerService.getOne(id);
+        touristBuyer.setCheckState(checkState);
+        touristBuyerService.save(touristBuyer);
     }
 
 
@@ -507,23 +524,22 @@ public class DistributionPlatformController extends BaseController {
     }
 
     /**
-     * 新增采购产品设置页面
+     * 删除采购产品设置页面
      *
      * @param request
      * @param model
      * @return
      */
-    @RequestMapping(value = "delPurchaserProductSetting", method = RequestMethod.GET)
-    public String delPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
+    @RequestMapping(value = "delPurchaserProductSetting", method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    public void delPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
         purchaserProductSettingService.delete(id);
-        return "view/platform/purchaserProductSetting.html";
     }
 
 
     /**
      * 新增采购产品设置
-     * // TODO: 2016/12/21
-     *
      * @param id        id 为null 代表添加，不为null代表修改
      * @param name      名称 not null
      * @param bannerUri 图片 not null
@@ -550,23 +566,41 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setExplain(explain);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);
-        return "";
+        return "view/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
+     * 显示线路商品
+     *
+     * @param id    商品ID
+     * @param model 返回的model
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/showTouristGood")
+    public String showTouristGood(@RequestParam Long id, Model model) throws IOException {
+        TouristGood touristGood = touristGoodRepository.findOne(id);
+        List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
+        model.addAttribute("routes", routes);
+        model.addAttribute("good", touristGood);
+        return "view/platform/trouristGood/touristGood.html";
+    }
+
+
+    /**
      * 推荐商品 和 取消推荐
-     * // TODO: 2016/12/21
      *
      * @param id        id   not null
      * @param recommend 推荐  not null
      * @return
      */
-    @RequestMapping(value = {"recommendTouristGood", "unRecommendTouristGood"}, method = RequestMethod.POST)
-    public String recommendGoodOrUnRecommendGood(@RequestParam Long id, @RequestParam boolean recommend) {
+    @RequestMapping(value = {"recommendTouristGood", "unRecommendTouristGood"}, method = RequestMethod.POST, produces =
+            "application/json;charset=UTF-8")
+    @ResponseBody
+    public void recommendGoodOrUnRecommendGood(@RequestParam Long id, @RequestParam boolean recommend) {
         TouristGood touristGood = touristGoodService.getOne(id);
         touristGood.setRecommend(recommend);
         touristGoodService.save(touristGood);
-        return "";
     }
 //    /**
 //     * 审核通过 和 未通过审核

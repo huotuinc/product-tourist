@@ -1,20 +1,71 @@
+updateBuyerCheckState = /*[[@{/distributionPlatform/updateBuyerCheckState}]]*/ "../../../mock/platform/httpJson.json"
 actionFormatter = function (value, row, index) {
     if (row.checkState.code == 0) {
-        return '<a class="btn btn-primary update" href="touristBuyerList.html"' +
-            ' th:href="@{/distributionPlatform/toBuyerList}">审核通过</a> '
+        return '<button class="btn btn-primary update" >审核通过</button> '
             + ' <button class="btn btn-primary frozen">冻结</button>';
     } else if (row.checkState.code == 1) {
         return [
             ' <button class="btn btn-primary frozen">冻结</button>'
         ].join('');
+    } else if (row.checkState.code == 2) {
+        return [
+            ' <button class="btn btn-primary unfrozen">取消冻结</button>'
+        ].join('');
     }
 };
 
+function updateCheckState(row, checkState) {
+    var load = layer.load();
+    $.ajax({
+        url: updateBuyerCheckState,
+        method: "post",
+        data: {id: row.id, checkState: checkState},
+        dataType: "json",
+        success: function () {
+            console.log("success");
+            layer.close(load);
+            var $table = $('#table');
+            $table.bootstrapTable('refresh');
+        },
+        error: function (error) {
+            console.log("error");
+            layer.close(load);
+        }
+    })
+}
+
 window.actionEvents = {
     'click .frozen': function (e, value, row, index) {
-        alert('冻结操作, row: ' + JSON.stringify(row));
-        console.log(value, row, index);
-    }
+        layer.confirm('确定冻结吗？', {
+            btn: ['冻结', '取消']
+        }, function (index) {
+            layer.close(index);
+            updateCheckState(row, 2);
+
+        }, function () {
+
+        });
+    },
+    'click .update': function (e, value, row, index) {
+        layer.confirm('确定审核通过吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            updateCheckState(row, 1);
+        }, function () {
+
+        });
+    },
+    'click .unfrozen': function (e, value, row, index) {
+        layer.confirm('确定取消冻结吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            updateCheckState(row, 1);
+        }, function () {
+        });
+    },
+
 };
 
 businessLicencesUriFormatter = function (value, row, index) {

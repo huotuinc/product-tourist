@@ -1,0 +1,45 @@
+{
+  "total": 200,
+  "rows": [
+    {
+      "id": 0,
+      "receivableAccount": "200",
+      "createTime": "2016-12-12 00:00:00",
+      "supplierName": "小花",
+      "platformChecking": {
+        "code": 0,
+        "value": "未审核"
+      }
+    },
+    {
+      "id": 1,
+      "receivableAccount": "200",
+      "createTime": "2016-12-12 00:00:00",
+      "supplierName": "小花",
+      "platformChecking": {
+        "code": 1,
+        "value": "已审核"
+      }
+    },
+    {
+      "id": 2,
+      "receivableAccount": "200",
+      "createTime": "2016-12-12 00:00:00",
+      "supplierName": "小花",
+      "platformChecking": {
+        "code": 0,
+        "value": "未审核"
+      }
+    },
+    {
+      "id": 4,
+      "receivableAccount": "200",
+      "createTime": "2016-12-12 00:00:00",
+      "supplierName": "小花",
+      "platformChecking": {
+        "code": 1,
+        "value": "已审核"
+      }
+    }
+  ]
+}

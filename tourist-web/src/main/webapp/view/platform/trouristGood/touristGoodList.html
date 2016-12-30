@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>线路产品审核列表</title>
@@ -52,6 +52,7 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="all">
                 <table id="table" data-toggle="table" data-url="../../../mock/platform/touristGoodList.json"
+                       th:attr="data-url=@{/distributionPlatform/touristGoodList}"
                        data-method="get"
                        data-side-pagination="server"
                        data-pagination="true" data-striped="true"
@@ -72,7 +73,9 @@
                         <th data-field="destination" data-align="center" data-sortable="true">目的地</th>
                         <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
                         <th data-field="touristCheckState.value" data-align="center" data-sortable="true">审核状态</th>
-                        <th data-field="action" data-formatter="actionFormatter" data-align="center">操作</th>
+                        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
+                            data-align="center">操作
+                        </th>
                     </tr>
                     </thead>
                 </table>
@@ -105,16 +108,14 @@
                     </thead>
                 </table>
             </div>
-
         </div>
     </div>
-
-
 </div>
 <script src="../../../assets/js/jquery.min.js"></script>
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../assets/js/page/platform/touristGoodList.js"></script>
+<script src="../../../assets/js/page/platform/touristGoodList.js" th:inline="javascript"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 </body>
 </html>

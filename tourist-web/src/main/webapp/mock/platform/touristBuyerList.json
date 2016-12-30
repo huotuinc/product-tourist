@@ -77,8 +77,8 @@
       "buyerId": "user123",
       "nickname": "小花",
       "checkState": {
-        "code": 1,
-        "value": "审核通过"
+        "code": 2,
+        "value": "已冻结"
       },
       "payState": {
         "code": 1,

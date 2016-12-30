@@ -38,6 +38,7 @@
         </div>
 
         <table id="table" data-toggle="table" data-url="../../../mock/platform/purchaserProductSetting.json"
+               th:attr="data-url=@{/distributionPlatform/purchaserProductSettingList}"
                data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
@@ -53,7 +54,8 @@
                 </th>
                 <th data-field="price" data-align="center" data-sortable="true">价格</th>
                 <th data-field="explain" data-align="center" data-sortable="true">说明</th>
-                <th data-field="action" data-formatter="updateFormatter" data-align="center" data-sortable="true">操作
+                <th data-field="action" data-formatter="updateFormatter" data-events="actionEvents" data-align="center"
+                    data-sortable="true">操作
                 </th>
             </tr>
             </thead>
@@ -65,6 +67,7 @@
 <script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../assets/js/page/platform/purchaserProductSettingList.js"></script>
+<script src="../../../assets/js/page/platform/purchaserProductSettingList.js" th:inline="javascript"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 </body>
 </html>
