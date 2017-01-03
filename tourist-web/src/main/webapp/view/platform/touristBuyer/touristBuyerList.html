@@ -53,7 +53,9 @@
 
 
     <div class="panel panel-default">
-        <table id="table" data-toggle="table" data-url="../../../mock/platform/touristBuyerList.json" data-method="get"
+        <table id="table" data-toggle="table" data-url="../../../mock/platform/touristBuyerList.json"
+               th:attr="data-url=@{/distributionPlatform/buyerList}"
+               data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
                data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"

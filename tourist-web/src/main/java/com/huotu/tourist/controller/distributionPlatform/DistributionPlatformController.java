@@ -15,7 +15,6 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.controller.BaseController;
-import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.Banner;
@@ -43,9 +42,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +53,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -109,9 +104,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
     public String toSupplierList(HttpServletRequest request, Model model) {
-        model.addAttribute("", 1000);
-        //todo
-        return "index.html";
+        return "platform/supplier/supplierList.html";
     }
 
     /**
@@ -136,8 +129,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
     public String toBuyerList(HttpServletRequest request, Model model) {
-        //todo
-        return "";
+        return "platform/touristBuyer/touristBuyerList.html";
     }
 
     /**
@@ -168,8 +160,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
     public String toPurchaserPaymentRecordList(HttpServletRequest request, Model model) {
-        //todo
-        return "";
+        return "platform/purchaserPaymentRecord/purchaserPaymentRecordList.html";
     }
 
     /**
@@ -194,44 +185,43 @@ public class DistributionPlatformController extends BaseController {
         return new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
     }
 
-    /**
-     * 导出采购商支付记录列表
-     * // TODO: 2016/12/22 方法最大化支持供应商，添加用户角色
-     *
-     * @param startPayDate  开始支付时间
-     * @param endPayDate    结束支付时间
-     * @param buyerName     采购商名称
-     * @param buyerDirector 采购商负责人
-     * @param telPhone      采购商负责人电话
-     * @param pageSize      每页显示条数
-     * @param pageNo        页码
-     * @param request
-     * @param model
-     */
-    @RequestMapping(value = "exportPurchaserPaymentRecord", method = RequestMethod.GET)
-    public ResponseEntity exportPurchaserPaymentRecord(String startPayDate, String endPayDate, String buyerName,
-                                                       String buyerDirector, String telPhone
-            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws UnsupportedEncodingException {
-        List<PurchaserPaymentRecord> list = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
-                , buyerName, buyerDirector, telPhone);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("text/csv"));
-        headers.setContentDispositionFormData("attachment", "采购商支付记录.csv");
-        StringBuffer sb = new StringBuffer();
-        sb.append("采购商,").append("采购商负责人,").append("采购商电话,").append("采购商id,").append("用户昵称,")
-                .append("支付状态,").append("支付金额,").append("支付时间/n");
-        for (PurchaserPaymentRecord paymentRecord : list) {
-            sb.append(paymentRecord.getTouristBuyer().getBuyerName()).append(",")
-                    .append(paymentRecord.getTouristBuyer().getBuyerDirector()).append(",")
-                    .append(paymentRecord.getTouristBuyer().getTelPhone()).append(",")
-                    .append(paymentRecord.getTouristBuyer().getBuyerId()).append(",")
-                    .append(paymentRecord.getTouristBuyer().getNickname()).append(",")
-                    .append(paymentRecord.getTouristBuyer().getPayState().getValue()).append(",")
-                    .append(paymentRecord.getMoney()).append(",")
-                    .append(LocalDateTimeFormatter.toStr(paymentRecord.getPayDate())).append("/n");
-        }
-        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
-    }
+//    /**
+//     * 导出采购商支付记录列表
+//     *
+//     * @param startPayDate  开始支付时间
+//     * @param endPayDate    结束支付时间
+//     * @param buyerName     采购商名称
+//     * @param buyerDirector 采购商负责人
+//     * @param telPhone      采购商负责人电话
+//     * @param pageSize      每页显示条数
+//     * @param pageNo        页码
+//     * @param request
+//     * @param model
+//     */
+//    @RequestMapping(value = "exportPurchaserPaymentRecord", method = RequestMethod.GET)
+//    public ResponseEntity exportPurchaserPaymentRecord(String startPayDate, String endPayDate, String buyerName,
+//                                                       String buyerDirector, String telPhone
+//            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws UnsupportedEncodingException {
+//        List<PurchaserPaymentRecord> list = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
+//                , buyerName, buyerDirector, telPhone);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(new MediaType("text/csv"));
+//        headers.setContentDispositionFormData("attachment", "采购商支付记录.csv");
+//        StringBuffer sb = new StringBuffer();
+//        sb.append("采购商,").append("采购商负责人,").append("采购商电话,").append("采购商id,").append("用户昵称,")
+//                .append("支付状态,").append("支付金额,").append("支付时间/n");
+//        for (PurchaserPaymentRecord paymentRecord : list) {
+//            sb.append(paymentRecord.getTouristBuyer().getBuyerName()).append(",")
+//                    .append(paymentRecord.getTouristBuyer().getBuyerDirector()).append(",")
+//                    .append(paymentRecord.getTouristBuyer().getTelPhone()).append(",")
+//                    .append(paymentRecord.getTouristBuyer().getBuyerId()).append(",")
+//                    .append(paymentRecord.getTouristBuyer().getNickname()).append(",")
+//                    .append(paymentRecord.getTouristBuyer().getPayState().getValue()).append(",")
+//                    .append(paymentRecord.getMoney()).append(",")
+//                    .append(LocalDateTimeFormatter.toStr(paymentRecord.getPayDate())).append("/n");
+//        }
+//        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
+//    }
 
 
     /**
@@ -241,8 +231,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
     public String toPurchaserProductSettingList(HttpServletRequest request, Model model) {
-        //todo
-        return "view/platform/purchaserProductSetting/purchaserProductSettingList.html";
+        return "platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -274,7 +263,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
     public String toTouristGoodList(HttpServletRequest request, Model model) {
-        return "view/platform/trouristGood/touristGoodList.html";
+        return "platform/touristGood/touristGoodList.html";
     }
 
 
@@ -285,8 +274,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
     public String toActivityTypeList(HttpServletRequest request, Model model) {
-        //todo
-        return "";
+        return "platform/activityType/activityTypeList.html";
     }
 
     /**
@@ -318,8 +306,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristTypeList", method = RequestMethod.GET)
     public String toTouristTypeList() {
-        //todo
-        return "";
+        return "platform/touristType/touristTypeList.html";
     }
 
     /**
@@ -344,16 +331,7 @@ public class DistributionPlatformController extends BaseController {
         return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
 
-    /**
-     * 跳转到订单列表页面
-     *
-     * @return
-     */
-    @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
-    public String toSupplierOrders(HttpServletRequest request, Model model) {
-        //todo
-        return "";
-    }
+
 
     /**
      * 跳转到结算单列表页面
@@ -418,6 +396,7 @@ public class DistributionPlatformController extends BaseController {
     }
 
     /**
+     * banner列表页
      * @param pageSize
      * @param pageNo
      * @param request
@@ -455,8 +434,6 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 新增供应商 和 修改供应商
-     * // TODO: 2016/12/21
-     *
      * @param id                 供应商id 为null 代表添加，不为null代表修改
      * @param supplierName       供应商名称  必须
      * @param loginName          登录名        必须
@@ -471,10 +448,10 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"addSupplier", "updateSupplier"}, method = RequestMethod.POST)
-    public String addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String loginName,
-                                     @RequestParam String password, @RequestParam String businessLicenseUri
+    public void addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String loginName,
+                                   @RequestParam String password, @RequestParam String businessLicenseUri
             , @RequestParam String contacts, @RequestParam String contactNumber, @RequestParam Address address, String remarks,
-                                     HttpServletRequest request, Model model) {
+                                   HttpServletRequest request, Model model) {
         TouristSupplier touristSupplier;
         if (id == null) {
             touristSupplier = new TouristSupplier();
@@ -491,19 +468,18 @@ public class DistributionPlatformController extends BaseController {
         touristSupplier.setContactNumber(contactNumber);
         touristSupplier.setAddress(address);
         touristSupplierService.save(touristSupplier);
-        return null;
     }
 
 
     /**
      * 冻结供应商
-     * // TODO: 2016/12/21
      *
      * @param id     供应商id not null
      * @param frozen 是否冻结 not null
      * @return
      */
-    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST
+            , produces = "application/json;charset=UTF-8")
     @ResponseBody
     public void frozenSupplierOrUnFrozenSupplier(@RequestParam Long id, @RequestParam boolean frozen) {
         TouristSupplier touristSupplier = touristSupplierService.getOne(id);

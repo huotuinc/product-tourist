@@ -1,5 +1,4 @@
 deleteUrl = /*[[@{/distributionPlatform/delPurchaserProductSetting}]]*/ "../../../mock/platform/httpJson.json"
-// addUrl = /*[[@{/distributionPlatform/addPurchaserProductSetting}]]*/ "purchaserProductSetting.html";
 toPurchaserProductSetting = /*[[@{/distributionPlatform/toPurchaserProductSetting}]]*/ "purchaserProductSetting.html"
 
 getParams = function (params) {
