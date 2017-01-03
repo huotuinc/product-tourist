@@ -13,7 +13,6 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
@@ -39,7 +38,6 @@ import com.huotu.tourist.service.TouristTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -101,31 +99,41 @@ public class BaseController {
 
     /**
      * 打开线路商品页面
+     *
      * @param model
      * @return
      */
     @RequestMapping("/showGoodsList")
-    public String showGoodsList(Model model){
+    public String showGoodsList(Model model) {
 
-        List<TouristType> touristTypes=touristTypeRepository.findAll();
+        List<TouristType> touristTypes = touristTypeRepository.findAll();
 
-        List<ActivityType> activityTypes=activityTypeRepository.findAll();
+        List<ActivityType> activityTypes = activityTypeRepository.findAll();
 
-        TouristCheckStateEnum[] checkStates=TouristCheckStateEnum.values();
+        TouristCheckStateEnum[] checkStates = TouristCheckStateEnum.values();
 
-        model.addAttribute("touristTypes",touristTypes);
-        model.addAttribute("activityTypes",activityTypes);
-        model.addAttribute("checkStates",checkStates);
+        model.addAttribute("touristTypes", touristTypes);
+        model.addAttribute("activityTypes", activityTypes);
+        model.addAttribute("checkStates", checkStates);
 
         return "/view/supplier/goodsList";
-    };
-
+    }
 
 
     /**
+     * 跳转到订单列表页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
+    public String toSupplierOrders(HttpServletRequest request, Model model) {
+        return "common/orderList";
+    }
+
+    /**
      * 订单列表
-     * // TODO: 2016/12/22 加入用户体系，接口最大化
-     *  @param user
+     *
+     * @param user
      * @param orderNo      订单号
      * @param supplierName
      * @param touristName  线路名称
@@ -186,7 +194,7 @@ public class BaseController {
         };
 
         //行程ID
-        Selection<TouristOrder,Long> touristRouteIdSelection=new Selection<TouristOrder, Long>() {
+        Selection<TouristOrder, Long> touristRouteIdSelection = new Selection<TouristOrder, Long>() {
             @Override
             public String getName() {
                 return "touristRouteId";
@@ -203,69 +211,69 @@ public class BaseController {
         selections.addAll(TouristOrder.htmlSelections);
 
 
-        return new PageAndSelection<>(page,selections);
+        return new PageAndSelection<>(page, selections);
     }
 
-    /**
-     * 导出订单列表
-     *  @param user
-     * @param supplierName
-     * @param orderNo      订单号
-     * @param touristName  线路名称
-     * @param buyerName    采购商名称
-     * @param tel          采购商电话
-     * @param payType      支付类型
-     * @param orderDate    开始订单创建时间
-     * @param endOrderDate 结束订单创建时间
-     * @param payDate      开始支付时间
-     * @param endPayDate   结束支付时间
-     * @param touristDate  线路开始时间
-     * @param orderState   订单状态
-     * @param pageSize     每页显示条数
-     * @param pageNo       页码
-     * @param request
-     * @param model        @return
-     */
-    @RequestMapping(value = "exportTouristOrdersOrders", method = RequestMethod.GET)
-    public ResponseEntity exportTouristOrdersOrders(@AuthenticationPrincipal SystemUser user
-            , String supplierName, String orderNo, String touristName, String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate
-            , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
-            , OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
-        TouristSupplier supplier = null;
-        if (user.isSupplier()) {
-            supplier = (TouristSupplier) user;
-        }
-        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
-                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
-                new PageRequest(pageNo, pageSize));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("text/csv"));
-        headers.setContentDispositionFormData("attachment", "订单记录.csv");
-        StringBuffer sb = new StringBuffer();
-        sb.append("订单号,").append("下单时间,").append("支付时间,").append("支付方式,").append("供应商,").append("线路名称,")
-                .append("金额,").append("购买人,").append("支付状态,").append("出行时间,").append("购买数量,").append("备注/n");
-        for (TouristOrder touristOrder : page.getContent()) {
-            List<Traveler> travelers = travelerRepository.findByOrder_Id(touristOrder.getId());
-            sb
-                    .append(touristOrder.getOrderNo()).append(",")
-                    .append(LocalDateTimeFormatter.toStr(touristOrder.getCreateTime())).append(",")
-                    .append(LocalDateTimeFormatter.toStr(touristOrder.getPayTime())).append(",")
-                    .append(touristOrder.getPayType().getValue()).append(",")
-                    .append(touristOrder.getTouristGood().getTouristSupplier().getSupplierName()).append(",")
-                    .append(touristOrder.getTouristGood().getTouristName()).append(",")
-                    .append(touristOrder.getOrderMoney()).append(",").append(touristOrder.getTouristBuyer().getBuyerName())
-                    .append("/r").append(touristOrder.getTouristBuyer().getTelPhone()).append(",")
-                    .append(touristOrder.getOrderState()).append(",")
-                    .append(LocalDateTimeFormatter.toStr(travelers.get(0).getRoute().getFromDate())).append(",")
-                    .append(travelers.size()).append(",")
-                    .append(touristOrder.getRemarks());
-        }
-        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
-    }
+//    /**
+//     * 导出订单列表
+//     *
+//     * @param user
+//     * @param supplierName
+//     * @param orderNo      订单号
+//     * @param touristName  线路名称
+//     * @param buyerName    采购商名称
+//     * @param tel          采购商电话
+//     * @param payType      支付类型
+//     * @param orderDate    开始订单创建时间
+//     * @param endOrderDate 结束订单创建时间
+//     * @param payDate      开始支付时间
+//     * @param endPayDate   结束支付时间
+//     * @param touristDate  线路开始时间
+//     * @param orderState   订单状态
+//     * @param pageSize     每页显示条数
+//     * @param pageNo       页码
+//     * @param request
+//     * @param model        @return
+//     */
+//    @RequestMapping(value = "exportTouristOrdersOrders", method = RequestMethod.GET)
+//    public ResponseEntity exportTouristOrdersOrders(@AuthenticationPrincipal SystemUser user
+//            , String supplierName, String orderNo, String touristName, String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate
+//            , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
+//            , OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
+//        TouristSupplier supplier = null;
+//        if (user.isSupplier()) {
+//            supplier = (TouristSupplier) user;
+//        }
+//        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
+//                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
+//                new PageRequest(pageNo, pageSize));
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(new MediaType("text/csv"));
+//        headers.setContentDispositionFormData("attachment", "订单记录.csv");
+//        StringBuffer sb = new StringBuffer();
+//        sb.append("订单号,").append("下单时间,").append("支付时间,").append("支付方式,").append("供应商,").append("线路名称,")
+//                .append("金额,").append("购买人,").append("支付状态,").append("出行时间,").append("购买数量,").append("备注/n");
+//        for (TouristOrder touristOrder : page.getContent()) {
+//            List<Traveler> travelers = travelerRepository.findByOrder_Id(touristOrder.getId());
+//            sb
+//                    .append(touristOrder.getOrderNo()).append(",")
+//                    .append(LocalDateTimeFormatter.toStr(touristOrder.getCreateTime())).append(",")
+//                    .append(LocalDateTimeFormatter.toStr(touristOrder.getPayTime())).append(",")
+//                    .append(touristOrder.getPayType().getValue()).append(",")
+//                    .append(touristOrder.getTouristGood().getTouristSupplier().getSupplierName()).append(",")
+//                    .append(touristOrder.getTouristGood().getTouristName()).append(",")
+//                    .append(touristOrder.getOrderMoney()).append(",").append(touristOrder.getTouristBuyer().getBuyerName())
+//                    .append("/r").append(touristOrder.getTouristBuyer().getTelPhone()).append(",")
+//                    .append(touristOrder.getOrderState()).append(",")
+//                    .append(LocalDateTimeFormatter.toStr(travelers.get(0).getRoute().getFromDate())).append(",")
+//                    .append(travelers.size()).append(",")
+//                    .append(touristOrder.getRemarks());
+//        }
+//        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
+//    }
 
     /**
      * 线路列表/推荐线路列表通过是否推荐属性进行判断是否推荐
-     * // TODO: 2016/12/22 加入用户体系
      *
      * @param user
      * @param touristName       线路名称
@@ -338,10 +346,10 @@ public class BaseController {
     @RequestMapping(value = "/modifyOrderState", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public void modifyOrderState(@AuthenticationPrincipal SystemUser user,@RequestParam Long id, @RequestParam
-    OrderStateEnum orderState) throws IOException {
+    public void modifyOrderState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id, @RequestParam
+            OrderStateEnum orderState) throws IOException {
         TouristOrder order = touristOrderRepository.getOne(id);
-        if(touristOrderService.checkOrderStatusCanBeModified(user,order.getOrderState(),orderState)){
+        if (touristOrderService.checkOrderStatusCanBeModified(user, order.getOrderState(), orderState)) {
             order.setOrderState(orderState);
         }
     }
@@ -384,7 +392,6 @@ public class BaseController {
     public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId) throws IOException {
         travelerRepository.modifyRouteIdByRouteId(laterId, formerId);
     }
-
 
 
     /**

@@ -32,7 +32,16 @@
                     </div>
                     <div class="col-sm-2">
                         <select type="text" name="buyerCheckState" class="form-control"
-                                placeholder="采购状态"></select>
+                                placeholder="采购状态">
+                            <!--suppress ThymeleafVariablesResolveInspection -->
+                            <option value="0"
+                                    th:each="checkState:${T(com.huotu.tourist.common.BuyerCheckStateEnum).values()}"
+                                    th:value="${checkState.getCode()}"
+                                    th:text="${checkState.getValue().toString()}">审核中
+                            </option>
+                            <option value="1">已审核</option>
+                            <option value="2">已冻结</option>
+                        </select>
                     </div>
                     <div class="col-sm-2">
                         <button type="button" class="btn btn-primary btnSearch">搜 索</button>
@@ -44,7 +53,9 @@
 
 
     <div class="panel panel-default">
-        <table id="table" data-toggle="table" data-url="../../../mock/platform/touristBuyerList.json" data-method="get"
+        <table id="table" data-toggle="table" data-url="../../../mock/platform/touristBuyerList.json"
+               th:attr="data-url=@{/distributionPlatform/buyerList}"
+               data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
                data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
