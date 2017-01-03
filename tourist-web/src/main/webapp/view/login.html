@@ -5,10 +5,10 @@
   ~
   ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
   ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
-  ~ 2013-2016. All rights reserved.
+  ~ 2013-2017. All rights reserved.
   -->
 
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
 
@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>后台供应商 - 登录</title>
-    <meta name="keywords" content="供应商">
-    <meta name="description" content="供应商登录页面">
+    <title>后台登录</title>
+    <meta name="keywords" content="后台登录">
+    <meta name="description" content="后台登录">
 
     <!--<link rel="shortcut icon" href="favicon.ico"> 图标-->
     <link href="http://resali.huobanplus.com/cdn/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
@@ -28,12 +28,18 @@
     <link href="../assets/css/style.min.css?v=4.0.0" rel="stylesheet">
     <base target="_blank">
     <!--[if lt IE 8]>
-    <meta http-equiv="refresh" content="0;ie.html" />
+    <meta http-equiv="refresh" content="0;ie.html"/>
     <![endif]-->
-    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+    <script>if (window.top !== window.self) {
+        window.top.location = window.location;
+    }</script>
 </head>
 
 <body class="gray-bg">
+
+<p id="loginErrorP" style="display: none;color: red">
+    用户名或者密码错误
+</p>
 
 <div class="middle-box text-center loginscreen  animated fadeInDown">
     <div>
@@ -42,14 +48,18 @@
             <h1 class="logo-name">XL</h1>
 
         </div>
-        <h3>供应商登录</h3>
+        <h3>后台登录</h3>
 
-        <form class="m-t" role="form" action="platform/index.html">
+        <form class="m-t" role="form" action="platform/main.html" th:action="@{/auth}">
             <div class="form-group">
-                <input value="admin" type="text" class="form-control" placeholder="用户名" required=""/>
+                <input name="username" value="admin" th:value="${@environment.acceptsProfiles('test')?'admin':''}"
+                       type="text" class="form-control" placeholder="用户名" required=""/>
             </div>
             <div class="form-group">
-                <input value="123456" type="password" class="form-control" placeholder="密码" required=""/>
+                <input name="password" value="adminIsAdmin"
+                       th:value="${@environment.acceptsProfiles('test')?'adminIsAdmin':''}" type="password"
+                       class="form-control" placeholder="密码"
+                       required=""/>
             </div>
             <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
 
@@ -61,6 +71,13 @@
 </div>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        if (window.document.location.search.indexOf('type=error') >= 0) {
+            $('#loginErrorP').show();
+        }
+    });
+</script>
 </body>
 
 </html>
