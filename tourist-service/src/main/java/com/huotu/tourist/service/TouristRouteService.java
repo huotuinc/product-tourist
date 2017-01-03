@@ -32,5 +32,10 @@ public interface TouristRouteService {
     void saveToursitRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate,LocalDateTime toDate
             ,int maxPeople);
 
-
+    /**
+     * 判断一个行程是否已经售出
+     * @param route     行程
+     * @return
+     */
+    boolean judgeRouteIsSold(TouristRoute route);
 }

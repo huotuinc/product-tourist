@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
+    <title>商品路线编辑</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="http://resali.huobanplus.com/cdn/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/animate.min.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/plugins/summernote/summernote.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/plugins/summernote/summernote-bs3.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>编辑资讯</h5>
+                </div>
+                <div class="ibox-title">
+                    <button onclick="history.go(-1)" class="btn btn-success" type="button">返回</button>
+                </div>
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#tab-1" aria-expanded="true">基本信息</a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#tab-2" aria-expanded="false">活动详情/注意事项</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="wrapper-content">
+                                    <form method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label">名称：</label>
+
+                                            <div class="col-sm-2">
+                                                <input name="title" th:value="*{title}" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label">封面图片</label>
+
+                                            <div class="col-sm-10">
+                                                <div class="col-md-2">
+                                                    <div class="image-crop">
+                                                        <img id="pictureUrl" style="width: 150px;height: 100px"  th:src="*{pictureUrl}==null?'/img/300x200.png':*{pictureUrl}"
+                                                             src="/img/300x200.png"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label title="上传图片" for="fileImage" class="btn btn-primary">
+                                                        <input onchange=" messageConfig.uploadImage()" type="file" accept="image/*"  id="fileImage" name="fileImage" class="hide"/> 上传新图片
+                                                    </label>
+                                                    <span class="help-block m-b-none">推荐图片大小:300x200</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label">活动类型：</label>
+
+                                            <div class="col-sm-2">
+                                                <input name="title" th:value="*{title}" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label">线路类型：</label>
+
+                                            <div class="col-sm-2">
+                                                <input name="title" th:value="*{title}" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label">线路特色：</label>
+
+                                            <div class="col-sm-2">
+                                                <input name="title" th:value="*{title}" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="wrapper-content">
+                                    <form method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label">资讯标题</label>
+
+                                            <div class="col-sm-10">
+                                                <div class="summernote">
+                                                    <h2>H+ 后台主题</h2>
+                                                    <p>H+是一个完全响应式，基于Bootstrap3.3.5最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的就jQuery插件，她可以用于所有的Web应用程序，如<b>网站管理后台</b>，<b>网站会员中心</b>，<b>CMS</b>，<b>CRM</b>，<b>OA</b>等等，当然，您也可以对她进行深度定制，以做出更强系统。</p>
+                                                    <p>
+                                                        <b>当前版本：</b>v4.0.0
+                                                    </p>
+                                                    <p>
+                                                        <b>定价：</b><span class="label label-warning">&yen;988（不开发票）</span>
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <p class="text-center">
+                            <button class="btn btn-success" type="button">取消</button>
+                            <button class="btn btn-success" type="button">取消</button>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.5/bootstrap.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/2.4/layer.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/summernote/summernote.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/summernote/summernote-zh-CN.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    //        messageConfig.sharePicPath=/*[[${sharePicPath}]]*/ '';
+    //图片上传
+
+    $(document).ready(function() {
+        $(".summernote").summernote({
+            lang: "zh-CN",
+            onImageUpload: function(files, editor, welEditable) {
+                sendFile(files[0],editor,welEditable);
+            }
+        })
+    });
+
+    function sendFile(file,editor,welEditable) {
+        data = new FormData();
+        data.append("fileImage", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "/resource/uploadMessageImage",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                editor.insertImage(welEditable, data.url);
+            }
+        });
+    }
+
+
+    messageConfig.uploadImage=function(){
+        var loadPic=layer.load(0, {shade: false});
+        $.ajaxFileUpload({
+            url: '/resource/uploadMessageImage',
+            secureuri: false,
+            fileElementId: 'fileImage',
+            dataType: 'json',
+            data: null,
+            success: function(resultModel) {
+                if(resultModel.code==1){
+                    layer.close(loadPic);
+                    layer.msg("上传成功");
+                    $(".image-crop img").attr("src",resultModel.url);
+                }
+            },
+            error: function(data, status, e) {
+                layer.close(loadPic);
+                layer.msg("上传失败，请检查网络后重试"+e);
+            }
+        });
+    };
+
+    //提交资讯
+    messageConfig.submitForm=function(obj) {
+        if($(obj).attr("class")=="btn btn-primary disabled"){
+            return;
+        }
+        var messageModel={};
+        messageModel.id=$("input[name='messageId']").val();
+        messageModel.title=$("input[name='title']").val();
+        messageModel.customerId=/*[[${message.customerId}]]*/ '';
+        messageModel.putAway=$("input[name='putAway']:checked").val();
+        messageModel.pictureUrl=$("#pictureUrl").attr("src");
+        messageModel.summary=$("input[name='summary']").val();
+        messageModel.content=$(".summernote").code();
+        messageModel.date=new Date();
+
+
+        var ld=layer.load(5, {shade: false});
+        $(obj).attr("class","btn btn-primary disabled");
+
+        $.ajax({
+            type:'POST',
+            url: '/back/saveMessage',
+            dataType: 'json',
+            contentType:"application/json",
+            data: JSON.stringify(messageModel),
+            success:function(result){
+                layer.close(ld);
+                layer.msg("保存成功！");
+//                    $(obj).attr("class","btn btn-primary");
+                window.setTimeout("window.location='/back/showMessageList'",1000);
+            },
+            error:function(e){
+                layer.close(ld);
+                layer.msg("保存失败！");
+                $(obj).attr("class","btn btn-primary");
+            }
+        });
+    };
+
+    /*]]>*/
+
+</script>
+</body>
+
+</html>

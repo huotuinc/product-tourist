@@ -9,10 +9,7 @@
 
 package com.huotu.tourist.controller.supplier;
 
-import com.huotu.tourist.common.CollectionAccountTypeEnum;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
@@ -283,6 +280,47 @@ public class SupplierManageController extends BaseController {
 //
 //        return new PageAndSelection<>(goods, TouristGood.selections);
 //    }
+
+
+    /**
+     * 显示线路商品
+     *
+     * @param id    商品ID
+     * @param model 返回的model
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/showTouristGood")
+    public String showTouristGood(@RequestParam Long id, Model model) throws IOException {
+        TouristGood touristGood = touristGoodRepository.findOne(id);
+        List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
+
+        List<TouristType> touristTypes=touristTypeRepository.findAll();
+
+        List<ActivityType> activityTypes=activityTypeRepository.findAll();
+
+        TouristCheckStateEnum[] checkStates=TouristCheckStateEnum.values();
+
+
+        List<TouristRouteModel> touristRouteModels=new ArrayList<>();
+        routes.forEach(route->{
+            TouristRouteModel routeModel=new TouristRouteModel();
+            routeModel.setId(route.getId());
+            routeModel.setFromDate(route.getFromDate());
+            routeModel.setSold(touristRouteService.judgeRouteIsSold(route));
+            touristRouteModels.add(routeModel);
+        });
+
+        model.addAttribute("touristTypes",touristTypes);
+        model.addAttribute("activityTypes",activityTypes);
+        model.addAttribute("checkStates",checkStates);
+
+        model.addAttribute("routes", touristRouteModels);
+
+        model.addAttribute("good", touristGood);
+        return "/supplier/goodsDetails";
+    }
+
 
 
     /**
