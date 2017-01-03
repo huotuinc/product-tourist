@@ -638,8 +638,6 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 添加或修改活动类型
-     * // TODO: 2016/12/21
-     *
      * @param id
      * @param activityName
      * @return
@@ -662,8 +660,6 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 删除活动类型
-     * // TODO: 2016/12/22
-     *
      * @param id id not null
      * @return
      */

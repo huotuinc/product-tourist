@@ -26,3 +26,16 @@ $(".modifyCheckState").click(function () {
     });
 
 })
+
+// ck editor
+var editor = $(".editor");
+if (editor.length > 0) {
+    var url = parent.imageUploaderUrl;
+    url = url || 'http://cms.51flashmall.com/upload/image';
+    editor.ckeditor({
+        extraPlugins: 'uploadimage',
+        uploadUrl: url,
+        language: parent.language
+    });
+}
+

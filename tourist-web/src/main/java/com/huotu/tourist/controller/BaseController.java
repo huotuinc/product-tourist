@@ -214,63 +214,6 @@ public class BaseController {
         return new PageAndSelection<>(page, selections);
     }
 
-//    /**
-//     * 导出订单列表
-//     *
-//     * @param user
-//     * @param supplierName
-//     * @param orderNo      订单号
-//     * @param touristName  线路名称
-//     * @param buyerName    采购商名称
-//     * @param tel          采购商电话
-//     * @param payType      支付类型
-//     * @param orderDate    开始订单创建时间
-//     * @param endOrderDate 结束订单创建时间
-//     * @param payDate      开始支付时间
-//     * @param endPayDate   结束支付时间
-//     * @param touristDate  线路开始时间
-//     * @param orderState   订单状态
-//     * @param pageSize     每页显示条数
-//     * @param pageNo       页码
-//     * @param request
-//     * @param model        @return
-//     */
-//    @RequestMapping(value = "exportTouristOrdersOrders", method = RequestMethod.GET)
-//    public ResponseEntity exportTouristOrdersOrders(@AuthenticationPrincipal SystemUser user
-//            , String supplierName, String orderNo, String touristName, String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate
-//            , LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate
-//            , OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
-//        TouristSupplier supplier = null;
-//        if (user.isSupplier()) {
-//            supplier = (TouristSupplier) user;
-//        }
-//        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
-//                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
-//                new PageRequest(pageNo, pageSize));
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(new MediaType("text/csv"));
-//        headers.setContentDispositionFormData("attachment", "订单记录.csv");
-//        StringBuffer sb = new StringBuffer();
-//        sb.append("订单号,").append("下单时间,").append("支付时间,").append("支付方式,").append("供应商,").append("线路名称,")
-//                .append("金额,").append("购买人,").append("支付状态,").append("出行时间,").append("购买数量,").append("备注/n");
-//        for (TouristOrder touristOrder : page.getContent()) {
-//            List<Traveler> travelers = travelerRepository.findByOrder_Id(touristOrder.getId());
-//            sb
-//                    .append(touristOrder.getOrderNo()).append(",")
-//                    .append(LocalDateTimeFormatter.toStr(touristOrder.getCreateTime())).append(",")
-//                    .append(LocalDateTimeFormatter.toStr(touristOrder.getPayTime())).append(",")
-//                    .append(touristOrder.getPayType().getValue()).append(",")
-//                    .append(touristOrder.getTouristGood().getTouristSupplier().getSupplierName()).append(",")
-//                    .append(touristOrder.getTouristGood().getTouristName()).append(",")
-//                    .append(touristOrder.getOrderMoney()).append(",").append(touristOrder.getTouristBuyer().getBuyerName())
-//                    .append("/r").append(touristOrder.getTouristBuyer().getTelPhone()).append(",")
-//                    .append(touristOrder.getOrderState()).append(",")
-//                    .append(LocalDateTimeFormatter.toStr(travelers.get(0).getRoute().getFromDate())).append(",")
-//                    .append(travelers.size()).append(",")
-//                    .append(touristOrder.getRemarks());
-//        }
-//        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
-//    }
 
     /**
      * 线路列表/推荐线路列表通过是否推荐属性进行判断是否推荐

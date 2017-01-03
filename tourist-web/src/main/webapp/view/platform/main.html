@@ -224,6 +224,9 @@
 </script>
 <script th:inline="javascript">
     uploaderUrl = /*[[@{/upload/fine}]]*/ null;
+    imageUploaderUrl = /*[[@{/upload/image}]]*/ null;
+    testMode = /*[[${@environment.acceptsProfiles('test')}]]*/ true;
+    language = 'zh-cn';
 </script>
 
 
