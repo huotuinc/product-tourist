@@ -3,7 +3,6 @@
  */
 $(function(){
     dateRangeEdit();
-    bindDeleteTouristDate();
     setRichText();
     showDiscountInfo();
     showRebateInfo();
@@ -11,16 +10,9 @@ $(function(){
 
 });
 
-var bindTouristDateDel=function(){
-    $('input[name="toursitDate"]').on('cancel.daterangepicker', function (ev, picker) {
-        var that=this;
-        layer.confirm('确定删除吗?', function(index){
-            $(that).parent().remove();
-            layer.close(index);
-        });
-    });
-};
-
+/**
+ * 儿童折扣信息提示
+ */
 var showDiscountInfo=function(){
     $("#discountInfo").on("click",function(){
         var that = this;
@@ -31,6 +23,9 @@ var showDiscountInfo=function(){
     });
 };
 
+/**
+ * 返利信息提示
+ */
 var showRebateInfo=function(){
     $("#rebateInfo").on("click",function(){
         var that = this;
@@ -41,6 +36,9 @@ var showRebateInfo=function(){
     });
 };
 
+/**
+ * 日期控件编辑
+ */
 var dateRangeEdit=function(){
     $('input[name="toursitDate"]').daterangepicker({
         locale: {
@@ -54,24 +52,19 @@ var dateRangeEdit=function(){
     });
 };
 
-var addTouristDate=function(){
-    $("#goodsTouristDates").append('<div class="col-sm-2"> ' +
-        '<span style="display: none">1</span> ' +
-        '<input name="toursitDate" ' +
-        'type="text"class="form-control"/></div>');
-    dateRangeEdit();
-    bindTouristDateDel();
-};
 
-var bindDeleteTouristDate=function(){
-    $(".goodsTouristDates").on("click","button",function(){
-
-        var div=$(this).parent();
-        if(!checkStringIsEmpty($("input[name='routeId'][type='hidden']",div).val())){
-            //请求服务器删除行程
-            layer.confirm('确定删除吗？', {
-                btn: ['确定', '取消']
-            }, function (index) {
+/**
+ * 删除行程时间
+ */
+var bindTouristDateDel=function(){
+    $('input[name="toursitDate"]').on('cancel.daterangepicker', function (ev, picker) {
+        if($(this).next().text()=="已售出"){
+            layer.msg("线路已售出，无法删除！");
+            return;
+        }
+        var that=this;
+        layer.confirm('确定删除吗?', function(index){
+            if(false){
                 $.ajax({
                     type:'POST',
                     url: '',
@@ -84,17 +77,30 @@ var bindDeleteTouristDate=function(){
                         layer.msg("删除出错！");
                     }
                 });
+            }
 
-                layer.close(index);
-            });
-        }else {
-            $(div).remove();
-        }
-
+            $(that).parent().remove();
+            layer.close(index);
+        });
     });
 };
 
+/**
+ * 增加一个行程时间
+ */
+var addTouristDate=function(){
+    $("#goodsTouristDates").append('<div class="col-sm-2"> ' +
+        '<input name="toursitDate" ' +
+        'type="text"class="form-control"/><span>已售出</span><span style="display: none">1</span></div>');
+    dateRangeEdit();
+    bindTouristDateDel();
+};
 
+/**
+ * 判断字符串是否为空
+ * @param str
+ * @returns {boolean}
+ */
 var checkStringIsEmpty=function(str){
     if(str==undefined||str==null||str==""){
         return true;
@@ -103,6 +109,9 @@ var checkStringIsEmpty=function(str){
     }
 };
 
+/**
+ * 富文本处理
+ */
 var setRichText=function(){
     $(".summernote").summernote({
         lang: "zh-CN",
@@ -112,8 +121,13 @@ var setRichText=function(){
     })
 
 };
-
-function sendFile(file,editor,welEditable) {
+/**
+ * 富文本图片上传
+ * @param file
+ * @param editor
+ * @param welEditable
+ */
+var sendFile=function(file,editor,welEditable) {
     data = new FormData();
     data.append("fileImage", file);
     $.ajax({
@@ -129,7 +143,9 @@ function sendFile(file,editor,welEditable) {
     });
 }
 
-
+/**
+ * 图片上传
+ */
 var uploadImage=function(){
     var loadPic=layer.load(0, {shade: false});
     $.ajaxFileUpload({
@@ -152,41 +168,65 @@ var uploadImage=function(){
     });
 };
 
-//提交
-var submitForm=function(obj) {
+/**
+ * 提交表单
+ * @param obj
+ */
+var submitForm=function(checkStates,obj) {
     if($(obj).attr("class")=="btn btn-primary disabled"){
         return;
     }
-    var messageModel={};
-    messageModel.id=$("input[name='messageId']").val();
-    messageModel.title=$("input[name='title']").val();
-    messageModel.customerId=/*[[${message.customerId}]]*/ '';
-    messageModel.putAway=$("input[name='putAway']:checked").val();
-    messageModel.pictureUrl=$("#pictureUrl").attr("src");
-    messageModel.summary=$("input[name='summary']").val();
-    messageModel.content=$(".summernote").code();
-    messageModel.date=new Date();
+    var id=$("input[name='id']").val();
+    var touristName=$("input[name='touristName']").val();
+    var pictureUrl=$("#pictureUrl").attr("src");
+    var touristType=$("select[name='touristType'] option:checked").val();
+    var activityType=$("select[name='activityType'] option:checked").val();
+    var touristFeatures=$("input[name='touristFeatures']").val();
+    var destination=$("input[name='destination']").val();
+    var placeOfDeparture=$("input[name='placeOfDeparture']").val();
+    var travelledAddress=$("input[name='travelledAddress']").val();
+    var price=$("input[name='price']").val();
+    var childrenDiscount=$("input[name='childrenDiscount']").val();
+    var rebate=$("input[name='rebate']").val();
+    var receptionPerson=$("input[name='receptionPerson']").val();
+    var receptionTelephone=$("input[name='receptionTelephone']").val();
+    var maxPeople=$("input[name='maxPeople']").val();
+    var eventDetails=$("#eventDetails").code();
+    var beCareful=$("#beCareful").code();
+    var touristRoutes=[];
+    $("#goodsTouristDates").children("div").each(function(){
+        var fromDate=$("input[name='toursitDate']",this).val();
+        var id=$("span",this).eq(1).text();
+        touristFeatures.push({id:id,fromDate:fromDate});
+    });
 
+
+    //goods.customerId=/*[[${message.customerId}]]*/ '';
 
     var ld=layer.load(5, {shade: false});
     $(obj).attr("class","btn btn-primary disabled");
 
     $.ajax({
         type:'POST',
-        url: '/back/saveMessage',
+        url: '',
         dataType: 'json',
         contentType:"application/json",
-        data: JSON.stringify(messageModel),
+        data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristType:touristType,activityType:activityType,
+            touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
+            travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
+            receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
+            eventDetails:eventDetails,beCareful:beCareful,touristRoutes:touristRoutes
+        },
         success:function(result){
             layer.close(ld);
             layer.msg("保存成功！");
-//                    $(obj).attr("class","btn btn-primary");
-            window.setTimeout("window.location='/back/showMessageList'",1000);
+            $(obj).attr("class","btn btn-success");
+//            window.setTimeout("window.location='/back/showMessageList'",1000);
         },
         error:function(e){
             layer.close(ld);
             layer.msg("保存失败！");
-            $(obj).attr("class","btn btn-primary");
+            $(obj).attr("class","btn btn-success");
         }
     });
 };
