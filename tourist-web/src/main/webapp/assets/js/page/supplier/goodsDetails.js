@@ -2,13 +2,24 @@
  * Created by Administrator slt 2016/12/30.
  */
 $(function(){
-    dateRangeEdit($('input[name="toursitDate"]'));
-    bindDelteTouristDate();
+    dateRangeEdit();
+    bindDeleteTouristDate();
     setRichText();
     showDiscountInfo();
     showRebateInfo();
+    bindTouristDateDel();
 
 });
+
+var bindTouristDateDel=function(){
+    $('input[name="toursitDate"]').on('cancel.daterangepicker', function (ev, picker) {
+        var that=this;
+        layer.confirm('确定删除吗?', function(index){
+            $(that).parent().remove();
+            layer.close(index);
+        });
+    });
+};
 
 var showDiscountInfo=function(){
     $("#discountInfo").on("click",function(){
@@ -30,30 +41,29 @@ var showRebateInfo=function(){
     });
 };
 
-var dateRangeEdit=function($ele){
-    $ele.daterangepicker({
+var dateRangeEdit=function(){
+    $('input[name="toursitDate"]').daterangepicker({
         locale: {
             format: 'YYYY-MM-DD hh:mm:ss',
             cancelLabel:'删除'
         },
         singleDatePicker: true,
         showDropdowns: true,
-        drops: "up",
-        autoApply: true
+        startDate: "2017-02-01",
+        drops: "up"
     });
 };
 
 var addTouristDate=function(){
-    $(".goodsTouristDates").append('<div> <input type="hidden" name="routeId"/> ' +
-        '<input  type="text" class="form-control datePicker"' +
-        ' name="toursitDate" placeholder="出行时间"/> ' +
-        '<button type="button" class="btn-lit">删除</button> </div>');
-
-    dateRangeEdit($('input[name="toursitDate"]'));
-
+    $("#goodsTouristDates").append('<div class="col-sm-2"> ' +
+        '<span style="display: none">1</span> ' +
+        '<input name="toursitDate" ' +
+        'type="text"class="form-control"/></div>');
+    dateRangeEdit();
+    bindTouristDateDel();
 };
 
-var bindDelteTouristDate=function(){
+var bindDeleteTouristDate=function(){
     $(".goodsTouristDates").on("click","button",function(){
 
         var div=$(this).parent();
