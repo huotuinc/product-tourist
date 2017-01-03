@@ -33,20 +33,36 @@
     <script>if (window.top !== window.self) {
         window.top.location = window.location;
     }</script>
+
+    <style>
+        .msgDiv {
+            display: none;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            color: #FFFFFF;
+            height: 50px;
+            line-height: 50px;
+            float: left;
+            padding: 0 10px;
+            margin: 5px 0 0 5px;
+        }
+    </style>
 </head>
 
 <body class="gray-bg">
+<div style="width: 200px;">
+    <div id="loginError" class="msgDiv"
+         style="background-color:indianred ;">
+        用户名或者密码错误
+    </div>
+</div>
 
-<p id="loginErrorP" style="display: none;color: red">
-    用户名或者密码错误
-</p>
 
 <div class="middle-box text-center loginscreen  animated fadeInDown">
     <div>
         <div>
-
             <h1 class="logo-name">XL</h1>
-
         </div>
         <h3>后台登录</h3>
 
@@ -72,11 +88,20 @@
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
 <script>
-    $(function () {
-        if (window.document.location.search.indexOf('type=error') >= 0) {
-            $('#loginErrorP').show();
-        }
-    });
+    var time;
+    function hideDiv() {
+        $('#loginError').animate({opacity: '0'}).hide(1000);
+        window.clearTimeout(time);
+    }
+    if (window.document.location.search.indexOf('type=error') >= 0) {
+        $('#loginError')
+                .animate({opacity: '0.7'})
+                .animate({opacity: '0.8'})
+                .animate({opacity: '0.9'})
+                .animate({opacity: '1'})
+                .show();
+        time = setTimeout("hideDiv();", 3000);//使用字符串执行方法
+    }
 </script>
 </body>
 
