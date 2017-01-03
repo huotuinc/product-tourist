@@ -9,10 +9,12 @@
 
 package com.huotu.tourist.service;
 
+import com.huotu.tourist.repository.TouristOrderRepository;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author CJ
@@ -21,10 +23,17 @@ import org.junit.Test;
 public class OrderServiceTest extends ServiceBaseTest {
 
     private static final Log log = LogFactory.getLog(OrderServiceTest.class);
+    @Autowired
+    TouristOrderRepository touristOrderRepository;
 
     @Test
     public void runnableTest() {
         log.info("sadfasdf");
+    }
+
+    @Test
+    public void aa() {
+        touristOrderRepository.sumCommissionTotal(1L);
     }
 
 }

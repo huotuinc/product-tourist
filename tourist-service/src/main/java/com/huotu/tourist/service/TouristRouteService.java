@@ -29,8 +29,8 @@ public interface TouristRouteService {
      * @param toDate    结束时间
      * @param maxPeople 总人数
      */
-    void saveToursitRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate,LocalDateTime toDate
-            ,int maxPeople);
+    void saveTouristRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime toDate
+            , int maxPeople);
 
     /**
      * 判断一个行程是否已经售出

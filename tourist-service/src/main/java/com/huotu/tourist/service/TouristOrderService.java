@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -79,7 +80,7 @@ public interface TouristOrderService {
      * @return              总佣金
      * @throws IOException
      */
-    long countCommissionTotal(Long supplierId) throws IOException;
+    BigDecimal countCommissionTotal(Long supplierId) throws IOException;
 
     /**
      * 计算总退款
@@ -87,7 +88,7 @@ public interface TouristOrderService {
      * @return              总退款
      * @throws IOException
      */
-    long countRefundTotal(Long supplierId) throws IOException;
+    BigDecimal countRefundTotal(Long supplierId) throws IOException;
 
     /**
      * 计算总订单数

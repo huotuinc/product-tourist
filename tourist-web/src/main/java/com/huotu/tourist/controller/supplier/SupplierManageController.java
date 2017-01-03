@@ -9,7 +9,11 @@
 
 package com.huotu.tourist.controller.supplier;
 
-import com.huotu.tourist.common.*;
+import com.huotu.tourist.common.CollectionAccountTypeEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.controller.BaseController;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
@@ -363,7 +367,7 @@ public class SupplierManageController extends BaseController {
 
         //保存所有线路
         for (TouristRoute t:touristRoutes){
-            touristRouteService.saveToursitRoute(t.getId(),t.getRouteNo(),good,t.getFromDate(),t.getToDate(),
+            touristRouteService.saveTouristRoute(t.getId(), t.getRouteNo(), good, t.getFromDate(), t.getToDate(),
                     maxPeople);
         }
 

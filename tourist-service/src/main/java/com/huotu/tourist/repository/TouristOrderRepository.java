@@ -30,4 +30,26 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder,Long>
 
     @Query("select sum(t.orderMoney) as om from TouristOrder as t where t.touristGood=?1")
     BigDecimal countOrderMoney(TouristGood good);
+
+    /**
+     * 统计当前状态订单的金额
+     *
+     * @param supplierId
+     * @param orderState
+     * @return
+     */
+    @Query("select sum(t.orderMoney) as om from TouristOrder as t where t.touristGood.touristSupplier.id=?1 and t" +
+            ".orderState=?2")
+    BigDecimal sumRefundTotal(Long supplierId, OrderStateEnum orderState);
+
+    /**
+     * 统计供应商订单的总佣金
+     *
+     * @param supplierId
+     * @return
+     */
+    @Query("select sum(t.orderMoney*t.touristGood.rebate) as om from TouristOrder as t where t.touristGood.touristSupplier.id=?1 ")
+    BigDecimal sumCommissionTotal(Long supplierId);
+
+    long countByTouristGood_TouristSupplier_id(Long supplierId);
 }
