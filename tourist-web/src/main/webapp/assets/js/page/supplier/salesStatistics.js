@@ -15,7 +15,8 @@ var dateRangeEdit=function(){
                 format: 'YYYY-MM-DD hh:mm:ss'
             },
             startDate: '2017-01-01',
-            endDate: '2017-06-01'
+            endDate: '2017-06-01',
+            linkedCalendars: false
         }
     );
 };
