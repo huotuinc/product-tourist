@@ -116,7 +116,7 @@ public class SupplierManageController extends BaseController {
      */
     @RequestMapping("/")
     public String showSupplierMain() {
-        return "/view/supplier/main";
+        return "/view/manage/supplier/main.html";
     }
 
     /**

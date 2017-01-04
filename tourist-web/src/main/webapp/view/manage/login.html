@@ -67,7 +67,8 @@
         </div>
         <h3>后台登录</h3>
 
-        <form class="m-t" role="form" action="../platform/main.html" th:action="@{/auth}" target="_self">
+        <form class="m-t" role="form" action="../manage/platform/main.html" th:method="post" th:action="@{/auth}"
+              target="_self">
             <div class="form-group">
                 <input name="username" value="admin" th:value="${@environment.acceptsProfiles('test')?'admin':''}"
                        type="text" class="form-control" placeholder="用户名" required=""/>

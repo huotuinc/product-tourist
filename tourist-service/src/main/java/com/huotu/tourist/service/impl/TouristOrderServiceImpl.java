@@ -34,9 +34,6 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     @Autowired
     TouristOrderRepository touristOrderRepository;
 
-    @Autowired
-    Map<OrderStateEnum,OrderPermissionsModel> orderPermissionsuery;
-
     @Override
     public URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed) {
         // TODO: 2017/1/3  

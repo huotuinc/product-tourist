@@ -23,7 +23,7 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public String index() {
-        return "view/login.html";
+        return "view/manage/login.html";
     }
 
 }

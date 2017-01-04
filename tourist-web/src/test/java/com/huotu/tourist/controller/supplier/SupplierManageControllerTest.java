@@ -58,7 +58,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         TouristOrder order=createTouristOrder(null,null,orderNo,null,null,null,null,null);
 
 
-        String json=mockMvc.perform(get("/supplier/orderList").session(loginAs("slt","123456"))
+        String json=mockMvc.perform(get("/supplier/orderList")
                 .param("orderId",orderNo))
                 .andReturn().getResponse().getContentAsString();
 
