@@ -68,7 +68,8 @@ class SecurityConfig {
                     .antMatchers(
                             // 安全系统无关的uri
 //                            mvcConfig.staticResourceAntPatterns()
-                    );
+                    )
+                    .antMatchers("/assets/**");
         }
 
         @Override
@@ -81,8 +82,9 @@ class SecurityConfig {
             // 2 个点  登录时 具体请求的页面应该是什么; 2 登录的处理者
 
             registry
-                    .anyRequest()
-                    .permitAll()
+                    .antMatchers("/**").authenticated()
+//                    .anyRequest()
+//                    .permitAll()
                     .and().csrf().disable()
                     .formLogin()
 //                .failureHandler()

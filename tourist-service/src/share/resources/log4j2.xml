@@ -5,7 +5,7 @@
   ~
   ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
   ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
-  ~ 2013-2016. All rights reserved.
+  ~ 2013-2017. All rights reserved.
   -->
 
 <configuration status="OFF">
@@ -18,10 +18,8 @@
         <logger name="org.springframework.web" level="debug"/>
         <!--<logger name="org.springframework.orm.jpa" level="debug"/>-->
         <!--<logger name="org.apache.http" level="debug"/>-->
-        <!--<logger name="org.springframework.security" level="debug"/>-->
+        <logger name="org.springframework.security" level="debug"/>
         <!--<logger name="org.springframework.orm.jpa" level="debug"/>-->
-        <logger name="me.jiangcai.dating" level="debug"/>
-        <logger name="me.jiangcai.chanpay" level="debug"/>
         <root level="info">
             <appender-ref ref="Console"/>
         </root>

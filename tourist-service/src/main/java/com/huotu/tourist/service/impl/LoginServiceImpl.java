@@ -4,12 +4,13 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.login.Login;
+import com.huotu.tourist.login.PlatformManager;
 import com.huotu.tourist.repository.LoginRepository;
 import com.huotu.tourist.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import java.util.Collections;
 
 /**
  * @author CJ
@@ -41,5 +46,20 @@ public class LoginServiceImpl implements LoginService {
     public <T extends Login> T updatePassword(T login, String rawPassword) {
         login.setPassword(passwordEncoder.encode(rawPassword));
         return loginRepository.save(login);
+    }
+
+    @PostConstruct
+    @Transactional
+    public void init() {
+        // 建立默认管理员 该帐号只向运维人员开放
+        try {
+            loadUserByUsername(DefaultRootName);
+        } catch (UsernameNotFoundException ex) {
+            PlatformManager manager = new PlatformManager();
+            manager.setEnabled(true);
+            manager.setLoginName(DefaultRootName);
+            manager.setAuthorityList(Collections.singleton("ROOT"));
+            updatePassword(manager, DefaultRootPassword);
+        }
     }
 }

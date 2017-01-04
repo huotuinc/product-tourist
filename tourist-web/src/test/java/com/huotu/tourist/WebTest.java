@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist;
@@ -14,6 +14,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.config.MVCConfig;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
@@ -26,6 +27,7 @@ import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.page.LoginPage;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.PurchaserProductSettingRepository;
@@ -37,20 +39,30 @@ import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.LoginService;
 import com.huotu.tourist.service.TouristGoodService;
 import me.jiangcai.dating.ServiceBaseTest;
+import me.jiangcai.lib.test.page.AbstractPage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 /**
  * 常用web测试基类
  */
 @SuppressWarnings("ALL")
 @WebAppConfiguration
+@ContextConfiguration(classes = {MVCConfig.class})
 public abstract class WebTest extends ServiceBaseTest {
 
     @Autowired
@@ -433,4 +445,51 @@ public abstract class WebTest extends ServiceBaseTest {
         return touristTypeRepository.saveAndFlush(touristType);
     }
 
+    /**
+     * 页面级别的登录,在此之前需要执行 {@link org.openqa.selenium.WebDriver#get(String)}
+     * 如果发现需要登录，则会完成其余步骤，并且自动跳转回原地址
+     *
+     * @param clazz    返回页面的类型
+     * @param username
+     * @param password
+     * @param <T>
+     * @return 新的页面实例
+     */
+    protected <T extends AbstractPage> T pageOrLogin(Class<T> clazz, String username, String password) {
+        try {
+            return initPage(clazz);
+        } catch (Throwable ex) {
+            LoginPage loginPage = initPage(LoginPage.class);
+            loginPage.login(username, password);
+            return initPage(clazz);
+        }
+    }
+
+    /**
+     * MVC登录
+     *
+     * @param uri      尝试浏览的uri
+     * @param username 用户
+     * @param password 密码
+     * @return 获取session
+     * @throws Exception
+     */
+    protected MockHttpSession mvcLogin(String uri, String username, String password) throws Exception {
+        if (uri == null)
+            uri = "/";
+        MockHttpSession session = (MockHttpSession) mockMvc.perform(get(uri))
+//                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isFound())
+                .andReturn().getRequest().getSession();
+
+        // 执行登录请求
+        mockMvc.perform(post("/auth")
+                .param("username", LoginService.DefaultRootName)
+                .param("password", LoginService.DefaultRootPassword).session(session))
+//                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isFound())
+                .andExpect(header().string("location", "http://localhost" + uri));
+
+        return session;
+    }
 }

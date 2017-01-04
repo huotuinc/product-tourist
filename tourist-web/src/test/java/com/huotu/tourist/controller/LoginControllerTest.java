@@ -10,6 +10,7 @@
 package com.huotu.tourist.controller;
 
 import com.huotu.tourist.WebTest;
+import com.huotu.tourist.service.LoginService;
 import org.junit.Test;
 
 /**
@@ -20,7 +21,9 @@ import org.junit.Test;
 public class LoginControllerTest extends WebTest {
 
     @Test
-    public void go() {
+    public void go() throws Exception {
+        mvcLogin(null, LoginService.DefaultRootName, LoginService.DefaultRootPassword);
+
     }
 
 }

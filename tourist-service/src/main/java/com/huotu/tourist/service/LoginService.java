@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.service;
@@ -16,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @author CJ
  */
 public interface LoginService extends UserDetailsService {
+
+    String DefaultRootName = "admin";
+    String DefaultRootPassword = "adminIsAdmin";
 
     /**
      * 更新密码

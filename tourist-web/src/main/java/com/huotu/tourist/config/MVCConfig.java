@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.config;
@@ -45,7 +45,7 @@ import java.util.Set;
 @EnableWebMvc
 @ComponentScan({
         "com.huotu.tourist.controller",
-        "com.huotu.tourist.interceptor",
+//        "com.huotu.tourist.interceptor",
         "com.huotu.tourist.converter"
 })
 @Import({MVCConfig.MVCConfigLoader.class, ServiceConfig.class, SecurityConfig.class})
