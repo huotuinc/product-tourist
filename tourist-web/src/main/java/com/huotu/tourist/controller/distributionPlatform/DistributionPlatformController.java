@@ -103,7 +103,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
     public String toSupplierList(HttpServletRequest request, Model model) {
-        return "platform/supplier/supplierList.html";
+        return "manage/platform/supplier/supplierList.html";
     }
 
     /**
@@ -128,7 +128,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
     public String toBuyerList(HttpServletRequest request, Model model) {
-        return "platform/touristBuyer/touristBuyerList.html";
+        return "manage/platform/touristBuyer/touristBuyerList.html";
     }
 
     /**
@@ -159,7 +159,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
     public String toPurchaserPaymentRecordList(HttpServletRequest request, Model model) {
-        return "platform/purchaserPaymentRecord/purchaserPaymentRecordList.html";
+        return "manage/platform/purchaserPaymentRecord/purchaserPaymentRecordList.html";
     }
 
     /**
@@ -230,7 +230,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
     public String toPurchaserProductSettingList(HttpServletRequest request, Model model) {
-        return "platform/purchaserProductSetting/purchaserProductSettingList.html";
+        return "manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -262,7 +262,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
     public String toTouristGoodList(HttpServletRequest request, Model model) {
-        return "platform/touristGood/touristGoodList.html";
+        return "manage/platform/touristGood/touristGoodList.html";
     }
 
 
@@ -273,7 +273,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
     public String toActivityTypeList(HttpServletRequest request, Model model) {
-        return "platform/activityType/activityTypeList.html";
+        return "manage/platform/activityType/activityTypeList.html";
     }
 
     /**
@@ -305,7 +305,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristTypeList", method = RequestMethod.GET)
     public String toTouristTypeList() {
-        return "platform/touristType/touristTypeList.html";
+        return "manage/platform/touristType/touristTypeList.html";
     }
 
     /**
@@ -430,7 +430,7 @@ public class DistributionPlatformController extends BaseController {
             supplier = touristSupplierRepository.getOne(id);
         }
         model.addAttribute("supplier", supplier);
-        return "view/platform/supplier/supplier.html";
+        return "manage/platform/supplier/supplier.html";
     }
 
     /**
@@ -520,7 +520,7 @@ public class DistributionPlatformController extends BaseController {
             purchaserProductSetting = purchaserProductSettingService.getOne(id);
         }
         model.addAttribute("purchaserProductSetting", purchaserProductSetting);
-        return "view/platform/purchaserProductSetting.html";
+        return "manage/platform/purchaserProductSetting.html";
     }
 
     /**
@@ -567,7 +567,7 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setExplain(explain);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);
-        return "view/platform/purchaserProductSetting/purchaserProductSettingList.html";
+        return "manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -584,7 +584,7 @@ public class DistributionPlatformController extends BaseController {
         List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
         model.addAttribute("routes", routes);
         model.addAttribute("good", touristGood);
-        return "view/platform/trouristGood/touristGood.html";
+        return "manage/platform/trouristGood/touristGood.html";
     }
 
 
