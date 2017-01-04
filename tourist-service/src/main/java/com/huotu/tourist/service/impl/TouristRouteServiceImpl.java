@@ -29,7 +29,7 @@ public class TouristRouteServiceImpl implements TouristRouteService {
 
     @Override
     public void saveTouristRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime toDate, int maxPeople) {
-        TouristRoute touristRoute = null;
+        TouristRoute touristRoute;
         if (id == null) {
             touristRoute = new TouristRoute();
         } else {

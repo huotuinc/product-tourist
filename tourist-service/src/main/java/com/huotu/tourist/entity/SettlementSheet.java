@@ -36,7 +36,6 @@ public class SettlementSheet extends BaseModel {
                 public String apply(SettlementSheet settlementSheet) {
                     return settlementSheet.getTouristOrder().getTouristGood().getTouristSupplier().getSupplierName();
                 }
-
                 @Override
                 public String getName() {
                     return "supplierName";

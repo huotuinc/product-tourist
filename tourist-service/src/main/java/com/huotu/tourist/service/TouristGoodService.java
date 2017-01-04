@@ -72,10 +72,10 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param maxPeople             最大人数(必须)
      * @return                      新增或修改的线路商品
      */
-    TouristGood saveToursitGood(Long id, String touristName, ActivityType activityType, TouristType touristType
+    TouristGood saveTouristGood(Long id, String touristName, ActivityType activityType, TouristType touristType
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            ,int maxPeople);
+            , int maxPeople);
 
 }

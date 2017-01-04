@@ -4,7 +4,7 @@ import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * 采购商支付记录
@@ -23,10 +23,7 @@ public interface PurchaserPaymentRecordService extends BaseService<PurchaserPaym
      * @param pageable
      * @return 返回支付记录列表
      */
-    Page<PurchaserPaymentRecord> purchaserPaymentRecordList(String startPayTime, String endPayTime, String buyerName
+    Page<PurchaserPaymentRecord> purchaserPaymentRecordList(LocalDateTime startPayTime, LocalDateTime endPayTime, String buyerName
             , String buyerDirector, String telPhone, Pageable pageable);
-
-    List<PurchaserPaymentRecord> purchaserPaymentRecordList(String startPayTime, String endPayTime, String buyerName
-            , String buyerDirector, String telPhone);
 
 }

@@ -5,7 +5,7 @@ import com.huotu.tourist.entity.PresentRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 提现服务
@@ -24,7 +24,7 @@ public interface PresentRecordService extends BaseService<PresentRecord, Long> {
      * @param pageable
      * @return 提现列表
      */
-    Page<PresentRecord> presentRecordList(String supplierName, PresentStateEnum presentState, LocalDate createTime, Pageable pageable);
+    Page<PresentRecord> presentRecordList(String supplierName, PresentStateEnum presentState, LocalDateTime createTime, Pageable pageable);
 
 
 }

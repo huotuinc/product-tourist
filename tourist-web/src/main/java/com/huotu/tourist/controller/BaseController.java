@@ -51,7 +51,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,8 +131,7 @@ public class BaseController {
 
     /**
      * 订单列表
-     *
-     * @param user
+     *  @param user
      * @param orderNo      订单号
      * @param supplierName
      * @param touristName  线路名称
@@ -154,8 +152,8 @@ public class BaseController {
     @RequestMapping(value = "touristOrders", method = RequestMethod.GET)
     public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo,
                                           String supplierName, String touristName
-            , String buyerName, String tel, PayTypeEnum payType, LocalDate orderDate, LocalDate endOrderDate
-            , LocalDate payDate, LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderState
+            , String buyerName, String tel, PayTypeEnum payType, LocalDateTime orderDate, LocalDateTime endOrderDate
+            , LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate, OrderStateEnum orderState
             , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {

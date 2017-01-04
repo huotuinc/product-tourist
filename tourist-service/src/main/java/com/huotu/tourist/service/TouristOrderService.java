@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -46,7 +46,7 @@ public interface TouristOrderService {
      * 订单列表，
      * @param supplier
      * @param supplierName   当supplier为null时该参数有效，反之无效
-     * @param orderId        订单ID
+     * @param orderNo        订单ID
      * @param touristName    路线名称
      * @param buyerName      购买人
      * @param tel            购买人电话
@@ -61,9 +61,9 @@ public interface TouristOrderService {
      * @return 返回带分页信息的订单列表
      * @throws IOException 获取订单列表发生错误
      */
-    Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderId, String touristName, String buyerName, String tel
-            , PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate
-            , LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException;
+    Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderNo, String touristName, String buyerName, String tel
+            , PayTypeEnum payTypeEnum, LocalDateTime orderDate, LocalDateTime endOrderDate, LocalDateTime payDate
+            , LocalDateTime endPayDate, LocalDateTime touristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException;
 
 
     /**
@@ -72,7 +72,7 @@ public interface TouristOrderService {
      * @return            总金额
      * @throws IOException
      */
-    long countMoneyTotal(Long supplierId) throws IOException;
+    BigDecimal countMoneyTotal(Long supplierId) throws IOException;
 
     /**
      * 计算总佣金

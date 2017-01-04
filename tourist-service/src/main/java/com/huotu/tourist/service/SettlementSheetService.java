@@ -5,7 +5,7 @@ import com.huotu.tourist.entity.SettlementSheet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 结算服务
@@ -24,7 +24,7 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
      * @param pageable
      * @return 结算列表
      */
-    Page<SettlementSheet> settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDate createTime, Pageable pageable);
+    Page<SettlementSheet> settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDateTime createTime, Pageable pageable);
 
 
 }

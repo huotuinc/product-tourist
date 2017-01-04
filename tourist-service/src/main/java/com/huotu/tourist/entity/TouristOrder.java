@@ -16,16 +16,19 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 线路订单
@@ -118,4 +121,7 @@ public class TouristOrder extends BaseModel {
     @Lob
     @Column
     private String remarks;
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "order")
+    private Set<Traveler> travelers;
 }

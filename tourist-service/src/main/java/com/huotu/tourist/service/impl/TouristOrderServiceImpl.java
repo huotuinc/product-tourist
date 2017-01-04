@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -30,17 +32,80 @@ public class TouristOrderServiceImpl implements TouristOrderService {
 
     @Override
     public URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed) {
+        // TODO: 2017/1/3  
         return null;
     }
 
     @Override
-    public Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderId, String touristName, String buyerName, String tel, PayTypeEnum payTypeEnum, LocalDate orderDate, LocalDate endOrderDate, LocalDate payDate, LocalDate endPayDate, LocalDate touristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException {
-        return null;
+    public Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderNo
+            , String touristName, String buyerName, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
+            , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
+            , OrderStateEnum orderStateEnum, Pageable pageable) throws IOException {
+        return touristOrderRepository.findAll((root, query, cb) -> {
+            Predicate predicate = null;
+            if (supplier != null) {
+                predicate = cb.equal(root.get("touristGood").get("touristSupplier").as(TouristSupplier.class), supplier);
+            }
+            if (!StringUtils.isEmpty(supplierName)) {
+                predicate = cb.and(predicate, cb.like(root.get("touristGood").get("touristSupplier").as(String.class),
+                        supplierName));
+            }
+            if (!StringUtils.isEmpty(orderNo)) {
+                predicate = cb.and(predicate, cb.like(root.get("orderNo").as(String.class),
+                        orderNo));
+            }
+            if (!StringUtils.isEmpty(touristName)) {
+                predicate = cb.and(predicate, cb.like(root.get("touristGood").get("touristName").as(String.class),
+                        touristName));
+            }
+            if (!StringUtils.isEmpty(buyerName)) {
+                predicate = cb.and(predicate, cb.like(root.get("touristBuyer").get("buyerName").as(String.class),
+                        buyerName));
+            }
+            if (!StringUtils.isEmpty(tel)) {
+                predicate = cb.and(predicate, cb.like(root.get("touristBuyer").get("telPhone").as(String.class),
+                        tel));
+            }
+            if (!StringUtils.isEmpty(payTypeEnum)) {
+                predicate = cb.and(predicate, cb.equal(root.get("payType").as(PayTypeEnum.class),
+                        payTypeEnum));
+            }
+            if (!StringUtils.isEmpty(orderStateEnum)) {
+                predicate = cb.and(predicate, cb.equal(root.get("orderState").as(OrderStateEnum.class),
+                        orderStateEnum));
+            }
+            if (orderDate != null) {
+                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("createTime").as(LocalDateTime.class), orderDate));
+            }
+
+            if (endOrderDate != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("createTime").as(LocalDateTime.class), endOrderDate));
+            }
+
+            if (payDate != null) {
+                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("payTime").as(LocalDateTime.class), payDate));
+            }
+
+            if (endPayDate != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("payTime").as(LocalDateTime.class), endPayDate));
+            }
+
+            if (touristDate != null) {
+                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.joinSet("travelers").get("route").get("fromDate")
+                        .as(LocalDateTime.class), touristDate));
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.joinSet("travelers").get("route").get("toDate")
+                        .as(LocalDateTime.class), touristDate));
+            }
+            return predicate;
+        }, pageable);
     }
 
     @Override
-    public long countMoneyTotal(Long supplierId) throws IOException {
-        return 0;
+    public BigDecimal countMoneyTotal(Long supplierId) throws IOException {
+        if (supplierId == null) {
+            throw new IOException();
+        }
+        return touristOrderRepository.sumMoneyTotal(supplierId);
     }
 
     @Override
@@ -69,11 +134,13 @@ public class TouristOrderServiceImpl implements TouristOrderService {
 
     @Override
     public boolean checkOrderStatusCanBeModified(SystemUser user, OrderStateEnum formerStatus, OrderStateEnum laterStatus) {
+        // TODO: 2017/1/3  
         return false;
     }
 
     @Override
     public List<OrderStateEnum> getModifyState(SystemUser user, TouristOrder touristOrder) {
+        // TODO: 2017/1/3  
         return null;
     }
 }

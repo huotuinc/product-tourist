@@ -31,9 +31,5 @@ public class OrderServiceTest extends ServiceBaseTest {
         log.info("sadfasdf");
     }
 
-    @Test
-    public void aa() {
-        touristOrderRepository.sumCommissionTotal(1L);
-    }
 
 }

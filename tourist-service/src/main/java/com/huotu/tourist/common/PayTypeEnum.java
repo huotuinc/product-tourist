@@ -1,7 +1,7 @@
 package com.huotu.tourist.common;
 
 /**
- * 结算状态
+ * 支付方式状态
  * Created by lhx on 2016/12/16.
  */
 

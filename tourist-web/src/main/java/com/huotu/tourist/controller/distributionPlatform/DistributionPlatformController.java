@@ -54,7 +54,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -176,7 +175,7 @@ public class DistributionPlatformController extends BaseController {
      * @param request
      */
     @RequestMapping(value = "purchaserPaymentRecordList", method = RequestMethod.GET)
-    public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(String startPayDate, String endPayDate
+    public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(LocalDateTime startPayDate, LocalDateTime endPayDate
             , String buyerName, String buyerDirector, String telPhone, int pageSize, int pageNo,
                                                                                HttpServletRequest request) {
         Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
@@ -357,7 +356,8 @@ public class DistributionPlatformController extends BaseController {
      * @param model            @return
      */
     @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
-    public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDate createTime,
+    public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDateTime
+            createTime,
                                                 int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<SettlementSheet> page = settlementSheetService.settlementSheetList(supplierName, platformChecking, createTime
                 , new PageRequest(pageNo, pageSize));
@@ -388,7 +388,8 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "presentRecordList", method = RequestMethod.GET)
-    public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, LocalDate createTime,
+    public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, LocalDateTime
+            createTime,
                                               int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, presentState, createTime
                 , new PageRequest(pageNo, pageSize));

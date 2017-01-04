@@ -152,8 +152,8 @@ public class SupplierManageController extends BaseController {
 
         Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, orderId, name, buyer, tel,
                 payTypeEnum
-                , orderDate.toLocalDate(), endOrderDate.toLocalDate(), payDate.toLocalDate(), endPayDate.toLocalDate()
-                , touristDate.toLocalDate(), orderStateEnum, pageable);
+                , orderDate, endOrderDate, payDate, endPayDate
+                , touristDate, orderStateEnum, pageable);
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
@@ -361,7 +361,7 @@ public class SupplierManageController extends BaseController {
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeRepository.getOne(touristTypeId);
         //保存商品
-        TouristGood good=touristGoodService.saveToursitGood(id,touristName,activityType,touristType,touristFeatures
+        TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType, touristFeatures
                 ,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
                 ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
 
@@ -431,7 +431,7 @@ public class SupplierManageController extends BaseController {
         TouristSupplier supplier =(TouristSupplier)userInfo;
 
         Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, null, null, null, null, null,
-                orderDate.toLocalDate(), endOrderDate.toLocalDate(), payDate.toLocalDate(), endPayDate.toLocalDate(), null, null, pageable
+                orderDate, endOrderDate, payDate, endPayDate, null, null, pageable
         );
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
