@@ -320,9 +320,9 @@ public class SupplierManageControllerTest extends WebTest {
         TouristSupplier touristSupplier=null;
         ActivityType activityType=createActivityType("sltActivity");
         TouristType touristType=createTouristType("sltTourist");
-        Address destination=new Address("浙江省","杭州市","滨江区","");
-        Address placeOfDeparture=new Address("浙江省","宁波市","鄞州区","");
-        Address travelledAddress=new Address("浙江省","杭州市","上城区","");
+        Address destination=new Address("浙江省","杭州市","滨江区");
+        Address placeOfDeparture=new Address("浙江省","宁波市","鄞州区");
+        Address travelledAddress=new Address("浙江省","杭州市","上城区");
         String name="sltname";
         String touristFeatures="线路特色";
         TouristCheckStateEnum checkState=TouristCheckStateEnum.CheckFinish;

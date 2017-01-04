@@ -351,7 +351,8 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/saveTouristGood")
-    public String saveTouristGood(Long id,String touristName,Long activityTypeId,Long touristTypeId
+    @ResponseBody
+    public void saveTouristGood(Long id,String touristName,Long activityTypeId,Long touristTypeId
             ,String touristFeatures,Address destination,Address placeOfDeparture,Address travelledAddress
             ,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson
             ,String receptionTelephone,String eventDetails,String beCareful,String touristImgUri
@@ -370,8 +371,6 @@ public class SupplierManageController extends BaseController {
             touristRouteService.saveTouristRoute(t.getId(), t.getRouteNo(), good, t.getFromDate(), t.getToDate(),
                     maxPeople);
         }
-
-        return "";// todo 返回的视图
     }
 
 
