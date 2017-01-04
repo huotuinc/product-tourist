@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 /**
@@ -50,12 +51,13 @@ public class SupplierManageControllerTest extends WebTest {
      */
     @Test
     public void orderList() throws Exception {
+//        loginAs("slt","123456");
         //预期
         String orderNo=randomString();
         TouristOrder order=createTouristOrder(null,null,orderNo,null,null,null,null,null);
 
 
-        String json=mockMvc.perform(get("/supplier/orderList")
+        String json=mockMvc.perform(get("/supplier/orderList").session(loginAs("slt","123456"))
                 .param("orderId",orderNo))
                 .andReturn().getResponse().getContentAsString();
 
@@ -206,7 +208,7 @@ public class SupplierManageControllerTest extends WebTest {
         TouristRoute routeF=createTouristRoute(null,null,LocalDateTime.now(),null,4);
         TouristRoute routeL=createTouristRoute(null,null,LocalDateTime.of(2016,10,10,0,0),null,4);
         Traveler traveler=createTraveler(routeF,order);
-        mockMvc.perform(get("/supplier/modifyOrderTouristDate")
+        mockMvc.perform(post("/supplier/modifyOrderTouristDate")
                 .param("formerId",""+routeF.getId()).param("laterId",""+routeL.getId()));
         Traveler travelerA=travelerRepository.findOne(traveler.getId());
         assertThat(routeL.getFromDate().equals(travelerA.getRoute().getFromDate())).isTrue().as("出行人数校验");

@@ -22,7 +22,7 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long> {
     @Query("update Traveler as t set t.route=?1 where t.route=?2 ")
     @Modifying
     @Transactional
-    int modifyRouteIdByRouteId(Long laterId,Long formerId);
+    int modifyRouteIdByRouteId(TouristRoute later,TouristRoute former);
 
     List<Traveler> findByOrder_Id(Long orderId);
 

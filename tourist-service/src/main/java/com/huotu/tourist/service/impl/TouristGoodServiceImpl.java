@@ -7,15 +7,19 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lhx on 2017/1/3.
@@ -24,6 +28,9 @@ import java.math.BigDecimal;
 public class TouristGoodServiceImpl implements TouristGoodService {
     @Autowired
     TouristGoodRepository touristGoodRepository;
+
+    @Autowired
+    TouristOrderRepository touristOrderRepository;
 
     @Override
     public TouristGood save(TouristGood data) {
@@ -106,9 +113,20 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     }
 
     @Override
-    public Page<TouristGood> modifySupplierInfo(Long supplierId) {
-        // TODO: 2017/1/3
-        return null;
+    public Page<TouristGood> salesRanking(Long supplierId,Pageable pageable) {
+        Page<Object> page=touristOrderRepository.goodsSalesRanking(supplierId);
+        List<TouristGood> touristGoods=new ArrayList<>();
+        for(Object o:page){
+            if(o==null){
+                continue;
+            }
+            Object[] objects=(Object[])o;
+            if(objects[0]==null){
+                continue;
+            }
+            touristGoods.add((TouristGood)objects[0]);
+        }
+        return new PageImpl<>(touristGoods,pageable,page.getTotalElements());
     }
 
     @Override

@@ -48,7 +48,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param supplierId    供应商ID
      * @return              商品列表
      */
-    Page<TouristGood> modifySupplierInfo(Long supplierId);
+    Page<TouristGood> salesRanking(Long supplierId,Pageable pageable);
 
 
     /**

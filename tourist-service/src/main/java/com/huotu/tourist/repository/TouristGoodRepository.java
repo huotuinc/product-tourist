@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>, JpaSpecificationExecutor<TouristGood> {
 
+
 }

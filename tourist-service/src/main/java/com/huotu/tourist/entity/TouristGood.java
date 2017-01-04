@@ -196,9 +196,9 @@ public class TouristGood extends BaseModel {
      */
     @Embedded
     @AttributeOverrides(
-            {@AttributeOverride(name = "province", column = @Column(name = "pla_province"))
-                    , @AttributeOverride(name = "town", column = @Column(name = "pla_town"))
-                    , @AttributeOverride(name = "district", column = @Column(name = "pla_district"))
+            {@AttributeOverride(name = "province", column = @Column(name = "tra_province"))
+                    , @AttributeOverride(name = "town", column = @Column(name = "tra_town"))
+                    , @AttributeOverride(name = "district", column = @Column(name = "tra_district"))
             })
     private Address travelledAddress;
     /**

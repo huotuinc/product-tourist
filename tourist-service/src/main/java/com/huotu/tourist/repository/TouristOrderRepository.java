@@ -3,6 +3,7 @@ package com.huotu.tourist.repository;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 线路订单持久层
@@ -64,4 +66,8 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
 
 
     long countByTouristGood_TouristSupplier_id(Long supplierId);
+
+
+    @Query("select o,count(o.touristGood) as num from TouristOrder as o where o.touristGood.touristSupplier.id=?1 order by num desc")
+    Page<Object> goodsSalesRanking(Long supplierId);
 }

@@ -129,11 +129,11 @@ var setRichText=function(){
  */
 var sendFile=function(file,editor,welEditable) {
     data = new FormData();
-    data.append("fileImage", file);
+    data.append("upload", file);
     $.ajax({
         data: data,
         type: "POST",
-        url: "/resource/uploadMessageImage",
+        url: "/upload/image",
         cache: false,
         contentType: false,
         processData: false,
@@ -149,13 +149,13 @@ var sendFile=function(file,editor,welEditable) {
 var uploadImage=function(){
     var loadPic=layer.load(0, {shade: false});
     $.ajaxFileUpload({
-        url: '/resource/uploadMessageImage',
+        url: '/upload/image',
         secureuri: false,
-        fileElementId: 'fileImage',
+        fileElementId: 'upload',
         dataType: 'json',
         data: null,
         success: function(resultModel) {
-            if(resultModel.code==1){
+            if(resultModel.success){
                 layer.close(loadPic);
                 layer.msg("上传成功");
                 $(".image-crop img").attr("src",resultModel.url);

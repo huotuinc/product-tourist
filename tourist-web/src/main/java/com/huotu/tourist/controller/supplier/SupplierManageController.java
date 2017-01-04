@@ -65,7 +65,8 @@ import java.util.List;
  * 供应商逻辑
  * Created by slt on 2016/12/17.
  */
-@Controller("/supplier")
+@Controller
+@RequestMapping("/supplier")
 public class SupplierManageController extends BaseController {
 
     @Autowired
@@ -107,6 +108,16 @@ public class SupplierManageController extends BaseController {
     @Autowired
     private CollectionAccountService collectionAccountService;
 
+
+    /**
+     * 打开订单列表页面
+     *
+     * @return
+     */
+    @RequestMapping("/")
+    public String showSupplierMain() {
+        return "/view/supplier/main";
+    }
 
     /**
      * 打开订单列表页面
@@ -475,10 +486,10 @@ public class SupplierManageController extends BaseController {
      */
     @RequestMapping("/goodsSalesRanking")
     @ResponseBody
-    public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo)
+    public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo,Pageable pageable)
             throws IOException{
         TouristSupplier supplier =(TouristSupplier)userInfo;
-        Page<TouristGood> touristGoods=touristGoodService.modifySupplierInfo(supplier.getId());
+        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable);
 
         //购买次数处理
         Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {
