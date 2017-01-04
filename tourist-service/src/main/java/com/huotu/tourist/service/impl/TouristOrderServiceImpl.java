@@ -6,7 +6,7 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.login.SystemUser;
-import com.huotu.tourist.model.orderPermissionsModel;
+import com.huotu.tourist.model.OrderPermissionsModel;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     TouristOrderRepository touristOrderRepository;
 
     @Autowired
-    Map<OrderStateEnum,orderPermissionsModel> orderPermissionsuery;
+    Map<OrderStateEnum,OrderPermissionsModel> orderPermissionsuery;
 
     @Override
     public URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed) {
@@ -144,13 +144,13 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         /**
          * 该订单是否可以被修改到相应订单状态
          */
-        if(!Arrays.asList(orderPermissionsModel.revisability[(int)formerStatus.getCode()]).contains(laterStatus)){
+        if(!Arrays.asList(OrderPermissionsModel.revisability[(int)formerStatus.getCode()]).contains(laterStatus)){
             return false;
         }
         /**
          * 该角色是否拥有修改到相应订单状态的权利
          */
-        if(!Arrays.asList(orderPermissionsModel.getAuthOrderStates(user)).contains(laterStatus)){
+        if(!Arrays.asList(OrderPermissionsModel.getAuthOrderStates(user)).contains(laterStatus)){
             return false;
         }
         return true;
@@ -159,12 +159,12 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     @Override
     public List<OrderStateEnum> getModifyState(SystemUser user, TouristOrder touristOrder) {
         //获取该权限可以修改的订单状态
-        OrderStateEnum[] orderStates= orderPermissionsModel.getAuthOrderStates(user);
+        OrderStateEnum[] orderStates= OrderPermissionsModel.getAuthOrderStates(user);
         OrderStateEnum orderformerState=touristOrder.getOrderState();
         List<OrderStateEnum> orderlaterStates=new ArrayList<>();
         //筛选可以被修改到之后的订单状态
         for(OrderStateEnum orderlater:orderStates){
-            if(Arrays.asList(orderPermissionsModel.revisability[(int)orderformerState.getCode()]).contains(orderlater)){
+            if(Arrays.asList(OrderPermissionsModel.revisability[(int)orderformerState.getCode()]).contains(orderlater)){
                 orderlaterStates.add(orderlater);
             }
 
