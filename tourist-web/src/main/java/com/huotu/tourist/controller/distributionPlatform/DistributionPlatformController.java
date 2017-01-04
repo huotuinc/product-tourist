@@ -290,7 +290,7 @@ public class DistributionPlatformController extends BaseController {
     public ResponseEntity activityTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model)
             throws JsonProcessingException {
         Page<ActivityType> page = activityTypeService.activityTypeList(name, new PageRequest(pageNo, pageSize));
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
         ObjectMapper objectMapper = new ObjectMapper();
