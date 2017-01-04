@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>采购商支付流水</title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
+    <link href="../../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control datePicker"
+                               id="payDate" name="payDate" placeholder="支付时间"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="buyerName" id="buyerName" class="form-control"
+                               placeholder="采购商名称">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="buyerDirector" class="form-control"
+                               placeholder="负责人">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="telPhone" class="form-control"
+                               placeholder="手机号">
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-primary btnSearch">搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div id="toolbar" class="btn-group">
+            <select class="form-control">
+                <option value="basic">Export Basic</option>
+                <option value="all">Export All</option>
+                <option value="selected">Export Selected</option>
+            </select>
+        </div>
+        <table id="table" data-url="../../../../mock/platform/purchaserPaymentRecordList.json"
+               th:attr="data-url=@{/distributionPlatform/purchaserPaymentRecordList}"
+               data-method="get"
+               data-side-pagination="server"
+               data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, all]"
+               data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+               data-toggle="table"
+               data-pagination="true"
+               data-show-export="true"
+               data-click-to-select="true"
+               data-toolbar="#toolbar"
+               data-query-params="getParams">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="id" data-align="center" data-sortable="true">id</th>
+                <th data-field="buyerName" data-align="center" data-sortable="true">采购商名称</th>
+                <th data-field="buyerDirector" data-align="center" data-sortable="true">负责人</th>
+                <th data-field="telPhone" data-align="center" data-sortable="true">手机号</th>
+                <th data-field="buyerId" data-align="center" data-sortable="true">用户id</th>
+                <th data-field="nickname" data-align="center" data-sortable="true">用户昵称</th>
+                <th data-field="payState.value" data-align="center" data-sortable="true">支付状态</th>
+                <th data-field="money" data-align="center" data-sortable="true">支付金额</th>
+                <th data-field="payDate" data-align="center" data-sortable="true">支付时间</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script th:inline="javascript">
+    exportsPurchaserPaymentRecordUrl = /*[[@{/distributionPlatform/exportPurchaserPaymentRecord}]]*/  "purchaserPaymentRecordList.html";
+</script>
+<script src="../../../../assets/js/jquery-1.9.1.min.js"></script>
+<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/tableExport.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/ga.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../../../assets/js/page/platform/purchaserPaymentRecordList.js"></script>
+
+</body>
+</html>

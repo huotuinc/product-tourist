@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
+    <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="../../../assets/css/style.min.css?v=4.0.0" rel="stylesheet"/>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="ibox">
+            <div class="ibox-content">
+                    <h2>
+                        结算单号：<span>12312313123</span>,订单总金额：<span>1000.00</span>元,
+                        佣金：<span>1000</span>元,应收款：<span>1000</span>元,结算日期：<span>2010-10-10</span>
+                        ,平台审核状态：<span>已审核</span>
+                    </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>订单明细</h5>
+
+                <!--<div class="col-md-8">-->
+                    <!--<div class="row"><label></label></div>-->
+
+                <!--</div>-->
+                <!--<div class="col-md-4">-->
+                    <!--<div class="row">-->
+                        <!--<label>自审：</label>-->
+                        <!--<button class="btn btn-success">审核通过/已审核</button>-->
+                        <!--<button class="btn btn-success">导出结算</button>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+            </div>
+            <div class="ibox-content">
+                <div class="roll-right">
+                    <label>自审：</label>
+                    <button class="btn btn-success">审核通过/已审核</button>
+                    <button class="btn btn-success">导出结算</button>
+                </div>
+                <!--<div class="row">-->
+                    <!--<div class="col-md-8">-->
+                        <!--<label class="text-box">订单明细</label>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-4">-->
+                        <!--<label>自审：</label>-->
+                        <!--<button class="btn btn-success">审核通过/已审核</button>-->
+                        <!--<button class="btn btn-success">导出结算</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <table id="goodsTable" data-toggle="table" data-url="../../../mock/supplier/settlementDetailsList.json"
+                       data-method="get" data-side-pagination="server" data-page-number="1" data-page-size="10"
+                       data-escape="true" data-query-params="getParams" data-toolbar="#toolbar">
+                    <thead>
+                    <tr>
+                        <th data-field="orderNo" data-align="center">订单号</th>
+                        <th data-field="touristName" data-align="center" data-sortable="true">商品名称</th>
+                        <th data-field="orderMoney" data-align="center" data-sortable="true">订单金额</th>
+                        <th data-field="commission" data-align="center" data-sortable="true">佣金</th>
+                        <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
+                        <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
+                        <th data-field="peopleNumber" data-align="center" data-sortable="true">购买数量</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="../../../assets/js/page/supplier/settlementDetailsList.js" th:inline="javascript"></script>
+</body>
+
+</html>

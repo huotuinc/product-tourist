@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>供应商列表</title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link href="../../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+                    <div class="col-sm-2">
+                        <input type="text" name="supplierName" id="supplierName" class="form-control"
+                               placeholder="供应商名称">
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-primary btnSearch">搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-primary">
+                <a href="supplier.html" style="color:#FFFFFF" th:href="@{/distributionPlatform/toAddTouristSupplier}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
+                </a>
+            </button>
+        </div>
+
+        <table id="table" data-toggle="table" data-url="../../../../mock/platform/supplierList.json"
+               th:attr="data-url=@{/distributionPlatform/supplierList}"
+               data-method="get"
+               data-side-pagination="server"
+               data-pagination="true" data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+               data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+               data-query-params="getParams" data-toolbar="#toolbar">
+            <thead>
+            <tr>
+                <th data-field="supplierName" data-align="center" data-sortable="true">名称</th>
+                <th data-field="adminAccount" data-align="center" data-sortable="true">登陆名</th>
+                <th data-field="address" data-align="center" data-sortable="true">所在地</th>
+                <th data-field="contacts" data-align="center" data-sortable="true">联系人</th>
+                <th data-field="contactNumber" data-align="center" data-sortable="true">电话</th>
+                <th data-field="createTime" data-align="center" data-sortable="true">注册时间</th>
+                <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
+                    data-align="center">操作
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="../../../../assets/js/jquery.min.js"></script>
+<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="../../../../assets/js/page/platform/supplierList.js" th:inline="javascript"></script>
+
+<!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
+</body>
+</html>
