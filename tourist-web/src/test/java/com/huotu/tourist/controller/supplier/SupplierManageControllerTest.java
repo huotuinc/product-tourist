@@ -31,6 +31,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 /**
@@ -59,7 +60,12 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
 
 
         String json=mockMvc.perform(get("/supplier/orderList")
-                .param("orderId",orderNo))
+                .param("orderId",orderNo)
+                .param("page","1")
+                .param("size","2")
+                .param("endOrderDate","2017-10-10 00:00:00")
+                .session(session))
+                .andExpect(jsonPath("$.row").isArray())
                 .andReturn().getResponse().getContentAsString();
 
         //实际

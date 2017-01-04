@@ -21,8 +21,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.dialect.IDialect;
@@ -34,6 +36,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.util.List;
 import java.util.Set;
 
 @Configuration
@@ -74,6 +77,11 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        super.addArgumentResolvers(argumentResolvers);
+        argumentResolvers.add(new PageableHandlerMethodArgumentResolver());
+    }
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {

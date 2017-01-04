@@ -154,7 +154,7 @@ public class SupplierManageController extends BaseController {
     @RequestMapping("/orderList")
 //    @ResponseBody AuthenticationPrincipal需要当前供应商
     public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal SystemUser userInfo
-            , @RequestParam Pageable pageable
+            , Pageable pageable
             , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
             ,LocalDateTime endTouristDate, OrderStateEnum orderStateEnum) throws IOException {
