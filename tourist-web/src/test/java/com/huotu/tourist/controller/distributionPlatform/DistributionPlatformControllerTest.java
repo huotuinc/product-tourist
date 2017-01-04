@@ -966,7 +966,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK).as("接口正常成功");
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
-        assertThat(touristSupplier.getFrozen()).isTrue().as("冻结成功");
+        assertThat(touristSupplier.isFrozen()).isTrue().as("冻结成功");
 
         status = mockMvc.perform(post("/distributionPlatform/unFrozenSupplier")
                 .param("id", touristSupplier.getId().toString())
@@ -974,7 +974,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK).as("接口正常成功");
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
-        assertThat(touristSupplier.getFrozen()).isFalse().as("解除冻结成功");
+        assertThat(touristSupplier.isFrozen()).isFalse().as("解除冻结成功");
 
     }
 

@@ -114,7 +114,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
 
     @Override
     public Page<TouristGood> salesRanking(Long supplierId,Pageable pageable) {
-        Page<Object> page=touristOrderRepository.goodsSalesRanking(supplierId);
+        Page<Object> page=touristOrderRepository.goodsSalesRanking(supplierId,pageable);
         List<TouristGood> touristGoods=new ArrayList<>();
         for(Object o:page){
             if(o==null){

@@ -10,6 +10,7 @@
 package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.AbstractMatcher;
+import com.huotu.tourist.AbstractSupplierTest;
 import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.*;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Administrator on 2016/12/17.
  */
-public class SupplierManageControllerTest extends WebTest {
+public class SupplierManageControllerTest extends AbstractSupplierTest {
     @Autowired
     private TouristRouteRepository touristRouteRepository;
 

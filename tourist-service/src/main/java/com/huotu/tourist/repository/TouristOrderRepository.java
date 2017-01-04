@@ -4,6 +4,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -69,5 +70,5 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
 
 
     @Query("select o,count(o.touristGood) as num from TouristOrder as o where o.touristGood.touristSupplier.id=?1 order by num desc")
-    Page<Object> goodsSalesRanking(Long supplierId);
+    Page<Object> goodsSalesRanking(Long supplierId, Pageable pageable);
 }
