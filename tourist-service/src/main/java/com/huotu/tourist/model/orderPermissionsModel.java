@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class OrderPermissionsModel {
+public class orderPermissionsModel {
     /**
      * 系统角色拥有的可修改的状态
      */
