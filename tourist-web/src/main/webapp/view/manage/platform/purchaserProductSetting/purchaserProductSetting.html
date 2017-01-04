@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/fine-uploader-new.min.css"
+          property=""/>
+    <link href="../../../../assets/css/admin.content.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../../assets/css/admin.global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../../assets/css/global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="block">
+    <!--/*@thymesVar id="purchaserProductSetting" type="com.huotu.tourist.entity.PurchaserProductSetting"*/-->
+    <div class="h">
+        <span class="icon-sprite icon-list"></span>
+        <h3>采购商资格产品设置</h3>
+        <div class="bar">
+            <a class="btn-lit" href="purchaserProductSettingList.html">
+                <span>返回管理列表</span></a>
+        </div>
+    </div>
+    <div class="cnt-wp">
+
+        <form id="modelForm" method="post" class="form-inline" action="purchaserProductSettingList.html"
+              th:action="@{${purchaserProductSetting==null ? '/distributionPlatform/savePurchaserProductSetting'
+              : '/distributionPlatform/updatePurchaserProductSetting'}}">
+            <div class="cnt form">
+                <div class="division">
+                    <input type="hidden" name="id" id="id"
+                           th:value="${purchaserProductSetting!=null ? purchaserProductSetting.id:''}">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                            <th>名称：</th>
+                            <td>
+                                <input name="name" type="text" id="name"
+                                       th:value="${purchaserProductSetting!=null ? purchaserProductSetting.name:''}"
+                                       maxlength="100"
+                                       class="input-normal" placeholder="名称">
+                            </td>
+                        </tr>
+                        <tr th:if="${purchaserProductSetting!=null}">
+                            <th>原有banner：</th>
+                            <td>
+                                <img res:src="${purchaserProductSetting.bannerUri}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>banner：</th>
+                            <td>
+                                <input type="hidden" name="bannerUri" id="bannerUri"
+                                       class="input-normal" placeholder="营业执照"
+                                       th:value="${purchaserProductSetting!=null ?purchaserProductSetting.bannerUri:''}">
+                                <div class="col-sm-10" id="banner-uploader"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>价格：</th>
+                            <td>
+                                <input type="number" name="price" id="price"
+                                       class="input-normal" placeholder="价格"
+                                       th:value="${purchaserProductSetting!=null ?purchaserProductSetting.price:''}">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>说明：</th>
+                            <td>
+                                <textarea rows="" cols="" style="width: 250px; height: 60px;" class="input-normal"
+                                          id="explain" name="explain"
+                                          th:value="${purchaserProductSetting!=null ?purchaserProductSetting.explain:''}"
+                                          placeholder="说明"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>协议：</th>
+                            <td>
+                                <textarea rows="" cols="" style="width: 250px; height: 60px;" class="input-normal"
+                                          id="agreement" name="agreement"
+                                          th:value="${purchaserProductSetting!=null ?purchaserProductSetting.agreement:''}"
+                                          placeholder="协议"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn-lit" name="btnSave" value="保存" data-submiting-text="提交中..."
+                           data-text="保存" id="jq-cms-Save">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../../../assets/js/jquery.min.js"></script>
+<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../../assets/libs/validate/jquery.validate.min.js"></script>
+<script src="../../../../assets/libs/validate/jquery.validate.addMethod.js"></script>
+<script src="../../../../assets/libs/fine-upload/jquery.fine-uploader.min.js"></script>
+<script src="../../../../assets/js/manage/platform/purchaserProductSetting.js"></script>
+</body>
+</html>

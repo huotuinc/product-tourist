@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>结算列表</title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
+    <link href="../../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+
+                    <div class="col-sm-2">
+                        <input type="text" name="supplierName" class="form-control"
+                               placeholder="供应商名称">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" name="createTime" class="form-control datePicker"
+                               placeholder="时间">
+                    </div>
+                    <div class="col-sm-2">
+                        <select name="platformChecking" class="form-control"
+                                placeholder="审核状态"></select>
+
+                        <select name="presentState" style="display: none;" class="form-control"
+                                placeholder="审核状态"></select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-primary btnSearch">搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <ul class="nav nav-tabs" role="tablist" id="myTab">
+            <li role="presentation"
+                class="active js"><a href="#settlementSheet" role="tab" data-toggle="tab">结算审核</a></li>
+            <li role="presentation" class="tx"><a href="#recommend" role="tab" data-toggle="tab">提现审核</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="settlementSheet">
+                <table id="table" data-toggle="table" data-url="../../../../mock/platform/settlementSheetList.json"
+                       data-method="get"
+                       data-side-pagination="server"
+                       data-pagination="true" data-striped="true"
+                       data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+                       data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+                       data-query-params="getParams">
+                    <thead>
+                    <tr>
+                        <th data-field="id" data-align="center" data-sortable="true">结算单号</th>
+                        <th data-field="supplierName" data-align="center" data-sortable="true">供应商名称</th>
+                        <th data-field="createTime" data-align="center" data-sortable="true">结算时间</th>
+                        <th data-field="receivableAccount" data-align="center" data-sortable="true">应收款</th>
+                        <th data-field="platformChecking.value" data-align="center" data-sortable="true">平台审核状态</th>
+                        <th data-field="action" data-formatter="actionFormatter" data-align="center">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="recommend">
+                <table id="txTable" data-toggle="table"
+                       data-url="../../../../mock/platform/presentRecordList.json"
+                       data-method="get"
+                       data-side-pagination="server"
+                       data-pagination="true" data-striped="true"
+                       data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+                       data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+                       data-query-params="getTxParams">
+                    <thead>
+                    <tr>
+                        <th data-field="id" data-align="center" data-sortable="true">提现编号</th>
+                        <th data-field="supplierName" data-align="center" data-sortable="true">供应商名称</th>
+                        <th data-field="createTime" data-align="center" data-sortable="true">提现日期</th>
+                        <th data-field="amountOfMoney" data-align="center" data-sortable="true">提现金额</th>
+                        <th data-field="accountBalance" data-align="center" data-sortable="true">当前账户余额</th>
+                        <th data-field="presentState.value" data-align="center" data-sortable="true">审核状态</th>
+                        <th data-field="action" data-formatter="presentFormatter" data-align="center">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../../../assets/js/jquery.min.js"></script>
+<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../../../assets/js/manage/platform/settlementSheetList.js"></script>
+</body>
+</html>

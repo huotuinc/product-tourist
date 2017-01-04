@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
+    <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+    <style>
+        .panel-success {
+            border-color: #1dc5a3;
+        }
+    </style>
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form role="form" class="search-panel" id="searchCircle">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content p-m no-borders">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <label class="control-label" for="orderId">订单号：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="orderId" name="orderId" placeholder="订单号"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">线路名称：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="name" name="name" placeholder="线路名称"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="buyer">购买人：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="buyer" name="buyer" placeholder="购买人"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="tel">购买人电话：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="tel" name="tel" placeholder="购买人电话"/>
+                                    </div>
+                                    <div class="form-group"
+                                         th:if="${#authorization.expression('hasRole(''ROLE_MA'')')}">
+                                        <label class="control-label" for="tel">供应商名称：</label>
+                                        <input type="text" class="form-control input-sm mb10"
+                                               id="supplierName" name="supplierName" placeholder="供应商名称"/>
+                                    </div>
+                                    <!--<p></p>-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label class="control-label" for="orderStateEnum">付款状态：</label>-->
+                                        <!--<select class="form-control" name="orderStateEnum" id="orderStateEnum">-->
+                                            <!--<option value="-1">全部</option>-->
+                                            <!--<option value="0">未支付</option>-->
+                                            <!--<option value="1">已支付</option>-->
+                                            <!--<option value="2">已确认</option>-->
+                                            <!--<option value="3">已完成</option>-->
+                                            <!--<option value="4">退款中</option>-->
+                                            <!--<option value="5">已退款</option>-->
+                                            <!--<option value="6">已取消</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                    <br/><br/>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="orderDate">下单时间：</label>
+                                        <input size="50" class="form-control" type="text"
+                                               id="orderDate" name="orderDate" placeholder="下单时间"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="payDate">支付时间：</label>
+                                        <input size="50" class="form-control" type="text"
+                                               id="payDate" name="payDate" placeholder="支付时间"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="touristDate">出行时间：</label>
+                                        <input size="50" class="form-control" type="text"
+                                               id="touristDate" name="touristDate" placeholder="出行时间"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <button id="searchList" type="button" class="btn btn-primary">筛选</button>
+                                    </div>
+
+                                </div>
+                                <p style="height: 8px;"></p>
+
+                                <!--<div class="form-inline" style="max-width: 926px; text-align: right;">-->
+                                <!--<button id="searchList" type="button" class="btn btn-primary">筛选</button>-->
+                                <!--&lt;!&ndash;<button type="button" class="btn btn-primary">导出订单</button>&ndash;&gt;-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="tabs-container">
+            <ul id="shortcutSearch" class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" aria-expanded="true">全部</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">未支付</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">已支付</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">已确认</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">已完成</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">退款中</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">已退款</a>
+                </li>
+                <li class=""><a data-toggle="tab" aria-expanded="false">已取消</a>
+                </li>
+            </ul>
+            <div id="toolbar" class="btn-group">
+                <select class="form-control">
+                    <option value="basic">Export Basic</option>
+                    <option value="all">Export All</option>
+                    <option value="selected">Export Selected</option>
+                </select>
+            </div>
+            <div class="tab-content">
+                <table id="table" data-toggle="table" data-url="../../../mock/supplier/orderList.json"
+                       data-method="get" data-side-pagination="server" data-pagination="true" data-striped="true"
+                       data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+                       data-escape="true" data-query-params="getParams"
+                       data-show-export="true"
+                       data-click-to-select="true"
+                       data-toolbar="#toolbar">
+                    <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="orderNo" data-align="center">订单号</th>
+                        <th th:if="${#authorization.expression('hasRole(''ROLE_MA'')')}"
+                            data-field="supplierName" data-align="center">供应商名称
+                        </th>
+                        <th data-field="touristName" data-align="center" data-formatter="touristNameFormatter">路线名称</th>
+                        <th data-field="orderMoney" data-align="center" data-sortable="true">金额</th>
+                        <th data-field="buyerName" data-align="center" data-sortable="true">购买人</th>
+                        <th data-field="payTypeValue" data-align="center" data-sortable="true">支付状态</th>
+                        <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
+                        <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
+                        <th data-field="payType" data-align="center" data-sortable="true">支付方式</th>
+                        <th data-field="touristDate" data-align="center" data-sortable="true"
+                            data-formatter="touristDateFormatter" data-events="touristDateEvents">出行时间
+                        </th>
+                        <th data-field="peopleNumber" data-align="center" data-sortable="true">购买数量</th>
+                        <th data-field="remarks" data-align="center" data-formatter="remarkFormatter"
+                            data-events="remarkEvents">备注
+                        </th>
+                        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
+                            data-align="center">操作
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modifyTouristDate" style="margin: 10px;display: none">
+</div>
+<script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../../../assets/libs/bootstrap-table/tableExport.js"></script>
+
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="../../../assets/js/manage/supplier/orderList.js"></script>
+</body>
+
+</html>

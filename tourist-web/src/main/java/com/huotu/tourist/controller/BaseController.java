@@ -115,7 +115,7 @@ public class BaseController {
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
 
-        return "/view/supplier/goodsList";
+        return "/view/manage/supplier/goodsList";
     }
 
 

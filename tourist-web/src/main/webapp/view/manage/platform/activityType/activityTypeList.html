@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>活动类型列表</title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+
+    <link href="../../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
+            </button>
+        </div>
+
+        <table id="table" data-toggle="table" data-url="../../../../mock/platform/activityTypeList.json"
+               th:attr="data-url=@{/distributionPlatform/activityTypeList}"
+               data-method="get"
+               data-side-pagination="server"
+               data-pagination="true" data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+               data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+               data-toolbar="#toolbar">
+            <thead>
+            <tr>
+                <th data-field="id" data-align="center" data-sortable="true">序号</th>
+                <th data-field="activityName" data-align="center" data-sortable="true">活动名称</th>
+                <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-align="center">
+                    操作
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加/修改活动类型</h4>
+            </div>
+            <div class="modal-body">
+                    <input type="hidden" name="id" value="">
+                    <input type="text" name="activityName" class="form-control" placeholder="活动类型名称">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary saveOrUpdate" data-dismiss="modal">添加/修改</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../../assets/js/jquery.min.js"></script>
+<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../../assets/js/manage/platform/activityTypeList.js" th:inline="javascript"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+
+<!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
+</body>
+</html>

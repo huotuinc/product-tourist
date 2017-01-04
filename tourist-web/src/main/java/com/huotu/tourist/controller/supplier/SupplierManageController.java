@@ -322,7 +322,7 @@ public class SupplierManageController extends BaseController {
         model.addAttribute("routes", touristRouteModels);
 
         model.addAttribute("good", touristGood);
-        return "/supplier/goodsDetails";
+        return "manage/supplier/goodsDetails";
     }
 
 
@@ -407,7 +407,7 @@ public class SupplierManageController extends BaseController {
         model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(supplier.getId()));
         model.addAttribute("refundTotal", touristOrderService.countRefundTotal(supplier.getId()));
         model.addAttribute("orderTotal", touristOrderService.countOrderTotal(supplier.getId()));
-        return "/view/supplier/salesStatistics";
+        return "/view/manage/supplier/salesStatistics";
 
     }
 

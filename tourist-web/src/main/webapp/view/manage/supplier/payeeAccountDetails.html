@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/fine-uploader-new.min.css"
+          property=""/>
+    <link href="../../../assets/css/admin.content.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/css/admin.global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/css/global.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+
+    <style>
+        .city-picker-span {
+            width: 390px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="block">
+    <div class="h">
+        <span class="icon-sprite icon-list"></span>
+        <h3>修改供应商</h3>
+    </div>
+    <div class="cnt-wp">
+        <!--/*@thymesVar id="account" type="com.huotu.tourist.entity.CollectionAccount"*/-->
+        <form id="modelForm" method="post" class="form-inline" action="payeeAccountDetails.html"
+              th:action="'/distributionPlatform/addSupplier'">
+            <div class="cnt form">
+                <div class="division">
+                    <input type="hidden" name="id" id="id" th:value="${account.id}">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                            <th>账户类型：</th>
+                            <td>
+                                <select name="accountType">
+
+                                    <option value="0" th:checked="${account.accountType.code}==0">支付宝</option>
+                                    <option value="1" th:checked="${account.accountType.code}==1">银行卡</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>姓名：</th>
+                            <td>
+                                <input type="text" name="aliPayName" id="aliPayName"
+                                       th:value="${account.aliPayName}" class="input-normal"
+                                       placeholder="姓名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>银行卡户名：</th>
+                            <td>
+                                <input type="text" name="accountName" id="accountName"
+                                       th:value="${account.accountName}" class="input-normal"
+                                       placeholder="银行卡户名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>支付宝账户：</th>
+                            <td>
+                                <input type="text" name="aliPayAccount" id="aliPayAccount"
+                                       th:value="${account.aliPayAccount}"
+                                       class="input-normal"
+                                       placeholder="支付宝账户">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>开户银行：</th>
+                            <td>
+                                <input type="text" name="bank" id="bank"
+                                       th:value="${account.bank}"
+                                       class="input-normal"
+                                       placeholder="开户银行">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>开户支行：</th>
+                            <td>
+                                <input type="text" name="bankBranch" id="bankBranch"
+                                       th:value="${account.bankBranch}"
+                                       class="input-normal"
+                                       placeholder="开户支行">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>身份证：</th>
+                            <td>
+                                <input type="text" name="IDCard" id="IDCard"
+                                       th:value="${account.IDCard}"
+                                       class="input-normal"
+                                       placeholder="身份证">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>银行卡号：</th>
+                            <td>
+                                <input type="text" name="bankCard" id="bankCard"
+                                       th:value="${account.bankCard}"
+                                       class="input-normal"
+                                       placeholder="银行卡号">
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn-lit" name="btnSave" value="保存" data-submiting-text="提交中..."
+                           data-text="保存" id="jq-cms-Save">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../../assets/js/jquery.min.js"></script>
+<script src="../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../assets/libs/validate/jquery.validate.min.js"></script>
+<script src="../../../assets/libs/validate/jquery.validate.addMethod.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
+<script src="../../../assets/libs/fine-upload/jquery.fine-uploader.min.js"></script>
+<script src="../../../assets/js/manage/supplier/payeeAccountDetails.js"></script>
+</body>
+</html>

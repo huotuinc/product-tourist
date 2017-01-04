@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>线路采购商列表</title>
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+
+    <link href="../../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+
+                    <div class="col-sm-2">
+                        <input type="text" name="buyerName" id="buyerName" class="form-control"
+                               placeholder="采购商名称">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="buyerDirector" class="form-control"
+                               placeholder="负责人">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="telPhone" class="form-control"
+                               placeholder="手机号">
+                    </div>
+                    <div class="col-sm-2">
+                        <select type="text" name="buyerCheckState" class="form-control"
+                                placeholder="采购状态">
+                            <!--suppress ThymeleafVariablesResolveInspection -->
+                            <option value="0"
+                                    th:each="checkState:${T(com.huotu.tourist.common.BuyerCheckStateEnum).values()}"
+                                    th:value="${checkState.getCode()}"
+                                    th:text="${checkState.getValue().toString()}">审核中
+                            </option>
+                            <option value="1">已审核</option>
+                            <option value="2">已冻结</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-primary btnSearch">搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <table id="table" data-toggle="table" data-url="../../../../mock/platform/touristBuyerList.json"
+               th:attr="data-url=@{/distributionPlatform/buyerList}"
+               data-method="get"
+               data-side-pagination="server"
+               data-pagination="true" data-striped="true"
+               data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
+               data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+               data-query-params="getParams">
+            <thead>
+            <tr>
+                <th data-field="id" data-align="center" data-sortable="true">id</th>
+                <th data-field="buyerName" data-align="center" data-sortable="true">采购商名称</th>
+                <th data-field="buyerDirector" data-align="center" data-sortable="true">负责人</th>
+                <th data-field="telPhone" data-align="center" data-sortable="true">手机号</th>
+                <th data-field="businessLicencesUri" data-formatter="businessLicencesUriFormatter" data-align="center"
+                    data-sortable="true">营业执照
+                </th>
+                <th data-field="IDCardImg" data-formatter="IDCardImgFormatter" data-align="center" data-sortable="true">
+                    身份证
+                </th>
+                <th data-field="buyerId" data-align="center" data-sortable="true">用户id</th>
+                <th data-field="nickname" data-align="center" data-sortable="true">用户昵称</th>
+                <th data-field="checkState.value" data-align="center" data-sortable="true">状态</th>
+                <th data-field="payState.value" data-align="center" data-sortable="true">支付状态</th>
+                <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-align="center">
+                    操作
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="../../../../assets/js/jquery.min.js"></script>
+<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script src="../../../../assets/js/manage/platform/touristBuyerList.js" th:inline="javascript"></script>
+<!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
+</body>
+</html>
