@@ -266,14 +266,14 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("startPayDate", "2016-12-12 08:00:00")
-                .param("endPayDate", "2016-12-12 23:00:00").session(session)
+                .param("startPayDate", "2016-12-12 10:00:00")
+                .param("endPayDate", "2016-12-12 10:00:01").session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (m.get("payDate").equals(purchaserPaymentRecord.getPayDate())) {
+            if (m.get("payDate").equals(LocalDateTimeFormatter.toStr(purchaserPaymentRecord.getPayDate()))) {
                 flag = true;
             }
         }

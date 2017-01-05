@@ -154,8 +154,11 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "buyerList", method = RequestMethod.GET)
-    public PageAndSelection<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone
-            , BuyerCheckStateEnum buyerCheckState, int pageSize, int pageNo, HttpServletRequest request) {
+    public PageAndSelection<TouristBuyer> buyerList(String buyerName
+            , String buyerDirector
+            , String telPhone
+            , BuyerCheckStateEnum buyerCheckState
+            , int pageSize, int pageNo, HttpServletRequest request) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
                 , new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristBuyer.selections);
@@ -185,7 +188,9 @@ public class DistributionPlatformController extends BaseController {
      * @param request
      */
     @RequestMapping(value = "purchaserPaymentRecordList", method = RequestMethod.GET)
-    public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(LocalDateTime startPayDate, LocalDateTime endPayDate
+    public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(@RequestParam(required = false) LocalDateTime
+                                                                                       startPayDate,
+                                                                               @RequestParam(required = false) LocalDateTime endPayDate
             , String buyerName, String buyerDirector, String telPhone, int pageSize, int pageNo,
                                                                                HttpServletRequest request) {
         Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
@@ -341,7 +346,6 @@ public class DistributionPlatformController extends BaseController {
     }
 
 
-
     /**
      * 跳转到结算单列表页面
      *
@@ -408,6 +412,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * banner列表页
+     *
      * @param pageSize
      * @param pageNo
      * @param request
@@ -445,6 +450,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 新增供应商 和 修改供应商
+     *
      * @param id                 供应商id 为null 代表添加，不为null代表修改
      * @param supplierName       供应商名称  必须
      * @param loginName          登录名        必须
@@ -649,6 +655,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 添加或修改活动类型
+     *
      * @param id
      * @param activityName
      * @return
@@ -671,6 +678,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 删除活动类型
+     *
      * @param id id not null
      * @return
      */

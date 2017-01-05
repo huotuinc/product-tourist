@@ -42,6 +42,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -77,7 +78,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
-        registry.addFormatter(localDateTimeFormatter);
+        registry.addFormatterForFieldType(LocalDateTime.class, localDateTimeFormatter);
         commonEnumConverterSet.forEach(registry::addConverter);
     }
 

@@ -40,9 +40,9 @@ public class PurchaserPaymentRecordServiceImpl implements PurchaserPaymentRecord
     public Page<PurchaserPaymentRecord> purchaserPaymentRecordList(LocalDateTime startPayTime, LocalDateTime endPayTime, String buyerName
             , String buyerDirector, String telPhone, Pageable pageable) {
         return purchaserPaymentRecordRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(buyerName)) {
-                predicate = cb.and(null, cb.like(root.get("touristBuyer").get("buyerName").as(String.class),
+                predicate = cb.and(predicate, cb.like(root.get("touristBuyer").get("buyerName").as(String.class),
                         buyerName));
             }
             if (!StringUtils.isEmpty(buyerDirector)) {

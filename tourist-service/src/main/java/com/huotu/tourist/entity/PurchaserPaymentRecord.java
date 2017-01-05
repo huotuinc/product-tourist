@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
@@ -38,8 +39,19 @@ public class PurchaserPaymentRecord extends BaseModel {
     public static final List<Selection<PurchaserPaymentRecord, ?>> selections = Arrays.asList(
             new SimpleSelection<PurchaserPaymentRecord, String>("id", "id")
             , new SimpleSelection<PurchaserPaymentRecord, String>("money", "money")
-            , new SimpleSelection<PurchaserPaymentRecord, String>("payDate", "payDate")
             , new Selection<PurchaserPaymentRecord, String>() {
+                @Override
+                public String apply(PurchaserPaymentRecord purchaserPaymentRecord) {
+                    return LocalDateTimeFormatter.toStr(purchaserPaymentRecord.getPayDate());
+                }
+
+                @Override
+                public String getName() {
+                    return "payDate";
+                }
+            }
+            ,
+            new Selection<PurchaserPaymentRecord, String>() {
                 @Override
                 public String apply(PurchaserPaymentRecord purchaserPaymentRecord) {
                     return purchaserPaymentRecord.getTouristBuyer().getBuyerName();
@@ -102,6 +114,9 @@ public class PurchaserPaymentRecord extends BaseModel {
 
                 @Override
                 public Map apply(PurchaserPaymentRecord purchaserPaymentRecord) {
+                    if (purchaserPaymentRecord.getTouristBuyer() == null || purchaserPaymentRecord.getTouristBuyer()
+                            .getPayState() == null)
+                        return null;
                     Map<String, String> map = new HashMap<>();
                     map.put("code", purchaserPaymentRecord.getTouristBuyer().getPayState().getCode().toString());
                     map.put("value", purchaserPaymentRecord.getTouristBuyer().getPayState().getValue().toString());
