@@ -156,9 +156,13 @@ public class SupplierManageController extends BaseController {
     @RequestMapping("/orderList")
     public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal SystemUser userInfo
             , Pageable pageable, String orderId, String name, String buyer, String tel
-            , PayTypeEnum payTypeEnum, LocalDateTime orderDate, LocalDateTime endOrderDate
-            , LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
-            ,LocalDateTime endTouristDate, OrderStateEnum orderStateEnum) throws IOException {
+            , PayTypeEnum payTypeEnum, @RequestParam(required = false) LocalDateTime orderDate
+            , @RequestParam(required = false)LocalDateTime endOrderDate
+            , @RequestParam(required = false)LocalDateTime payDate
+            , @RequestParam(required = false)LocalDateTime endPayDate
+            , @RequestParam(required = false)LocalDateTime touristDate
+            , @RequestParam(required = false)LocalDateTime endTouristDate
+            , OrderStateEnum orderStateEnum) throws IOException {
 
         TouristSupplier supplier=(TouristSupplier) userInfo;
 

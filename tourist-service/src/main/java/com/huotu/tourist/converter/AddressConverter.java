@@ -25,8 +25,6 @@ public class AddressConverter extends AutowireConverter<Address> {
         String[] strings=source.split("/");
         Address address=new Address();
         switch (strings.length){
-//            case 4:
-//                address.setDetailedAddress(strings[3]);
             case 3:
                 address.setDistrict(strings[2]);
             case 2:

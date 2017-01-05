@@ -57,6 +57,8 @@ import java.util.Set;
 public class MVCConfig extends WebMvcConfigurerAdapter {
 
     private static final String UTF8 = "UTF-8";
+    private String pageParameterName = "pageNo";
+    private String sizeParameterName = "pageSize";
     @Autowired
     PageAndSelectionResolver pageAndSelectionResolver;
     @Autowired
@@ -91,7 +93,10 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
-        argumentResolvers.add(new PageableHandlerMethodArgumentResolver());
+        PageableHandlerMethodArgumentResolver resolver=new PageableHandlerMethodArgumentResolver();
+        resolver.setPageParameterName(pageParameterName);
+        resolver.setSizeParameterName(sizeParameterName);
+        argumentResolvers.add(resolver);
     }
 
     @Override
