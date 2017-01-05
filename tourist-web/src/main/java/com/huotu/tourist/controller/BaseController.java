@@ -38,10 +38,12 @@ import com.huotu.tourist.service.TouristTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +61,7 @@ import java.util.List;
  * 提供公共的controller 方法
  * Created by lhx on 2016/12/21.
  */
+@Controller
 @RequestMapping(value = "/base/")
 public class BaseController {
 
@@ -143,9 +146,9 @@ public class BaseController {
      * @param payDate      开始支付时间
      * @param endPayDate   结束支付时间
      * @param touristDate  线路开始时间
+     * @param endTouristDate 结束出行时间
      * @param orderState   订单状态
-     * @param pageSize     每页显示条数
-     * @param pageNo       页码
+     * @param pageable     分页
      * @param request
      * @param model        @return
      */
@@ -157,15 +160,16 @@ public class BaseController {
             , @RequestParam(required = false) LocalDateTime endOrderDate
             , @RequestParam(required = false) LocalDateTime payDate
             , @RequestParam(required = false) LocalDateTime endPayDate
-            , @RequestParam(required = false) LocalDateTime touristDate,
-                                          OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
+            , @RequestParam(required = false) LocalDateTime touristDate
+            , @RequestParam(required = false)LocalDateTime endTouristDate
+            , OrderStateEnum orderState, Pageable pageable, HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
         }
         Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
-                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, orderState,
-                new PageRequest(pageNo, pageSize));
+                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderState,
+                pageable);
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
         //出行时间特殊处理
@@ -242,7 +246,7 @@ public class BaseController {
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
     public PageAndSelection<TouristGood> touristGoodList(@AuthenticationPrincipal SystemUser user
             , String touristName, String supplierName, Long touristTypeId, Long activityTypeId
-            , TouristCheckStateEnum touristCheckState, Boolean recommend, int pageSize, int pageNo
+            , TouristCheckStateEnum touristCheckState, Boolean recommend, Pageable pageable
             , HttpServletRequest request) {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
@@ -259,10 +263,10 @@ public class BaseController {
         Page<TouristGood> page;
         if (recommend != null && recommend) {
             page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
-                    , touristCheckState, true, new PageRequest(pageNo, pageSize));
+                    , touristCheckState, true, pageable);
         } else {
             page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
-                    activityType, touristCheckState, new PageRequest(pageNo, pageSize));
+                    activityType, touristCheckState,pageable);
         }
         List<Selection<TouristGood, ?>> selects = new ArrayList<>();
         selects.addAll(TouristGood.selections);

@@ -18,11 +18,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +32,7 @@ import java.util.List;
 @Table(name = "Tourist_Supplier")
 @Getter
 @Setter
+@Inheritance(strategy = InheritanceType.JOINED)
 public class TouristSupplier extends Login implements SystemUser {
 
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(

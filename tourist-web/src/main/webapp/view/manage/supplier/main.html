@@ -18,7 +18,6 @@
     <title>供应商后台</title>
 
 
-    <link rel="shortcut icon" href="favicon.ico">
     <link href="http://resali.huobanplus.com/cdn/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="http://resali.huobanplus.com/cdn/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
     <link href="http://resali.huobanplus.com/cdn/hotui/css/animate.min.css" rel="stylesheet"/>
@@ -36,30 +35,28 @@
             <ul class="nav" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        商户编号：100889887
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                                    <span class="block m-t-xs"><strong class="font-bold"
-                                                                       th:text="${#authentication.name}">超级管理员</strong><b
-                                            class="caret"></b></span>
+                                    <span class="block m-t-xs">
+                                        <strong class="font-bold" th:text="${#authentication.name}">超级管理员</strong></span>
                                 </span>
                         </a>
-                        <ul class="dropdown-menu animated fadeInDown m-t-xs">
-                            <li><a class="J_menuItem" href="/top/modifyPassword">修改密码</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li><a href="/loginOut">安全退出</a>
-                            </li>
-                        </ul>
+                        <!--<ul class="dropdown-menu animated fadeInDown m-t-xs">-->
+                            <!--<li><a class="J_menuItem" href="/top/modifyPassword">修改密码</a>-->
+                            <!--</li>-->
+                            <!--<li class="divider"></li>-->
+                            <!--<li><a href="/loginOut">安全退出</a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
                     </div>
                 </li>
                 <li>
-                    <a class="J_menuItem" href="order_list.html">
+                    <a class="J_menuItem" href="salesStatistics.html">
                         <i class="fa fa-home"></i>
                         <span class="nav-label">操作列表</span>
                     </a>
                 </li>
-                <!---------------------------圈子----------------------------------------------->
+
                 <li>
                     <a href="#">
                         <i class="fa fa-edit"></i>
@@ -67,7 +64,7 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="../common/orderList.html">订单列表</a>
+                        <li><a class="J_menuItem" th:href="@{/supplier/showOrderList}" href="../common/orderList.html">订单列表</a>
                         </li>
 
                     </ul>
@@ -77,13 +74,13 @@
                     <a href="#"><i class="fa fa-edit"></i><span class="nav-label">线路管理</span><span
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="goodsList.html">路线列表</a>
+                        <li><a class="J_menuItem" th:href="@{/base/showGoodsList}" href="goodsList.html">路线列表</a>
                         </li>
-                        <li><a class="J_menuItem" href="goodsDetails.html">新增路线</a>
+                        <li><a class="J_menuItem" th:href="@{/supplier/showTouristGood}" href="goodsDetailsH+.html">新增路线</a>
                         </li>
-                        <li><a class="J_menuItem" href="">路线类型</a>
+                        <li><a class="J_menuItem" href="../platform/touristType/touristTypeList.html">路线类型</a>
                         </li>
-                        <li><a class="J_menuItem" href="">活动类型</a>
+                        <li><a class="J_menuItem" href="../platform/activityType/activityTypeList.html">活动类型</a>
                         </li>
                     </ul>
                 </li>
@@ -101,16 +98,16 @@
                 </li>
 
                 <li>
-                    <a href="#"><i class="fa fa-edit"></i><span class="nav-label">设置</span><span
-                            class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-edit"></i><span class="nav-label">设置</span>
+                        <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li><a class="J_menuItem" href="supplierDetails.html">供应商信息</a>
                         </li>
                         <li><a class="J_menuItem" href="payeeAccountDetails.html">收款账户</a>
                         </li>
-                        <li><a class="J_menuItem" href="">后台权限</a>
+                        <li><a class="J_menuItem" href="jurisdictionList.html">后台权限</a>
                         </li>
-                        <li><a class="J_menuItem" href="">修改密码</a>
+                        <li><a class="J_menuItem" href="jurisdictionDeails.html">修改密码</a>
                         </li>
                     </ul>
                 </li>

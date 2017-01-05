@@ -41,6 +41,8 @@ public abstract class AbstractSupplierTest extends WebTest {
      */
     protected MockHttpSession session;
 
+
+
     @Autowired
     private LoginService loginService;
 
@@ -52,7 +54,6 @@ public abstract class AbstractSupplierTest extends WebTest {
         supplier.setLoginName(RandomStringUtils.randomAlphanumeric(20));
         supplier.setCreateTime(LocalDateTime.now());
         supplier = loginService.updatePassword(supplier, rawPassword);
-
 
         session = mvcLogin(null, supplier.getLoginName(), rawPassword);
 

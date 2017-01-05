@@ -43,7 +43,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     public Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderNo
             , String touristName, String buyerName, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
-            , OrderStateEnum orderStateEnum, Pageable pageable) throws IOException {
+            , LocalDateTime endTouristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException {
         return touristOrderRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
             if (supplier != null) {
@@ -94,12 +94,13 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             if (endPayDate != null) {
                 predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("payTime").as(LocalDateTime.class), endPayDate));
             }
-
             if (touristDate != null) {
                 predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.joinSet("travelers").get("route").get("fromDate")
                         .as(LocalDateTime.class), touristDate));
-                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.joinSet("travelers").get("route").get("toDate")
-                        .as(LocalDateTime.class), touristDate));
+            }
+            if(endTouristDate!=null){
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.joinSet("travelers").get("route").get("fromDate")
+                        .as(LocalDateTime.class), endTouristDate));
             }
             return predicate;
         }, pageable);
