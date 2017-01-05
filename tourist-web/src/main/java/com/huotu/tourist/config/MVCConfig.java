@@ -57,10 +57,12 @@ import java.util.Set;
 public class MVCConfig extends WebMvcConfigurerAdapter {
 
     private static final String UTF8 = "UTF-8";
-    private String pageParameterName = "pageNo";
-    private String sizeParameterName = "pageSize";
     @Autowired
     PageAndSelectionResolver pageAndSelectionResolver;
+    private String pageParameterName = "pageNo";
+    private String sizeParameterName = "pageSize";
+    private String sortOrder = "sortOrder";//asc,desc
+    private String sortName = "sortName";//排序字段名
     @Autowired
     private ThymeleafViewResolver htmlViewResolver;
     @Autowired
