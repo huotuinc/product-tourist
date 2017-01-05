@@ -315,26 +315,6 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
 
     @Test
-    public void exportPurchaserPaymentRecord() throws Exception {
-        int pageSize = 1;
-        int pageNo = 0;
-        PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
-                , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
-        String json = mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
-                .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
-                .param("startPayDate", "2016-12-12 08:00:00")
-                .param("endPayDate", "2016-12-12 23:00:00")
-                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
-                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
-                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
-        ).andReturn().getResponse().getContentAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(json, Map.class);
-        // TODO: 2016/12/21
-    }
-
-    @Test
     public void purchaserProductSettingList() throws Exception {
         int pageSize = 1;
         int pageNo = 0;
@@ -342,7 +322,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         String json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", productSetting.getName().toString())
+                .param("name", productSetting.getName().toString()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -357,7 +337,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -367,7 +347,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         createPurchaserProductSetting(UUID.randomUUID().toString());
         json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + (pageNo + 1)).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
