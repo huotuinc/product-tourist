@@ -53,6 +53,8 @@ public class TouristGood extends BaseModel {
             , new Selection<TouristGood, String>() {
                 @Override
                 public String apply(TouristGood touristGood) {
+                    if (touristGood.destination == null)
+                        return null;
                     return touristGood.destination.toString();
                 }
 
@@ -97,6 +99,8 @@ public class TouristGood extends BaseModel {
             , new Selection<TouristGood, Map>() {
                 @Override
                 public Map apply(TouristGood touristGood) {
+                    if (touristGood.getTouristCheckState() == null)
+                        return null;
                     Map map = new HashMap();
                     map.put("code", touristGood.getTouristCheckState().getCode().toString());
                     map.put("value", touristGood.getTouristCheckState().getValue().toString());
@@ -120,15 +124,20 @@ public class TouristGood extends BaseModel {
 
         @Override
         public Long apply(TouristGood touristGood) {
-            //商品的游客总人数
-            long travelers = travelerRepository.countByOrder_TouristGood(touristGood);
-            //线路数
-            long routes = touristRouteRepository.countByGood(touristGood);
+            try {
+                //商品的游客总人数
+                long travelers = travelerRepository.countByOrder_TouristGood(touristGood);
+                //线路数
+                long routes = touristRouteRepository.countByGood(touristGood);
 
-            //剩余数
-            long surplus = touristGood.maxPeople * routes - travelers;
+                //剩余数
+                long surplus = touristGood.maxPeople * routes - travelers;
 
-            return surplus;
+                return surplus;
+            } catch (Exception e) {
+                return null;
+            }
+
         }
 
         @Override

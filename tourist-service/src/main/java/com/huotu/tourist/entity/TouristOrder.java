@@ -66,7 +66,7 @@ public class TouristOrder extends BaseModel {
 
                 @Override
                 public String apply(TouristOrder touristOrder) {
-                    return touristOrder.getTouristBuyer().getBuyerName() + touristOrder.getTouristBuyer().getTelPhone();
+                    return touristOrder.getTouristBuyer().getBuyerName();
                 }
             }
     );

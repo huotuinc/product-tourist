@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -46,12 +45,14 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
             , OrderStateEnum orderStateEnum, Pageable pageable) throws IOException {
         return touristOrderRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
             if (supplier != null) {
-                predicate = cb.equal(root.get("touristGood").get("touristSupplier").as(TouristSupplier.class), supplier);
+                predicate = cb.and(cb.equal(root.get("touristGood").get("touristSupplier").as(TouristSupplier.class),
+                        supplier));
             }
             if (!StringUtils.isEmpty(supplierName)) {
-                predicate = cb.and(predicate, cb.like(root.get("touristGood").get("touristSupplier").as(String.class),
+                predicate = cb.and(predicate, cb.like(root.get("touristGood").get("touristSupplier").get("supplierName").as(String
+                                .class),
                         supplierName));
             }
             if (!StringUtils.isEmpty(orderNo)) {

@@ -40,9 +40,10 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     public Page<SettlementSheet> settlementSheetList(String supplierName, SettlementStateEnum platformChecking
             , LocalDateTime createTime, Pageable pageable) {
         return settlementSheetRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(supplierName)) {
-                predicate = cb.and(predicate, cb.like(root.get("touristSupplier").get("supplierName").as(String.class),
+                predicate = cb.and(predicate, cb.like(root.get("touristOrder").get("touristGood").get("touristSupplier").get
+                                ("supplierName").as(String.class),
                         supplierName));
             }
             if (platformChecking != null) {

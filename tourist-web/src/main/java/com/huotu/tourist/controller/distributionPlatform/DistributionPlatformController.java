@@ -199,43 +199,6 @@ public class DistributionPlatformController extends BaseController {
         return new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
     }
 
-//    /**
-//     * 导出采购商支付记录列表
-//     *
-//     * @param startPayDate  开始支付时间
-//     * @param endPayDate    结束支付时间
-//     * @param buyerName     采购商名称
-//     * @param buyerDirector 采购商负责人
-//     * @param telPhone      采购商负责人电话
-//     * @param pageSize      每页显示条数
-//     * @param pageNo        页码
-//     * @param request
-//     * @param model
-//     */
-//    @RequestMapping(value = "exportPurchaserPaymentRecord", method = RequestMethod.GET)
-//    public ResponseEntity exportPurchaserPaymentRecord(String startPayDate, String endPayDate, String buyerName,
-//                                                       String buyerDirector, String telPhone
-//            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws UnsupportedEncodingException {
-//        List<PurchaserPaymentRecord> list = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
-//                , buyerName, buyerDirector, telPhone);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(new MediaType("text/csv"));
-//        headers.setContentDispositionFormData("attachment", "采购商支付记录.csv");
-//        StringBuffer sb = new StringBuffer();
-//        sb.append("采购商,").append("采购商负责人,").append("采购商电话,").append("采购商id,").append("用户昵称,")
-//                .append("支付状态,").append("支付金额,").append("支付时间/n");
-//        for (PurchaserPaymentRecord paymentRecord : list) {
-//            sb.append(paymentRecord.getTouristBuyer().getBuyerName()).append(",")
-//                    .append(paymentRecord.getTouristBuyer().getBuyerDirector()).append(",")
-//                    .append(paymentRecord.getTouristBuyer().getTelPhone()).append(",")
-//                    .append(paymentRecord.getTouristBuyer().getBuyerId()).append(",")
-//                    .append(paymentRecord.getTouristBuyer().getNickname()).append(",")
-//                    .append(paymentRecord.getTouristBuyer().getPayState().getValue()).append(",")
-//                    .append(paymentRecord.getMoney()).append(",")
-//                    .append(LocalDateTimeFormatter.toStr(paymentRecord.getPayDate())).append("/n");
-//        }
-//        return new ResponseEntity<>(sb.toString().getBytes("utf-8"), headers, HttpStatus.CREATED);
-//    }
 
 
     /**
@@ -353,8 +316,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toSettlementSheetList", method = RequestMethod.GET)
     public String toSettlementSheetList(HttpServletRequest request, Model model) {
-        //todo
-        return "";
+        return "view/manage/platform/settlementSheet/settlementSheetList.html";
     }
 
 
@@ -370,8 +332,8 @@ public class DistributionPlatformController extends BaseController {
      * @param model            @return
      */
     @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
-    public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDateTime
-            createTime,
+    public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking,
+                                                @RequestParam(required = false) LocalDateTime createTime,
                                                 int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<SettlementSheet> page = settlementSheetService.settlementSheetList(supplierName, platformChecking, createTime
                 , new PageRequest(pageNo, pageSize));
@@ -402,8 +364,8 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "presentRecordList", method = RequestMethod.GET)
-    public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, LocalDateTime
-            createTime,
+    public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, @RequestParam
+            (required = false) LocalDateTime createTime,
                                               int pageSize, int pageNo, HttpServletRequest request, Model model) {
         Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, presentState, createTime
                 , new PageRequest(pageNo, pageSize));
@@ -465,6 +427,7 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"addSupplier", "updateSupplier"}, method = RequestMethod.POST)
+    @ResponseBody
     public void addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String loginName,
                                    @RequestParam String password, @RequestParam String businessLicenseUri
             , @RequestParam String contacts, @RequestParam String contactNumber, @RequestParam Address address, String remarks,
@@ -583,7 +546,7 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setExplain(explain);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);
-        return "manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
+        return "view/manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**

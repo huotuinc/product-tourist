@@ -13,7 +13,12 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
@@ -147,9 +152,13 @@ public class BaseController {
     @RequestMapping(value = "touristOrders", method = RequestMethod.GET)
     public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo,
                                           String supplierName, String touristName
-            , String buyerName, String tel, PayTypeEnum payType, LocalDateTime orderDate, LocalDateTime endOrderDate
-            , LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate, OrderStateEnum orderState
-            , int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
+            , String buyerName, String tel, PayTypeEnum payType
+            , @RequestParam(required = false) LocalDateTime orderDate
+            , @RequestParam(required = false) LocalDateTime endOrderDate
+            , @RequestParam(required = false) LocalDateTime payDate
+            , @RequestParam(required = false) LocalDateTime endPayDate
+            , @RequestParam(required = false) LocalDateTime touristDate,
+                                          OrderStateEnum orderState, int pageSize, int pageNo, HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
@@ -168,8 +177,12 @@ public class BaseController {
 
             @Override
             public LocalDateTime apply(TouristOrder order) {
-                Traveler traveler = travelerRepository.findByOrder_Id(order.getId()).get(0);
-                return traveler.getRoute().getFromDate();
+                try {
+                    Traveler traveler = travelerRepository.findByOrder_Id(order.getId()).get(0);
+                    return traveler.getRoute().getFromDate();
+                } catch (Exception e) {
+                    return null;
+                }
             }
         };
 
@@ -195,7 +208,11 @@ public class BaseController {
 
             @Override
             public Long apply(TouristOrder order) {
-                return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
+                try {
+                    return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
+                } catch (Exception e) {
+                    return null;
+                }
             }
         };
         selections.add(touristDateSelection);
@@ -237,10 +254,10 @@ public class BaseController {
             touristType = touristTypeService.getOne(touristTypeId);
         }
         if (activityTypeId != null) {
-            activityType = activityTypeService.getOne(touristTypeId);
+            activityType = activityTypeService.getOne(activityTypeId);
         }
         Page<TouristGood> page;
-        if (recommend) {
+        if (recommend != null && recommend) {
             page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
                     , touristCheckState, true, new PageRequest(pageNo, pageSize));
         } else {

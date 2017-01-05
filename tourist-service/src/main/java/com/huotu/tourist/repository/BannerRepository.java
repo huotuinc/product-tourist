@@ -14,10 +14,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by lhx on 2016/12/20.
  */
 @Repository
 public interface BannerRepository extends JpaRepository<Banner, Long>
         , JpaSpecificationExecutor<Banner> {
+    List<Banner> findByBannerName(String name);
 }

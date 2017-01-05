@@ -15,6 +15,7 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Banner;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.SettlementSheet;
@@ -37,7 +38,8 @@ import java.util.UUID;
 
 import static com.huotu.tourist.controller.distributionPlatform.DistributionPlatformController.ROWS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Created by lhx on 2016/12/17.
@@ -329,7 +331,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         List<Map> list = (List<Map>) map.get(ROWS);
         boolean flag = false;
         for (Map m : list) {
-            if (m.get("buyerName").equals(productSetting.getName())) {
+            if (m.get("name").equals(productSetting.getName())) {
                 flag = true;
             }
         }
@@ -358,13 +360,13 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
     @Test
     public void touristGoodList() throws Exception {
-        int pageSize = random.nextInt(100) + 10;
-        int pageNo = random.nextInt(10) + 1;
+        int pageSize = 1;
+        int pageNo = 0;
         TouristGood touristGood = createTouristGood("123", null, null, null, null);
         String json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("touristName", touristGood.getTouristName())
+                .param("touristName", touristGood.getTouristName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -380,7 +382,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("supplierName", touristGood.getTouristSupplier().getSupplierName())
+                .param("supplierName", touristGood.getTouristSupplier().getSupplierName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -396,7 +398,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("activityTypeId", "" + touristGood.getTouristType().getId())
+                .param("activityTypeId", "" + touristGood.getTouristType().getId()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -412,7 +414,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("touristTypeId", "" + touristGood.getTouristType().getId())
+                .param("touristTypeId", "" + touristGood.getTouristType().getId()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -428,14 +430,15 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("touristCheckState", "" + touristGood.getTouristCheckState())
+                .param("touristCheckState", "" + touristGood.getTouristCheckState()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (((Map) m.get("touristCheckState")).get("code").equals(touristGood.getTouristCheckState().getCode())) {
+            if (((Map) m.get("touristCheckState")).get("code").equals(touristGood.getTouristCheckState().getCode()
+                    .toString())) {
                 flag = true;
             }
         }
@@ -448,7 +451,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("supplierName", touristGood.getTouristSupplier().getSupplierName())
                 .param("touristTypeId", "" + touristGood.getTouristType().getId())
                 .param("activityTypeId", "" + touristGood.getTouristType().getId())
-                .param("touristCheckState", "" + touristGood.getTouristCheckState())
+                .param("touristCheckState", "" + touristGood.getTouristCheckState()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -457,7 +460,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -468,7 +471,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         createTouristGood(null, null, null, null, null);
         json = mockMvc.perform(get("/distributionPlatform/touristGoodList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + pageNo + 1).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -484,7 +487,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         String json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", activityType.getActivityName())
+                .param("name", activityType.getActivityName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -499,7 +502,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -509,7 +512,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         createActivityType(UUID.randomUUID().toString());
         json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + pageNo + 1).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -527,7 +530,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         String json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", type.getTypeName())
+                .param("name", type.getTypeName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -542,7 +545,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -552,7 +555,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         createTouristType(UUID.randomUUID().toString());
         json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + (pageNo + 1)).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -563,14 +566,13 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
     @Test
     public void touristOrders() throws Exception {
-
         int pageSize = 1;
         int pageNo = 0;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
                 ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"),null, null);
         String json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -580,7 +582,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("orderNo", "" + order.getOrderNo())
+                .param("orderNo", "" + order.getOrderNo()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -597,7 +599,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("touristName", order.getTouristGood().getTouristName())
+                .param("touristName", order.getTouristGood().getTouristName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -613,7 +615,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerName", order.getTouristBuyer().getBuyerName())
+                .param("buyerName", order.getTouristBuyer().getBuyerName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -629,7 +631,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("tel", "" + order.getTouristBuyer().getTelPhone())
+                .param("tel", "" + order.getTouristBuyer().getTelPhone()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -639,7 +641,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("orderState", order.getOrderState().getCode() + "")
+                .param("orderState", order.getOrderState().getCode() + "").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -655,7 +657,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("payType", "" + order.getPayType().getCode())
+                .param("payType", "" + order.getPayType().getCode()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -672,7 +674,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("orderDate", "2016-12-12 00:00:00")
-                .param("endOrderDate", "2016-12-12 22:00:00")
+                .param("endOrderDate", "2016-12-12 22:00:00").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -683,7 +685,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("payDate", "2016-12-12 00:00:00")
-                .param("endPayDate", "2016-12-12 22:00:00")
+                .param("endPayDate", "2016-12-12 22:00:00").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -697,19 +699,19 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("touristName", order.getTouristGood().getTouristName())
                 .param("buyerName", order.getTouristBuyer().getBuyerName())
                 .param("tel", order.getTouristBuyer().getTelPhone())
-                .param("orderState", LocalDateTimeFormatter.toStr(order.getCreateTime()))
+                .param("orderState", order.getOrderState().getCode() + "")
                 .param("payType", order.getPayType().getCode() + "")
-                .param("orderDate", "2012-12-12 00:00:00")
-                .param("endOrderDate", "2012-12-12 22:00:00")
-                .param("payDate", "2012-12-12 00:00:00")
-                .param("endPayDate", "2012-12-12 22:00:00")
+                .param("orderDate", "2016-12-12 00:00:00")
+                .param("endOrderDate", "2016-12-12 22:00:00")
+                .param("payDate", "2016-12-12 00:00:00")
+                .param("endPayDate", "2016-12-12 22:00:00").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (m.get("id").equals(order.getId())) {
+            if (m.get("id").equals(order.getId().intValue())) {
                 flag = true;
             }
         }
@@ -718,28 +720,13 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         createTouristOrder(null, null, null, null, null, null, null,null);
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + (pageNo + 1)).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("没有筛选条件的分页查询到相应数据列表");
 
-    }
-
-    @Test
-    public void exportTouristOrders() throws Exception {
-        int pageSize = 1;
-        int pageNo = 0;
-        PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
-                , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
-        String json = mockMvc.perform(get("/distributionPlatform/exportTouristOrders")
-                .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
-        ).andReturn().getResponse().getContentAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(json, Map.class);
-        // TODO: 2016/12/21
     }
 
     @Test
@@ -750,7 +737,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 "08:00:00"), null, "ss");
         String json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -761,14 +748,14 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("supplierName", settlementSheet.getTouristOrder().getTouristGood().getTouristSupplier
-                        ().getSupplierName())
+                        ().getSupplierName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         boolean flag = false;
         for (Map m : list) {
-            if (m.get("id").equals(settlementSheet.getId())) {
+            if (m.get("id").equals(settlementSheet.getId().intValue())) {
                 flag = true;
             }
         }
@@ -777,14 +764,14 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("platformChecking", settlementSheet.getPlatformChecking().getCode() + "")
+                .param("platformChecking", settlementSheet.getPlatformChecking().getCode() + "").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (m.get("id").equals(settlementSheet.getId())) {
+            if (m.get("id").equals(settlementSheet.getId().intValue())) {
                 flag = true;
             }
         }
@@ -793,14 +780,14 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("createTime", "2016-12-12 08:00:00")
+                .param("createTime", "2016-12-12 08:00:00").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (m.get("id").equals(settlementSheet.getId())) {
+            if (m.get("id").equals(settlementSheet.getId().intValue())) {
                 flag = true;
             }
         }
@@ -812,14 +799,14 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("supplierName", settlementSheet.getTouristOrder().getTouristGood().getTouristSupplier()
                         .getSupplierName())
                 .param("platformChecking", settlementSheet.getPlatformChecking().getCode().toString())
-                .param("createTime", "2016-12-12 08:00:00")
+                .param("createTime", "2016-12-12 08:00:00").session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (m.get("id").equals(settlementSheet.getId())) {
+            if (m.get("id").equals(settlementSheet.getId().intValue())) {
                 flag = true;
             }
         }
@@ -828,14 +815,14 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("supplierName", UUID.randomUUID().toString())
+                .param("supplierName", UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
         flag = false;
         for (Map m : list) {
-            if (m.get("id").equals(settlementSheet.getId())) {
+            if (m.get("id").equals(settlementSheet.getId().intValue())) {
                 flag = true;
             }
         }
@@ -844,7 +831,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         createSettlementSheet(null, null, null);
         json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + (pageNo + 1)).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -853,7 +840,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 2)
+                .param("pageNo", "" + (pageNo + 2)).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -871,10 +858,12 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("pageNo", "" + pageNo)
                 .param("supplierName", "" + pageNo)
                 .param("presentState", "" + PresentStateEnum.CheckFinish)
-                .param("createTime", "" + LocalDate.now())
+                .param("createTime", "" + LocalDate.now()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
+        // TODO: 2017/1/5 提现
+        assertThat(false).isEqualTo(true);
     }
 
 
@@ -882,58 +871,58 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
     @Test
     public void addTouristSupplierAndUpdateSupplier() throws Exception {
         String supplierName = UUID.randomUUID().toString();
-        String adminAccount = UUID.randomUUID().toString();
-        String adminPassword = UUID.randomUUID().toString();
-        String contacts = UUID.randomUUID().toString();
+        String loginName = "456789";
+        String password = UUID.randomUUID().toString();
+        String contacts = "sadf";
         String contactNumber = "13000000000";
-        String address = "浙江省,杭州市,滨江区";
+        String address = "浙江省/杭州市/滨江区";
         String remarks = UUID.randomUUID().toString();
         int status = mockMvc.perform(post("/distributionPlatform/addSupplier")
                 .param("supplierName", supplierName)
-                .param("adminAccount", adminAccount)
-                .param("adminPassword", adminPassword)
+                .param("loginName", loginName)
+                .param("password", password)
                 .param("contacts", contacts)
+                .param("businessLicenseUri", UUID.randomUUID().toString() + ".jpg")
                 .param("contactNumber", contactNumber)
                 .param("address", address)
-                .param("remarks", remarks)
+                .param("remarks", remarks).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
-        TouristSupplier touristSupplier = touristSupplierRepository.findByLoginName(adminAccount);
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("添加相应成功");
+        TouristSupplier touristSupplier = touristSupplierRepository.findByLoginName(loginName);
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
-//        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
-        assertThat(touristSupplier.getSupplierName()).isEqualTo(adminPassword);
-        assertThat(touristSupplier.getSupplierName()).isEqualTo(contacts);
-        assertThat(touristSupplier.getSupplierName()).isEqualTo(contactNumber);
+        assertThat(touristSupplier.getPassword()).isEqualTo(password);
+        assertThat(touristSupplier.getContacts()).isEqualTo(contacts);
+        assertThat(touristSupplier.getContactNumber()).isEqualTo(contactNumber);
         assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
         assertThat(touristSupplier.getRemarks()).isEqualTo(remarks);
 
         status = mockMvc.perform(post("/distributionPlatform/updateSupplier")
                 .param("id", touristSupplier.getId() + "")
                 .param("supplierName", supplierName = UUID.randomUUID().toString())
-                .param("adminAccount", adminAccount = UUID.randomUUID().toString())
-                .param("adminPassword", adminPassword = UUID.randomUUID().toString())
+                .param("loginName", loginName = "123456")
+                .param("password", password = UUID.randomUUID().toString())
+                .param("businessLicenseUri", UUID.randomUUID().toString() + ".jpg")
                 .param("contacts", contacts = "123123")
                 .param("contactNumber", contactNumber = "14000000000")
-                .param("address", address = "安徽省,合肥市,庐山区")
-                .param("remarks", remarks = UUID.randomUUID().toString())
+                .param("address", address = "安徽省/合肥市/庐山区")
+                .param("remarks", remarks = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("添加相应成功");
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
-//        assertThat(touristSupplier.getAdminAccount()).isEqualTo(adminAccount);
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
-        assertThat(touristSupplier.getSupplierName()).isEqualTo(adminPassword);
-        assertThat(touristSupplier.getSupplierName()).isEqualTo(contacts);
-        assertThat(touristSupplier.getSupplierName()).isEqualTo(contactNumber);
+        assertThat(touristSupplier.getPassword()).isEqualTo(password);
+        assertThat(touristSupplier.getContacts()).isEqualTo(contacts);
+        assertThat(touristSupplier.getContactNumber()).isEqualTo(contactNumber);
         assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
         assertThat(touristSupplier.getRemarks()).isEqualTo(remarks);
 
         status = mockMvc.perform(post("/distributionPlatform/updateSupplier")
                 .param("id", touristSupplier.getId() + "")
-                .param("supplierName", supplierName = UUID.randomUUID().toString())
+                .param("supplierName", supplierName = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("相应成功");
 
     }
 
@@ -942,17 +931,17 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         TouristSupplier touristSupplier = createTouristSupplier(null);
         int status = mockMvc.perform(post("/distributionPlatform/frozenSupplier")
                 .param("id", touristSupplier.getId().toString())
-                .param("frozen", true + "")
+                .param("frozen", true + "").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("接口正常成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("接口正常成功");
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
         assertThat(touristSupplier.isFrozen()).isTrue().as("冻结成功");
 
         status = mockMvc.perform(post("/distributionPlatform/unFrozenSupplier")
                 .param("id", touristSupplier.getId().toString())
-                .param("frozen", false + "")
+                .param("frozen", false + "").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("接口正常成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("接口正常成功");
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
         assertThat(touristSupplier.isFrozen()).isFalse().as("解除冻结成功");
 
@@ -963,7 +952,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         Random random = new Random(100);
         String name = UUID.randomUUID().toString();
         String bannerUri = UUID.randomUUID().toString();
-        BigDecimal price = new BigDecimal(random.nextInt());
+        BigDecimal price = new BigDecimal(100);
         String explain = UUID.randomUUID().toString();
         String agreement = UUID.randomUUID().toString();
         int status = mockMvc.perform(post("/distributionPlatform/savePurchaserProductSetting")
@@ -971,9 +960,9 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("bannerUri", bannerUri)
                 .param("price", price + "")
                 .param("explain", explain)
-                .param("agreement", agreement)
+                .param("agreement", agreement).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("添加相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("添加相应成功");
         List<PurchaserProductSetting> list = purchaserProductSettingRepository.findByName(name);
         assertThat(list).isNotEmpty().as("查找到数据");
         PurchaserProductSetting purchaserProductSetting = list.get(0);
@@ -987,11 +976,11 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("id", purchaserProductSetting.getId().toString())
                 .param("name", name = UUID.randomUUID().toString())
                 .param("bannerUri", bannerUri = UUID.randomUUID().toString())
-                .param("price", (price = new BigDecimal(random.nextInt())).toString())
+                .param("price", (price = new BigDecimal(200)).toString())
                 .param("explain", explain = UUID.randomUUID().toString())
-                .param("agreement", agreement = UUID.randomUUID().toString())
+                .param("agreement", agreement = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("修改相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("修改相应成功");
         purchaserProductSetting = purchaserProductSettingRepository.getOne(purchaserProductSetting.getId());
         assertThat(purchaserProductSetting).isNotNull().as("查找到数据");
         assertThat(purchaserProductSetting.getName()).isEqualTo(name);
@@ -1002,15 +991,15 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         status = mockMvc.perform(post("/distributionPlatform/savePurchaserProductSetting")
                 .param("id", purchaserProductSetting.getId().toString())
-                .param("name", name = UUID.randomUUID().toString())
+                .param("name", name = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("添加失败");
 
         status = mockMvc.perform(post("/distributionPlatform/updatePurchaserProductSetting")
                 .param("id", purchaserProductSetting.getId().toString())
-                .param("name", name = UUID.randomUUID().toString())
+                .param("name", name = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("修改失败");
 
     }
 
@@ -1019,29 +1008,29 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         TouristGood touristGood = createTouristGood(null, null, null, null, null);
         int status = mockMvc.perform(post("/distributionPlatform/recommendTouristGood")
                 .param("id", touristGood.getId().toString())
-                .param("recommend", true + "")
+                .param("recommend", true + "").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         touristGood = touristGoodRepository.getOne(touristGood.getId());
         assertThat(touristGood.getRecommend()).isTrue().as("修改成功");
 
         status = mockMvc.perform(post("/distributionPlatform/unRecommendTouristGood")
                 .param("id", touristGood.getId().toString())
-                .param("recommend", false + "")
+                .param("recommend", false + "").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         touristGood = touristGoodRepository.getOne(touristGood.getId());
         assertThat(touristGood.getRecommend()).isFalse().as("修改成功");
 
         status = mockMvc.perform(post("/distributionPlatform/recommendTouristGood")
-                .param("id", touristGood.getId().toString())
+                .param("id", touristGood.getId().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("添加失败");
 
         status = mockMvc.perform(post("/distributionPlatform/unRecommendTouristGood")
-                .param("id", touristGood.getId().toString())
+                .param("id", touristGood.getId().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("修改失败");
 
     }
 
@@ -1049,9 +1038,9 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
     public void saveOrUpdateActivityType() throws Exception {
         String name = UUID.randomUUID().toString();
         int status = mockMvc.perform(post("/distributionPlatform/saveActivityType")
-                .param("activityName", name)
+                .param("activityName", name).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         List<ActivityType> activityTypes = activityTypeRepository.findByActivityName(name);
         assertThat(activityTypes).isNotEmpty().as("查找到数据");
         ActivityType activityType = activityTypes.get(0);
@@ -1059,43 +1048,43 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         status = mockMvc.perform(post("/distributionPlatform/updateActivityType")
                 .param("id", activityType.getId().toString())
-                .param("activityName", name = UUID.randomUUID().toString())
+                .param("activityName", name = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         activityType = activityTypeRepository.getOne(activityType.getId());
         assertThat(activityType.getActivityName()).isEqualTo(name).as("修改成功");
 
-        status = mockMvc.perform(post("/distributionPlatform/saveActivityType")
+        status = mockMvc.perform(post("/distributionPlatform/saveActivityType").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("添加失败");
 
-        status = mockMvc.perform(post("/distributionPlatform/updateActivityType")
+        status = mockMvc.perform(post("/distributionPlatform/updateActivityType").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("修改失败");
     }
 
     @Test
     public void delActivityType() throws Exception {
         ActivityType activityType = createActivityType(null);
-        int status = mockMvc.perform(delete("/distributionPlatform/delActivityType")
-                .param("id", activityType.getId().toString())
+        int status = mockMvc.perform(post("/distributionPlatform/delActivityType")
+                .param("id", activityType.getId().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         activityType = activityTypeRepository.findOne(activityType.getId());
         assertThat(activityType).as("删除成功").isNull();
 
-        status = mockMvc.perform(delete("/distributionPlatform/delActivityType")
+        status = mockMvc.perform(post("/distributionPlatform/delActivityType").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("删除失败");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("删除失败");
     }
 
     @Test
     public void saveOrUpdateTouristType() throws Exception {
         String name = UUID.randomUUID().toString();
         int status = mockMvc.perform(post("/distributionPlatform/saveTouristType")
-                .param("typeName", name)
+                .param("typeName", name).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         List<TouristType> touristTypes = touristTypeRepository.findByTypeName(name);
 
         assertThat(touristTypes).isNotEmpty().as("查找到数据");
@@ -1104,19 +1093,74 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
         status = mockMvc.perform(post("/distributionPlatform/updateTouristType")
                 .param("id", touristType.getId().toString())
-                .param("typeName", name = UUID.randomUUID().toString())
+                .param("typeName", name = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isEqualTo(HttpStatus.OK).as("相应成功");
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         touristType = touristTypeRepository.getOne(touristType.getId());
         assertThat(touristType.getTypeName()).isEqualTo(name).as("修改成功");
 
         status = mockMvc.perform(post("/distributionPlatform/saveTouristType")
-                .param("id", touristType.getId().toString())
+                .param("id", touristType.getId().toString()).session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("添加失败,缺少参数");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("添加失败,缺少参数");
 
-        status = mockMvc.perform(post("/distributionPlatform/updateTouristType")
+        status = mockMvc.perform(post("/distributionPlatform/updateTouristType").session(session)
         ).andReturn().getResponse().getStatus();
-        assertThat(status).isNotEqualTo(HttpStatus.OK).as("修改失败,缺少参数");
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("修改失败,缺少参数");
     }
+
+
+    @Test
+    public void saveOrUpdateBanner() throws Exception {
+        String name = UUID.randomUUID().toString();
+        int status = mockMvc.perform(post("/distributionPlatform/saveBanner")
+                .param("bannerImgUri", name)
+                .param("linkUrl", name)
+                .param("bannerName", name).session(session)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
+        List<Banner> banners = bannerRepository.findByBannerName(name);
+
+        assertThat(banners).isNotEmpty().as("查找到数据");
+        Banner banner = banners.get(0);
+        assertThat(banner.getBannerName()).isEqualTo(name).as("添加成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/updateBanner")
+                .param("id", banner.getId().toString())
+                .param("bannerImgUri", UUID.randomUUID().toString())
+                .param("bannerName", name = UUID.randomUUID().toString()).session(session)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
+        banner = bannerRepository.getOne(banner.getId());
+        assertThat(banner.getBannerName()).isEqualTo(name).as("修改成功");
+
+        status = mockMvc.perform(post("/distributionPlatform/saveBanner")
+                .param("id", banner.getId().toString()).session(session)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("添加失败,缺少参数");
+
+        status = mockMvc.perform(post("/distributionPlatform/updateBanner").session(session)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("修改失败,缺少参数");
+    }
+
+    @Test
+    public void delBanner() throws Exception {
+        Banner banner = new Banner();
+        banner.setBannerName(UUID.randomUUID().toString());
+        banner.setBannerImgUri(UUID.randomUUID().toString());
+        banner.setLinkUrl(UUID.randomUUID().toString());
+        banner = bannerRepository.saveAndFlush(banner);
+        int status = mockMvc.perform(post("/distributionPlatform/delBanner")
+                .param("id", banner.getId().toString()).session(session)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
+        banner = bannerRepository.findOne(banner.getId());
+        assertThat(banner).as("删除成功").isNull();
+
+        status = mockMvc.perform(post("/distributionPlatform/delBanner").session(session)
+        ).andReturn().getResponse().getStatus();
+        assertThat(status).isNotEqualTo(HttpStatus.OK.value()).as("删除失败");
+    }
+
 }

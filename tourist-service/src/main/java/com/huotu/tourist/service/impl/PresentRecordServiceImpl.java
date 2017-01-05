@@ -39,7 +39,7 @@ public class PresentRecordServiceImpl implements PresentRecordService {
     @Override
     public Page<PresentRecord> presentRecordList(String supplierName, PresentStateEnum presentState, LocalDateTime createTime, Pageable pageable) {
         return presentRecordRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(supplierName)) {
                 predicate = cb.and(null, cb.like(root.get("settlementSheet").get("touristOrder").get("touristGood")
                                 .get("touristSupplier").get("supplierName").as(String.class),

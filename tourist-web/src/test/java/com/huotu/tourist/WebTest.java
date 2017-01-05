@@ -29,6 +29,7 @@ import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.page.LoginPage;
 import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.BannerRepository;
 import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.PurchaserProductSettingRepository;
 import com.huotu.tourist.repository.SettlementSheetRepository;
@@ -64,6 +65,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ContextConfiguration(classes = {MVCConfig.class})
 public abstract class WebTest extends ServiceBaseTest {
+
+    @Autowired
+    protected BannerRepository bannerRepository;
 
     @Autowired
     protected TouristOrderRepository touristOrderRepository;
@@ -256,9 +260,7 @@ public abstract class WebTest extends ServiceBaseTest {
      */
     protected TouristSupplier createTouristSupplier(String supplierName) {
         TouristSupplier supplier = new TouristSupplier();
-        supplier.setSupplierName(supplierName);
-//        supplier.setAdminAccount(supplierName);
-//        supplier.setAdminPassword("1234567890");
+        supplier.setSupplierName(supplierName == null ? UUID.randomUUID().toString() : supplierName);
         supplier.setCreateTime(LocalDateTime.now());
         return touristSupplierRepository.saveAndFlush(supplier);
     }

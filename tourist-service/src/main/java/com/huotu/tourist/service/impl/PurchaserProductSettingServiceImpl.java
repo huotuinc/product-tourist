@@ -37,7 +37,7 @@ public class PurchaserProductSettingServiceImpl implements PurchaserProductSetti
     @Override
     public Page<PurchaserProductSetting> purchaserProductSettingList(String name, Pageable pageable) {
         return purchaserProductSettingRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(name)) {
                 predicate = cb.and(predicate, cb.like(root.get("name").as(String.class),
                         name));

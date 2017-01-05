@@ -48,10 +48,14 @@ $('.btnSearch').click(function () {
 });
 
 getParams = function (params) {
+    params.sort
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.limit, //页面大小
         pageNo: params.offset, //页码
+        sortName: params.sortName,
+        sortOrder: params.sortOrder,
+        sort: params.sort,
         supplierName: $("input[name='supplierName']").val()
     };
     return temp;
