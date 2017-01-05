@@ -45,6 +45,7 @@ import com.huotu.tourist.service.TouristSupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -110,7 +111,7 @@ public class SupplierManageController extends BaseController {
 
 
     /**
-     * 打开订单列表页面
+     * 打开供应商后台页面
      *
      * @return
      */
@@ -125,8 +126,9 @@ public class SupplierManageController extends BaseController {
      * @return
      */
     @RequestMapping("/showOrderList")
+//    @PreAuthorize("hasRole('Order')")
     public String showOrderList(Model model) {
-        return "";
+        return "/view/manage/common/orderList.html";
     }
 
 
@@ -152,11 +154,10 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/orderList")
-//    @ResponseBody AuthenticationPrincipal需要当前供应商
     public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal SystemUser userInfo
-            , Pageable pageable
-            , String orderId, String name, String buyer, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
-            , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
+            , Pageable pageable, String orderId, String name, String buyer, String tel
+            , PayTypeEnum payTypeEnum, LocalDateTime orderDate, LocalDateTime endOrderDate
+            , LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
             ,LocalDateTime endTouristDate, OrderStateEnum orderStateEnum) throws IOException {
 
         TouristSupplier supplier=(TouristSupplier) userInfo;
@@ -306,6 +307,7 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/showTouristGood")
+    @PreAuthorize("hasRole('Goods')")
     public String showTouristGood(@RequestParam Long id, Model model) throws IOException {
         TouristGood touristGood = touristGoodRepository.findOne(id);
         List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
@@ -412,6 +414,7 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/showSaleStatistics")
+    @PreAuthorize("hasRole('SaleStatistics')")
     public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
         TouristSupplier supplier=(TouristSupplier)userInfo;
         model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
@@ -572,6 +575,7 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/showCollectionAccount")
+    @PreAuthorize("hasRole('CollectionAccount')")
     public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier =(TouristSupplier)userInfo;
         CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
