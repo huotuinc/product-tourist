@@ -26,8 +26,10 @@ presentFormatter = function (value, row, index) {
 getParams = function (params) {
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-        pageSize: params.limit, //页面大小
-        pageNo: params.offset, //页码
+        pageSize: params.pageSize, //页面大小
+        pageNo: params.pageNumber, //页码
+        sortOrder: params.sortOrder,
+        sortName: params.sortName,
         supplierName: $("input[name='supplierName']").val(),
         createTime: $("input[name='createTime']").val(),
         platformChecking: $("select[name='platformChecking']").val()
@@ -38,8 +40,10 @@ getParams = function (params) {
 getTxParams = function (params) {
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-        pageSize: params.limit, //页面大小
-        pageNo: params.offset, //页码
+        pageSize: params.pageSize, //页面大小
+        pageNo: params.pageNumber, //页码
+        sortOrder: params.sortOrder,
+        sortName: params.sortName,
         supplierName: $("input[name='supplierName']").val(),
         createTime: $("input[name='createTime']").val(),
         presentState: $("select[name='presentState']").val()

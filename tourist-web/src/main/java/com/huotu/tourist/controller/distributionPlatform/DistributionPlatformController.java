@@ -41,7 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,14 +120,12 @@ public class DistributionPlatformController extends BaseController {
      * 供应商列表
      *
      * @param name     供应商名称
-     * @param pageSize 每页显示条数
-     * @param pageNo   页码
      * @param request
      * @return
      */
     @RequestMapping(value = "/supplierList", method = RequestMethod.GET)
-    public PageAndSelection supplierList(String name, int pageSize, int pageNo, HttpServletRequest request) {
-        Page<TouristSupplier> page = touristSupplierService.supplierList(name, new PageRequest(pageNo, pageSize));
+    public PageAndSelection supplierList(String name, Pageable pageable, HttpServletRequest request) {
+        Page<TouristSupplier> page = touristSupplierService.supplierList(name, pageable);
         return new PageAndSelection<>(page, TouristSupplier.selections);
     }
 
@@ -148,8 +146,6 @@ public class DistributionPlatformController extends BaseController {
      * @param buyerDirector   采购负责人
      * @param telPhone        采购负责人电话
      * @param buyerCheckState 采购状态
-     * @param pageSize        每页显示条数
-     * @param pageNo          页码
      * @param request
      * @return
      */
@@ -158,9 +154,9 @@ public class DistributionPlatformController extends BaseController {
             , String buyerDirector
             , String telPhone
             , BuyerCheckStateEnum buyerCheckState
-            , int pageSize, int pageNo, HttpServletRequest request) {
+            , Pageable pageable, HttpServletRequest request) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
-                , new PageRequest(pageNo, pageSize));
+                , pageable);
         return new PageAndSelection<>(page, TouristBuyer.selections);
     }
 
@@ -183,18 +179,16 @@ public class DistributionPlatformController extends BaseController {
      * @param buyerName     采购商名称
      * @param buyerDirector 负责人
      * @param telPhone      负责人电话
-     * @param pageSize      每页显示条数
-     * @param pageNo        页码
      * @param request
      */
     @RequestMapping(value = "purchaserPaymentRecordList", method = RequestMethod.GET)
     public PageAndSelection<PurchaserPaymentRecord> purchaserPaymentRecordList(@RequestParam(required = false) LocalDateTime
                                                                                        startPayDate,
                                                                                @RequestParam(required = false) LocalDateTime endPayDate
-            , String buyerName, String buyerDirector, String telPhone, int pageSize, int pageNo,
+            , String buyerName, String buyerDirector, String telPhone, Pageable pageable,
                                                                                HttpServletRequest request) {
         Page<PurchaserPaymentRecord> page = purchaserPaymentRecordService.purchaserPaymentRecordList(startPayDate, endPayDate
-                , buyerName, buyerDirector, telPhone, new PageRequest(pageNo, pageSize));
+                , buyerName, buyerDirector, telPhone, pageable);
 
         return new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
     }
@@ -215,16 +209,14 @@ public class DistributionPlatformController extends BaseController {
      * 采购商产品设置列表
      *
      * @param name     产品设置名称
-     * @param pageSize 每页显示条数
-     * @param pageNo   页码
      * @param request
      * @return
      */
     @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity purchaserProductSettingList(String name, int pageSize, int pageNo
+    public ResponseEntity purchaserProductSettingList(String name, Pageable pageable
             , HttpServletRequest request) throws JsonProcessingException {
         Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
-                , new PageRequest(pageNo, pageSize));
+                , pageable);
         Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
@@ -258,16 +250,14 @@ public class DistributionPlatformController extends BaseController {
      * 活动类型列表
      *
      * @param name     活动名称
-     * @param pageSize 每页显示条数
-     * @param pageNo   页码
      * @param request
      * @param model
      * @return
      */
     @RequestMapping(value = "activityTypeList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity activityTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model)
+    public ResponseEntity activityTypeList(String name, Pageable pageable, HttpServletRequest request, Model model)
             throws JsonProcessingException {
-        Page<ActivityType> page = activityTypeService.activityTypeList(name, new PageRequest(pageNo, pageSize));
+        Page<ActivityType> page = activityTypeService.activityTypeList(name, pageable);
         Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
@@ -290,16 +280,14 @@ public class DistributionPlatformController extends BaseController {
      * 线路类型列表
      *
      * @param name     线路名称
-     * @param pageSize 每页显示条数
-     * @param pageNo   页码
      * @param request
      * @param model
      * @return
      */
     @RequestMapping(value = "touristTypeList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity touristTypeList(String name, int pageSize, int pageNo, HttpServletRequest request, Model model)
+    public ResponseEntity touristTypeList(String name, Pageable pageable, HttpServletRequest request, Model model)
             throws JsonProcessingException {
-        Page<TouristType> page = touristTypeService.touristTypeList(name, new PageRequest(pageNo, pageSize));
+        Page<TouristType> page = touristTypeService.touristTypeList(name, pageable);
         Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
@@ -326,17 +314,15 @@ public class DistributionPlatformController extends BaseController {
      * @param supplierName     供应商名称
      * @param platformChecking 结算单审核状态
      * @param createTime       结算单创建时间
-     * @param pageSize         每页显示条数
-     * @param pageNo           页码
      * @param request
      * @param model            @return
      */
     @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
     public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking,
                                                 @RequestParam(required = false) LocalDateTime createTime,
-                                                int pageSize, int pageNo, HttpServletRequest request, Model model) {
+                                                Pageable pageable, HttpServletRequest request, Model model) {
         Page<SettlementSheet> page = settlementSheetService.settlementSheetList(supplierName, platformChecking, createTime
-                , new PageRequest(pageNo, pageSize));
+                , pageable);
         return new PageAndSelection<>(page, SettlementSheet.selections);
     }
 
@@ -357,8 +343,6 @@ public class DistributionPlatformController extends BaseController {
      * @param supplierName 供应商名称
      * @param presentState 提现状态
      * @param createTime   提现单创建时间
-     * @param pageSize     每页显示条数
-     * @param pageNo       页码
      * @param request
      * @param model
      * @return
@@ -366,23 +350,20 @@ public class DistributionPlatformController extends BaseController {
     @RequestMapping(value = "presentRecordList", method = RequestMethod.GET)
     public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, @RequestParam
             (required = false) LocalDateTime createTime,
-                                              int pageSize, int pageNo, HttpServletRequest request, Model model) {
+                                              Pageable pageable, HttpServletRequest request, Model model) {
         Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, presentState, createTime
-                , new PageRequest(pageNo, pageSize));
+                , pageable);
         return new PageAndSelection(page, PresentRecord.selections);
     }
 
     /**
      * banner列表页
-     *
-     * @param pageSize
-     * @param pageNo
      * @param request
      * @return
      */
     @RequestMapping(value = "bannerList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity bannerList(int pageSize, int pageNo, HttpServletRequest request) throws JsonProcessingException {
-        Page<Banner> page = bannerRepository.findAll(new PageRequest(pageNo, pageSize));
+    public ResponseEntity bannerList(Pageable pageable, HttpServletRequest request) throws JsonProcessingException {
+        Page<Banner> page = bannerRepository.findAll(pageable);
         Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
@@ -582,39 +563,6 @@ public class DistributionPlatformController extends BaseController {
         touristGood.setRecommend(recommend);
         touristGoodService.save(touristGood);
     }
-//    /**
-//     * 审核通过 和 未通过审核
-//     * 推荐使用 {@link BaseController#showTouristGood(Long, Model)}
-//     * @param id                id   not null
-//     * @param touristCheckState 审核状态  not null
-//     * @return
-//     */
-//    @Deprecated
-//    @RequestMapping(value = {"notCheck", "FinishCheck"}, method = RequestMethod.POST)
-//    public String notCheckOrFinishCheck(@RequestParam Long id, @RequestParam TouristCheckStateEnum
-//            touristCheckState) {
-//        TouristGood touristGood = touristGoodService.getOne(id);
-//        touristGood.setTouristCheckState(touristCheckState);
-//        touristGoodService.save(touristGood);
-//        // TODO: 2016/12/21
-//        return "";
-//    }
-//
-//    /**
-//     * 查看线路
-//     * 推荐使用{@link BaseController#showTouristGood(Long, Model)}
-//     * @param id    id   not null
-//     * @param model
-//     * @return
-//     */
-//    @Deprecated
-//    @RequestMapping(value = "seeTouristGood", method = RequestMethod.GET)
-//    public String seeTouristGood(@RequestParam Long id, Model model) {
-//        TouristGood touristGood = touristGoodService.getOne(id);
-//        model.addAttribute("touristGood", touristGood);
-//        // TODO: 2016/12/21
-//        return "";
-//    }
 
     /**
      * 添加或修改活动类型

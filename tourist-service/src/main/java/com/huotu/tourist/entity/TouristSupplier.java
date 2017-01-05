@@ -41,7 +41,7 @@ public class TouristSupplier extends Login implements SystemUser {
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristSupplier, String>("id", "id"),
             new SimpleSelection<TouristSupplier, String>("supplierName", "supplierName")
-            , new SimpleSelection<TouristSupplier, String>("loginName", "adminAccount")
+            , new SimpleSelection<TouristSupplier, String>("loginName", "loginName")
             , new Selection<TouristSupplier, String>() {
                 @Override
                 public String apply(TouristSupplier touristSupplier) {

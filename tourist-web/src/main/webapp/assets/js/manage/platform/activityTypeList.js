@@ -1,10 +1,16 @@
 addUrl = /*[[@{/distributionPlatform/saveActivityType}]]*/ "../../../mock/platform/httpJson.json";
-;
 updateUrl = /*[[@{/distributionPlatform/updateActivityType}]]*/ "../../../mock/platform/httpJson.json";
-;
 delUrl = /*[[@{/distributionPlatform/delActivityType}]]*/ "../../../mock/platform/httpJson.json";
-;
-
+getParams = function (params) {
+    var temp = {
+        //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+        pageSize: params.pageSize, //页面大小
+        pageNo: params.pageNumber, //页码
+        sortOrder: params.sortOrder,
+        sortName: params.sortName
+    };
+    return temp;
+}
 actionFormatter = function (value, row, index) {
     return '<button  class="btn btn-primary update" data-toggle="modal" data-target="#myModal">修改</button> '
         + '<button class="btn btn-danger del" >删除</button>';

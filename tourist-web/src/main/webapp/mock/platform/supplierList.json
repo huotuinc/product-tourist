@@ -4,7 +4,7 @@
     {
       "id": 0,
       "supplierName": "Item 0",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -14,7 +14,7 @@
     {
       "id": 1,
       "supplierName": "Item 1",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "谁谁谁",
       "contactNumber": "110",
@@ -24,7 +24,7 @@
     {
       "id": 2,
       "supplierName": "Item 2",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -34,7 +34,7 @@
     {
       "id": 3,
       "supplierName": "Item 3",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -44,7 +44,7 @@
     {
       "id": 4,
       "supplierName": "Item 4",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -54,7 +54,7 @@
     {
       "id": 5,
       "supplierName": "Item 5",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -64,7 +64,7 @@
     {
       "id": 6,
       "supplierName": "Item 6",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -74,7 +74,7 @@
     {
       "id": 7,
       "supplierName": "Item 7",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -84,7 +84,7 @@
     {
       "id": 8,
       "supplierName": "Item 8",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -94,7 +94,7 @@
     {
       "id": 9,
       "supplierName": "Item 9",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -104,7 +104,7 @@
     {
       "id": 10,
       "supplierName": "Item 10",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -114,7 +114,7 @@
     {
       "id": 11,
       "supplierName": "Item 11",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -124,7 +124,7 @@
     {
       "id": 12,
       "supplierName": "Item 12",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
@@ -134,7 +134,7 @@
     {
       "id": 13,
       "supplierName": "Item 13",
-      "adminAccount": "adminAccount",
+      "loginName": "loginName",
       "address": "浙江温州",
       "contacts": "王鹤",
       "contactNumber": "110",
