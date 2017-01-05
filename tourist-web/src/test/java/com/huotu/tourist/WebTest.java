@@ -9,24 +9,9 @@
 
 package com.huotu.tourist;
 
-import com.huotu.tourist.common.BuyerCheckStateEnum;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.config.MVCConfig;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.Address;
-import com.huotu.tourist.entity.PurchaserPaymentRecord;
-import com.huotu.tourist.entity.PurchaserProductSetting;
-import com.huotu.tourist.entity.SettlementSheet;
-import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.page.LoginPage;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
@@ -41,6 +26,7 @@ import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.LoginService;
+import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.TouristGoodService;
 import me.jiangcai.dating.ServiceBaseTest;
 import me.jiangcai.lib.test.page.AbstractPage;
@@ -101,6 +87,15 @@ public abstract class WebTest extends ServiceBaseTest {
     protected TouristGoodService touristGoodService;
     @Autowired
     SettlementSheetRepository settlementSheetRepository;
+
+    /**
+     * 第几页字符串名称
+     */
+    protected String pageParameterName = "pageNo";
+    /**
+     * 每页几条字符串名称
+     */
+    protected String sizeParameterName = "pageSize";
 
     /**
      * 创建一个随机的订单状态
@@ -486,8 +481,8 @@ public abstract class WebTest extends ServiceBaseTest {
 
         // 执行登录请求
         mockMvc.perform(post("/auth")
-                .param("username", LoginService.DefaultRootName)
-                .param("password", LoginService.DefaultRootPassword).session(session))
+                .param("username", username)
+                .param("password", password).session(session))
 //                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isFound())
                 .andExpect(header().string("location", "http://localhost" + uri));
