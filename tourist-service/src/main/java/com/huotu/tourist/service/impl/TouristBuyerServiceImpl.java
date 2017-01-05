@@ -38,7 +38,7 @@ public class TouristBuyerServiceImpl implements TouristBuyerService {
     @Override
     public Page<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum checkState, Pageable pageable) {
         return touristBuyerRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
 
             if (!StringUtils.isEmpty(buyerName)) {
                 predicate = cb.and(predicate, cb.like(root.get("buyerName").as(String.class),

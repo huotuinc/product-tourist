@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -26,13 +27,14 @@ import java.util.Map;
 /**
  * @author CJ
  */
+@Component
 public class PageAndSelectionResolver implements HandlerMethodReturnValueHandler {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public boolean supportsReturnType(MethodParameter returnType) {
-        return false;
+        return returnType.getParameterType() == PageAndSelection.class;
     }
 
     @Override
@@ -57,6 +59,5 @@ public class PageAndSelectionResolver implements HandlerMethodReturnValueHandler
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         objectMapper.writeValue(response.getOutputStream(), json);
         mavContainer.setRequestHandled(true);
-
     }
 }

@@ -17,7 +17,12 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,6 +68,9 @@ public class TouristBuyer implements SystemUser {
 
                 @Override
                 public Map apply(TouristBuyer touristBuyer) {
+                    if (touristBuyer.getCheckState() == null) {
+                        return null;
+                    }
                     Map<String, String> map = new HashMap<>();
                     map.put("code", touristBuyer.checkState.getCode().toString());
                     map.put("value", touristBuyer.checkState.getValue().toString());
@@ -77,6 +85,9 @@ public class TouristBuyer implements SystemUser {
 
                 @Override
                 public Map apply(TouristBuyer touristBuyer) {
+                    if (touristBuyer.getPayState() == null) {
+                        return null;
+                    }
                     Map<String, String> map = new HashMap<>();
                     map.put("code", touristBuyer.payState.getCode().toString());
                     map.put("value", touristBuyer.payState.getValue().toString());

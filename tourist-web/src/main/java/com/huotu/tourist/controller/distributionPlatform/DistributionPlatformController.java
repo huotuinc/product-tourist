@@ -97,6 +97,16 @@ public class DistributionPlatformController extends BaseController {
     BannerRepository bannerRepository;
 
     /**
+     * 打开订单列表页面
+     *
+     * @return
+     */
+    @RequestMapping("/")
+    public String showSupplierMain() {
+        return "/view/manage/platform/main.html";
+    }
+
+    /**
      * 跳转到供应商列表页面
      *
      * @return
@@ -115,7 +125,7 @@ public class DistributionPlatformController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "supplierList", method = RequestMethod.GET)
+    @RequestMapping(value = "/supplierList", method = RequestMethod.GET)
     public PageAndSelection supplierList(String name, int pageSize, int pageNo, HttpServletRequest request) {
         Page<TouristSupplier> page = touristSupplierService.supplierList(name, new PageRequest(pageNo, pageSize));
         return new PageAndSelection<>(page, TouristSupplier.selections);

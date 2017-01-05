@@ -41,10 +41,13 @@ public class TouristSupplier extends Login implements SystemUser {
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristSupplier, String>("id", "id"),
             new SimpleSelection<TouristSupplier, String>("supplierName", "supplierName")
-            , new SimpleSelection<TouristSupplier, String>("adminAccount", "adminAccount")
+            , new SimpleSelection<TouristSupplier, String>("loginName", "adminAccount")
             , new Selection<TouristSupplier, String>() {
                 @Override
                 public String apply(TouristSupplier touristSupplier) {
+                    if (touristSupplier.getAddress() == null) {
+                        return "";
+                    }
                     return touristSupplier.getAddress().getProvince() + touristSupplier.getAddress().getTown()
                             + touristSupplier.getAddress().getDistrict();
                 }

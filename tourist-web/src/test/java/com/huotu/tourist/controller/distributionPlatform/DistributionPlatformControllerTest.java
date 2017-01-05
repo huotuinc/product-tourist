@@ -10,7 +10,7 @@
 package com.huotu.tourist.controller.distributionPlatform;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.huotu.tourist.WebTest;
+import com.huotu.tourist.AbstractPlatformTest;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
@@ -42,11 +42,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 /**
  * Created by lhx on 2016/12/17.
  */
-public class DistributionPlatformControllerTest extends WebTest {
+public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
     @Test
     public void testDateTimeFormatter() throws ParseException {
         System.out.println(LocalDateTimeFormatter.toStr(LocalDateTime.now()));
+        System.out.println(LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
     }
 
     @Test
@@ -55,11 +56,11 @@ public class DistributionPlatformControllerTest extends WebTest {
         createTouristSupplier(name);
         createTouristSupplier(name);
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         String json = mockMvc.perform(get("/distributionPlatform/supplierList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("name", "" + name)
+                .param("name", "" + name).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -74,8 +75,8 @@ public class DistributionPlatformControllerTest extends WebTest {
 
         json = mockMvc.perform(get("/distributionPlatform/supplierList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
-                .param("name", name)
+                .param("pageNo", "" + (pageNo + 1))
+                .param("name", name).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -85,7 +86,7 @@ public class DistributionPlatformControllerTest extends WebTest {
 
         json = mockMvc.perform(get("/distributionPlatform/supplierList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + pageNo + 1).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -95,7 +96,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void buyerList() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         String buyerName = UUID.randomUUID().toString().replace("-", "");
         String buyerDirector = UUID.randomUUID().toString().replace("-", "");
         String telPhone = "13000000000";
@@ -104,7 +105,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         String json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerCheckState", "" + BuyerCheckStateEnum.CheckFinish)
+                .param("buyerCheckState", "" + checkStateEnum.getCode()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -112,7 +113,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         boolean flag = false;
         for (Map m : list) {
             Map checkState = (Map) m.get("checkState");
-            if (checkState.get("code").equals(checkStateEnum.getCode())) {
+            if (checkState.get("code").equals(checkStateEnum.getCode().toString())) {
                 flag = true;
             }
         }
@@ -122,7 +123,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerDirector", "" + buyerDirector)
+                .param("buyerDirector", "" + buyerDirector).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -138,7 +139,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("telPhone", "" + UUID.randomUUID().toString())
+                .param("telPhone", "" + telPhone).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -154,7 +155,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerName", "" + buyerName)
+                .param("buyerName", "" + buyerName).session(session)
 
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
@@ -174,7 +175,7 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("buyerDirector", "" + touristBuyer.getBuyerDirector())
                 .param("buyerName", "" + touristBuyer.getBuyerName())
                 .param("telPhone", "" + touristBuyer.getTelPhone())
-                .param("buyerCheckState", "" + touristBuyer.getCheckState())
+                .param("buyerCheckState", "" + touristBuyer.getCheckState().getCode()).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -183,7 +184,7 @@ public class DistributionPlatformControllerTest extends WebTest {
             if (m.get("buyerDirector").equals(touristBuyer.getBuyerDirector())
                     && m.get("buyerName").equals(touristBuyer.getBuyerName())
                     && m.get("telPhone").equals(touristBuyer.getTelPhone())
-                    && ((Map) m.get("buyerCheckState")).get("code").equals(touristBuyer.getCheckState().getCode())) {
+                    && ((Map) m.get("checkState")).get("code").equals(touristBuyer.getCheckState().getCode().toString())) {
                 flag = true;
             }
         }
@@ -192,7 +193,7 @@ public class DistributionPlatformControllerTest extends WebTest {
 
         json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -202,7 +203,7 @@ public class DistributionPlatformControllerTest extends WebTest {
 
         json = mockMvc.perform(get("/distributionPlatform/buyerList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + (pageNo + 1)).session(session)
         ).andReturn().getResponse().getContentAsString();
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
@@ -213,13 +214,13 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void purchaserPaymentRecordList() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
                 , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
         String json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
+                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.readValue(json, Map.class);
@@ -235,7 +236,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
+                .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector()).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -250,7 +251,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
-                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
+                .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone()).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -266,8 +267,7 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo)
                 .param("startPayDate", "2016-12-12 08:00:00")
-                .param("endPayDate", "2016-12-12 23:00:00")
-
+                .param("endPayDate", "2016-12-12 23:00:00").session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -286,7 +286,7 @@ public class DistributionPlatformControllerTest extends WebTest {
                 .param("endPayDate", "2016-12-12 23:00:00")
                 .param("telPhone", "" + purchaserPaymentRecord.getTouristBuyer().getTelPhone())
                 .param("buyerDirector", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerDirector())
-                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName())
+                .param("buyerName", "" + purchaserPaymentRecord.getTouristBuyer().getBuyerName()).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -295,7 +295,7 @@ public class DistributionPlatformControllerTest extends WebTest {
 
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo)
+                .param("pageNo", "" + pageNo).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -304,7 +304,7 @@ public class DistributionPlatformControllerTest extends WebTest {
         createPurchaserPaymentRecord(null, null);
         json = mockMvc.perform(get("/distributionPlatform/purchaserPaymentRecordList")
                 .param("pageSize", "" + pageSize)
-                .param("pageNo", "" + pageNo + 1)
+                .param("pageNo", "" + pageNo + 1).session(session)
         ).andReturn().getResponse().getContentAsString();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
@@ -317,7 +317,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void exportPurchaserPaymentRecord() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
                 , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
         String json = mockMvc.perform(get("/distributionPlatform/exportPurchaserPaymentRecord")
@@ -337,7 +337,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void purchaserProductSettingList() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         PurchaserProductSetting productSetting = createPurchaserProductSetting(UUID.randomUUID().toString());
         String json = mockMvc.perform(get("/distributionPlatform/purchaserProductSettingList")
                 .param("pageSize", "" + pageSize)
@@ -499,7 +499,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void activityTypeList() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         ActivityType activityType = createActivityType(UUID.randomUUID().toString());
         String json = mockMvc.perform(get("/distributionPlatform/activityTypeList")
                 .param("pageSize", "" + pageSize)
@@ -542,7 +542,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void touristTypeList() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         TouristType type = createTouristType(UUID.randomUUID().toString());
         String json = mockMvc.perform(get("/distributionPlatform/touristTypeList")
                 .param("pageSize", "" + pageSize)
@@ -585,7 +585,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     public void touristOrders() throws Exception {
 
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
                 ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"),null, null);
         String json = mockMvc.perform(get("/distributionPlatform/touristOrders")
@@ -750,7 +750,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void exportTouristOrders() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         PurchaserPaymentRecord purchaserPaymentRecord = createPurchaserPaymentRecord(null
                 , LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
         String json = mockMvc.perform(get("/distributionPlatform/exportTouristOrders")
@@ -765,7 +765,7 @@ public class DistributionPlatformControllerTest extends WebTest {
     @Test
     public void settlementSheetList() throws Exception {
         int pageSize = 1;
-        int pageNo = 1;
+        int pageNo = 0;
         SettlementSheet settlementSheet = createSettlementSheet(LocalDateTimeFormatter.toLocalDateTime("2016-12-12 " +
                 "08:00:00"), null, "ss");
         String json = mockMvc.perform(get("/distributionPlatform/settlementSheetList")

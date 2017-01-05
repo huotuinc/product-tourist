@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * 预约好身份的单元测试，在这个测试中已经预先建立了一个供应商；并且处于登录状态
  *
- * @author CJ
+ * @author lhx
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class AbstractSupplierTest extends WebTest {
@@ -40,6 +40,7 @@ public abstract class AbstractSupplierTest extends WebTest {
      * 已登录的mvc session
      */
     protected MockHttpSession session;
+
     @Autowired
     private LoginService loginService;
 

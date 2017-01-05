@@ -15,22 +15,22 @@ public class OrderPermissionsModel {
     /**
      * 系统角色拥有的可修改的状态
      */
-    public static OrderStateEnum[] systemPossess={OrderStateEnum.NotPay,OrderStateEnum.NotFinish,OrderStateEnum.Finish,OrderStateEnum.Invalid};
+    public static OrderStateEnum[] systemPossess = {OrderStateEnum.NotPay, OrderStateEnum.NotFinish, OrderStateEnum.Finish, OrderStateEnum.Invalid};
 
     /**
      * 采购商角色拥有的可修改的状态
      */
-    public static OrderStateEnum[] purchaserPossess={OrderStateEnum.PayFinish,OrderStateEnum.Finish,OrderStateEnum.Invalid};
+    public static OrderStateEnum[] purchaserPossess = {OrderStateEnum.PayFinish, OrderStateEnum.Finish, OrderStateEnum.Invalid};
 
     /**
      * 供应商角色拥有的可修改的状态
      */
-    public static OrderStateEnum[] supplierPossess={OrderStateEnum.NotFinish,OrderStateEnum.Refunds,OrderStateEnum.Invalid};
+    public static OrderStateEnum[] supplierPossess = {OrderStateEnum.NotFinish, OrderStateEnum.Refunds, OrderStateEnum.Invalid};
 
     /**
      * 平台角色拥有的可修改的状态
      */
-    public static OrderStateEnum[] platformPossess={OrderStateEnum.NotFinish,OrderStateEnum.Refunds,OrderStateEnum.RefundsFinish,OrderStateEnum.Invalid};
+    public static OrderStateEnum[] platformPossess = {OrderStateEnum.NotFinish, OrderStateEnum.Refunds, OrderStateEnum.RefundsFinish, OrderStateEnum.Invalid};
 
 
     /**
@@ -43,26 +43,27 @@ public class OrderPermissionsModel {
      * OrderStateEnum[5:RefundsFinish][无法修改]
      * OrderStateEnum[6:Invalid][无法修改]
      */
-    public static OrderStateEnum[][] revisability={
-             {OrderStateEnum.Finish, OrderStateEnum.Invalid}
-            ,{OrderStateEnum.NotFinish,OrderStateEnum.Refunds,OrderStateEnum.Invalid}
-            ,{OrderStateEnum.Finish,OrderStateEnum.Invalid}
-            ,{}
-            ,{OrderStateEnum.RefundsFinish,OrderStateEnum.NotFinish}
-            ,{}
-            ,{}};
+    public static OrderStateEnum[][] revisability = {
+            {OrderStateEnum.Finish, OrderStateEnum.Invalid}
+            , {OrderStateEnum.NotFinish, OrderStateEnum.Refunds, OrderStateEnum.Invalid}
+            , {OrderStateEnum.Finish, OrderStateEnum.Invalid}
+            , {}
+            , {OrderStateEnum.RefundsFinish, OrderStateEnum.NotFinish}
+            , {}
+            , {}};
 
     /**
      * 根据所给角色信息返回该角色能修改的订单状态，如果识别不了则返回空数组
-     * @param user      角色信息
+     *
+     * @param user 角色信息
      * @return
      */
-    public static OrderStateEnum[] getAuthOrderStates(SystemUser user){
-        if(user==null){
+    public static OrderStateEnum[] getAuthOrderStates(SystemUser user) {
+        if (user == null) {
             return systemPossess;
-        }else if (user.isSupplier()){
+        } else if (user.isSupplier()) {
             return supplierPossess;
-        }else if (user.isPlatformUser()){
+        } else if (user.isPlatformUser()) {
             return platformPossess;
         }
         return new OrderStateEnum[]{};
