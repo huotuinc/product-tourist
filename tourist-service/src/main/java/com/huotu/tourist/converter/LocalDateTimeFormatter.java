@@ -14,12 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -29,7 +25,7 @@ import java.util.Locale;
 public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
 
 
-    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 字符串转换成LocalDateTime
@@ -39,9 +35,10 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
      * @throws ParseException 转换异常
      */
     public static LocalDateTime toLocalDateTime(String text) throws ParseException {
-        Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(text);
-        Instant instant = Instant.ofEpochMilli(date.getTime());
-        return LocalDateTime.ofInstant(instant, ZoneOffset.systemDefault());
+        if (StringUtils.isEmpty(text))
+            return null;
+
+        return LocalDateTime.from(dateTimeFormatter.parse(text));
     }
 
     /**
@@ -51,27 +48,20 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
      * @return yyyy-MM-dd hh:mm:ss 格式字符
      */
     public static String toStr(LocalDateTime dateTime) {
-//        Instant instant = dateTime.toInstant(ZoneOffset.systemDefault());
-//        Date date = Date.from(instant);
-//        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
-
         return dateTimeFormatter.format(dateTime);
     }
 
     @Override
     public LocalDateTime parse(String text, Locale locale) throws ParseException {
-//        Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(text);
-//        Instant instant = Instant.ofEpochMilli(date.getTime());
-//        return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         if (StringUtils.isEmpty(text))
             return null;
         return LocalDateTime.from(dateTimeFormatter.parse(text));
     }
 
     @Override
-    public String print(LocalDateTime object, Locale locale) {
-        Instant instant = object.toInstant(ZoneOffset.UTC);
-        Date date = Date.from(instant);
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
+    public String print(LocalDateTime datetime, Locale locale) {
+        if (datetime == null)
+            return null;
+        return dateTimeFormatter.format(datetime);
     }
 }

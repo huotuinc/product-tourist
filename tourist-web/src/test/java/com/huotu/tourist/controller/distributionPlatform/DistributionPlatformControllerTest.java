@@ -47,7 +47,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
     @Test
     public void testDateTimeFormatter() throws ParseException {
         System.out.println(LocalDateTimeFormatter.toStr(LocalDateTime.now()));
-        System.out.println(LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:00"));
+        System.out.println(LocalDateTimeFormatter.toLocalDateTime("2016-12-12 10:00:01"));
     }
 
     @Test
