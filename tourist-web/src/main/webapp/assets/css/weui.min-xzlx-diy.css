@@ -1087,3 +1087,21 @@ body {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
+
+.lxxznnn {
+    margin-left: 4px;
+    margin-top: 6px;
+}
+
+.pj {
+    font-size: 14px;
+    border: 1px solid #ddd;
+    float: left;
+    margin-left: 1%;
+    background-color: #fff;
+    list-style: none;
+    width: 31%;
+    text-align: center;
+    padding: 10px 0px;
+    margin-top: 3px;
+}

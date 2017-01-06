@@ -13,6 +13,7 @@
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
     <title>首页</title>
+
 </head>
 
 <body class="bac">
@@ -37,6 +38,7 @@
             <!-- If we need pagination -->
             <div class="swiper-pagination"></div>
         </div>
+
         <!--分类图标-->
         <div>
             <div class="weui_navbar">
@@ -76,6 +78,7 @@
                 </a>
             </div>
         </div>
+
         <!--热门路线-->
         <div class="weui_cells weui_cells_access">
             <a class="weui_cell" href="javascript:alert('跳转至热门线路列表页');">
@@ -101,9 +104,10 @@
                                 <p class="zh-wz-name" th:text="${good.touristName}">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
                             </div>
                             <div class="zh-wz-time" style="padding-top: 10px">
-                                <span style="float:left">12月08号出发</span>
+                                <span style="float:left" th:text="${good.touristRoutes.get(0).getFromDate()+'出发'}">12月08
+                                    号出发</span>
                                 <span style="float:right; margin-right:10px;color:#FF5558; font-size: 16px;"
-                                      th:if="${user.payState.code==1}">￥199</span>
+                                      th:if="${user.payState.code==1}" th:text="${'$'+good.price}">￥199</span>
                                 <p style="clear:both"></p>
                             </div>
                         </div>
@@ -147,7 +151,8 @@
                 </div>
             </div>
         </div>
-        <!--活动类型-->
+
+
         <div class="weui_cells weui_cells_access">
             <a class="weui_cell" href="activityType.html">
                 <div class="weui_cell_bd weui_cell_primary">
@@ -156,43 +161,50 @@
                 <div class="weui_cell_ft"></div>
             </a>
         </div>
-        <div class="weui_navbar">
-            <!--weui_bar_item_on选中状态-->
-            <div class="weui_navbar_item weui_bar_item_on lxlx"> 登山</div>
-            <div class="weui_navbar_item lxlx"> 徒步</div>
-            <div class="weui_navbar_item lxlx"> 自驾</div>
-        </div>
-        <div class="weui_navbar">
-            <div class="weui_navbar_item lxlx "> 露营</div>
-            <div class="weui_navbar_item lxlx"> 潜水</div>
-            <div class="weui_navbar_item lxlx"> 滑雪</div>
-        </div>
-        <div class="weui_navbar">
-            <div class="weui_navbar_item lxlx"> 垂钓</div>
-            <div class="weui_navbar_item lxlx"> 冲浪</div>
-            <div class="weui_navbar_item lxlx"> 攀岩</div>
-        </div>
+        <ul class="lxxznnn">
+            <li class="pj"> 登山登山</li>
+            <li class="pj"> 徒步步</li>
+            <li class="pj"> 自驾</li>
+            <li class="pj"> 登山</li>
+            <li class="pj"> 徒步步步</li>
+            <li class="pj"> 自驾</li>
+            <li class="pj"> 登山</li>
+            <li class="pj"> 徒步</li>
+            <li class="pj"> 自驾</li>
+        </ul>
+        <p style="clear: both"></p>
+
+
         <!--最新路线-->
-        <div class="weui_cells weui_cells_access" style="margin-top:8px;"><a class="weui_cell" href="javascript:;">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>最新路线</p>
-            </div>
-            <div class="weui_cell_ft"></div>
-        </a></div>
-        <div class="leftboxtwo">
+        <div class="weui_cells weui_cells_access" style="margin-top:8px;">
+            <a class="weui_cell" href="javascript:;">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>最新路线</p>
+                </div>
+                <div class="weui_cell_ft"></div>
+            </a>
+        </div>
+        <div class="leftboxtwo" th:each="good:${newGoods}">
             <div class="cont-zhbox" style="margin: 0px">
                 <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
-                    <a href="touristGoodInfo.html" class="bz">
-                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                    <a href="touristGoodInfo.html" th:href="@{/wap/goodInfo(id=${good.id})}" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px">
+                            <img src="../../assets/img/a1.jpg" res:src="${good.touristImgUri}">
+                        </p>
                         <p class="cont-zhbox-nav"></p>
                     </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">
-                                <div class="zh-wz-name" style="margin: 0px 4px;">西藏云南8日轻装游，赶快报名！</div>
+                                <div class="zh-wz-name" style="margin: 0px 4px;" th:text="${good.touristName}">
+                                    西藏云南8日轻装游，赶快报名！
+                                </div>
                             </div>
-                            <div class="zh-wz-time"><span
-                                    style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;">￥199</span>
+                            <div class="zh-wz-time">
+                                <span
+                                        style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;"
+                                        th:if="${user.payState.code==1}" th:text="${'$'+good.price}">￥199
+                            </span>
                                 <p style="clear:both"></p>
                             </div>
                         </div>

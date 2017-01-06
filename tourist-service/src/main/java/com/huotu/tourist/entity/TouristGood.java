@@ -152,6 +152,7 @@ public class TouristGood extends BaseModel {
      */
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "good")
     List<TouristRoute> touristRoutes;
+
     /**
      * 线路名称
      */
