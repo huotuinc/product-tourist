@@ -20,12 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -145,7 +147,11 @@ public class TouristGood extends BaseModel {
             return "surplus";
         }
     };
-
+    /**
+     * 线路行程表
+     */
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "good")
+    List<TouristRoute> touristRoutes;
     /**
      * 线路名称
      */
@@ -257,12 +263,10 @@ public class TouristGood extends BaseModel {
      */
     @Column(length = 200)
     private String touristImgUri;
-
     /**
      * 统一最大出行人数
      */
     private int maxPeople;
-
     /**
      * 推荐
      */

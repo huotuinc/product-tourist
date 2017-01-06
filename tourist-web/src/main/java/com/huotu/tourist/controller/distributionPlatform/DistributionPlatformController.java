@@ -115,7 +115,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
     public String toSupplierList(HttpServletRequest request, Model model) {
-        return "manage/platform/supplier/supplierList.html";
+        return "view/manage/platform/supplier/supplierList.html";
     }
 
     /**
@@ -138,7 +138,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
     public String toBuyerList(HttpServletRequest request, Model model) {
-        return "manage/platform/touristBuyer/touristBuyerList.html";
+        return "view/manage/platform/touristBuyer/touristBuyerList.html";
     }
 
     /**
@@ -170,7 +170,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
     public String toPurchaserPaymentRecordList(HttpServletRequest request, Model model) {
-        return "manage/platform/purchaserPaymentRecord/purchaserPaymentRecordList.html";
+        return "view/manage/platform/purchaserPaymentRecord/purchaserPaymentRecordList.html";
     }
 
     /**
@@ -204,7 +204,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
     public String toPurchaserProductSettingList(HttpServletRequest request, Model model) {
-        return "manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
+        return "view/manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -236,7 +236,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
     public String toTouristGoodList(HttpServletRequest request, Model model) {
-        return "manage/platform/touristGood/touristGoodList.html";
+        return "view/manage/platform/touristGood/touristGoodList.html";
     }
 
 
@@ -247,7 +247,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
     public String toActivityTypeList(HttpServletRequest request, Model model) {
-        return "manage/platform/activityType/activityTypeList.html";
+        return "view/manage/platform/activityType/activityTypeList.html";
     }
 
     /**
@@ -277,7 +277,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristTypeList", method = RequestMethod.GET)
     public String toTouristTypeList() {
-        return "manage/platform/touristType/touristTypeList.html";
+        return "view/manage/platform/touristType/touristTypeList.html";
     }
 
     /**
@@ -392,7 +392,7 @@ public class DistributionPlatformController extends BaseController {
             supplier = touristSupplierRepository.getOne(id);
         }
         model.addAttribute("supplier", supplier);
-        return "manage/platform/supplier/supplier.html";
+        return "view/manage/platform/supplier/supplier.html";
     }
 
     /**
@@ -484,7 +484,7 @@ public class DistributionPlatformController extends BaseController {
             purchaserProductSetting = purchaserProductSettingService.getOne(id);
         }
         model.addAttribute("purchaserProductSetting", purchaserProductSetting);
-        return "manage/platform/purchaserProductSetting.html";
+        return "view/manage/platform/purchaserProductSetting.html";
     }
 
     /**
@@ -548,7 +548,7 @@ public class DistributionPlatformController extends BaseController {
         List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
         model.addAttribute("routes", routes);
         model.addAttribute("good", touristGood);
-        return "manage/platform/trouristGood/touristGood.html";
+        return "view/manage/platform/trouristGood/touristGood.html";
     }
 
 

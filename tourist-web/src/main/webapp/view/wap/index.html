@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -23,7 +23,14 @@
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
                 <!-- Slides -->
-                <div class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
+
+                <div class="swiper-slide"
+                     th:each="${banner:${banners}}">
+                    <!--/*@thymesVar id="banner" type="com.huotu.tourist.entity.Banner"*/-->
+                    <a href="javascript:;" th:href="${banner.linkUrl}">
+                        <img src="../../assets/img/swiper-1.jpg" res:src="${banenr.bannerImgUri}"/>
+                    </a>
+                </div>
                 <div class="swiper-slide"><img src="../../assets/img/swiper-2.jpg"/></div>
                 <div class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
             </div>
@@ -33,29 +40,29 @@
         <!--分类图标-->
         <div>
             <div class="weui_navbar">
-                <a href="javascript:;" class="weui_tabbar_item">
+                <a href="destination.html" class="weui_tabbar_item">
                     <div class="weui_tabbar_icon"><img src="../../assets/img/mdd.png" alt=""></div>
                     <p class="weui_tabbar_label">目的地</p>
                 </a>
-                <a href="javascript:;" class="weui_tabbar_item">
+                <a href="6-mddxl.html" class="weui_tabbar_item">
                     <div class="weui_tabbar_icon"><img src="../../assets/img/cty.png" alt=""></div>
                     <p class="weui_tabbar_label">长途游</p>
                 </a>
-                <a href="javascript:;" class="weui_tabbar_item">
+                <a href="6-mddxl.html" class="weui_tabbar_item">
                     <div class="weui_tabbar_icon"><img src="../../assets/img/dty.png" alt=""></div>
                     <p class="weui_tabbar_label">短途游</p>
                 </a>
-                <a href="javascript:;" class="weui_tabbar_item">
+                <a href="6-mddxl.html" class="weui_tabbar_item">
                     <div class="weui_tabbar_icon"><img src="../../assets/img/jwy.png" alt=""></div>
                     <p class="weui_tabbar_label">境外游</p>
                 </a>
             </div>
             <div class="weui_navbar" style="padding-bottom:10px;">
-                <a href="javascript:;" class="weui_tabbar_item">
+                <a href="activityType.html" class="weui_tabbar_item">
                     <div class="weui_tabbar_icon"><img src="../../assets/img/hdlx.png" alt=""></div>
                     <p class="weui_tabbar_label">活动类型</p>
                 </a>
-                <a href="javascript:;" class="weui_tabbar_item">
+                <a href="javascript:alert('这个没有用待删除');" class="weui_tabbar_item">
                     <div class="weui_tabbar_icon"><img src="../../assets/img/rmlx.png" alt=""></div>
                     <p class="weui_tabbar_label">热门路线</p>
                 </a>
@@ -71,7 +78,7 @@
         </div>
         <!--热门路线-->
         <div class="weui_cells weui_cells_access">
-            <a class="weui_cell" href="6-mddxl.html">
+            <a class="weui_cell" href="javascript:alert('跳转至热门线路列表页');">
                 <div class="weui_cell_bd weui_cell_primary">
                     <p>热门路线</p>
                 </div>
@@ -79,6 +86,30 @@
             </a>
         </div>
         <div class="weui_tab_bd" style="padding-bottom:0px">
+            <div class="cont-zhbox" th:each="good:${recommendGoods}">
+                <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
+                <div class="cont-zhbox-t"><a href="touristGoodInfo.html" th:href="@{/wap/goodInfo(id=${good.id})}"
+                                             class="bz">
+                    <p class="cont-zhbox-img">
+                        <img src="../../assets/img/swiper-2.jpg" res:src="${good.touristImgUri}">
+                    </p>
+                    <p class="cont-zhbox-nav"></p>
+                </a>
+                    <div class="zhbox">
+                        <div class="zh-wz">
+                            <div class="zh-wz-x">
+                                <p class="zh-wz-name" th:text="${good.touristName}">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
+                            </div>
+                            <div class="zh-wz-time" style="padding-top: 10px">
+                                <span style="float:left">12月08号出发</span>
+                                <span style="float:right; margin-right:10px;color:#FF5558; font-size: 16px;"
+                                      th:if="${user.payState.code==1}">￥199</span>
+                                <p style="clear:both"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="cont-zhbox">
                 <div class="cont-zhbox-t"><a href="touristGoodInfo.html" class="bz">
                     <p class="cont-zhbox-img"><img src="../../assets/img/swiper-2.jpg"></p>
@@ -98,25 +129,7 @@
                 </div>
             </div>
             <div class="cont-zhbox">
-                <div class="cont-zhbox-t"><a href="geren-index8.html" class="bz">
-                    <p class="cont-zhbox-img"><img src="../../assets/img/swiper-2.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
-                    <div class="zhbox">
-                        <div class="zh-wz">
-                            <div class="zh-wz-x">
-                                <p class="zh-wz-name">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
-                            </div>
-                            <div class="zh-wz-time" style="padding-top: 10px"><span style="float:left">12月08号出发</span>
-                                <span style="float:right; margin-right:10px;color:#FF5558; font-size: 16px;">￥199</span>
-                                <p style="clear:both"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="cont-zhbox">
-                <div class="cont-zhbox-t"><a href="geren-index8.html" class="bz">
+                <div class="cont-zhbox-t"><a href="touristGoodInfo.html" class="bz">
                     <p class="cont-zhbox-img"><img src="../../assets/img/swiper-2.jpg"></p>
                     <p class="cont-zhbox-nav"></p>
                 </a>
@@ -135,15 +148,17 @@
             </div>
         </div>
         <!--活动类型-->
-        <div class="weui_cells weui_cells_access"><a class="weui_cell" href="javascript:;">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>活动类型</p>
-            </div>
-            <div class="weui_cell_ft"></div>
-        </a></div>
+        <div class="weui_cells weui_cells_access">
+            <a class="weui_cell" href="activityType.html">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>活动类型</p>
+                </div>
+                <div class="weui_cell_ft"></div>
+            </a>
+        </div>
         <div class="weui_navbar">
             <!--weui_bar_item_on选中状态-->
-            <div class="weui_navbar_item lxlx"> 登山</div>
+            <div class="weui_navbar_item weui_bar_item_on lxlx"> 登山</div>
             <div class="weui_navbar_item lxlx"> 徒步</div>
             <div class="weui_navbar_item lxlx"> 自驾</div>
         </div>
@@ -166,11 +181,11 @@
         </a></div>
         <div class="leftboxtwo">
             <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
+                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
+                    <a href="touristGoodInfo.html" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                        <p class="cont-zhbox-nav"></p>
+                    </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">
@@ -187,11 +202,11 @@
         </div>
         <div class="leftboxtwo">
             <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
+                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
+                    <a href="touristGoodInfo.html" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                        <p class="cont-zhbox-nav"></p>
+                    </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">
@@ -208,11 +223,11 @@
         </div>
         <div class="leftboxtwo">
             <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
+                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
+                    <a href="touristGoodInfo.html" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                        <p class="cont-zhbox-nav"></p>
+                    </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">
@@ -229,11 +244,11 @@
         </div>
         <div class="leftboxtwo">
             <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
+                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
+                    <a href="touristGoodInfo.html" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                        <p class="cont-zhbox-nav"></p>
+                    </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">
@@ -250,11 +265,11 @@
         </div>
         <div class="leftboxtwo">
             <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
+                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
+                    <a href="touristGoodInfo.html" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                        <p class="cont-zhbox-nav"></p>
+                    </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">
@@ -271,11 +286,11 @@
         </div>
         <div class="leftboxtwo">
             <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
+                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
+                    <a href="touristGoodInfo.html" class="bz">
+                        <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
+                        <p class="cont-zhbox-nav"></p>
+                    </a>
                     <div class="zhbox" style="margin: 7px 3px;">
                         <div class="zh-wz">
                             <div class="zh-wz-x">

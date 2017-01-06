@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css"
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
-    <title>目的地下拉列表</title>
+    <title>下拉列表</title>
 </head>
 
 <body>
@@ -24,14 +24,19 @@
             <div class="control-group">
                 <div class="hr_screen">
                     <div class="custom-paixu-A">
-                        <div><span class="custom-paixu"> <a class="on state_switch"> 目的地<i class="icon_sort_single"></i> </a> <a> 排序<i
-                                class="icon_sort_single"></i> </a> <a> 活动类型<i class="icon_sort_single"></i> </a> <a> 路线类型<i
-                                class="icon_sort_single"></i> </a> </span></div>
+                        <div>
+                            <span class="custom-paixu">
+                            <a href="javascript:;" class="on state_switch"> 目的地<i class="icon_sort_single"></i> </a>
+                            <a> 排序<i class="icon_sort_single"></i> </a>
+                            <a> 活动类型<i class="icon_sort_single"></i> </a>
+                            <a> 路线类型<i class="icon_sort_single"></i> </a>
+                        </span>
+                        </div>
                     </div>
                 </div>
             </div>
             <!--选择目的地-->
-            <div style="display:block">
+            <div style="display:block" class="mdd">
                 <div class="control-group">
                     <div class="custom-tag-list clearfix"
                          style="margin-top: 0px;border: 1px solid #ddd;border-top: 0px;">
@@ -60,8 +65,6 @@
                                         <div class="ullidd"> 成都</div>
                                     </a></div>
                                 </li>
-                            </ul>
-                            <ul class="ulxy">
                                 <li class="ulli">
                                     <div class="ullidiv"><a href="javascript: void(0);" class="link js-goods clearfix">
                                         <div class="ullidd"> 深圳</div>
@@ -182,22 +185,29 @@
     <!--底部高度-->
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
-    <div class="weui_navbar daohangs"><a href="javascript:void(0);" class="weui_navbar_item weui_bar_item_on">
-        <p class="kimg dhshouyeicon"></p>
-        <p>首页</p>
-    </a> <a href="javascript:void(0);" class="weui_navbar_item ">
-        <p class="kimg dhsousuoicon"></p>
-        <p>搜索</p>
-    </a> <a href="javascript:void(0);" class="weui_navbar_item">
-        <p class="kimg dhwodeicon"></p>
-        <p> 我的</p>
-    </a></div>
+    <div class="weui_navbar daohangs">
+        <a href="index.html" class="weui_navbar_item weui_bar_item_on">
+            <p class="kimg dhshouyeicon"></p>
+            <p>首页</p>
+        </a>
+        <a href="search.html" class="weui_navbar_item ">
+            <p class="kimg dhsousuoicon"></p>
+            <p>搜索</p>
+        </a>
+        <a href="my.html" class="weui_navbar_item">
+            <p class="kimg dhwodeicon"></p>
+            <p> 我的</p>
+        </a>
+    </div>
 
     <!---->
 </div>
 </body>
-</html>
+<script>
+
+</script>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+</html>

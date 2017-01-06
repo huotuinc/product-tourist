@@ -4055,7 +4055,6 @@
                 820008: '聖方濟各堂區'
             }
         }
-        ;
 
     if (typeof window !== 'undefined') {
         window.ChineseDistricts = ChineseDistricts;
