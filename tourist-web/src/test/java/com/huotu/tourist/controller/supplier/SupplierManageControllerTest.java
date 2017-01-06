@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.controller.supplier;
 
+import com.google.gson.Gson;
 import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.AbstractSupplierTest;
 import com.huotu.tourist.WebTest;
@@ -375,6 +376,22 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         mockMvc.perform(get("/supplier/saveTouristGood")
                 .param("id",""+ touristGood.getId())
                 .param("touristName","modify")
+                .param("routes","[\n{\n\"routeNo\": \"48954\",\n\"fromDate\": \"2016-12-12 00:00:00\"\n},\n{\n \"routeNo\": \"1111\",\n\"fromDate\": \"2017-12-12 00:00:00\"\n}\n]")
+                .param("activityTypeId",""+touristGood.getActivityType().getId())
+                .param("touristTypeId",""+touristGood.getTouristType().getId())
+                .param("destination","浙江省/杭州市/江干")
+                .param("travelledAddress","浙江省/杭州市/滨江区")
+                .param("placeOfDeparture","浙江省/杭州市/下沙")
+                .param("maxPeople","20")
+                .param("touristFeatures","touristFeatures")
+                .param("price","15.2")
+                .param("childrenDiscount","3")
+                .param("rebate","3")
+                .param("receptionPerson","receptionPerson")
+                .param("receptionTelephone","18036547894")
+                .param("eventDetails","活动详情")
+                .param("beCareful","注意事项")
+                .param("touristImgUri","www.baidu.com")
                 .session(session)
                 );
         TouristGood goodsAct=touristGoodRepository.findOne(touristGood.getId());

@@ -10,6 +10,7 @@
 package com.huotu.tourist.config;
 
 
+import com.huotu.tourist.TouristRouteResolver;
 import com.huotu.tourist.converter.AutowireConverter;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.converter.PageAndSelectionResolver;
@@ -28,11 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -86,6 +83,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         commonEnumConverterSet.forEach(registry::addConverter);
     }
 
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
@@ -99,6 +97,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         resolver.setPageParameterName(pageParameterName);
         resolver.setSizeParameterName(sizeParameterName);
         argumentResolvers.add(resolver);
+        argumentResolvers.add(new TouristRouteResolver());
     }
 
     @Override
