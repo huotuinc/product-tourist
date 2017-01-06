@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -348,25 +349,29 @@ public class SupplierManageController extends BaseController {
      */
     @RequestMapping("/saveTouristGood")
     @ResponseBody
+    @Transactional
     public void saveTouristGood(Long id,String touristName,Long activityTypeId,Long touristTypeId
-            ,String touristFeatures,Address destination,Address placeOfDeparture,Address travelledAddress
-            ,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson
-            ,String receptionTelephone,String eventDetails,String beCareful,String touristImgUri
-            ,Integer maxPeople,TouristRoute[] touristRoutes)
-            throws IOException{
+            ,String touristFeatures,@RequestParam Address destination,@RequestParam Address placeOfDeparture
+            ,@RequestParam Address travelledAddress,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate
+            ,String receptionPerson,String receptionTelephone,String eventDetails,String beCareful
+            ,String touristImgUri,int maxPeople,List<TouristRoute> touristRoutes) throws IOException{
 
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeRepository.getOne(touristTypeId);
         //保存商品
-        TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType, touristFeatures
-                ,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
+        TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType
+                ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount
+                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
 
         //保存所有线路
+        List<TouristRoute> newRoutes=new ArrayList<>();
         for (TouristRoute t:touristRoutes){
-            touristRouteService.saveTouristRoute(t.getId(), t.getRouteNo(), good, t.getFromDate(), t.getToDate(),
-                    maxPeople);
+            TouristRoute newRoute=touristRouteService.saveTouristRoute(t.getId(), t.getRouteNo(), good
+                    , t.getFromDate(), t.getToDate(), maxPeople);
+            newRoutes.add(newRoute);
         }
+        good.setTouristRoutes(newRoutes);
+
     }
 
 

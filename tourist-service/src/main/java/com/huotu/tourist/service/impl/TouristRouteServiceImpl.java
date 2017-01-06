@@ -28,7 +28,8 @@ public class TouristRouteServiceImpl implements TouristRouteService {
     }
 
     @Override
-    public void saveTouristRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime toDate, int maxPeople) {
+    public TouristRoute saveTouristRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime
+            toDate, int maxPeople) {
         TouristRoute touristRoute;
         if (id == null) {
             touristRoute = new TouristRoute();
@@ -40,7 +41,7 @@ public class TouristRouteServiceImpl implements TouristRouteService {
         touristRoute.setFromDate(fromDate);
         touristRoute.setToDate(toDate);
         touristRoute.setMaxPeople(maxPeople);
-        touristRouteRepository.saveAndFlush(touristRoute);
+        return touristRouteRepository.saveAndFlush(touristRoute);
     }
 
     @Override

@@ -29,7 +29,7 @@ public interface TouristRouteService {
      * @param toDate    结束时间
      * @param maxPeople 总人数
      */
-    void saveTouristRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime toDate
+    TouristRoute saveTouristRoute(Long id, String routeNo, TouristGood good, LocalDateTime fromDate, LocalDateTime toDate
             , int maxPeople);
 
     /**
