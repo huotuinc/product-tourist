@@ -29,4 +29,6 @@ public interface LoginService extends UserDetailsService {
      * @return JPA实例
      */
     <T extends Login> T updatePassword(T login, String rawPassword);
+
+
 }

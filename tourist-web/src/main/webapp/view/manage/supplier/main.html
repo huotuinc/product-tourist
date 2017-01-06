@@ -51,7 +51,7 @@
                     </div>
                 </li>
                 <li>
-                    <a class="J_menuItem" href="salesStatistics.html">
+                    <a class="J_menuItem" href="salesStatistics.html" th:href="@{/supplier/showSaleStatistics}">
                         <i class="fa fa-home"></i>
                         <span class="nav-label">操作列表</span>
                     </a>
@@ -64,7 +64,8 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" th:href="@{/supplier/showOrderList}" href="../common/orderList.html">订单列表</a>
+                        <li><a class="J_menuItem" th:href="@{/supplier/showOrderList}"
+                                href="../common/orderList.html">订单列表</a>
                         </li>
 
                     </ul>
@@ -91,7 +92,8 @@
                     <ul class="nav nav-second-level">
                         <li><a class="J_menuItem" href="settlementAccount.html">结算账户</a>
                         </li>
-                        <li><a class="J_menuItem" href="salesStatistics.html">销售统计</a>
+                        <li><a class="J_menuItem" href="salesStatistics.html"
+                               th:href="@{supplier/showSaleStatistics}">销售统计</a>
                         </li>
 
                     </ul>
@@ -101,13 +103,17 @@
                     <a href="#"><i class="fa fa-edit"></i><span class="nav-label">设置</span>
                         <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="supplierDetails.html">供应商信息</a>
+                        <li><a class="J_menuItem" href="supplierDetails.html"
+                               th:href="@{/supplier/modifySupplierInfo}">供应商信息</a>
                         </li>
-                        <li><a class="J_menuItem" href="payeeAccountDetails.html">收款账户</a>
+                        <li><a class="J_menuItem" href="payeeAccountDetails.html"
+                               th:href="@{/supplier/showCollectionAccount}">收款账户</a>
                         </li>
-                        <li><a class="J_menuItem" href="jurisdictionList.html">后台权限</a>
+                        <li><a class="J_menuItem" href="jurisdictionList.html"
+                               th:href="@{/supplier/getJurisdictionList}">后台权限</a>
                         </li>
-                        <li><a class="J_menuItem" href="jurisdictionDeails.html">修改密码</a>
+                        <li><a class="J_menuItem" href="jurisdictionDeails.html"
+                               th:href="@{/supplier/showSupplierResetPassword}">修改密码</a>
                         </li>
                     </ul>
                 </li>
@@ -169,7 +175,6 @@
 <script src="http://resali.huobanplus.com/cdn/hotui/js/contabs.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/pace/pace.min.js"></script>
 
-<!--<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/hot/bootstrap.hot.extra-utils-1.0.1.js"></script>-->
 
 <script type="text/javascript">
     function newTab(url, name) {

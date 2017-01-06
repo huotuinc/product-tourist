@@ -75,6 +75,7 @@ class SecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 //            super.configure(http);
+            http.headers().frameOptions().sameOrigin();
 
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry
                     = http.authorizeRequests();
