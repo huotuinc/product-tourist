@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.controller;
@@ -30,6 +30,7 @@ import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.PurchaserPaymentRecordService;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
@@ -96,6 +97,9 @@ public class BaseController {
 
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
+
+    @Autowired
+    private ConnectMallService connectMallService;
 
 
     /**
@@ -367,7 +371,7 @@ public class BaseController {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
                     checkState.equals(TouristCheckStateEnum.CheckFinish)) {
                 //
-                touristGoodService.pushGoodToMall(touristGood);
+                connectMallService.pushGoodToMall(touristGood);
                 touristGood.setTouristCheckState(checkState);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
