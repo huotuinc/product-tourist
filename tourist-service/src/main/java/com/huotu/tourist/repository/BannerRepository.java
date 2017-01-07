@@ -25,6 +25,6 @@ public interface BannerRepository extends JpaRepository<Banner, Long>
         , JpaSpecificationExecutor<Banner> {
     List<Banner> findByBannerName(String name);
 
-    List<Banner> findByDeleteIsFalse(PageRequest pageRequest);
+    List<Banner> findByDeletedIsFalse(PageRequest pageRequest);
 
 }

@@ -44,7 +44,7 @@
                             <div class="ibox">
                                 <div class="ibox-content">
                                     <h4>订单总金额</h4>
-                                    <h1 class="no-margins" th:text="${moneyTotal}">886,200</h1>
+                                    <h1 class="no-margins" th:text="${moneyTotal}==null?0:${moneyTotal}">886,200</h1>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                             <div class="ibox">
                                 <div class="ibox-content">
                                     <h4>佣金</h4>
-                                    <h1 class="no-margins" th:text="${commissionTotal}">1 738,200</h1>
+                                    <h1 class="no-margins" th:text="${commissionTotal}==null?0:${commissionTotal}">1 738,200</h1>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                             <div class="ibox">
                                 <div class="ibox-content">
                                     <h4>总退款</h4>
-                                    <h1 class="no-margins" th:text="${refundTotal}">-200,100</h1>
+                                    <h1 class="no-margins" th:text="${refundTotal}==null?0:${refundTotal}">-200,100</h1>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                             <div class="ibox">
                                 <div class="ibox-content">
                                     <h4>订单总数</h4>
-                                    <h1 class="no-margins" th:text="${orderTotal}">54,200</h1>
+                                    <h1 class="no-margins" th:text="${orderTotal}==null?0:${orderTotal}">54,200</h1>
                                 </div>
                             </div>
                         </div>

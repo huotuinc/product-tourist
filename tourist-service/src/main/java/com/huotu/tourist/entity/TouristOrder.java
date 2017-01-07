@@ -106,7 +106,7 @@ public class TouristOrder extends BaseModel {
     /**
      * 支付时间
      */
-    @Column
+    @Column(columnDefinition = "datetime")
     private LocalDateTime payTime;
 
     /**

@@ -271,26 +271,27 @@ public class SupplierManageController {
      * @param eventDetails          活动详情
      * @param beCareful             注意事项
      * @param touristImgUri         商品图片
-     * @param touristRoutes         出行线路列表
      * @param maxPeople             最大人数
+     * @param touristRoutes         出行线路列表
+     * @param mallGoodsId
      * @return
      * @throws IOException
      */
     @RequestMapping("/saveTouristGood")
     @ResponseBody
     @Transactional
-    public void saveTouristGood(Long id,String touristName,Long activityTypeId,Long touristTypeId
-            ,String touristFeatures,@RequestParam Address destination,@RequestParam Address placeOfDeparture
-            ,@RequestParam Address travelledAddress,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate
-            ,String receptionPerson,String receptionTelephone,String eventDetails,String beCareful
-            ,String touristImgUri,int maxPeople,TouristRoute[] touristRoutes) throws IOException{
+    public void saveTouristGood(Long id, String touristName, Long activityTypeId, Long touristTypeId
+            , String touristFeatures, @RequestParam Address destination, @RequestParam Address placeOfDeparture
+            , @RequestParam Address travelledAddress, BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate
+            , String receptionPerson, String receptionTelephone, String eventDetails, String beCareful
+            , String touristImgUri, int maxPeople, TouristRoute[] touristRoutes, long mallGoodsId) throws IOException{
 
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeRepository.getOne(touristTypeId);
         //保存商品
         TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount
-                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
+                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,mallGoodsId);
 
         //保存所有线路
         List<TouristRoute> newRoutes=new ArrayList<>();

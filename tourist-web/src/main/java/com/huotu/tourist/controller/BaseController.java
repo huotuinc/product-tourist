@@ -98,7 +98,7 @@ public class BaseController {
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
 
-    @Autowired
+    @Autowired(required = false)
     private ConnectMallService connectMallService;
 
 

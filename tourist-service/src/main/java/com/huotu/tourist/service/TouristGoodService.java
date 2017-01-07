@@ -81,12 +81,13 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param beCareful          注意事项(必须)
      * @param touristImgUri      商品图片(必须)
      * @param maxPeople          最大人数(必须)
+     * @param mallGoodsId
      * @return 新增或修改的线路商品
      */
     TouristGood saveTouristGood(Long id, String touristName, ActivityType activityType, TouristType touristType
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople);
+            , int maxPeople, long mallGoodsId);
 
 }

@@ -9,12 +9,8 @@
 
 package com.huotu.tourist.controller.supplier;
 
-import com.google.gson.Gson;
-import com.huotu.tourist.AbstractMatcher;
 import com.huotu.tourist.AbstractSupplierTest;
-import com.huotu.tourist.WebTest;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.config.MVCConfig;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.model.TouristRouteModel;
@@ -24,9 +20,9 @@ import com.huotu.tourist.service.TouristRouteService;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +31,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 /**
  * Created by Administrator on 2016/12/17.
  */
+//@Transactional
 public class SupplierManageControllerTest extends AbstractSupplierTest {
 
     @Autowired
@@ -364,7 +360,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         Integer maxPeople=40;
         TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,touristSupplier
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople);
+                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,8);
 
         TouristRoute[] touristRoutes=new TouristRoute[2];
 
@@ -374,6 +370,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         }
 
         mockMvc.perform(get("/supplier/saveTouristGood")
+                .param("mallGoodsId","9")
                 .param("id",""+ touristGood.getId())
                 .param("touristName","modify")
                 .param("routes","[\n{\n\"routeNo\": \"48954\",\n\"fromDate\": \"2016-12-12 00:00:00\"\n},\n{\n \"routeNo\": \"1111\",\n\"fromDate\": \"2017-12-12 00:00:00\"\n}\n]")

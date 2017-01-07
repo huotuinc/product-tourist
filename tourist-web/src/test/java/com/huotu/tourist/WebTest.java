@@ -25,8 +25,6 @@ import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.LoginService;
-import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.TouristGoodService;
 import me.jiangcai.dating.ServiceBaseTest;
 import me.jiangcai.lib.test.page.AbstractPage;
@@ -301,13 +299,14 @@ public abstract class WebTest extends ServiceBaseTest {
      * @param beCareful             注意事项
      * @param touristImgUri         商品图片
      * @param maxPeople             最大人数
+     * @param mallGoodsId
      * @return  线路商品
      */
     protected TouristGood createTouristGood(String name, ActivityType activityType, TouristType touristType
-            , TouristCheckStateEnum checkState, TouristSupplier touristSupplier,String touristFeatures
-            ,Address destination,Address placeOfDeparture,Address travelledAddress,BigDecimal price
-            ,BigDecimal childrenDiscount,BigDecimal rebate,String receptionPerson,String receptionTelephone
-            ,String eventDetails,String beCareful,String touristImgUri,Integer maxPeople) {
+            , TouristCheckStateEnum checkState, TouristSupplier touristSupplier, String touristFeatures
+            , Address destination, Address placeOfDeparture, Address travelledAddress, BigDecimal price
+            , BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson, String receptionTelephone
+            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, long mallGoodsId) {
         TouristGood touristGood=new TouristGood();
         touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
         touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
@@ -315,6 +314,7 @@ public abstract class WebTest extends ServiceBaseTest {
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
         touristGood.setRecommend(null);
+        touristGood.setMallGoodId(mallGoodsId);
         touristGood.setTouristFeatures(touristFeatures);
         touristGood.setDestination(destination);
         touristGood.setPlaceOfDeparture(placeOfDeparture);
@@ -328,6 +328,7 @@ public abstract class WebTest extends ServiceBaseTest {
         touristGood.setBeCareful(beCareful);
         touristGood.setTouristImgUri(touristImgUri);
         touristGood.setMaxPeople(maxPeople);
+        touristGood.setCreateTime(LocalDateTime.now());
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 

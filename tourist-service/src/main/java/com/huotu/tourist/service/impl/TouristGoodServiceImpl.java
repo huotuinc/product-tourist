@@ -1,11 +1,7 @@
 package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.Address;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.TouristGoodService;
@@ -18,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,13 +130,15 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     public TouristGood saveTouristGood(Long id, String touristName, ActivityType activityType, TouristType touristType
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
-            , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri, int maxPeople) {
+            , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri, int maxPeople, long mallGoodsId) {
         TouristGood touristGood = null;
         if (id != null) {
             touristGood = touristGoodRepository.getOne(id);
         } else {
             touristGood = new TouristGood();
         }
+        touristGood.setCreateTime(LocalDateTime.now());
+        touristGood.setMallGoodId(mallGoodsId);
         touristGood.setTouristName(touristName);
         touristGood.setActivityType(activityType);
         touristGood.setTouristType(touristType);
@@ -159,8 +158,8 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 
-    @Override
-    public void pushGoodToMall(TouristGood touristGood) {
-        // TODO: 2017/1/7 商城交互同步商品 @CJ
-    }
+//    @Override
+//    public void pushGoodToMall(TouristGood touristGood) {
+//        // TODO: 2017/1/7 商城交互同步商品 @CJ
+//    }
 }

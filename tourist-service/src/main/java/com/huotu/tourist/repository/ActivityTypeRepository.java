@@ -32,5 +32,5 @@ public interface ActivityTypeRepository extends JpaRepository<ActivityType, Long
      * @param pageRequest
      * @return
      */
-    List<ActivityType> findByDeleteIsFalse(PageRequest pageRequest);
+    List<ActivityType> findByDeletedIsFalse(PageRequest pageRequest);
 }

@@ -84,11 +84,11 @@ public class IndexController {
      */
     @RequestMapping(value = {"/", "index/"})
     public String index(Model model) {
-        List<Banner> banners = bannerRepository.findByDeleteIsFalse(new PageRequest(0, 5));
+        List<Banner> banners = bannerRepository.findByDeletedIsFalse(new PageRequest(0, 5));
         model.addAttribute("banners", banners);
-        List<TouristGood> recommendGoods = touristGoodRepository.findByRecommendIsTrueAndDeleteIsFalse(new PageRequest(0, 3));
+        List<TouristGood> recommendGoods = touristGoodRepository.findByRecommendIsTrueAndDeletedIsFalse(new PageRequest(0, 3));
         model.addAttribute("recommendGoods", recommendGoods);
-        List<ActivityType> activityTypes = activityTypeRepository.findByDeleteIsFalse(new PageRequest(0, 9));
+        List<ActivityType> activityTypes = activityTypeRepository.findByDeletedIsFalse(new PageRequest(0, 9));
         model.addAttribute("activityTypes", activityTypes);
         return "/view/wap/index.html";
     }
@@ -120,7 +120,7 @@ public class IndexController {
      */
     @RequestMapping(value = {"/activityTypeGoods"})
     public String activityTypeGoods(@RequestParam Long activityTypeId, Model model) {
-        model.addAttribute("activityTypeGoods", touristGoodRepository.findByActivityType_IdAndDeleteIsFalse(activityTypeId, new
+        model.addAttribute("activityTypeGoods", touristGoodRepository.findByActivityType_IdAndDeletedIsFalse(activityTypeId, new
                 PageRequest(0, 6)));
         // TODO: 2017/1/6 页面
         return "";

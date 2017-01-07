@@ -22,7 +22,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param pageRequest
      * @return
      */
-    List<TouristGood> findByRecommendIsTrueAndDeleteIsFalse(PageRequest pageRequest);
+    List<TouristGood> findByRecommendIsTrueAndDeletedIsFalse(PageRequest pageRequest);
 
     /**
      * 查找指定活动id且没有删除的商品列表
@@ -31,5 +31,5 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param pageRequest
      * @return
      */
-    List<TouristGood> findByActivityType_IdAndDeleteIsFalse(Long activityTypeId, PageRequest pageRequest);
+    List<TouristGood> findByActivityType_IdAndDeletedIsFalse(Long activityTypeId, PageRequest pageRequest);
 }

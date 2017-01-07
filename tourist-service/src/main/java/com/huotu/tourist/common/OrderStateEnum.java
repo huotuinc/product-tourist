@@ -25,6 +25,25 @@ public enum OrderStateEnum implements CommonEnum  {
         this.description = getDescription;
     }
 
+    public static OrderStateEnum getOrderStateByCode(int code){
+        switch (code) {
+            case 0:
+                return OrderStateEnum.NotPay;
+            case 1:
+                return OrderStateEnum.PayFinish;
+            case 2:
+                return OrderStateEnum.NotFinish;
+            case 3:
+                return OrderStateEnum.Finish;
+            case 4:
+                return OrderStateEnum.Invalid;
+            case 5:
+                return OrderStateEnum.Refunds;
+            default:
+                return OrderStateEnum.RefundsFinish;
+        }
+    }
+
     @Override
     public Object getCode() {
         return this.code;
