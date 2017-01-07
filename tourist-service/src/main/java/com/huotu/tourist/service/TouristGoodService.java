@@ -78,4 +78,11 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
             , int maxPeople);
 
+    /**
+     * 将本地商品与远程商品同步
+     * 并设置当前商品的商城商品id
+     *
+     * @param touristGood 本地商品
+     */
+    void pushGoodToMall(TouristGood touristGood);
 }

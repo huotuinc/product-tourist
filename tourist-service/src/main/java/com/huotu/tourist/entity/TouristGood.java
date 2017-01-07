@@ -274,4 +274,10 @@ public class TouristGood extends BaseModel {
     @Column
     private Boolean recommend;
 
+    /**
+     * 商城商品id
+     */
+    @Column(unique = true)
+    private Long mallGoodId;
+
 }

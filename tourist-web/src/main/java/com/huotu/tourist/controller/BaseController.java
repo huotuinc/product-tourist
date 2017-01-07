@@ -13,12 +13,28 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
-import com.huotu.tourist.repository.*;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.PurchaserPaymentRecordService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
+import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TouristTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -350,6 +366,8 @@ public class BaseController {
         if (user.isPlatformUser()) {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
                     checkState.equals(TouristCheckStateEnum.CheckFinish)) {
+                //
+                touristGoodService.pushGoodToMall(touristGood);
                 touristGood.setTouristCheckState(checkState);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)

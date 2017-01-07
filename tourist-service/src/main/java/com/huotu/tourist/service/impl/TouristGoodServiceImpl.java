@@ -158,4 +158,9 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         touristGood.setMaxPeople(maxPeople);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
+
+    @Override
+    public void pushGoodToMall(TouristGood touristGood) {
+        // TODO: 2017/1/7 商城交互同步商品 @CJ
+    }
 }

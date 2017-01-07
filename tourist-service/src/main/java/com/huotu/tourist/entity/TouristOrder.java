@@ -124,4 +124,6 @@ public class TouristOrder extends BaseModel {
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "order")
     private Set<Traveler> travelers;
+
+
 }
