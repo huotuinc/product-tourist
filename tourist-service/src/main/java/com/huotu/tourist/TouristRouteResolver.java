@@ -34,7 +34,7 @@ public class TouristRouteResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
 
-        return List.class.equals(parameter.getParameterType());
+        return TouristRoute[].class.equals(parameter.getParameterType());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TouristRouteResolver implements HandlerMethodArgumentResolver {
             touristRoute.setToDate(toDate);
             routes.add(touristRoute);
         }
-        return routes;
+        return routes.toArray(new TouristRoute[routes.size()]);
 
     }
 }

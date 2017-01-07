@@ -42,7 +42,7 @@
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-title">
-                    <h2>编辑资讯</h2>
+                    <h2>编辑商品</h2>
                     <div class="text-right">
                         <button onclick="history.go(-1)" class="btn btn-success" type="button">返回</button>
                     </div>
@@ -289,13 +289,13 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <p class="text-center" th:each="c:${checkStates}">
-                            <button onclick="submitForm(1,this)" th:value="${c.value}"
+                        <p class="text-center">
+                            <button th:each="c:${checkStates}" onclick="submitForm(1,this)" th:text="${c.value}"
                                     th:onclick="'submitForm('+${c.code}+',this)'"
                                     class="btn btn-success" type="button">保存
                             </button>
-                            <!--<button onclick="submitForm(this)" class="btn btn-success" type="button">保存并提交审核</button>-->
-                            <!--<button onclick="submitForm(this)" class="btn btn-success" type="button">回收</button>-->
+                            <button onclick="submitForm(this)" class="btn btn-success" type="button">保存并提交审核</button>
+                            <button onclick="submitForm(this)" class="btn btn-success" type="button">回收</button>
                         </p>
 
                     </div>

@@ -13,28 +13,12 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
-import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.ActivityTypeService;
-import com.huotu.tourist.service.PurchaserPaymentRecordService;
-import com.huotu.tourist.service.TouristGoodService;
-import com.huotu.tourist.service.TouristOrderService;
-import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TouristTypeService;
+import com.huotu.tourist.repository.*;
+import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -117,7 +101,7 @@ public class BaseController {
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
 
-        return "/view/manage/supplier/goodsList";
+        return "/view/manage/supplier/goodsList.html";
     }
 
 
@@ -238,6 +222,7 @@ public class BaseController {
      * @param activityTypeId    活动ID
      * @param touristCheckState 线路审核状态
      * @param recommend         是否推荐 null全部，true推荐列表
+     * @param pageable          分页
      * @param request
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)

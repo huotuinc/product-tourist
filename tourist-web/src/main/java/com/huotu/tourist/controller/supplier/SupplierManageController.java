@@ -9,9 +9,12 @@
 
 package com.huotu.tourist.controller.supplier;
 
-import com.huotu.tourist.common.*;
-import com.huotu.tourist.controller.BaseController;
+import com.huotu.tourist.common.CollectionAccountTypeEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.*;
+import com.huotu.tourist.login.SupplierOperator;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
@@ -21,8 +24,8 @@ import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -45,10 +48,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/supplier")
-public class SupplierManageController extends BaseController {
-
-    @Autowired
-    private TouristSupplierRepository touristSupplierRepository;
+public class SupplierManageController {
 
     @Autowired
     private TouristOrderService touristOrderService;
@@ -86,6 +86,20 @@ public class SupplierManageController extends BaseController {
     @Autowired
     private CollectionAccountService collectionAccountService;
 
+    @Autowired
+    private SupplierOperatorRepository supplierOperatorRepository;
+
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private String viewSupplierPath="/view/manage/supplier/";
+
+    private String viewCommonPath="/view/manage/common/";
+
+
 
     /**
      * 打开供应商后台页面
@@ -94,7 +108,7 @@ public class SupplierManageController extends BaseController {
      */
     @RequestMapping("/")
     public String showSupplierMain() {
-        return "/view/manage/supplier/main.html";
+        return viewSupplierPath+"main.html";
     }
 
     /**
@@ -102,100 +116,10 @@ public class SupplierManageController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/showOrderList")
+    @RequestMapping(value = "/showOrderList")
 //    @PreAuthorize("hasRole('Order')")
     public String showOrderList(Model model) {
-        return "/view/manage/common/orderList.html";
-    }
-
-
-
-    /**
-     * 根据某个供应商的订单列表
-     *
-     * @param userInfo       当前用户信息(必须)
-     * @param pageable       分页信息(必须)
-     * @param orderId        订单ID
-     * @param name           路线名称
-     * @param buyer          购买人
-     * @param tel            购买人电话
-     * @param payTypeEnum    付款状态
-     * @param orderDate      下单时间
-     * @param endOrderDate   结束下单时间
-     * @param payDate        支付时间
-     * @param endPayDate     结束支付时间
-     * @param touristDate    出行时间
-     * @param endTouristDate 结束出行时间
-     * @param orderStateEnum 结算状态
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/orderList")
-    public PageAndSelection<TouristOrder> orderList(@AuthenticationPrincipal SystemUser userInfo
-            , Pageable pageable, String orderId, String name, String buyer, String tel
-            , PayTypeEnum payTypeEnum, @RequestParam(required = false) LocalDateTime orderDate
-            , @RequestParam(required = false)LocalDateTime endOrderDate
-            , @RequestParam(required = false)LocalDateTime payDate
-            , @RequestParam(required = false)LocalDateTime endPayDate
-            , @RequestParam(required = false)LocalDateTime touristDate
-            , @RequestParam(required = false)LocalDateTime endTouristDate
-            , OrderStateEnum orderStateEnum) throws IOException {
-
-        TouristSupplier supplier=(TouristSupplier) userInfo;
-
-        Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, orderId, name, buyer, tel,
-                payTypeEnum, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderStateEnum, pageable);
-
-        List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
-
-
-        //出行时间特殊处理
-        Selection<TouristOrder, LocalDateTime> touristDateSelection = new Selection<TouristOrder, LocalDateTime>() {
-            @Override
-            public String getName() {
-                return "touristDate";
-            }
-
-            @Override
-            public LocalDateTime apply(TouristOrder order) {
-                List<Traveler> travelers=travelerRepository.findByOrder_Id(order.getId());
-                if(travelers.isEmpty()){
-                    return null;
-                }
-                Traveler traveler = travelers.get(0);
-                return traveler.getRoute().getFromDate();
-            }
-        };
-
-        //人数处理
-        Selection<TouristOrder, Long> peopleNumberSelection = new Selection<TouristOrder, Long>() {
-            @Override
-            public String getName() {
-                return "peopleNumber";
-            }
-
-            @Override
-            public Long apply(TouristOrder order) {
-                return travelerRepository.countByOrder_Id(order.getId());
-            }
-        };
-
-        Selection<TouristOrder,Long> touristRouteIdSelection=new Selection<TouristOrder, Long>() {
-            @Override
-            public String getName() {
-                return "touristRouteId";
-            }
-
-            @Override
-            public Long apply(TouristOrder order) {
-                return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
-            }
-        };
-
-        selections.add(touristDateSelection);
-        selections.add(peopleNumberSelection);
-        selections.addAll(TouristOrder.htmlSelections);
-        return new PageAndSelection<>(orders, selections);
+        return viewCommonPath+"orderList.html";
     }
 
     /**
@@ -260,7 +184,7 @@ public class SupplierManageController extends BaseController {
 
         model.addAttribute("travelers", travelers);
 
-        return "/view/manage/common/orderDetails.html";
+        return viewCommonPath+"orderDetails.html";
 
     }
 
@@ -293,7 +217,12 @@ public class SupplierManageController extends BaseController {
     @RequestMapping("/showTouristGood")
 //    @PreAuthorize("hasRole('Goods')")
     public String showTouristGood(Long id, Model model) throws IOException {
-        TouristGood touristGood = touristGoodRepository.findOne(id);
+        TouristGood touristGood;
+        if(id==null){
+            touristGood=new TouristGood();
+        }else {
+           touristGood = touristGoodRepository.findOne(id);
+        }
         List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
 
         List<TouristType> touristTypes=touristTypeRepository.findAll();
@@ -319,7 +248,7 @@ public class SupplierManageController extends BaseController {
         model.addAttribute("routes", touristRouteModels);
 
         model.addAttribute("good", touristGood);
-        return "manage/supplier/goodsDetailsH+.html";
+        return viewSupplierPath+"goodsDetailsH+.html";
     }
 
 
@@ -354,7 +283,7 @@ public class SupplierManageController extends BaseController {
             ,String touristFeatures,@RequestParam Address destination,@RequestParam Address placeOfDeparture
             ,@RequestParam Address travelledAddress,BigDecimal price,BigDecimal childrenDiscount,BigDecimal rebate
             ,String receptionPerson,String receptionTelephone,String eventDetails,String beCareful
-            ,String touristImgUri,int maxPeople,List<TouristRoute> touristRoutes) throws IOException{
+            ,String touristImgUri,int maxPeople,TouristRoute[] touristRoutes) throws IOException{
 
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeRepository.getOne(touristTypeId);
@@ -402,14 +331,14 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/showSaleStatistics")
-    @PreAuthorize("hasRole('SaleStatistics')")
+//    @PreAuthorize("hasRole('SaleStatistics')")
     public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
         TouristSupplier supplier=(TouristSupplier)userInfo;
         model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
         model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(supplier.getId()));
         model.addAttribute("refundTotal", touristOrderService.countRefundTotal(supplier.getId()));
         model.addAttribute("orderTotal", touristOrderService.countOrderTotal(supplier.getId()));
-        return "/view/manage/supplier/salesStatistics";
+        return viewSupplierPath+"salesStatistics.html";
 
     }
 
@@ -533,7 +462,17 @@ public class SupplierManageController extends BaseController {
     }
 
 
-
+    /**
+     * 打开供应商信息页面
+     * @param userInfo
+     * @return
+     * @throws IOException
+     */
+    public String showSupplierInfo(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        model.addAttribute("supplier",supplier);
+        return viewSupplierPath+"supplierDetails.html";
+    }
 
     /**
      * 修改供应商信息
@@ -550,9 +489,7 @@ public class SupplierManageController extends BaseController {
     @ResponseBody
     public void modifySupplierInfo(Long id,Address address,String contacts,String contactNumber
             ,String businessLicenseUri,String remarks)throws Exception{
-
         touristSupplierService.modifySupplier(id,address,contacts,contactNumber,businessLicenseUri,remarks);
-
     }
 
 
@@ -563,7 +500,7 @@ public class SupplierManageController extends BaseController {
      * @throws IOException
      */
     @RequestMapping("/showCollectionAccount")
-    @PreAuthorize("hasRole('CollectionAccount')")
+//    @PreAuthorize("hasRole('CollectionAccount')")
     public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier =(TouristSupplier)userInfo;
         CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
@@ -591,5 +528,95 @@ public class SupplierManageController extends BaseController {
                 ,accountName,bank,bankBranch,bankCard);
     }
 
+
+
+    /**
+     * 打开供应商管理员列表
+     * @return
+     */
+    @RequestMapping("/showJurisdiction")
+    public String showJurisdiction(){
+        return viewSupplierPath+"jurisdictionList.html";
+    }
+
+    /**
+     * 返回供应商操作员列表
+     * @param pageable      分页信息
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/getJurisdictionList")
+    public PageAndSelection<SupplierOperator> getJurisdictionList(Pageable pageable)
+            throws IOException {
+
+        Page<SupplierOperator> supplierManagers=supplierOperatorRepository.findAll(pageable);
+        Selection<SupplierOperator,String> loginName=new Selection<SupplierOperator, String>() {
+            @Override
+            public String getName() {
+                return "loginName";
+            }
+
+            @Override
+            public String apply(SupplierOperator supplierOperator) {
+                return supplierOperator.getLoginName();
+            }
+        };
+        return new PageAndSelection<>(supplierManagers,SupplierOperator.selections);
+    }
+
+    /**
+     * 返回某个供应商操作员的详情页
+     * @param id        操作员ID
+     * @param model
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/getJurisdiction")
+    public String getJurisdiction(Long id, Model model) throws IOException{
+        SupplierOperator operator=supplierOperatorRepository.findOne(id);
+        model.addAttribute("operator",operator);
+        return viewSupplierPath+"jurisdictionDeails.html";
+    }
+
+    /**
+     * 显示修改密码的界面
+     * @param userInfo  当前登录用户
+     * @param model     返回的model
+     * @return
+     */
+    @RequestMapping("/showSupplierResetPassword")
+    public String showSupplierResetPassword(@AuthenticationPrincipal SystemUser userInfo,Model model){
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        model.addAttribute("id",supplier.getId());
+        model.addAttribute("loginName",supplier.getLoginName());
+        return viewSupplierPath+"resetSupplierPassword.html";
+    }
+
+    /**
+     * 修改供应商密码
+     * @param userInfo      当前登录用户
+     * @param oldPassword   旧密码
+     * @param newPassword   新密码
+     * @throws IOException
+     */
+    @RequestMapping("/resetSupplierPassword")
+    public ModelMap resetSupplierPassword(@AuthenticationPrincipal SystemUser userInfo,String oldPassword
+            ,String newPassword) throws IOException{
+        ModelMap modelMap=new ModelMap();
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        if(!supplier.getPassword().equals(passwordEncoder.encode(oldPassword))){
+            modelMap.addAttribute("data",500);
+            modelMap.addAttribute("message","密码错误！");
+            return modelMap;
+        }
+        loginService.updatePassword(supplier,newPassword);
+        modelMap.addAttribute("data",200);
+        return modelMap;
+    }
+
+    @RequestMapping("/saveSupplierOperatorInfo")
+    public void saveSupplierOperatorInfo(String loginName,String password,String tel,String name) throws IOException{
+
+    }
 
 }
