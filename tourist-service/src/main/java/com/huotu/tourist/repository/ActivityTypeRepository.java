@@ -10,6 +10,7 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.entity.ActivityType;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,14 @@ import java.util.List;
 @Repository
 public interface ActivityTypeRepository extends JpaRepository<ActivityType, Long>
         , JpaSpecificationExecutor<ActivityType> {
+
     List<ActivityType> findByActivityName(String activityName);
+
+    /**
+     * 查找没有删除的活动类型
+     *
+     * @param pageRequest
+     * @return
+     */
+    List<ActivityType> findByDeleteIsFalse(PageRequest pageRequest);
 }

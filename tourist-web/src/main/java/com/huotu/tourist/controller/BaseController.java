@@ -37,7 +37,6 @@ import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TouristTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -239,8 +238,6 @@ public class BaseController {
      * @param activityTypeId    活动ID
      * @param touristCheckState 线路审核状态
      * @param recommend         是否推荐 null全部，true推荐列表
-     * @param pageSize          每页显示条数
-     * @param pageNo            页码
      * @param request
      */
     @RequestMapping(value = "touristGoodList", method = RequestMethod.GET)
