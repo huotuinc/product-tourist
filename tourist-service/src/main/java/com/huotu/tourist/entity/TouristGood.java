@@ -280,4 +280,9 @@ public class TouristGood extends BaseModel {
     @Column(unique = true)
     private Long mallGoodId;
 
+    /**
+     * 商品组图
+     */
+    private String[] Photos;
+
 }

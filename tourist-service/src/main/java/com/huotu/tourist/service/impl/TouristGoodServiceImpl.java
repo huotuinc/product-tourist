@@ -130,7 +130,8 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     public TouristGood saveTouristGood(Long id, String touristName, ActivityType activityType, TouristType touristType
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
-            , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri, int maxPeople, long mallGoodsId) {
+            , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
+            , int maxPeople, long mallGoodsId, String[] photos) {
         TouristGood touristGood = null;
         if (id != null) {
             touristGood = touristGoodRepository.getOne(id);
@@ -155,6 +156,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         touristGood.setBeCareful(beCareful);
         touristGood.setTouristImgUri(touristImgUri);
         touristGood.setMaxPeople(maxPeople);
+        touristGood.setPhotos(photos);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 

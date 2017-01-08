@@ -389,6 +389,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
                 .param("eventDetails","活动详情")
                 .param("beCareful","注意事项")
                 .param("touristImgUri","www.baidu.com")
+                .param("photos","eeee,334")
                 .session(session)
                 );
         TouristGood goodsAct=touristGoodRepository.findOne(touristGood.getId());

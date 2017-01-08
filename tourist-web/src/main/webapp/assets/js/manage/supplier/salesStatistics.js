@@ -3,6 +3,18 @@
  */
 $(function(){
     dateRangeEdit();
+
+    var $table = $('table');
+    $('#toolbar').find('select').change(function () {
+        var pageSize = $table.bootstrapTable("getOptions").totalRows;
+        if ($(this).val() === 'all') {
+            pageSize = $table.bootstrapTable("getOptions").totalRows;
+        }
+        var a = {
+            exportDataType: $(this).val(), pageSize: pageSize
+        }
+        $table.bootstrapTable('destroy').bootstrapTable(a);
+    });
 });
 
 /**

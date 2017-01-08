@@ -284,14 +284,15 @@ public class SupplierManageController {
             , String touristFeatures, @RequestParam Address destination, @RequestParam Address placeOfDeparture
             , @RequestParam Address travelledAddress, BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate
             , String receptionPerson, String receptionTelephone, String eventDetails, String beCareful
-            , String touristImgUri, int maxPeople, TouristRoute[] touristRoutes, long mallGoodsId) throws IOException{
+            , String touristImgUri, int maxPeople, TouristRoute[] touristRoutes
+            , long mallGoodsId,String[] photos) throws IOException{
 
         ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeRepository.getOne(touristTypeId);
         //保存商品
         TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount
-                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,mallGoodsId);
+                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,mallGoodsId, photos);
 
         //保存所有线路
         List<TouristRoute> newRoutes=new ArrayList<>();
