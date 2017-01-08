@@ -105,8 +105,24 @@ var touristNameFormatter=function(value,row,index){
  * @returns {string}
  */
 var touristDateFormatter=function(value,row,index){
-    var html='<span>'+row.touristDate+'</span><p><a class="btn btn-link showDetail">修改出行时间</a></p>';
+    var html='<a class="btn btn-link showDetail"><span>'+row.touristDate+'</span></a>';
     return html;
+};
+
+
+/**
+ * 结算状态格式化
+ * @param value
+ * @param row
+ * @param index
+ * @returns {*}
+ */
+var settlementFormatter=function(value,row,index){
+    if(row.settlement){
+        return "已结算";
+    }else {
+        return "未结算";
+    }
 };
 
 /**
@@ -233,14 +249,14 @@ var changesStyleTouristDate=function(){
  * @returns {string}
  */
 var remarkFormatter=function(value,row,index){
-    var txt="";
-    var size=row.remarks.length;
-    if(size>5){
-        txt =row.remarks.substr(0,5)+"...";
-    }else {
-        txt= row.remarks;
-    }
-    return "<a href='#' class=''>"+txt+"</a>";
+    //var txt="";
+    //var size=row.remarks.length;
+    //if(size>5){
+    //    txt =row.remarks.substr(0,5)+"...";
+    //}else {
+    //    txt= row.remarks;
+    //}
+    return "<a href='#' class=''>"+row.remarks+"</a>";
 
 };
 
@@ -250,20 +266,36 @@ var remarkFormatter=function(value,row,index){
  */
 var remarkEvents={
     'click a': function (e, value, row, index) {
+        var that=this;
+        var url = /*[[@{/base/modifyOrderRemarks}]]*/ "../../../mock/supplier/httpJson.json";
         layer.open({
             type: 1,
             title: false,
             area: ['400px', '200px'],
             shade: false,
             btn:['确定'],
-            //closeBtn: 0,
             shadeClose: true,
             content: "<p id='remark' contenteditable='true' class='text-area'>"+value+"</p>",
             yes: function(index){
                 //ajax修改备注
-                var id=row.id;
                 var newText=$("#remark").text();
-                layer.msg(id+newText);
+                //ajax请求
+                $.ajax({
+                    url: url,
+                    method: "post",
+                    data: {id: row.id,remark:newText},
+                    dataType: "json",
+                    success: function () {
+                        $(that).text(newText);
+                        layer.msg("修改成功");
+                    },
+                    error: function () {
+                        layer.msg("修改失败");
+
+                    }
+                });
+
+
                 layer.close(index);
             }
         });
