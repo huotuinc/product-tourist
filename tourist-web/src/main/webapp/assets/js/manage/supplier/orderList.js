@@ -134,7 +134,7 @@ var touristDateEvents={
         var id=row.id;
         var formerId=row.touristRouteId;
         var peopleNumber=parseInt(row.peopleNumber);
-        getAllOrderTouristDate(id);
+        getAllOrderTouristDate(row.id,row.touristRouteId);
         layer.open({
             type:1,
             area: ['700px', '400px'],
@@ -147,6 +147,23 @@ var touristDateEvents={
                 var surplusNumber=parseInt($(".surplusNumber",div).text());
                 if(peopleNumber>surplusNumber){
                     layer.msg("修改人数超出限制");
+                }else {
+                    var url = /*[[@{/base/modifyOrderTouristDate}]]*/ "../../../mock/supplier/httpJson.json";
+                    //ajax
+                    $.ajax({
+                        type:'GET',
+                        url: url,
+                        dataType: 'json',
+                        data: {formerId:row.touristRouteId,laterId:laterId},
+                        success:function(result){
+                            layer.msg("修改成功！");
+                            $("#table").bootstrapTable('refresh');
+                        },
+                        error:function(e){
+                            layer.msg("修改失败！");
+                        }
+                    });
+
                 }
                 //layer.msg("formerId:"+formerId+",laterId:"+laterId);
                 layer.close(index);
@@ -179,12 +196,13 @@ var modifyOrderTouristDate=function(formerId,laterId){
  * 获取所有该订单商品的其他的线路信息
  * @param id    订单ID
  */
-var getAllOrderTouristDate=function(id){
+var getAllOrderTouristDate=function(orderId,routeId){
+    var url = /*[[@{/supplier/getAllOrderTouristDate}]]*/ "../../../mock/supplier/allOrderTouristDate.json";
     $.ajax({
         type:'GET',
-        url: '../../mock/supplier/allOrderTouristDate.json',
+        url: url,
         dataType: 'json',
-        data: {id:id},
+        data: {orderId:orderId,routeId:routeId},
         success:function(result){
             console.log(result);
             bulidAllOrderTouristDate(result.data);
@@ -266,7 +284,6 @@ var remarkFormatter=function(value,row,index){
  */
 var remarkEvents={
     'click a': function (e, value, row, index) {
-        var that=this;
         var url = /*[[@{/base/modifyOrderRemarks}]]*/ "../../../mock/supplier/httpJson.json";
         layer.open({
             type: 1,
@@ -286,8 +303,8 @@ var remarkEvents={
                     data: {id: row.id,remark:newText},
                     dataType: "json",
                     success: function () {
-                        $(that).text(newText);
                         layer.msg("修改成功");
+                        $("#table").bootstrapTable('refresh');
                     },
                     error: function () {
                         layer.msg("修改失败");

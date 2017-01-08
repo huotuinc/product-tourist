@@ -280,9 +280,4 @@ public class TouristGood extends BaseModel {
     @Column(unique = true)
     private Long mallGoodId;
 
-    /**
-     * 是否结算
-     */
-    private Boolean settlement;
-
 }
