@@ -1,6 +1,7 @@
 package com.huotu.tourist.service;
 
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 
 import java.io.IOException;
@@ -19,6 +20,14 @@ public interface TouristRouteService {
      * @throws IOException IO异常，获取人数出错
      */
     int getRemainPeopleByRoute(TouristRoute route) throws IOException;
+
+    /**
+     * 获取该订单的行程的剩余人数
+     * @param order         订单
+     * @return              剩余人数
+     * @throws IOException
+     */
+    int getRemainPeopleByRoute(TouristOrder order) throws IOException;
 
     /**
      * 保存一个线路行程(包括新增和修改)

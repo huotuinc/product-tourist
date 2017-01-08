@@ -158,7 +158,7 @@ var uploadImage=function(){
             if(resultModel.success){
                 layer.close(loadPic);
                 layer.msg("上传成功");
-                $(".image-crop img").attr("src",resultModel.url);
+                $("#pictureUrl").attr("src",resultModel.url);
             }
         },
         error: function(data, status, e) {

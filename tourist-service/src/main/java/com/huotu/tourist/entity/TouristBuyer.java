@@ -47,6 +47,7 @@ public class TouristBuyer implements SystemUser {
             , new SimpleSelection<TouristBuyer, String>("businessLicencesUri", "businessLicencesUri")
             , new SimpleSelection<TouristBuyer, String>("buyerId", "buyerId")
             , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
+            , new SimpleSelection<TouristBuyer, String>("IDNo","IDNo")
             , new Selection<TouristBuyer, Map>() {
                 @Override
                 public Map apply(TouristBuyer touristBuyer) {
@@ -166,6 +167,12 @@ public class TouristBuyer implements SystemUser {
      */
     @Column
     private BuyerPayStateEnum payState;
+
+    /**
+     * 身份证号
+     */
+    @Column(length = 18)
+    private String IDNo;
 
     @Override
     public boolean isSupplier() {

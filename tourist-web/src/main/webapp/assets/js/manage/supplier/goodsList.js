@@ -6,7 +6,7 @@ $(function(){
 });
 
 var bindSearch=function(){
-    $("#searchOrderList").on("click",function(){
+    $("#searchList").on("click",function(){
         search();
     });
 };
@@ -17,7 +17,8 @@ var search=function(){
 
 
 var actionFormatter = function (value, row, index) {
-    return  '<button class="btn btn-link showDetail">查看</button>' +
+    var detailUrl=/*[[@{/supplier/showTouristGood}]]*/"goodsDetailsH+.html";
+    return  '<a href="'+detailUrl+'?id='+row.id+'" class="btn btn-link showDetail">查看</a>' +
             '<button class="btn btn-link recycle">回收</button>';
 };
 
@@ -30,12 +31,12 @@ var touristImgUriFormatter=function(value,row,index){
 };
 
 var actionEvents = {
-    'click .showDetail': function (e, value, row, index) {
-        var id=row.id;
-        location.href="goodsDetails.html";
-    },
+    //'click .showDetail': function (e, value, row, index) {
+    //    var id=row.id;
+    //    location.href=/*[[@{/supplier/showTouristGood(id=)}]]*/"goodsDetailsH+.html";
+    //},
     'click .recycle': function (e, value, row, index) {
-        var id=row.id;
+        var url=/*[[@{/supplier/showTouristGood(id=)}]]*/"../../../mock/supplier/httpJson.json";
         var tr=$("#goodsTable tr").eq(index+1);
         var td=$("td",tr).eq(9);
         if($(td).text()!="已回收"){
@@ -43,9 +44,20 @@ var actionEvents = {
                 btn: ['回收','取消'] //按钮
             }, function(){
                 //ajax异步回收
-                layer.msg('修改成功', {icon: 1});
-                $(td).text("已回收");
-
+                $.ajax({
+                    url: url,
+                    method: "post",
+                    data: {id: row.id, checkState: 3},
+                    dataType: "json",
+                    success: function () {
+                        //$table.bootstrapTable('refresh');
+                        layer.msg('修改成功', {icon: 1});
+                        $(td).text("已回收");
+                    },
+                    error: function (error) {
+                        layer.msg("修改失败")
+                    }
+                })
             }, function(index){
                 layer.close(index);
             });
@@ -59,13 +71,18 @@ var actionEvents = {
 };
 
 var getParams= function(params) {
+    var touristName=$("input[name='touristName']").val();
+    var touristTypeId=$("select[name='touristType'] option:selected").val();
+    var activityTypeId=$("select[name='activityType'] option:selected").val();
+    var touristCheckState=$("select[name='touristCheckState'] option:selected").val();
     var temp = {
         pageSize: params.limit, //页面大小
-        pageNo: params.offset, //页码
-        touristName: $("input[name='touristName']").val(),
-        touristTypeId:$("select[name='touristType'] option:selected").val(),
-        activityTypeId:$("select[name='activityType'] option:selected").val(),
-        touristCheckState:$("select[name='touristCheckState'] option:selected").val()
+        pageNo: params.offset/params.limit, //页码
+        sortName: params.sort, sortOrder:params.order,   //排序
+        touristName: touristName!=""?touristName:undefined,
+        touristTypeId:touristTypeId!="-1"?touristTypeId:undefined,
+        activityTypeId:activityTypeId!="-1"?activityTypeId:undefined,
+        touristCheckState:touristCheckState!="-1"?touristCheckState:undefined
     };
     //console.log(temp);
     return temp;

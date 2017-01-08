@@ -1,6 +1,7 @@
 package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TravelerRepository;
@@ -25,6 +26,12 @@ public class TouristRouteServiceImpl implements TouristRouteService {
     public int getRemainPeopleByRoute(TouristRoute route) throws IOException {
         int count = travelerRepository.countByRoute(route);
         return route.getMaxPeople() - count;
+    }
+
+    @Override
+    public int getRemainPeopleByRoute(TouristOrder order) throws IOException {
+        int count =order.getTouristGood().getMaxPeople()-order.getTravelers().size();
+        return count;
     }
 
     @Override

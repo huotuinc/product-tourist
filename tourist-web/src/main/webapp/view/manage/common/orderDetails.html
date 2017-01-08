@@ -84,38 +84,38 @@
                 <table class="table table-bordered">
                     <tr>
                         <th style="width: 150px">订单号</th>
-                        <td>11淡淡的淡淡的淡淡的</td>
+                        <td th:text="${order.orderNo}">11淡淡的淡淡的淡淡的</td>
                         <th style="width: 150px">订单总金额</th>
-                        <td>11到底大大大大大大大大大大大</td>
+                        <td th:text="${order.orderMoney}">11到底大大大大大大大大大大大</td>
 
                     </tr>
                     <tr>
                         <th>下单日期：</th>
-                        <td>22</td>
+                        <td th:text="${order.createTime}">2016-10-10</td>
                         <th>支付时间：</th>
-                        <td>22</td>
+                        <td th:text="${order.payTime}">2017-10-10</td>
                     </tr>
                     <tr>
                         <th>积分抵用：</th>
                         <td>22</td>
                         <th>支付方式：</th>
-                        <td>22</td>
+                        <td th:text="${order.payType.value}">支付宝</td>
                     </tr>
                     <tr>
                         <th>余额抵用：</th>
                         <td>22</td>
                         <th>购买数量：</th>
-                        <td>22</td>
+                        <td th:text="${travelers.size()}">22</td>
                     </tr>
                     <tr>
                         <th>小金库抵用：</th>
                         <td>22</td>
                         <th>返佣：</th>
-                        <td>22</td>
+                        <td th:text="${order.orderMoney}*${order.touristGood.rebate}">22</td>
                     </tr>
                     <tr>
                         <th>订单备注：</th>
-                        <td>22</td>
+                        <td th:text="${order.remarks}">22</td>
                         <th></th>
                         <td></td>
                     </tr>
@@ -133,19 +133,19 @@
                 <table class="table table-bordered">
                     <tr>
                         <th style="width: 150px">购买人姓名：</th>
-                        <td>11</td>
+                        <td th:text="${order.touristBuyer.nickname}">11</td>
                     </tr>
                     <tr>
                         <th>购买人手机号：</th>
-                        <td>22</td>
+                        <td th:text="${order.touristBuyer.telPhone}">22</td>
                     </tr>
                     <tr>
                         <th>身份证号：</th>
-                        <td>11</td>
+                        <td th:text="${order.touristBuyer.IDNo}">11</td>
                     </tr>
                     <tr>
                         <th>所属俱乐部名称：</th>
-                        <td>22</td>
+                        <td th:text="${order.touristGood.touristSupplier.supplierName}">22</td>
                     </tr>
                 </table>
             </div>

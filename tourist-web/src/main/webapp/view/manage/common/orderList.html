@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
@@ -66,8 +66,8 @@
                                     <label class="control-label" for="settlement">结算状态：</label>
                                     <select class="form-control" name="settlement" id="settlement">
                                     <option value="-1">全部</option>
-                                    <option value="5">已结算</option>
-                                    <option value="6">未结算</option>
+                                    <option value="true">已结算</option>
+                                    <option value="false">未结算</option>
                                     </select>
                                     </div>
                                     <br/><br/>
@@ -134,7 +134,7 @@
                 </select>
             </div>
             <div class="tab-content">
-                <table id="table" data-toggle="table" th:data-url="@{/base/touristOrders}"
+                <table id="table" data-toggle="table" th:attr="data-url=@{/base/touristOrders}"
                        data-url="../../../mock/supplier/orderList.json"
                        data-method="get" data-side-pagination="server" data-pagination="true" data-striped="true"
                        data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
@@ -159,7 +159,7 @@
                         <th data-field="touristDate" data-align="center"
                             data-formatter="touristDateFormatter" data-events="touristDateEvents">出行时间
                         </th>
-                        <th data-field="peopleNumber" data-align="center" data-sortable="true">购买数量</th>
+                        <th data-field="peopleNumber" data-align="center">购买数量</th>
                         <th data-field="settlement" data-align="center" data-formatter="settlementFormatter">结算状态</th>
                         <th data-field="remarks" data-align="center" data-formatter="remarkFormatter"
                             data-events="remarkEvents">备注

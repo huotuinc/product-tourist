@@ -43,9 +43,12 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     public Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderNo
             , String touristName, String buyerName, String tel, PayTypeEnum payTypeEnum, LocalDateTime orderDate
             , LocalDateTime endOrderDate, LocalDateTime payDate, LocalDateTime endPayDate, LocalDateTime touristDate
-            , LocalDateTime endTouristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException {
+            , LocalDateTime endTouristDate, OrderStateEnum orderStateEnum, Boolean settlement, Pageable pageable) throws IOException {
         return touristOrderRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
+            if(settlement!=null){
+                predicate=cb.and(cb.equal(root.get("settlement").as(Boolean.class),settlement));
+            }
             if (supplier != null) {
                 predicate = cb.and(cb.equal(root.get("touristGood").get("touristSupplier").as(TouristSupplier.class),
                         supplier));

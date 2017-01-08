@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
@@ -16,6 +16,9 @@
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 </head>
+<!--/*@thymesVar id="touristTypes" type="java.util.ArrayList<com.huotu.tourist.entity.TouristType>"*/-->
+<!--/*@thymesVar id="activityTypes" type="java.util.ArrayList<com.huotu.tourist.entity.ActivityType>"*/-->
+<!--/*@thymesVar id="checkStates" type="com.huotu.tourist.common.TouristCheckStateEnum[]"*/-->
 <body>
 <div class="panel-body" style="padding-bottom:0;">
     <div class="panel panel-default">
@@ -36,29 +39,32 @@
                                         <label class="control-label" for="touristType">线路类型：</label>
                                         <select class="form-control" name="touristType" id="touristType">
                                             <option value="-1">全部</option>
-                                            <option value="0">长途游</option>
-                                            <option value="1">短途游</option>
-                                            <option value="1">境外游</option>
+                                            <option th:each="t:${touristTypes}" value="0"
+                                            th:value="${t.id}" th:text="${t.typeName}">长途游</option>
+                                            <!--<option value="1">短途游</option>-->
+                                            <!--<option value="1">境外游</option>-->
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label" for="activityType">活动类型：</label>
                                         <select class="form-control" name="activityType" id="activityType">
                                             <option value="-1">全部</option>
-                                            <option value="0">登山</option>
-                                            <option value="1">徒步</option>
-                                            <option value="1">潜水</option>
-                                            <option value="1">滑雪</option>
+                                            <option th:each="a:${activityTypes}" value="0"
+                                            th:value="${a.id}" th:text="${a.activityName}">登山</option>
+                                            <!--<option value="1">徒步</option>-->
+                                            <!--<option value="1">潜水</option>-->
+                                            <!--<option value="1">滑雪</option>-->
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label" for="touristCheckState">审核状态：</label>
                                         <select class="form-control" name="touristCheckState" id="touristCheckState">
                                             <option value="-1">全部</option>
-                                            <option value="0">已保存</option>
-                                            <option value="1">未审核</option>
-                                            <option value="1">已审核</option>
-                                            <option value="1">已回收</option>
+                                            <option th:each="c:${checkStates}" value="0"
+                                            th:value="${c.code}" th:text="${c.value}">已保存</option>
+                                            <!--<option value="1">未审核</option>-->
+                                            <!--<option value="1">已审核</option>-->
+                                            <!--<option value="1">已回收</option>-->
                                         </select>
                                     </div>
 
@@ -67,7 +73,7 @@
 
                                 <div class="form-inline" style="max-width: 926px; text-align: right;">
                                     <button id="searchList" type="button" class="btn btn-primary">筛选</button>
-                                    <button type="button" class="btn btn-primary">显示全部</button>
+                                    <!--<button type="button" class="btn btn-primary">显示全部</button>-->
                                 </div>
                             </div>
                         </div>
@@ -79,28 +85,31 @@
 
     <div id="toolbar" class="btn-group">
         <button id="btn_add" type="button" class="btn btn-default">
-            <a href="addModel.html"><span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span></a>
+            <a th:href="@{/supplier/showTouristGood}" href="goodsDetailsH+.html">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
+            </a>
         </button>
     </div>
 
-    <table id="goodsTable" data-toggle="table" data-url="../../../mock/supplier/goodsList.json"
+    <table id="goodsTable" data-toggle="table" th:attr="data-url=@{/base/touristGoodList}"
+           data-url="../../../mock/supplier/goodsList.json"
            data-method="get" data-side-pagination="server"
-           data-pagination="true" data-striped="true" data-search="true" data-strict-search="true"
-           data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
-           data-show-columns="true" data-minimum-count-columns="2" data-escape="true"
+           data-pagination="true" data-striped="true" data-page-number="1" data-page-size="10"
+           data-page-list="[10, 25, 50, 100, All]" data-show-columns="true"
+           data-minimum-count-columns="2" data-escape="true"
            data-query-params="getParams" data-toolbar="#toolbar">
         <thead>
         <tr>
             <th data-field="id" data-align="center">序号</th>
             <th data-field="touristName" data-align="center" data-formatter="touristNameFormatter">商品名称</th>
             <th data-field="touristImgUri"  data-align="center"data-formatter="touristImgUriFormatter">图片</th>
-            <th data-field="touristType" data-align="center" data-sortable="true">线路类型</th>
-            <th data-field="activityType" data-align="center" data-sortable="true">活动类型</th>
+            <th data-field="touristType" data-align="center">线路类型</th>
+            <th data-field="activityType" data-align="center">活动类型</th>
             <th data-field="price" data-align="center" data-sortable="true">价格</th>
-            <th data-field="stock" data-align="center" data-sortable="true">剩余库存</th>
+            <th data-field="stock" data-align="center">剩余库存</th>
             <th data-field="destination" data-align="center">目的地</th>
             <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
-            <th data-field="touristCheckState" data-align="center" data-sortable="true">审核状态</th>
+            <th data-field="touristCheckState" data-align="center">审核状态</th>
             <th data-field="action"  data-align="center"
                 data-formatter="actionFormatter" data-events="actionEvents">操作
             </th>

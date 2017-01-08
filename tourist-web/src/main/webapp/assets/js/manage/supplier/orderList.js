@@ -345,9 +345,11 @@ var getParams= function(params) {
     var name=$("input[name='name']").val();
     var buyer=$("input[name='buyer']").val();
     var tel=$("input[name='tel']").val();
+    var settlement=$("#settlement option:checked").val();
     var temp = {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
+        sortName: params.sort, sortOrder:params.order,   //排序
         orderId:orderId!=""?orderId:undefined,
         name:name!=""?name:undefined,
         buyer:buyer!=""?buyer:undefined,
@@ -358,7 +360,8 @@ var getParams= function(params) {
         payDate:payDate[0]!=""?payDate[0]:undefined,
         endPayDate:payDate[1]!=""?payDate[1]:undefined,
         touristDate:touristDate[0]!=""?touristDate[0]:undefined,
-        endTouristDate:touristDate[1]!=""?touristDate[1]:undefined
+        endTouristDate:touristDate[1]!=""?touristDate[1]:undefined,
+        settlement:settlement!="-1"?settlement:undefined
     };
     return temp;
 };

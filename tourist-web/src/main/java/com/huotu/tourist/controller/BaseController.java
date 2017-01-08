@@ -165,13 +165,14 @@ public class BaseController {
             , @RequestParam(required = false) LocalDateTime endPayDate
             , @RequestParam(required = false) LocalDateTime touristDate
             , @RequestParam(required = false)LocalDateTime endTouristDate
-            , OrderStateEnum orderState, Pageable pageable, HttpServletRequest request, Model model) throws IOException {
+            , OrderStateEnum orderState, Pageable pageable, Boolean settlement
+            ,HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
         }
         Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
-                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderState,
+                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderState,settlement ,
                 pageable);
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 

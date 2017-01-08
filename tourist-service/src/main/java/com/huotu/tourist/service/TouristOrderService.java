@@ -57,13 +57,14 @@ public interface TouristOrderService {
      * @param endPayDate     结束支付时间
      * @param touristDate    出行时间
      * @param endTouristDate 结束出行时间
-     *@param orderStateEnum 结算状态
+     * @param orderStateEnum 订单状态
+     * @param settlement     是否结算
      * @param pageable       分页信息(必须)   @return 返回带分页信息的订单列表
      * @throws IOException 获取订单列表发生错误
      */
     Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderNo, String touristName, String buyerName, String tel
             , PayTypeEnum payTypeEnum, LocalDateTime orderDate, LocalDateTime endOrderDate, LocalDateTime payDate
-            , LocalDateTime endPayDate, LocalDateTime touristDate, LocalDateTime endTouristDate, OrderStateEnum orderStateEnum, Pageable pageable) throws IOException;
+            , LocalDateTime endPayDate, LocalDateTime touristDate, LocalDateTime endTouristDate, OrderStateEnum orderStateEnum, Boolean settlement, Pageable pageable) throws IOException;
 
 
     /**
