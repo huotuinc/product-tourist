@@ -64,17 +64,17 @@
                                     </div>
                                     <!--<p></p>-->
                                     <!--<div class="form-group">-->
-                                        <!--<label class="control-label" for="orderStateEnum">付款状态：</label>-->
-                                        <!--<select class="form-control" name="orderStateEnum" id="orderStateEnum">-->
-                                            <!--<option value="-1">全部</option>-->
-                                            <!--<option value="0">未支付</option>-->
-                                            <!--<option value="1">已支付</option>-->
-                                            <!--<option value="2">已确认</option>-->
-                                            <!--<option value="3">已完成</option>-->
-                                            <!--<option value="4">退款中</option>-->
-                                            <!--<option value="5">已退款</option>-->
-                                            <!--<option value="6">已取消</option>-->
-                                        <!--</select>-->
+                                    <!--<label class="control-label" for="orderStateEnum">付款状态：</label>-->
+                                    <!--<select class="form-control" name="orderStateEnum" id="orderStateEnum">-->
+                                    <!--<option value="-1">全部</option>-->
+                                    <!--<option value="0">未支付</option>-->
+                                    <!--<option value="1">已支付</option>-->
+                                    <!--<option value="2">已确认</option>-->
+                                    <!--<option value="3">已完成</option>-->
+                                    <!--<option value="4">退款中</option>-->
+                                    <!--<option value="5">已退款</option>-->
+                                    <!--<option value="6">已取消</option>-->
+                                    <!--</select>-->
                                     <!--</div>-->
                                     <br/><br/>
 
@@ -112,8 +112,7 @@
                 </div>
             </form>
         </div>
-    </div>
-    <div class="panel panel-default">
+
         <div class="tabs-container">
             <ul id="shortcutSearch" class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" aria-expanded="true">全部</a>
@@ -135,13 +134,14 @@
             </ul>
             <div id="toolbar" class="btn-group">
                 <select class="form-control">
-                    <option value="basic">Export Basic</option>
-                    <option value="all">Export All</option>
-                    <option value="selected">Export Selected</option>
+                    <option value="basic">导出本页</option>
+                    <option value="all">导出全部</option>
+                    <option value="selected">选择导出</option>
                 </select>
             </div>
             <div class="tab-content">
-                <table id="table" data-toggle="table" th:data-url="@{/base/touristOrders}" data-url="../../../mock/supplier/orderList.json"
+                <table id="table" data-toggle="table" th:data-url="@{/base/touristOrders}"
+                       data-url="../../../mock/supplier/orderList.json"
                        data-method="get" data-side-pagination="server" data-pagination="true" data-striped="true"
                        data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
                        data-escape="true" data-query-params="getParams"

@@ -23,6 +23,7 @@ $(function(){
  * 时间控件编辑
  */
 var dateRangeEdit=function(){
+    //noinspection JSUnresolvedFunction
     $('input[name$="Date"]').daterangepicker(
         {
             locale: {
