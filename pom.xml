@@ -5,7 +5,7 @@
   ~
   ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
   ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
-  ~ 2013-2016. All rights reserved.
+  ~ 2013-2017. All rights reserved.
   -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -74,6 +74,11 @@
             <id>repo-jc</id>
             <name>JiangCai Repository</name>
             <url>http://repo.jiangcai.me:8082/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>repo-huotu</id>
+            <name>Hot Repository</name>
+            <url>http://repo.51flashmall.com:8081/nexus/content/groups/public/</url>
         </repository>
     </repositories>
     <pluginRepositories>
