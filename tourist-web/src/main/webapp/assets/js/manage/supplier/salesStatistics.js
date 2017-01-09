@@ -127,9 +127,11 @@ dateRangeFormat = function (text) {
  */
 var getParams= function(params) {
     var orderDates=dateRangeFormat($("input[name='orderDate']").val());
+    var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
     var temp = {
         pageSize: params.limit, //页面大小
-        pageNo: params.offset/params.limit, //页码
+        //pageNo: params.offset/params.limit, //页码
+        sort:sort,
         sortName: params.sort, sortOrder:params.order,   //排序
         orderDate:orderDates[0]!=""?orderDates[0]:undefined,
         endOrderDate:orderDates[1]!=""?orderDates[1]:undefined

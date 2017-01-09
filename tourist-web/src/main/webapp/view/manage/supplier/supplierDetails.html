@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
-    <title></title>
+    <title>供应商信息</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/fine-uploader-new.min.css"
           property=""/>
@@ -23,15 +23,11 @@
     <div class="h">
         <span class="icon-sprite icon-list"></span>
         <h3>修改供应商</h3>
-        <div class="bar">
-            <a class="btn-lit" href="supplierList.html" target="content">
-                <span>返回管理列表</span></a>
-        </div>
     </div>
     <div class="cnt-wp">
 
         <form id="modelForm" method="post" class="form-inline" action="supplierList.html"
-              th:action="@{${supplier==null ? '/distributionPlatform/addSupplier' : '/distributionPlatform/updateSupplier'}}">
+              th:action="@{/supplier/modifySupplierInfo}">
             <div class="cnt form">
                 <div class="division">
                     <input type="hidden" name="id" id="id" th:value="${supplier.id}">
@@ -96,23 +92,6 @@
                                 <div class="col-sm-10" id="supplier-uploader"></div>
                             </td>
                         </tr>
-                        <!--<tr>-->
-                            <!--<th>管理员账号：</th>-->
-                            <!--<td>-->
-                                <!--<input type="text" name="loginName" id="adminAccount"-->
-                                       <!--th:value="${supplier.loginName}"-->
-                                       <!--class="input-normal"-->
-                                       <!--placeholder="管理员账号">-->
-                            <!--</td>-->
-                        <!--</tr>-->
-                        <!--<tr>-->
-                            <!--<th>管理员密码：</th>-->
-                            <!--<td>-->
-                                <!--<input type="password" name="password" id="adminPassword"-->
-                                       <!--th:value="${supplier.password}" class="input-normal"-->
-                                       <!--placeholder="管理员密码">-->
-                            <!--</td>-->
-                        <!--</tr>-->
                         <tr>
                             <th>备注：</th>
                             <td>

@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 
 <head>
 
@@ -77,7 +77,7 @@
                                             <label class="col-sm-1 control-label">封面图片：</label>
 
                                             <div class="col-sm-10">
-                                                    <img id="pictureUrl" style="width: 150px;height: 100px"  th:src="*{touristImgUri}"
+                                                    <img id="pictureUrl" style="width: 150px;height: 100px"  res:src="*{touristImgUri}"
                                                          src="http://placehold.it/300x200?text=封面&size=50"/>
                                                 <label title="上传图片" for="fileImage" class="btn btn-success">
                                                     <input onchange="uploadImage()" type="file" accept="image/*"  id="fileImage" name="fileImage" class="hide"/> 上传新图片
