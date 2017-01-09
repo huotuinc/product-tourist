@@ -3,7 +3,17 @@
  */
 $(function(){
     dateRangeEdit();
+    exportEdit();
+    dateSearch();
+    datecancelEdit();
+    //dateapplyEdit();
 
+});
+
+/**
+ * 导出表格配置
+ */
+var exportEdit=function(){
     var $table = $('table');
     $('#toolbar').find('select').change(function () {
         var pageSize = $table.bootstrapTable("getOptions").totalRows;
@@ -15,7 +25,38 @@ $(function(){
         }
         $table.bootstrapTable('destroy').bootstrapTable(a);
     });
-});
+};
+
+/**
+ * 根据日期查询
+ */
+var dateSearch=function(){
+    $("#dateSearch").on("click",function(){
+        $(".tab-pane.active").find("table").bootstrapTable('refresh');
+    })
+};
+
+
+/**
+ * 日期点击取消操作
+ * @constructor
+ */
+var datecancelEdit=function(){
+    $('input[name="orderDate"]').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val("");
+    });
+};
+
+//var dateapplyEdit=function(){
+//    $('input[name="orderDate"]').on('apply.daterangepicker', function (ev, picker) {
+//        var startDate=picker.startDate.format("YYYY-MM-DD hh:mm:ss");
+//        var endDate=picker.endDate.format("YYYY-MM-DD hh:mm:ss");
+//        $(this).val(startDate+" - "+endDate);
+//    });
+//};
+
+
+
 
 /**
  * 时间控件编辑
@@ -65,5 +106,34 @@ var actionEvents = {
     'click .audit': function (e, value, row, index) {
         var id=row.id;
     }
+};
+
+/**
+ * 将2017-01-01 12:00:00-2017-01-01 12:00:00这种格式的字符串转换成两个时间格式的字符串
+ * @param text
+ */
+dateRangeFormat = function (text) {
+    var s = "2017-01-01 12:00:00";
+    var array = [];
+    array[0] =text.substr(0, s.length);
+    array[1] =text.substr(s.length+1);
+    return array;
+};
+
+
+/**
+ * 搜素参数添加
+ * @param params
+ */
+var getParams= function(params) {
+    var orderDates=dateRangeFormat($("input[name='orderDate']").val());
+    var temp = {
+        pageSize: params.limit, //页面大小
+        pageNo: params.offset/params.limit, //页码
+        sortName: params.sort, sortOrder:params.order,   //排序
+        orderDate:orderDates[0]!=""?orderDates[0]:undefined,
+        endOrderDate:orderDates[1]!=""?orderDates[1]:undefined
+    };
+    return temp;
 };
 

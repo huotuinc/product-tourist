@@ -1012,7 +1012,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         touristGood = touristGoodRepository.getOne(touristGood.getId());
-        assertThat(touristGood.getRecommend()).isTrue().as("修改成功");
+        assertThat(touristGood.isRecommend()).isTrue().as("修改成功");
 
         status = mockMvc.perform(post("/distributionPlatform/unRecommendTouristGood")
                 .param("id", touristGood.getId().toString())
@@ -1020,7 +1020,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value()).as("相应成功");
         touristGood = touristGoodRepository.getOne(touristGood.getId());
-        assertThat(touristGood.getRecommend()).isFalse().as("修改成功");
+        assertThat(touristGood.isRecommend()).isFalse().as("修改成功");
 
         status = mockMvc.perform(post("/distributionPlatform/recommendTouristGood")
                 .param("id", touristGood.getId().toString()).session(session)

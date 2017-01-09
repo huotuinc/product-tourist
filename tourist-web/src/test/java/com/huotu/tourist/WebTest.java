@@ -35,6 +35,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -275,7 +276,7 @@ public abstract class WebTest extends ServiceBaseTest {
         touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
-        touristGood.setRecommend(null);
+        touristGood.setRecommend(false);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 
@@ -300,20 +301,21 @@ public abstract class WebTest extends ServiceBaseTest {
      * @param touristImgUri         商品图片
      * @param maxPeople             最大人数
      * @param mallGoodsId
+     * @param images                组图
      * @return  线路商品
      */
     protected TouristGood createTouristGood(String name, ActivityType activityType, TouristType touristType
             , TouristCheckStateEnum checkState, TouristSupplier touristSupplier, String touristFeatures
             , Address destination, Address placeOfDeparture, Address travelledAddress, BigDecimal price
             , BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson, String receptionTelephone
-            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, long mallGoodsId) {
+            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, long mallGoodsId, List<String> images) {
         TouristGood touristGood=new TouristGood();
         touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
         touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
         touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
-        touristGood.setRecommend(null);
+        touristGood.setRecommend(false);
         touristGood.setMallGoodId(mallGoodsId);
         touristGood.setTouristFeatures(touristFeatures);
         touristGood.setDestination(destination);
@@ -329,6 +331,7 @@ public abstract class WebTest extends ServiceBaseTest {
         touristGood.setTouristImgUri(touristImgUri);
         touristGood.setMaxPeople(maxPeople);
         touristGood.setCreateTime(LocalDateTime.now());
+        touristGood.setImages(images);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 

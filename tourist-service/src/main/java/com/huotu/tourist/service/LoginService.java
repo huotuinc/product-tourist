@@ -30,5 +30,13 @@ public interface LoginService extends UserDetailsService {
      */
     <T extends Login> T updatePassword(T login, String rawPassword);
 
+    /**
+     * 新增登录用户
+     * @param login     登录用户
+     * @param password  密码
+     * @return
+     */
+    Login addLogin(Login login,String password);
+
 
 }

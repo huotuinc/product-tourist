@@ -40,6 +40,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -292,7 +293,8 @@ public class SupplierManageController {
         //保存商品
         TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount
-                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,mallGoodsId, photos);
+                ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople
+                ,mallGoodsId, Arrays.asList(photos));
 
         //保存所有线路
         List<TouristRoute> newRoutes=new ArrayList<>();
@@ -358,7 +360,7 @@ public class SupplierManageController {
     @RequestMapping("/orderDetailsList")
     @ResponseBody
     public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal SystemUser userInfo
-            , @RequestParam Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
+            , Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
             , LocalDateTime payDate, LocalDateTime endPayDate) throws IOException {
         TouristSupplier supplier =(TouristSupplier)userInfo;
 
@@ -408,10 +410,11 @@ public class SupplierManageController {
      */
     @RequestMapping("/goodsSalesRanking")
     @ResponseBody
-    public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo,Pageable pageable)
+    public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo
+            ,Pageable pageable,LocalDateTime orderDate, LocalDateTime endOrderDate)
             throws IOException{
         TouristSupplier supplier =(TouristSupplier)userInfo;
-        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable);
+        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 
         //购买次数处理
         Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {

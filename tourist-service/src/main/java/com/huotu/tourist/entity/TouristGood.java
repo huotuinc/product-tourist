@@ -18,18 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -282,7 +271,7 @@ public class TouristGood extends BaseModel {
     private Long mallGoodId;
 
     /**
-     * 商品组图
+     * 商品组图,保存的是图片path
      */
     @ElementCollection
     private List<String> images;

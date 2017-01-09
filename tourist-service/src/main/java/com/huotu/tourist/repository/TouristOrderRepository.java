@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -71,4 +72,9 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
 
     @Query("select o,count(o.touristGood) as num from TouristOrder as o where o.touristGood.touristSupplier.id=?1 order by num desc")
     Page<Object> goodsSalesRanking(Long supplierId, Pageable pageable);
+
+    @Query("select o,count(o.touristGood) as num from TouristOrder as o where o.touristGood.touristSupplier.id=?1" +
+            " and o.createTime>?2 and o.createTime<?3 order by num desc")
+    Page<Object> goodsSalesRankingByDate(Long supplierId, LocalDateTime orderDate,LocalDateTime endOrderDate
+                                         ,Pageable pageable);
 }

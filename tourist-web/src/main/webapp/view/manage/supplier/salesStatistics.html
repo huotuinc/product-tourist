@@ -31,7 +31,10 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
 
 </head>
-
+<!--/*@thymesVar id="moneyTotal" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="commissionTotal" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="refundTotal" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="orderTotal" type="long"*/-->
 <body class="gray-bg">
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -44,6 +47,7 @@
                             <div class="ibox">
                                 <div class="ibox-content">
                                     <h4>订单总金额</h4>
+
                                     <h1 class="no-margins" th:text="${moneyTotal}==null?0:${moneyTotal}">886,200</h1>
                                 </div>
                             </div>
@@ -82,8 +86,8 @@
                 <div class="ibox-title">
                     <div class="form-group">
                     <div class="form-inline">
-                        <input size="50" name="Date" placeholder="时间" class="form-control" type="text">
-                        <button type="button" class="btn  btn-success ">查询</button>
+                        <input size="50" name="orderDate" placeholder="时间" class="form-control" type="text">
+                        <button id="dateSearch" type="button" class="btn  btn-success ">查询</button>
                         <!--<button type="button" class="btn  btn-success ">导出明细</button>-->
                     </div>
                 </div>
@@ -106,6 +110,7 @@
                                     </select>
                                 </div>
                                 <table class="table table-hover" data-toggle="table"
+                                       th:attr="data-url=@{/supplier/orderDetailsList}"
                                        data-url="../../../mock/supplier/orderDetailsList.json"
                                        data-method="get" data-side-pagination="server" data-pagination="true"
                                        data-striped="true" data-page-number="1" data-page-size="10"
@@ -124,8 +129,7 @@
                                             data-sortable="true">下单时间</th>
                                         <th data-field="payTime" data-align="center"
                                             data-sortable="true">支付时间</th>
-                                        <th data-field="peopleNumber" data-align="center"
-                                            data-sortable="true">人员数量</th>
+                                        <th data-field="peopleNumber" data-align="center">人员数量</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -140,6 +144,7 @@
                                 </div>
                                 <table class="table table-hover" data-toggle="table"
                                        data-url="../../../mock/supplier/goodsStatisticsList.json"
+                                       th:attr="data-url=@{/supplier/goodsSalesRanking}"
                                        data-method="get" data-side-pagination="server" data-pagination="true"
                                        data-striped="true" data-page-number="1" data-page-size="10"
                                        data-query-params="getParams" data-toolbar="#toolbar2"
@@ -179,8 +184,6 @@
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script src="../../../assets/libs/bootstrap-table/bootstrap-table-export.js"></script>
 <script src="../../../assets/libs/bootstrap-table/tableExport.js"></script>
-
-
 
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>-->
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>-->

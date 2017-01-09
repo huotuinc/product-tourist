@@ -48,6 +48,11 @@ public class LoginServiceImpl implements LoginService {
         return loginRepository.save(login);
     }
 
+    @Override
+    public Login addLogin(Login login, String password) {
+       return updatePassword(login,password);
+    }
+
     @PostConstruct
     @Transactional
     public void init() {

@@ -20,11 +20,11 @@ import com.huotu.tourist.service.TouristRouteService;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,6 +65,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
                 .param("orderId",orderNo)
                 .param(pageParameterName,"0")
                 .param(sizeParameterName,"10")
+                .param("sort","id,asc")
                 .session(session))
                 .andExpect(jsonPath("$.rows").isArray())
                 .andReturn().getResponse().getContentAsString();
@@ -340,7 +341,6 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
     @Test
     public void saveTouristGood() throws Exception{
         //当前测试的登录用户
-        TouristSupplier touristSupplier=null;
         ActivityType activityType=createActivityType("sltActivity");
         TouristType touristType=createTouristType("sltTourist");
         Address destination=new Address("浙江省","杭州市","滨江区");
@@ -358,9 +358,10 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         String beCareful="注意事项";
         String touristImgUri="图片";
         Integer maxPeople=40;
-        TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,touristSupplier
+        List<String> images=new ArrayList<>(Arrays.asList(new String[]{"11","22"}));
+        TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,supplier
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,8);
+                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,8, images);
 
         TouristRoute[] touristRoutes=new TouristRoute[2];
 
@@ -389,7 +390,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
                 .param("eventDetails","活动详情")
                 .param("beCareful","注意事项")
                 .param("touristImgUri","www.baidu.com")
-                .param("photos","eeee,334")
+                .param("photos","11,334")
                 .session(session)
                 );
         TouristGood goodsAct=touristGoodRepository.findOne(touristGood.getId());

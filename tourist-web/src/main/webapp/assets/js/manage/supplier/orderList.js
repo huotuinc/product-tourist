@@ -6,6 +6,7 @@ $(function(){
     bindSearch();
     bindOrderStateLabel();
     changesStyleTouristDate();
+    datecancelEdit();
     var $table = $('#table');
     $('#toolbar').find('select').change(function () {
         var pageSize = $table.bootstrapTable("getOptions").totalRows;
@@ -46,6 +47,27 @@ var dateRangeFormat=function(text){
     array[0]=text.substr(0, s.length);
     array[1]=text.substr(s.length+3);
     return array;
+};
+
+/**
+ * 日期确定操作
+ */
+//var dateapplyEdit=function(){
+//    $('input[name$="Date"]').on('apply.daterangepicker', function (ev, picker) {
+//        var startDate=picker.startDate.format("YYYY-MM-DD hh:mm:ss");
+//        var endDate=picker.endDate.format("YYYY-MM-DD hh:mm:ss");
+//        $(this).val(startDate+" - "+endDate);
+//    });
+//};
+
+/**
+ * 日期点击取消操作
+ * @constructor
+ */
+var datecancelEdit=function(){
+    $('input[name="orderDate"]').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val("");
+    });
 };
 
 /**
@@ -349,7 +371,7 @@ var getParams= function(params) {
     var temp = {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
-        sortName: params.sort, sortOrder:params.order,   //排序
+        sort: params.sort+","+params.order,   //排序
         orderId:orderId!=""?orderId:undefined,
         name:name!=""?name:undefined,
         buyer:buyer!=""?buyer:undefined,

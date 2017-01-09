@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 线路相关服务
@@ -56,9 +58,10 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * 商品销售排行，默认降序
      *
      * @param supplierId 供应商ID
-     * @return 商品列表
+     * @param orderDate
+     *@param endOrderDate @return 商品列表
      */
-    Page<TouristGood> salesRanking(Long supplierId, Pageable pageable);
+    Page<TouristGood> salesRanking(Long supplierId, Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate);
 
 
     /**
@@ -89,6 +92,6 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, long mallGoodsId, String[] photos);
+            , int maxPeople, long mallGoodsId, List<String> photos);
 
 }

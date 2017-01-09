@@ -110,8 +110,13 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     }
 
     @Override
-    public Page<TouristGood> salesRanking(Long supplierId,Pageable pageable) {
-        Page<Object> page=touristOrderRepository.goodsSalesRanking(supplierId,pageable);
+    public Page<TouristGood> salesRanking(Long supplierId, Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate) {
+        Page<Object> page=null;
+        if(orderDate!=null&&endOrderDate!=null){
+            touristOrderRepository.goodsSalesRankingByDate(supplierId,orderDate,endOrderDate,pageable);
+        }else {
+            touristOrderRepository.goodsSalesRanking(supplierId,pageable);
+        }
         List<TouristGood> touristGoods=new ArrayList<>();
         for(Object o:page){
             if(o==null){
@@ -131,7 +136,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, long mallGoodsId, String[] photos) {
+            , int maxPeople, long mallGoodsId, List<String> photos) {
         TouristGood touristGood = null;
         if (id != null) {
             touristGood = touristGoodRepository.getOne(id);
@@ -156,7 +161,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         touristGood.setBeCareful(beCareful);
         touristGood.setTouristImgUri(touristImgUri);
         touristGood.setMaxPeople(maxPeople);
-        touristGood.setPhotos(photos);
+        touristGood.setImages(photos);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 

@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -93,7 +94,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
-        PageableHandlerMethodArgumentResolver resolver=new PageableHandlerMethodArgumentResolver();
+        PageableHandlerMethodArgumentResolver resolver=
+                new PageableHandlerMethodArgumentResolver(new SortHandlerMethodArgumentResolver());
         resolver.setPageParameterName(pageParameterName);
         resolver.setSizeParameterName(sizeParameterName);
         argumentResolvers.add(resolver);
