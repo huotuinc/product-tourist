@@ -26,8 +26,9 @@ public interface ConnectMallService {
      * 并设置当前商品的商城商品id
      *
      * @param touristGood 本地商品
+     * @return 商城商品id
      */
-    void pushGoodToMall(TouristGood touristGood) throws IOException;
+    long pushGoodToMall(TouristGood touristGood) throws IOException;
 
     /**
      * 订单状态是否正常（我们只会认可唯一的一种状态）

@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.entity;
@@ -22,6 +22,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -272,7 +273,7 @@ public class TouristGood extends BaseModel {
      * 推荐
      */
     @Column
-    private Boolean recommend;
+    private boolean recommend;
 
     /**
      * 商城商品id
@@ -283,6 +284,7 @@ public class TouristGood extends BaseModel {
     /**
      * 商品组图
      */
-    private String[] Photos;
+    @ElementCollection
+    private List<String> images;
 
 }
