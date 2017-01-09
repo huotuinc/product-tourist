@@ -9,9 +9,23 @@
 
 package com.huotu.tourist;
 
-import com.huotu.tourist.common.*;
+import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.config.MVCConfig;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.page.LoginPage;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
@@ -35,7 +49,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -84,9 +97,6 @@ public abstract class WebTest extends ServiceBaseTest {
     protected TravelerRepository travelerRepository;
     @Autowired
     protected TouristGoodService touristGoodService;
-    @Autowired
-    SettlementSheetRepository settlementSheetRepository;
-
     /**
      * 第几页字符串名称
      */
@@ -95,6 +105,8 @@ public abstract class WebTest extends ServiceBaseTest {
      * 每页几条字符串名称
      */
     protected String sizeParameterName = "pageSize";
+    @Autowired
+    SettlementSheetRepository settlementSheetRepository;
 
     /**
      * 创建一个随机的订单状态
@@ -148,25 +160,6 @@ public abstract class WebTest extends ServiceBaseTest {
                 return SettlementStateEnum.NotChecking;
             default:
                 return SettlementStateEnum.CheckFinish;
-        }
-    }
-
-    /**
-     * 创建一个线路审核的状态
-     *
-     * @return 线路审核的状态
-     */
-    protected TouristCheckStateEnum randomTouristCheckStateEnum() {
-        int checkStateNo = random.nextInt(4);
-        switch (checkStateNo) {
-            case 0:
-                return TouristCheckStateEnum.NotChecking;
-            case 1:
-                return TouristCheckStateEnum.CheckFinish;
-            case 2:
-                return TouristCheckStateEnum.Saved;
-            default:
-                return TouristCheckStateEnum.Recycle;
         }
     }
 
@@ -247,19 +240,6 @@ public abstract class WebTest extends ServiceBaseTest {
     }
 
     /**
-     * 创建一个供应商
-     *
-     * @param supplierName
-     * @return
-     */
-    protected TouristSupplier createTouristSupplier(String supplierName) {
-        TouristSupplier supplier = new TouristSupplier();
-        supplier.setSupplierName(supplierName == null ? UUID.randomUUID().toString() : supplierName);
-        supplier.setCreateTime(LocalDateTime.now());
-        return touristSupplierRepository.saveAndFlush(supplier);
-    }
-
-    /**
      *  创建一个线路商品
      * @param name 线路名称
      * @param activityType 活动类型
@@ -277,61 +257,6 @@ public abstract class WebTest extends ServiceBaseTest {
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
         touristGood.setRecommend(false);
-        return touristGoodRepository.saveAndFlush(touristGood);
-    }
-
-    /**
-     * 创建一个线路商品,详细
-     * @param name 线路名称
-     * @param activityType          活动类型
-     * @param touristType           线路类型
-     * @param checkState            线路审核状态
-     * @param touristSupplier       线路供应商
-     * @param touristFeatures       线路特色
-     * @param destination           目的地
-     * @param placeOfDeparture      出发地
-     * @param travelledAddress      途经地
-     * @param price                 单价
-     * @param childrenDiscount      儿童折扣
-     * @param rebate                返利比例
-     * @param receptionPerson       地接人
-     * @param receptionTelephone    地接人电话
-     * @param eventDetails          活动详情
-     * @param beCareful             注意事项
-     * @param touristImgUri         商品图片
-     * @param maxPeople             最大人数
-     * @param mallGoodsId
-     * @param images                组图
-     * @return  线路商品
-     */
-    protected TouristGood createTouristGood(String name, ActivityType activityType, TouristType touristType
-            , TouristCheckStateEnum checkState, TouristSupplier touristSupplier, String touristFeatures
-            , Address destination, Address placeOfDeparture, Address travelledAddress, BigDecimal price
-            , BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson, String receptionTelephone
-            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, long mallGoodsId, List<String> images) {
-        TouristGood touristGood=new TouristGood();
-        touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
-        touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
-        touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
-        touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
-        touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
-        touristGood.setRecommend(false);
-        touristGood.setMallGoodId(mallGoodsId);
-        touristGood.setTouristFeatures(touristFeatures);
-        touristGood.setDestination(destination);
-        touristGood.setPlaceOfDeparture(placeOfDeparture);
-        touristGood.setTravelledAddress(travelledAddress);
-        touristGood.setPrice(price);
-        touristGood.setChildrenDiscount(childrenDiscount);
-        touristGood.setRebate(rebate);
-        touristGood.setReceptionPerson(receptionPerson);
-        touristGood.setReceptionTelephone(receptionTelephone);
-        touristGood.setEventDetails(eventDetails);
-        touristGood.setBeCareful(beCareful);
-        touristGood.setTouristImgUri(touristImgUri);
-        touristGood.setMaxPeople(maxPeople);
-        touristGood.setCreateTime(LocalDateTime.now());
-        touristGood.setImages(images);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 
@@ -418,32 +343,6 @@ public abstract class WebTest extends ServiceBaseTest {
         purchaserProductSetting.setName(name == null ? UUID.randomUUID().toString().replace("-", "") : name);
         purchaserProductSetting.setPrice(new BigDecimal(100));
         return purchaserProductSettingRepository.saveAndFlush(purchaserProductSetting);
-    }
-
-    /**
-     * 创建活动类型
-     *
-     * @param activityName
-     * @return
-     */
-    protected ActivityType createActivityType(String activityName) {
-        ActivityType activityType = new ActivityType();
-        activityType.setActivityName(activityName == null ? UUID.randomUUID().toString() : activityName);
-        activityType.setCreateTime(LocalDateTime.now());
-        return activityTypeRepository.saveAndFlush(activityType);
-    }
-
-    /**
-     * 创建线路类型
-     *
-     * @param typeName
-     * @return
-     */
-    protected TouristType createTouristType(String typeName) {
-        TouristType touristType = new TouristType();
-        touristType.setTypeName(typeName == null ? UUID.randomUUID().toString() : typeName);
-        touristType.setCreateTime(LocalDateTime.now());
-        return touristTypeRepository.saveAndFlush(touristType);
     }
 
     /**

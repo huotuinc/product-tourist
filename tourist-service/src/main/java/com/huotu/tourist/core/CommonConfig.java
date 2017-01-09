@@ -4,11 +4,12 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.core;
 
+import com.huotu.huobanplus.sdk.common.CommonClientSpringConfig;
 import com.huotu.tourist.Version;
 import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.repository.SystemStringRepository;
@@ -28,7 +29,8 @@ import org.springframework.context.annotation.Import;
  * @author CJ
  */
 @Configuration
-@Import({ResourceSpringConfig.class, UpgradeSpringConfig.class, JdbcSpringConfig.class, LoggingConfig.class})
+@Import({ResourceSpringConfig.class, UpgradeSpringConfig.class, JdbcSpringConfig.class, LoggingConfig.class
+        , CommonClientSpringConfig.class})
 class CommonConfig {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
