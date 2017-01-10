@@ -15,6 +15,7 @@ import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 使用huobanplus推送商品和订单
@@ -37,6 +39,8 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
+    @Autowired
+    private TouristGoodRepository touristGoodRepository;
 
     @Autowired
     public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository) throws IOException {
@@ -46,12 +50,20 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
-    public long pushGoodToMall(TouristGood touristGood) throws IOException {
+    public TouristGood pushGoodToMall(long touristGoodId) throws IOException {
+        TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
+        if (touristGood.getMallGoodId() != null)
+            return touristGood;
         Goods goods = new Goods();
         goods.setOwner(merchant);
+        goods.setCreateTime(new Date());
+        goods.setDisabled(false);
+        goods.setMarketable(true);
+        goods.setTitle(touristGood.getTouristName());
         goods = goodsRestRepository.insert(goods);
         log.debug("new Goods:" + goods);
-        return goods.getId();
+        touristGood.setMallGoodId(goods.getId());
+        return touristGood;
     }
 
     @Override

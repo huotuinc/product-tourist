@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -116,6 +117,47 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     }
 
     /**
+     * @return 创建好的一个随机供应商
+     */
+    protected TouristSupplier createRandomTouristSupplier() {
+        return createTouristSupplier(null);
+    }
+
+    /**
+     * @return 随机地址
+     */
+    protected Address randomAddress() {
+        return new Address(org.apache.commons.lang.RandomStringUtils.randomAlphabetic(5)
+                , org.apache.commons.lang.RandomStringUtils.randomAlphabetic(5)
+                , org.apache.commons.lang.RandomStringUtils.randomAlphabetic(6));
+    }
+
+    /**
+     * @return 已创建的随机线路
+     */
+    protected TouristGood createRandomTouristGood() {
+        return createTouristGood(null, null, null, null, null
+                , UUID.randomUUID().toString(), randomAddress(), randomAddress(), randomAddress(), randomPrice()
+                , randomRate(), randomRate(), RandomStringUtils.randomAlphabetic(6), randomMobile()
+                , UUID.randomUUID().toString(), UUID.randomUUID().toString(), null
+                , 30, null, Collections.emptyList());
+    }
+
+    /**
+     * @return 随机比例 <1
+     */
+    protected BigDecimal randomRate() {
+        return new BigDecimal(Math.abs(random.nextDouble())).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * @return 随机价格
+     */
+    protected BigDecimal randomPrice() {
+        return new BigDecimal(1D + Math.abs(random.nextDouble()) * 200D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
      * 创建一个线路商品,详细
      *
      * @param name               线路名称
@@ -144,7 +186,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
             , TouristCheckStateEnum checkState, TouristSupplier touristSupplier, String touristFeatures
             , Address destination, Address placeOfDeparture, Address travelledAddress, BigDecimal price
             , BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson, String receptionTelephone
-            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, long mallGoodsId, List<String> images) {
+            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, Long mallGoodsId, List<String> images) {
         TouristGood touristGood = new TouristGood();
         touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
         touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
@@ -185,6 +227,13 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     }
 
     /**
+     * @return 创建好的随机活动类型
+     */
+    protected ActivityType createRandomActivityType() {
+        return createActivityType(null);
+    }
+
+    /**
      * 创建线路类型
      *
      * @param typeName
@@ -195,6 +244,13 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         touristType.setTypeName(typeName == null ? UUID.randomUUID().toString() : typeName);
         touristType.setCreateTime(LocalDateTime.now());
         return touristTypeRepository.saveAndFlush(touristType);
+    }
+
+    /**
+     * @return 创建好的随机线路类型
+     */
+    protected TouristType createRandomTouristType() {
+        return createTouristType(null);
     }
 
     public static class RandomComparator implements Comparator<Object> {
