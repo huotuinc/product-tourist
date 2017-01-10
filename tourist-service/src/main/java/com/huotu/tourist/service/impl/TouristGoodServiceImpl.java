@@ -132,17 +132,18 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     }
 
     @Override
-    public TouristGood saveTouristGood(Long id, String touristName, ActivityType activityType, TouristType touristType
+    public TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType, TouristType touristType
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, long mallGoodsId, List<String> photos) {
+            , int maxPeople, Long mallGoodsId, List<String> photos, TouristCheckStateEnum goodsCheckState) {
         TouristGood touristGood = null;
         if (id != null) {
             touristGood = touristGoodRepository.getOne(id);
         } else {
             touristGood = new TouristGood();
         }
+        touristGood.setTouristSupplier(touristSupplier);
         touristGood.setCreateTime(LocalDateTime.now());
         touristGood.setMallGoodId(mallGoodsId);
         touristGood.setTouristName(touristName);
@@ -162,6 +163,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         touristGood.setTouristImgUri(touristImgUri);
         touristGood.setMaxPeople(maxPeople);
         touristGood.setImages(photos);
+        touristGood.setTouristCheckState(goodsCheckState);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 

@@ -26,6 +26,10 @@ var touristNameFormatter=function(value,row,index){
     return '<span>'+row.touristName+'</span>';
 };
 
+var touristCheckStateFormatter=function(value,row,index){
+    return row.touristCheckState.value;
+};
+
 var touristImgUriFormatter=function(value,row,index){
     return '<img src="'+row.touristImgUri+'" height="50px" width="80px">';
 };
