@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
 
 /**
@@ -48,14 +49,16 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
 
     @Override
     public TouristSupplier modifySupplier(Long id, Address address, String contacts, String contactNumber
-            , String businessLicenseUri, String remarks) {
+            , String businessLicenseUri, String remarks, String detailedAddress) {
         TouristSupplier touristSupplier = getOne(id);
         touristSupplier.setAddress(address);
         touristSupplier.setContacts(contacts);
         touristSupplier.setContactNumber(contactNumber);
         // TODO: 2017/1/3 删除原有图片
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
+        touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setRemarks(remarks);
         return save(touristSupplier);
+
     }
 }

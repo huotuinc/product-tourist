@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
+    <title>收款账户修改</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="http://resali.huobanplus.com/cdn/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/animate.min.css" rel="stylesheet"/>
+    <link href="../../../assets/libs/cityPicker/css/city-picker.css" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
+
+</head>
+<!--/*@thymesVar id="account" type="com.huotu.tourist.entity.CollectionAccount"*/-->
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h2>编辑收款账户</h2>
+                </div>
+                <div class="ibox-content">
+                    <div class="wrapper-content">
+
+                        <form action="payeeAccountDetailsH+.html" method="post"
+                              th:action="@{/supplier/saveCollectionAccount}" class="form-horizontal">
+                            <input name="id" th:value="${account.id}" type="hidden"/>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">账户类型：</label>
+
+                                <div class="col-sm-1">
+
+                                    <select name="accountType" class="form-control">
+                                        <option value="0"
+                                                th:selected="${account.accountType!=null&&account.accountType.code==0}">支付宝
+                                        </option>
+                                        <option value="1"
+                                                th:selected="${account.accountType!=null&&account.accountType.code==1}">银行卡</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">姓名：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="aliPayName" th:value="${account.aliPayName}" type="text"
+                                           placeholder="供应商名称"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">银行卡户名：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="accountName" th:value="${account.accountName}" type="text"
+                                           placeholder="银行卡户名"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">支付宝账户：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="aliPayAccount" th:value="${account.aliPayAccount}" type="text"
+                                           placeholder="支付宝账户"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">开户银行：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="bank" th:value="${account.bank}" type="text"
+                                           placeholder="开户银行"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">开户支行：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="bankBranch" th:value="${account.bankBranch}" type="text"
+                                           placeholder="开户支行"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">身份证：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="IDCard" th:value="${account.IDCard}" type="text"
+                                           placeholder="身份证"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">银行卡号：</label>
+
+                                <div class="col-sm-4">
+                                    <input name="bankCard" th:value="${account.bankCard}" type="text"
+                                           placeholder="银行卡号"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+
+
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <p class="text-center">
+                                    <button  class="btn btn-success"
+                                            type="submit">保存</button>
+                                </p>
+
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.5/bootstrap.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/2.4/layer.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
+<script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+<script src="../../../assets/js/manage/supplier/payeeAccountDetails.js" th:inline="javascript"></script>
+</body>
+
+</html>

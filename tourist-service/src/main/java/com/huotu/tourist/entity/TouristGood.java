@@ -69,7 +69,7 @@ public class TouristGood extends BaseModel {
             , new Selection<TouristGood, String>() {
                 @Override
                 public String apply(TouristGood touristGood) {
-                    return touristGood.getActivityType().getActivityName();
+                    return touristGood.getActivityType()==null?null:touristGood.getActivityType().getActivityName();
                 }
 
                 @Override
@@ -80,7 +80,7 @@ public class TouristGood extends BaseModel {
             , new Selection<TouristGood, String>() {
                 @Override
                 public String apply(TouristGood touristGood) {
-                    return touristGood.getTouristType().getTypeName();
+                    return touristGood.getTouristType()==null?null:touristGood.getTouristType().getTypeName();
                 }
 
                 @Override
@@ -267,7 +267,7 @@ public class TouristGood extends BaseModel {
     /**
      * 商城商品id
      */
-    @Column(unique = true)
+    @Column
     private Long mallGoodId;
 
     /**

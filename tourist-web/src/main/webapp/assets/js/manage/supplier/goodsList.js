@@ -26,6 +26,10 @@ var touristNameFormatter=function(value,row,index){
     return '<span>'+row.touristName+'</span>';
 };
 
+var touristCheckStateFormatter=function(value,row,index){
+    return row.touristCheckState.value;
+};
+
 var touristImgUriFormatter=function(value,row,index){
     return '<img src="'+row.touristImgUri+'" height="50px" width="80px">';
 };
@@ -75,10 +79,12 @@ var getParams= function(params) {
     var touristTypeId=$("select[name='touristType'] option:selected").val();
     var activityTypeId=$("select[name='activityType'] option:selected").val();
     var touristCheckState=$("select[name='touristCheckState'] option:selected").val();
+    var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
     var temp = {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
-        sortName: params.sort, sortOrder:params.order,   //排序
+        //sortName: params.sort, sortOrder:params.order,   //排序
+        sort:sort,
         touristName: touristName!=""?touristName:undefined,
         touristTypeId:touristTypeId!="-1"?touristTypeId:undefined,
         activityTypeId:activityTypeId!="-1"?activityTypeId:undefined,

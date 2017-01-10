@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 
 <head>
 
@@ -35,7 +35,6 @@
 <!--/*@thymesVar id="touristTypes" type="java.util.ArrayList<com.huotu.tourist.entity.TouristType>"*/-->
 <!--/*@thymesVar id="activityTypes" type="java.util.ArrayList<com.huotu.tourist.entity.ActivityType>"*/-->
 <!--/*@thymesVar id="routes" type="java.util.ArrayList<com.huotu.tourist.model.TouristRouteModel>"*/-->
-<!--/*@thymesVar id="checkStates" type="com.huotu.tourist.common.TouristCheckStateEnum[]"*/-->
 <body class="gray-bg">
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -77,7 +76,7 @@
                                             <label class="col-sm-1 control-label">封面图片：</label>
 
                                             <div class="col-sm-10">
-                                                    <img id="pictureUrl" style="width: 150px;height: 100px"  th:src="*{touristImgUri}"
+                                                    <img id="pictureUrl" style="width: 150px;height: 100px"  res:src="*{touristImgUri}"
                                                          src="http://placehold.it/300x200?text=封面&size=50"/>
                                                 <label title="上传图片" for="fileImage" class="btn btn-success">
                                                     <input onchange="uploadImage()" type="file" accept="image/*"  id="fileImage" name="fileImage" class="hide"/> 上传新图片
@@ -106,9 +105,9 @@
 
                                             <div class="col-sm-1">
 
-                                                <select name="touristType" th:each="t:${touristTypes}" class="form-control">
+                                                <select name="touristType"  class="form-control">
 
-                                                    <option value="3" th:checked="*{touristType.id}==${t.id}"
+                                                    <option th:each="t:${touristTypes}" value="3" th:checked="*{touristType.id}==${t.id}"
                                                             th:value="${t.id}"
                                                             th:text="${t.typeName}">短途游
                                                     </option>
@@ -120,8 +119,8 @@
 
                                             <div class="col-sm-1">
 
-                                                <select name="activityType" th:each="a:${activityTypes}" class="form-control">
-                                                    <option value="2" th:checked="*{activityType.id}==${a.id}"
+                                                <select name="activityType"  class="form-control">
+                                                    <option th:each="a:${activityTypes}" value="2" th:checked="*{activityType.id}==${a.id}"
                                                             th:value="${a.id}"
                                                             th:text="${a.activityName}">跳伞
                                                 </select>
@@ -237,10 +236,10 @@
                                         <div class="hr-line-dashed"></div>
 
 
-                                        <div th:each="r:${routes}" id="goodsTouristDates" class="form-group form-inline">
+                                        <div id="goodsTouristDates" class="form-group form-inline">
 
-                                            <div class="col-sm-2">
-
+                                            <div th:each="r:${routes}" class="col-sm-2">
+                                                <span>出行时间：</span>
                                                 <input name="toursitDate" th:value="${r.fromDate}" type="text"
                                                        class="form-control"/>
                                                 <span th:if="${r.sold}">已售出</span>
@@ -299,12 +298,9 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <p class="text-center">
-                            <button th:each="c:${checkStates}" onclick="submitForm(1,this)" th:text="${c.value}"
-                                    th:onclick="'submitForm('+${c.code}+',this)'"
-                                    class="btn btn-success" type="button">保存
-                            </button>
-                            <button onclick="submitForm(this)" class="btn btn-success" type="button">保存并提交审核</button>
-                            <button onclick="submitForm(this)" class="btn btn-success" type="button">回收</button>
+                            <button onclick="submitForm(0,this)" class="btn btn-success" type="button">保存</button>
+                            <button onclick="submitForm(1,this)" class="btn btn-success" type="button">保存并提交审核</button>
+                            <button onclick="submitForm(3,this)" class="btn btn-success" type="button">回收</button>
                         </p>
 
                     </div>
@@ -329,8 +325,73 @@
 <script src="../../../assets/js/manage/supplier/goodsDetails.js" th:inline="javascript"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    //        messageConfig.sharePicPath=/*[[${sharePicPath}]]*/ '';
-    //图片上传
+    /**
+     * 提交表单
+     * @param obj
+     */
+    var submitForm=function(checkStates,obj) {
+        if($(obj).attr("class")=="btn btn-primary disabled"){
+            return;
+        }
+        var id=$("input[name='id']").val();
+        var touristName=$("input[name='touristName']").val();
+        var pictureUrl=$("#pictureUrl").attr("src");
+        var touristType=$("select[name='touristType'] option:checked").val();
+        var activityType=$("select[name='activityType'] option:checked").val();
+        var touristFeatures=$("input[name='touristFeatures']").val();
+        var destination=$("input[name='destination']").val();
+        var placeOfDeparture=$("input[name='placeOfDeparture']").val();
+        var travelledAddress=$("input[name='travelledAddress']").val();
+        var price=$("input[name='price']").val();
+        var childrenDiscount=$("input[name='childrenDiscount']").val();
+        var rebate=$("input[name='rebate']").val();
+        var receptionPerson=$("input[name='receptionPerson']").val();
+        var receptionTelephone=$("input[name='receptionTelephone']").val();
+        var maxPeople=$("input[name='maxPeople']").val();
+        var eventDetails=$("#eventDetails").code();
+        var beCareful=$("#beCareful").code();
+        var touristRoutes=[];
+        $("#goodsTouristDates").children("div").each(function(){
+            var fromDate=$("input[name='toursitDate']",this).val();
+            var id=$("span",this).eq(1).text();
+            if(fromDate!=""){
+                touristRoutes.push({id:id,fromDate:fromDate});
+            }
+        });
+        if(touristRoutes.length==0){
+            layer.msg("请至少添加一个行程");
+            return;
+        }
+
+
+        var url=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
+
+        var ld=layer.load(5, {shade: false});
+        $(obj).attr("class","btn btn-primary disabled");
+
+        $.ajax({
+            type:'POST',
+            url: url,
+            dataType: 'text',
+            data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristType:touristType,activityType:activityType,
+                touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
+                travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
+                receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
+                eventDetails:eventDetails,beCareful:beCareful,routes:JSON.stringify(touristRoutes),checkState:checkStates
+            },
+            success:function(){
+                layer.close(ld);
+                layer.msg("保存成功！");
+                $(obj).attr("class","btn btn-success");
+                window.setTimeout("window.location='/base/showGoodsList'",1000);
+            },
+            error:function(e){
+                layer.close(ld);
+                layer.msg("保存失败！");
+                $(obj).attr("class","btn btn-success");
+            }
+        });
+    };
 
 
     /*]]>*/

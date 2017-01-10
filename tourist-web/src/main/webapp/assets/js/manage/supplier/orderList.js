@@ -368,10 +368,11 @@ var getParams= function(params) {
     var buyer=$("input[name='buyer']").val();
     var tel=$("input[name='tel']").val();
     var settlement=$("#settlement option:checked").val();
+    var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
     var temp = {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
-        sort: params.sort+","+params.order,   //排序
+        sort: sort,   //排序
         orderId:orderId!=""?orderId:undefined,
         name:name!=""?name:undefined,
         buyer:buyer!=""?buyer:undefined,

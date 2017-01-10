@@ -89,9 +89,9 @@ var bindTouristDateDel=function(){
  * 增加一个行程时间
  */
 var addTouristDate=function(){
-    $("#goodsTouristDates").append('<div class="col-sm-2"> ' +
+    $("#goodsTouristDates").append('<div class="col-sm-2"> <span>出行时间：</span>' +
         '<input name="toursitDate" ' +
-        'type="text"class="form-control"/><span>已售出</span><span style="display: none">1</span></div>');
+        'type="text"class="form-control"/><span style="display: none">1</span></div>');
     dateRangeEdit();
     bindTouristDateDel();
 };
@@ -168,65 +168,3 @@ var uploadImage=function(){
     });
 };
 
-/**
- * 提交表单
- * @param obj
- */
-var submitForm=function(checkStates,obj) {
-    if($(obj).attr("class")=="btn btn-primary disabled"){
-        return;
-    }
-    var id=$("input[name='id']").val();
-    var touristName=$("input[name='touristName']").val();
-    var pictureUrl=$("#pictureUrl").attr("src");
-    var touristType=$("select[name='touristType'] option:checked").val();
-    var activityType=$("select[name='activityType'] option:checked").val();
-    var touristFeatures=$("input[name='touristFeatures']").val();
-    var destination=$("input[name='destination']").val();
-    var placeOfDeparture=$("input[name='placeOfDeparture']").val();
-    var travelledAddress=$("input[name='travelledAddress']").val();
-    var price=$("input[name='price']").val();
-    var childrenDiscount=$("input[name='childrenDiscount']").val();
-    var rebate=$("input[name='rebate']").val();
-    var receptionPerson=$("input[name='receptionPerson']").val();
-    var receptionTelephone=$("input[name='receptionTelephone']").val();
-    var maxPeople=$("input[name='maxPeople']").val();
-    var eventDetails=$("#eventDetails").code();
-    var beCareful=$("#beCareful").code();
-    var touristRoutes=[];
-    $("#goodsTouristDates").children("div").each(function(){
-        var fromDate=$("input[name='toursitDate']",this).val();
-        var id=$("span",this).eq(1).text();
-        touristFeatures.push({id:id,fromDate:fromDate});
-    });
-
-
-    //goods.customerId=/*[[${message.customerId}]]*/ '';
-
-    var ld=layer.load(5, {shade: false});
-    $(obj).attr("class","btn btn-primary disabled");
-
-    $.ajax({
-        type:'POST',
-        url: '',
-        dataType: 'json',
-        contentType:"application/json",
-        data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristType:touristType,activityType:activityType,
-            touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
-            travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
-            receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
-            eventDetails:eventDetails,beCareful:beCareful,touristRoutes:touristRoutes
-        },
-        success:function(result){
-            layer.close(ld);
-            layer.msg("保存成功！");
-            $(obj).attr("class","btn btn-success");
-//            window.setTimeout("window.location='/back/showMessageList'",1000);
-        },
-        error:function(e){
-            layer.close(ld);
-            layer.msg("保存失败！");
-            $(obj).attr("class","btn btn-success");
-        }
-    });
-};

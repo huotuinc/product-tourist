@@ -84,11 +84,9 @@
     </div>
 
     <div id="toolbar" class="btn-group">
-        <button id="btn_add" type="button" class="btn btn-default">
-            <a th:href="@{/supplier/showTouristGood}" href="goodsDetailsH+.html">
+            <a class="btn btn-primary" th:href="@{/supplier/showTouristGood}" href="goodsDetailsH+.html">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
             </a>
-        </button>
     </div>
 
     <table id="goodsTable" data-toggle="table" th:attr="data-url=@{/base/touristGoodList}"
@@ -109,7 +107,8 @@
             <th data-field="stock" data-align="center">剩余库存</th>
             <th data-field="destination" data-align="center">目的地</th>
             <th data-field="rebate" data-align="center" data-sortable="true">佣金比例</th>
-            <th data-field="touristCheckState" data-align="center">审核状态</th>
+            <th data-field="touristCheckState" data-align="center"
+                data-formatter="touristCheckStateFormatter">审核状态</th>
             <th data-field="action"  data-align="center"
                 data-formatter="actionFormatter" data-events="actionEvents">操作
             </th>
