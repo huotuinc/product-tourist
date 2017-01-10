@@ -322,81 +322,15 @@
 <script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
 <script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
-<script src="../../../assets/js/manage/supplier/goodsDetails.js" th:inline="javascript"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    /**
-     * 提交表单
-     * @param obj
-     */
-    var submitForm=function(checkStates,obj) {
-        if($(obj).attr("class")=="btn btn-primary disabled"){
-            return;
-        }
-        var id=$("input[name='id']").val();
-        var touristName=$("input[name='touristName']").val();
-        var pictureUrl=$("#pictureUrl").attr("src");
-        var touristType=$("select[name='touristType'] option:checked").val();
-        var activityType=$("select[name='activityType'] option:checked").val();
-        var touristFeatures=$("input[name='touristFeatures']").val();
-        var destination=$("input[name='destination']").val();
-        var placeOfDeparture=$("input[name='placeOfDeparture']").val();
-        var travelledAddress=$("input[name='travelledAddress']").val();
-        var price=$("input[name='price']").val();
-        var childrenDiscount=$("input[name='childrenDiscount']").val();
-        var rebate=$("input[name='rebate']").val();
-        var receptionPerson=$("input[name='receptionPerson']").val();
-        var receptionTelephone=$("input[name='receptionTelephone']").val();
-        var maxPeople=$("input[name='maxPeople']").val();
-        var eventDetails=$("#eventDetails").code();
-        var beCareful=$("#beCareful").code();
-        var touristRoutes=[];
-        $("#goodsTouristDates").children("div").each(function(){
-            var fromDate=$("input[name='toursitDate']",this).val();
-            var id=$("span",this).eq(1).text();
-            if(fromDate!=""){
-                touristRoutes.push({id:id,fromDate:fromDate});
-            }
-        });
-        if(touristRoutes.length==0){
-            layer.msg("请至少添加一个行程");
-            return;
-        }
 
-
-        var url=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
-
-        var ld=layer.load(5, {shade: false});
-        $(obj).attr("class","btn btn-primary disabled");
-
-        $.ajax({
-            type:'POST',
-            url: url,
-            dataType: 'text',
-            data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristType:touristType,activityType:activityType,
-                touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
-                travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
-                receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
-                eventDetails:eventDetails,beCareful:beCareful,routes:JSON.stringify(touristRoutes),checkState:checkStates
-            },
-            success:function(){
-                layer.close(ld);
-                layer.msg("保存成功！");
-                $(obj).attr("class","btn btn-success");
-                window.setTimeout("window.location='/base/showGoodsList'",1000);
-            },
-            error:function(e){
-                layer.close(ld);
-                layer.msg("保存失败！");
-                $(obj).attr("class","btn btn-success");
-            }
-        });
-    };
-
-
+    var submitUrl=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
     /*]]>*/
 
 </script>
+<script src="../../../assets/js/manage/supplier/goodsDetails.js"></script>
+
 </body>
 
 </html>

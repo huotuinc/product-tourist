@@ -34,10 +34,10 @@ public class TouristRoute extends BaseModel {
     @ManyToOne
     private TouristGood good;
 
-    @Column(columnDefinition = "date")
+    @Column(columnDefinition = "datetime")
     private LocalDateTime fromDate;
 
-    @Column(columnDefinition = "date")
+    @Column(columnDefinition = "datetime")
     private LocalDateTime toDate;
 
     private int maxPeople;

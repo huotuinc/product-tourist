@@ -10,6 +10,8 @@
 package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.AbstractSupplierTest;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.*;
@@ -371,7 +373,6 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         }
 
         mockMvc.perform(get("/supplier/saveTouristGood")
-                .param("mallGoodsId","9")
                 .param("id",""+ touristGood.getId())
                 .param("touristName","modify")
                 .param("routes","[\n{\n\"routeNo\": \"48954\",\n\"fromDate\": \"2016-12-12 00:00:00\"\n},\n{\n \"routeNo\": \"1111\",\n\"fromDate\": \"2017-12-12 00:00:00\"\n}\n]")
@@ -395,7 +396,45 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
                 );
         TouristGood goodsAct=touristGoodRepository.findOne(touristGood.getId());
         assertThat(goodsAct.getTouristName().equals("modify")).isTrue().as("名称校验");
+
+        List<TouristRoute> routesAct=touristRouteRepository.findByGood(touristGood);
+        LocalDateTime formDate=routesAct.get(0).getFromDate();
+        System.out.println(formDate.toString());
+        assertThat(formDate!=null).isTrue().as("出发日期是否存在");
+
     }
+
+
+    @Test
+    public void showTouristGoodsList() throws Exception{
+        TouristGood touristGood=createTouristGood("slt",null,null,TouristCheckStateEnum.CheckFinish,supplier
+                ,null,null,null,null,null,null,null,null,null,null,null,null,20,10,null);
+        TouristOrder touristOrder=createTouristOrder(touristGood,null,null, OrderStateEnum.Finish,LocalDateTime.now()
+                , LocalDateTime.now(), PayTypeEnum.Alipay,"");
+
+        List<TouristRoute> routes=new ArrayList<>();
+        for(int i=0;i<3;i++){
+            routes.add(createTouristRoute(null,touristGood,LocalDateTime.now(),null,0));
+        }
+        List<Traveler> travelers=new ArrayList<>();
+        for(int i=0;i<5;i++){
+           travelers.add(createTraveler(routes.get(2/(i+1)),touristOrder));
+        }
+
+
+        String json=mockMvc.perform(get("/base/touristGoodList")
+                .param(pageParameterName,"0")
+                .param(sizeParameterName,"10")
+                .session(session))
+                .andExpect(jsonPath("$.rows").isArray())
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        Long idActual=Long.valueOf(JsonPath.read(json,"$.rows[0].surplus").toString());
+        assertThat(routes.size()*touristGood.getMaxPeople()-travelers.size()==idActual).isTrue().as("库存校验");
+
+
+    };
 
 
 }

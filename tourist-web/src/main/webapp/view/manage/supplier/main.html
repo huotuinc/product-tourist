@@ -79,9 +79,11 @@
                         </li>
                         <li><a class="J_menuItem" th:href="@{/supplier/showTouristGood}" href="goodsDetailsH+.html">新增路线</a>
                         </li>
-                        <li><a class="J_menuItem" href="../platform/touristType/touristTypeList.html">路线类型</a>
+                        <li><a class="J_menuItem" th:href="@{/distributionPlatform/toTouristTypeList}" href="../platform/touristType/touristTypeList.html">
+                            路线类型</a>
                         </li>
-                        <li><a class="J_menuItem" href="../platform/activityType/activityTypeList.html">活动类型</a>
+                        <li><a class="J_menuItem" th:href="@{/distributionPlatform/toActivityTypeList}" href="../platform/activityType/activityTypeList.html">
+                            活动类型</a>
                         </li>
                     </ul>
                 </li>
@@ -93,7 +95,7 @@
                         <li><a class="J_menuItem" href="settlementAccount.html">结算账户</a>
                         </li>
                         <li><a class="J_menuItem" href="salesStatistics.html"
-                               th:href="@{supplier/showSaleStatistics}">销售统计</a>
+                               th:href="@{/supplier/showSaleStatistics}">销售统计</a>
                         </li>
 
                     </ul>

@@ -247,7 +247,13 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/iCheck/icheck.min.js"></script>
-<script src="../../../assets/js/manage/supplier/orderDetails.js" th:inline="javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var modifyOrderStateUrl=/*[[@{base/modifyOrderState}]]*/'../../mock/supplier/orderDetails.json';
+    /*]]>*/
+
+</script>
+<script src="../../../assets/js/manage/supplier/orderDetails.js"></script>
 </body>
 
 </html>

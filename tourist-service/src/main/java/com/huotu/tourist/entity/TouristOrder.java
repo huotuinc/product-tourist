@@ -51,8 +51,8 @@ public class TouristOrder extends BaseModel {
             ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
             ,new SimpleSelection<TouristOrder,String>("remarks", "remarks")
 
-            ,new SimpleSelection<TouristOrder,String>("payTime", "payTime")
-            ,new SimpleSelection<TouristOrder,String>("createTime", "createTime")
+            ,new SimpleSelection<TouristOrder,LocalDateTime>("payTime", "payTime")
+            ,new SimpleSelection<TouristOrder,LocalDateTime>("createTime", "createTime")
 
             , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
@@ -128,6 +128,7 @@ public class TouristOrder extends BaseModel {
     /**
      * 是否结算
      */
+    @Column
     private Boolean settlement;
 
 

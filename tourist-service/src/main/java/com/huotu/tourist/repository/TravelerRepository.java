@@ -28,7 +28,8 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long> {
 
     Long countByOrder_Id(Long orderId);
 
-    long countByOrder_TouristGood(TouristGood touristGood);
+//    @Query("select count(t) from Traveler as t where ")
+    Long countByOrder_TouristGood(TouristGood touristGood);
 
     int countByRoute(TouristRoute route);
 }

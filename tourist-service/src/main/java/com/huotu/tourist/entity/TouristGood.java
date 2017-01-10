@@ -12,11 +12,8 @@ package com.huotu.tourist.entity;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TravelerRepository;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -106,37 +103,37 @@ public class TouristGood extends BaseModel {
             }
 
     );
-
-    //**剩余库存计算
-    public static final Selection select = new Selection<TouristGood, Long>() {
-        @Autowired
-        TravelerRepository travelerRepository;
-        @Autowired
-        TouristRouteRepository touristRouteRepository;
-
-        @Override
-        public Long apply(TouristGood touristGood) {
-            try {
-                //商品的游客总人数
-                long travelers = travelerRepository.countByOrder_TouristGood(touristGood);
-                //线路数
-                long routes = touristRouteRepository.countByGood(touristGood);
-
-                //剩余数
-                long surplus = touristGood.maxPeople * routes - travelers;
-
-                return surplus;
-            } catch (Exception e) {
-                return null;
-            }
-
-        }
-
-        @Override
-        public String getName() {
-            return "surplus";
-        }
-    };
+//
+//    //**剩余库存计算
+//    public static final Selection select = new Selection<TouristGood, Long>() {
+//        @Autowired
+//        TravelerRepository travelerRepository;
+//        @Autowired
+//        TouristRouteRepository touristRouteRepository;
+//
+//        @Override
+//        public Long apply(TouristGood touristGood) {
+//            try {
+//                //商品的游客总人数
+//                long travelers = travelerRepository.countByOrder_TouristGood(touristGood);
+//                //线路数
+//                long routes = touristRouteRepository.countByGood(touristGood);
+//
+//                //剩余数
+//                long surplus = touristGood.maxPeople * routes - travelers;
+//
+//                return surplus;
+//            } catch (Exception e) {
+//                return null;
+//            }
+//
+//        }
+//
+//        @Override
+//        public String getName() {
+//            return "surplus";
+//        }
+//    };
     /**
      * 线路行程表
      */

@@ -17,8 +17,7 @@ var search=function(){
 
 
 var actionFormatter = function (value, row, index) {
-    var detailUrl=/*[[@{/supplier/showTouristGood}]]*/"goodsDetailsH+.html";
-    return  '<a href="'+detailUrl+'?id='+row.id+'" class="btn btn-link showDetail">查看</a>' +
+    return  '<button class="btn btn-link showDetail">查看</button>' +
             '<button class="btn btn-link recycle">回收</button>';
 };
 
@@ -28,6 +27,7 @@ var touristNameFormatter=function(value,row,index){
 
 var touristCheckStateFormatter=function(value,row,index){
     return row.touristCheckState.value;
+
 };
 
 var touristImgUriFormatter=function(value,row,index){
@@ -35,12 +35,13 @@ var touristImgUriFormatter=function(value,row,index){
 };
 
 var actionEvents = {
-    //'click .showDetail': function (e, value, row, index) {
-    //    var id=row.id;
-    //    location.href=/*[[@{/supplier/showTouristGood(id=)}]]*/"goodsDetailsH+.html";
-    //},
+    'click .showDetail': function (e, value, row, index) {
+        var id=row.id;
+
+        location.href=showGoodsDetalUrl+"?id="+id;
+    },
     'click .recycle': function (e, value, row, index) {
-        var url=/*[[@{/supplier/showTouristGood(id=)}]]*/"../../../mock/supplier/httpJson.json";
+
         var tr=$("#goodsTable tr").eq(index+1);
         var td=$("td",tr).eq(9);
         if($(td).text()!="已回收"){
@@ -49,10 +50,10 @@ var actionEvents = {
             }, function(){
                 //ajax异步回收
                 $.ajax({
-                    url: url,
+                    url: recyleUrl,
                     method: "post",
                     data: {id: row.id, checkState: 3},
-                    dataType: "json",
+                    dataType: "text",
                     success: function () {
                         //$table.bootstrapTable('refresh');
                         layer.msg('修改成功', {icon: 1});
