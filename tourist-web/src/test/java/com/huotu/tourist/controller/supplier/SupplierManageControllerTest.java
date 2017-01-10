@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.controller.supplier;
@@ -12,7 +12,14 @@ package com.huotu.tourist.controller.supplier;
 import com.huotu.tourist.AbstractSupplierTest;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.BaseModel;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TravelerRepository;
@@ -361,7 +368,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         List<String> images=new ArrayList<>(Arrays.asList(new String[]{"11","22"}));
         TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,supplier
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,8, images);
+                , receptionPerson, receptionTelephone, eventDetails, beCareful, touristImgUri, maxPeople, null, images);
 
         TouristRoute[] touristRoutes=new TouristRoute[2];
 

@@ -10,6 +10,7 @@
 package com.huotu.tourist.service;
 
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.tourist.entity.TouristGood;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,13 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
 
     @Test
     public void go() throws IOException {
-//        createTouristGood()
-        long id = connectMallService.pushGoodToMall(null);
+        TouristGood good = createRandomTouristGood();
+
+        good = connectMallService.pushGoodToMall(good.getId());
         try {
-            System.out.println(goodsRestRepository.getOneByPK(id).getOwner().getNickName());
+            System.out.println(goodsRestRepository.getOneByPK(good.getMallGoodId()).getOwner().getNickName());
         } finally {
-            goodsRestRepository.deleteByPK(id);
+            goodsRestRepository.deleteByPK(good.getMallGoodId());
         }
 
     }

@@ -11,6 +11,7 @@ package com.huotu.tourist.service;
 
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -25,10 +26,11 @@ public interface ConnectMallService {
      * 将本地商品与远程商品同步
      * 并设置当前商品的商城商品id
      *
-     * @param touristGood 本地商品
-     * @return 商城商品id
+     * @param touristGoodId 本地商品id
+     * @return 已更新好的本地商品
      */
-    long pushGoodToMall(TouristGood touristGood) throws IOException;
+    @Transactional
+    TouristGood pushGoodToMall(long touristGoodId) throws IOException;
 
     /**
      * 订单状态是否正常（我们只会认可唯一的一种状态）

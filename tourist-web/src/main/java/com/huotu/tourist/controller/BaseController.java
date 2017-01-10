@@ -137,23 +137,24 @@ public class BaseController {
 
     /**
      * 订单列表
-     *  @param user
-     * @param orderNo      订单号
+     *
+     * @param user
+     * @param orderNo        订单号
      * @param supplierName
-     * @param touristName  线路名称
-     * @param buyerName    采购商名称
-     * @param tel          采购商电话
-     * @param payType      支付类型
-     * @param orderDate    开始订单创建时间
-     * @param endOrderDate 结束订单创建时间
-     * @param payDate      开始支付时间
-     * @param endPayDate   结束支付时间
-     * @param touristDate  线路开始时间
+     * @param touristName    线路名称
+     * @param buyerName      采购商名称
+     * @param tel            采购商电话
+     * @param payType        支付类型
+     * @param orderDate      开始订单创建时间
+     * @param endOrderDate   结束订单创建时间
+     * @param payDate        开始支付时间
+     * @param endPayDate     结束支付时间
+     * @param touristDate    线路开始时间
      * @param endTouristDate 结束出行时间
-     * @param orderState   订单状态
-     * @param pageable     分页
+     * @param orderState     订单状态
+     * @param pageable       分页
      * @param request
-     * @param model        @return
+     * @param model          @return
      */
     @RequestMapping(value = "touristOrders", method = RequestMethod.GET)
     public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo,
@@ -164,15 +165,15 @@ public class BaseController {
             , @RequestParam(required = false) LocalDateTime payDate
             , @RequestParam(required = false) LocalDateTime endPayDate
             , @RequestParam(required = false) LocalDateTime touristDate
-            , @RequestParam(required = false)LocalDateTime endTouristDate
+            , @RequestParam(required = false) LocalDateTime endTouristDate
             , OrderStateEnum orderState, Pageable pageable, Boolean settlement
-            ,HttpServletRequest request, Model model) throws IOException {
+            , HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
         }
         Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
-                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderState,settlement ,
+                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderState, settlement,
                 pageable);
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
@@ -269,7 +270,7 @@ public class BaseController {
                     , touristCheckState, true, pageable);
         } else {
             page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
-                    activityType, touristCheckState,pageable);
+                    activityType, touristCheckState, pageable);
         }
         List<Selection<TouristGood, ?>> selects = new ArrayList<>();
         selects.addAll(TouristGood.selections);
@@ -372,7 +373,7 @@ public class BaseController {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
                     checkState.equals(TouristCheckStateEnum.CheckFinish)) {
                 //
-                connectMallService.pushGoodToMall(touristGood);
+                touristGood = connectMallService.pushGoodToMall(touristGood.getId());
                 touristGood.setTouristCheckState(checkState);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
