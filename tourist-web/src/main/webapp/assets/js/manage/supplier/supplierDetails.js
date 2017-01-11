@@ -34,7 +34,7 @@ var uploadImage=function(){
  * 提交表单
  * @param obj
  */
-var submitForm=function(checkStates,obj) {
+var submitForm=function(obj) {
     if($(obj).attr("class")=="btn btn-primary disabled"){
         return;
     }
@@ -48,22 +48,22 @@ var submitForm=function(checkStates,obj) {
 
     var contactNumber=$("input[name='contactNumber']").val();
 
-    var remarks=$("textarea[name='remarks']").text();
+    var remarks=$("input[name='remarks']").val();
 
-    //goods.customerId=/*[[${message.customerId}]]*/ '';
+
 
     var ld=layer.load(5, {shade: false});
     $(obj).attr("class","btn btn-primary disabled");
 
     $.ajax({
         type:'POST',
-        url: '',
-        dataType: 'json',
-        contentType:"application/json",
+        url: submitUrl,
+        dataType: 'text',
+//            contentType:"application/json",
         data:{id:id,supplierName:supplierName,businessLicenseUri:businessLicenseUri,address:address
             ,detailedAddress:detailedAddress, contacts:contacts,contactNumber:contactNumber
             ,remarks:remarks},
-        success:function(result){
+        success:function(){
             layer.close(ld);
             layer.msg("保存成功！");
             $(obj).attr("class","btn btn-success");

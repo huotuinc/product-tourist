@@ -41,8 +41,12 @@ public class TouristRouteResolver implements HandlerMethodArgumentResolver {
             , NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         List<TouristRoute> routes=new ArrayList<>();
         String routesStr=webRequest.getParameter("routes");
+        if(routesStr==null){
+            return null;
+        }
         ObjectMapper objectMapper=new ObjectMapper();
         List<LinkedHashMap<String, Object>> list=objectMapper.readValue(routesStr,List.class);
+
         for(LinkedHashMap<String, Object> l:list){
             TouristRoute touristRoute=new TouristRoute();
             String routeNo=l.get("routeNo")==null?null:l.get("routeNo").toString();

@@ -35,7 +35,6 @@
 <!--/*@thymesVar id="touristTypes" type="java.util.ArrayList<com.huotu.tourist.entity.TouristType>"*/-->
 <!--/*@thymesVar id="activityTypes" type="java.util.ArrayList<com.huotu.tourist.entity.ActivityType>"*/-->
 <!--/*@thymesVar id="routes" type="java.util.ArrayList<com.huotu.tourist.model.TouristRouteModel>"*/-->
-<!--/*@thymesVar id="checkStates" type="com.huotu.tourist.common.TouristCheckStateEnum[]"*/-->
 <body class="gray-bg">
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -106,9 +105,9 @@
 
                                             <div class="col-sm-1">
 
-                                                <select name="touristType" th:each="t:${touristTypes}" class="form-control">
+                                                <select name="touristType"  class="form-control">
 
-                                                    <option value="3" th:checked="*{touristType.id}==${t.id}"
+                                                    <option th:each="t:${touristTypes}" value="3" th:checked="*{touristType.id}==${t.id}"
                                                             th:value="${t.id}"
                                                             th:text="${t.typeName}">短途游
                                                     </option>
@@ -120,8 +119,8 @@
 
                                             <div class="col-sm-1">
 
-                                                <select name="activityType" th:each="a:${activityTypes}" class="form-control">
-                                                    <option value="2" th:checked="*{activityType.id}==${a.id}"
+                                                <select name="activityType"  class="form-control">
+                                                    <option th:each="a:${activityTypes}" value="2" th:checked="*{activityType.id}==${a.id}"
                                                             th:value="${a.id}"
                                                             th:text="${a.activityName}">跳伞
                                                 </select>
@@ -237,10 +236,10 @@
                                         <div class="hr-line-dashed"></div>
 
 
-                                        <div th:each="r:${routes}" id="goodsTouristDates" class="form-group form-inline">
+                                        <div id="goodsTouristDates" class="form-group form-inline">
 
-                                            <div class="col-sm-2">
-
+                                            <div th:each="r:${routes}" class="col-sm-2">
+                                                <span>出行时间：</span>
                                                 <input name="toursitDate" th:value="${r.fromDate}" type="text"
                                                        class="form-control"/>
                                                 <span th:if="${r.sold}">已售出</span>
@@ -299,12 +298,9 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <p class="text-center">
-                            <button th:each="c:${checkStates}" onclick="submitForm(1,this)" th:text="${c.value}"
-                                    th:onclick="'submitForm('+${c.code}+',this)'"
-                                    class="btn btn-success" type="button">保存
-                            </button>
-                            <button onclick="submitForm(this)" class="btn btn-success" type="button">保存并提交审核</button>
-                            <button onclick="submitForm(this)" class="btn btn-success" type="button">回收</button>
+                            <button onclick="submitForm(0,this)" class="btn btn-success" type="button">保存</button>
+                            <button onclick="submitForm(1,this)" class="btn btn-success" type="button">保存并提交审核</button>
+                            <button onclick="submitForm(3,this)" class="btn btn-success" type="button">回收</button>
                         </p>
 
                     </div>
@@ -326,16 +322,15 @@
 <script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
 <script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
-<script src="../../../assets/js/manage/supplier/goodsDetails.js" th:inline="javascript"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    //        messageConfig.sharePicPath=/*[[${sharePicPath}]]*/ '';
-    //图片上传
 
-
+    var submitUrl=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
     /*]]>*/
 
 </script>
+<script src="../../../assets/js/manage/supplier/goodsDetails.js"></script>
+
 </body>
 
 </html>

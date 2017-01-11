@@ -170,11 +170,10 @@ var touristDateEvents={
                 if(peopleNumber>surplusNumber){
                     layer.msg("修改人数超出限制");
                 }else {
-                    var url = /*[[@{/base/modifyOrderTouristDate}]]*/ "../../../mock/supplier/httpJson.json";
                     //ajax
                     $.ajax({
                         type:'GET',
-                        url: url,
+                        url: modifyTouristDateurl,
                         dataType: 'json',
                         data: {formerId:row.touristRouteId,laterId:laterId},
                         success:function(result){
@@ -219,10 +218,10 @@ var modifyOrderTouristDate=function(formerId,laterId){
  * @param id    订单ID
  */
 var getAllOrderTouristDate=function(orderId,routeId){
-    var url = /*[[@{/supplier/getAllOrderTouristDate}]]*/ "../../../mock/supplier/allOrderTouristDate.json";
+
     $.ajax({
         type:'GET',
-        url: url,
+        url: getAllOrderTouristDateUrl,
         dataType: 'json',
         data: {orderId:orderId,routeId:routeId},
         success:function(result){
@@ -306,7 +305,6 @@ var remarkFormatter=function(value,row,index){
  */
 var remarkEvents={
     'click a': function (e, value, row, index) {
-        var url = /*[[@{/base/modifyOrderRemarks}]]*/ "../../../mock/supplier/httpJson.json";
         layer.open({
             type: 1,
             title: false,
@@ -320,10 +318,10 @@ var remarkEvents={
                 var newText=$("#remark").text();
                 //ajax请求
                 $.ajax({
-                    url: url,
+                    url: modifyRemarkUrl,
                     method: "post",
                     data: {id: row.id,remark:newText},
-                    dataType: "json",
+                    dataType: "text",
                     success: function () {
                         layer.msg("修改成功");
                         $("#table").bootstrapTable('refresh');
@@ -373,11 +371,11 @@ var getParams= function(params) {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
         sort: sort,   //排序
-        orderId:orderId!=""?orderId:undefined,
+        orderNo:orderId!=""?orderId:undefined,
         name:name!=""?name:undefined,
         buyer:buyer!=""?buyer:undefined,
         tel:buyer!=""?buyer:undefined,
-        orderStateEnum:orderStateEnum>0?orderStateEnum-1:undefined,
+        orderState:orderStateEnum>0?orderStateEnum-1:undefined,
         orderDate:orderDates[0]!=""?orderDates[0]:undefined,
         endOrderDate:orderDates[1]!=""?orderDates[1]:undefined,
         payDate:payDate[0]!=""?payDate[0]:undefined,

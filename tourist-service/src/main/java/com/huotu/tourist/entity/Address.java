@@ -31,19 +31,19 @@ public class Address {
     /**
      * 省
      */
-    @Column(length = 10)
+    @Column(length = 20)
     private String province;
 
     /**
      * 市
      */
-    @Column(length = 10)
+    @Column(length = 20)
     private String town;
 
     /**
      * 区
      */
-    @Column(length = 10)
+    @Column(length = 20)
     private String district;
 
 

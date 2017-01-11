@@ -89,9 +89,9 @@ var bindTouristDateDel=function(){
  * 增加一个行程时间
  */
 var addTouristDate=function(){
-    $("#goodsTouristDates").append('<div class="col-sm-2"> ' +
+    $("#goodsTouristDates").append('<div class="col-sm-2"> <span>出行时间：</span>' +
         '<input name="toursitDate" ' +
-        'type="text"class="form-control"/><span>已售出</span><span style="display: none">1</span></div>');
+        'type="text"class="form-control"/><span style="display: none">1</span></div>');
     dateRangeEdit();
     bindTouristDateDel();
 };
@@ -129,13 +129,13 @@ var setRichText=function(){
  */
 var sendFile=function(file,editor,welEditable) {
     data = new FormData();
-    data.append("upload", file);
+    data.append("fileImage", file);
     $.ajax({
         data: data,
         type: "POST",
         url: "/upload/image",
         cache: false,
-        contentType: false,
+        contentType:'application/json',
         processData: false,
         success: function(data) {
             editor.insertImage(welEditable, data.url);
@@ -151,7 +151,7 @@ var uploadImage=function(){
     $.ajaxFileUpload({
         url: '/upload/image',
         secureuri: false,
-        fileElementId: 'upload',
+        fileElementId: 'fileImage',
         dataType: 'json',
         data: null,
         success: function(resultModel) {
@@ -196,32 +196,42 @@ var submitForm=function(checkStates,obj) {
     var touristRoutes=[];
     $("#goodsTouristDates").children("div").each(function(){
         var fromDate=$("input[name='toursitDate']",this).val();
+        var dateLenth="2017-02-02 04:31:00";
+        if(fromDate.length<dateLenth.length){
+            fromDate=fromDate.replace("T"," ");
+            fromDate=fromDate+":00";
+        }
         var id=$("span",this).eq(1).text();
-        touristFeatures.push({id:id,fromDate:fromDate});
+        if(fromDate!=""){
+            touristRoutes.push({id:id,fromDate:fromDate});
+        }
     });
+    if(touristRoutes.length==0){
+        layer.msg("请至少添加一个行程");
+        return;
+    }
 
 
-    //goods.customerId=/*[[${message.customerId}]]*/ '';
+
 
     var ld=layer.load(5, {shade: false});
     $(obj).attr("class","btn btn-primary disabled");
 
     $.ajax({
         type:'POST',
-        url: '',
-        dataType: 'json',
-        contentType:"application/json",
+        url: submitUrl,
+        dataType: 'text',
         data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristType:touristType,activityType:activityType,
             touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
             travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
             receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
-            eventDetails:eventDetails,beCareful:beCareful,touristRoutes:touristRoutes
+            eventDetails:eventDetails,beCareful:beCareful,routes:JSON.stringify(touristRoutes),checkState:checkStates
         },
-        success:function(result){
+        success:function(){
             layer.close(ld);
             layer.msg("保存成功！");
             $(obj).attr("class","btn btn-success");
-//            window.setTimeout("window.location='/back/showMessageList'",1000);
+            window.setTimeout("window.location='/base/showGoodsList'",1000);
         },
         error:function(e){
             layer.close(ld);
@@ -230,3 +240,4 @@ var submitForm=function(checkStates,obj) {
         }
     });
 };
+

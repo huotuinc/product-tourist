@@ -65,15 +65,14 @@ var modifyOrderStatus=function(id,obj){
     }, function (index) {
         var orderState=parseInt($(".orderState",obj).text());
         //修改订单状态
-        var url=/*[['base/modifyOrderState']]*/'../../mock/supplier/orderDetails.json';
         $.ajax({
             type:'POST',
-            url: url,
+            url: modifyOrderStateUrl,
             dataType: 'json',
             data: {id:id,orderState:orderState},
             success:function(result){
                 layer.msg("修改成功！");
-                window.setTimeout("window.location=location.href",1000);
+                //window.setTimeout("window.location=location.href",1000);
             },
             error:function(e){
                 layer.msg("修改出错！");

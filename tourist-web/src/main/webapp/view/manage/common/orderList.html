@@ -153,10 +153,10 @@
                         <th data-field="touristName" data-align="center" data-formatter="touristNameFormatter">路线名称</th>
                         <th data-field="orderMoney" data-align="center" data-sortable="true">金额</th>
                         <th data-field="buyerName" data-align="center">购买人</th>
-                        <th data-field="payTypeValue" data-align="center">支付状态</th>
+                        <th data-field="orderStateValue" data-align="center">订单状态</th>
                         <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
                         <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
-                        <th data-field="payType" data-align="center">支付方式</th>
+                        <th data-field="payTypeValue" data-align="center">支付方式</th>
                         <th data-field="touristDate" data-align="center"
                             data-formatter="touristDateFormatter" data-events="touristDateEvents">出行时间
                         </th>
@@ -189,7 +189,17 @@
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
-<script src="../../../assets/js/manage/supplier/orderList.js" th:inline="javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    var modifyTouristDateUrl = /*[[@{/base/modifyOrderTouristDate}]]*/ "../../../mock/supplier/httpJson.json";
+    var modifyRemarkUrl = /*[[@{/base/modifyOrderRemarks}]]*/ "../../../mock/supplier/httpJson.json";
+    var getAllOrderTouristDateUrl = /*[[@{/supplier/getAllOrderTouristDate}]]*/
+            "../../../mock/supplier/allOrderTouristDate.json";
+    /*]]>*/
+
+</script>
+<script src="../../../assets/js/manage/supplier/orderList.js"></script>
 </body>
 
 </html>

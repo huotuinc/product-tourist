@@ -200,8 +200,8 @@ public abstract class WebTest extends ServiceBaseTest {
      * @return 测试的线路订单
      */
     protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer, String orderNo
-            , OrderStateEnum orderState,LocalDateTime createTime, LocalDateTime payTime
-            , PayTypeEnum payType,String remark) {
+            , OrderStateEnum orderState, LocalDateTime createTime, LocalDateTime payTime
+            , PayTypeEnum payType, String remark, boolean settlement) {
         TouristOrder order = new TouristOrder();
         order.setTouristGood(good == null ? createTouristGood(null, null, null, null, null) : good);
         order.setTouristBuyer(buyer == null ? createTouristBuyer(null, null, null, null) : buyer);
@@ -211,6 +211,7 @@ public abstract class WebTest extends ServiceBaseTest {
         order.setPayTime(payTime == null ? LocalDateTime.now() : payTime);
         order.setPayType(payType == null ? randomPayTypeEnum() : payType);
         order.setRemarks(remark);
+        order.setSettlement(settlement);
 
         return touristOrderRepository.saveAndFlush(order);
     }
@@ -233,8 +234,8 @@ public abstract class WebTest extends ServiceBaseTest {
                         createTouristGood(null, null, null, null,
                                 createTouristSupplier(supplierName)
                         )
-                        , null, null, null, null, null, null,null
-                )
+                        , null, null, null, null, null, null,null,
+                        false)
         );
         return settlementSheetRepository.saveAndFlush(settlementSheet);
     }

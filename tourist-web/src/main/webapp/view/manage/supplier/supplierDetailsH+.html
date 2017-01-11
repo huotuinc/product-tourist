@@ -106,9 +106,9 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">备注：</label>
 
-                                <div class="col-sm-2">
-                                     <textarea name="remarks" th:text="*{remarks}"
-                                               placeholder="备注"></textarea>
+                                <div class="col-sm-10">
+                                     <input class="form-control" type="text" name="remarks" th:value="*{remarks}"
+                                               placeholder="备注"/>
                                 </div>
                             </div>
 
@@ -137,7 +137,18 @@
 <script src="../../../assets/libs/cityPicker/js/city-picker.data.js"></script>
 <script src="../../../assets/libs/cityPicker/js/city-picker.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
-<script src="../../../assets/js/manage/supplier/supplierDetails.js" th:inline="javascript"></script>
+
+
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    var submitUrl=/*[[@{/supplier/modifySupplierInfo}]]*/ '../../../mock/supplier/httpJson.json';
+
+    /*]]>*/
+
+</script>
+
+<script src="../../../assets/js/manage/supplier/supplierDetails.js"></script>
 </body>
 
 </html>

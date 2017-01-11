@@ -10,14 +10,21 @@
 package com.huotu.tourist.service.impl;
 
 import com.huotu.huobanplus.common.entity.Goods;
+import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 使用huobanplus推送商品和订单
@@ -27,14 +34,36 @@ import java.io.IOException;
 @Service
 public class ConnectMallServiceImpl implements ConnectMallService {
 
+    private static final Log log = LogFactory.getLog(ConnectMallServiceImpl.class);
+    private final Merchant merchant;
+
     @Autowired
     private GoodsRestRepository goodsRestRepository;
+    @Autowired
+    private TouristGoodRepository touristGoodRepository;
+
+    @Autowired
+    public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository) throws IOException {
+        merchant = merchantRestRepository.getOneByPK(
+                environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
+        );
+    }
 
     @Override
-    public long pushGoodToMall(TouristGood touristGood) throws IOException {
+    public TouristGood pushGoodToMall(long touristGoodId) throws IOException {
+        TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
+        if (touristGood.getMallGoodId() != null)
+            return touristGood;
         Goods goods = new Goods();
+        goods.setOwner(merchant);
+        goods.setCreateTime(new Date());
+        goods.setDisabled(false);
+        goods.setMarketable(true);
+        goods.setTitle(touristGood.getTouristName());
         goods = goodsRestRepository.insert(goods);
-        return goods.getId();
+        log.debug("new Goods:" + goods);
+        touristGood.setMallGoodId(goods.getId());
+        return touristGood;
     }
 
     @Override

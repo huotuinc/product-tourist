@@ -4,15 +4,24 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.AbstractSupplierTest;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.BaseModel;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.TouristRouteModel;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TravelerRepository;
@@ -58,7 +67,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         //预期
         String orderNo=randomString();
         TouristGood good=createTouristGood("slt",null,null,null,supplier);
-        TouristOrder order=createTouristOrder(good,null,orderNo,null,null,null,null,null);
+        TouristOrder order=createTouristOrder(good,null,orderNo,null,null,null,null,null, false);
 
 
         String json=mockMvc.perform(get("/base/touristOrders")
@@ -78,7 +87,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
 
         //预期
         order = createTouristOrder(createTouristGood("wy", null, null, null, supplier), null,null, null
-                , null, null, null, null);
+                , null, null, null, null, false);
 
         json=mockMvc.perform(get("/base/touristOrders")
                 .param("touristName","wy")
@@ -92,7 +101,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         assertThat(order.getId().equals(idActual)).isTrue().as("线路名称校验");
 
         //预期
-        order=createTouristOrder(good,createTouristBuyer("wy",null,null,null),null,null,null,null,null,null);
+        order=createTouristOrder(good,createTouristBuyer("wy",null,null,null),null,null,null,null,null,null, false);
 
         json=mockMvc.perform(get("/base/touristOrders")
                 .param("buyerName","wy").session(session))
@@ -106,7 +115,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         List<TouristOrder> touristOrders=new ArrayList<>();
         for(int i=0;i<3;i++){
             touristOrders.add(createTouristOrder(good,null,null,null,
-                    LocalDateTime.of(2016,i*3+1,1,1,1),null,null,null));
+                    LocalDateTime.of(2016,i*3+1,1,1,1),null,null,null, false));
         }
         order=touristOrders.get(1);
         json=mockMvc.perform(get("/base/touristOrders")
@@ -123,7 +132,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         touristOrders=new ArrayList<>();
         for(int i=0;i<3;i++){
             touristOrders.add(createTouristOrder(good,null,null,null,null,
-                    LocalDateTime.of(2016,i*3+1,1,1,1),null,null));
+                    LocalDateTime.of(2016,i*3+1,1,1,1),null,null, false));
         }
         order=touristOrders.get(1);
         json=mockMvc.perform(get("/base/touristOrders")
@@ -142,7 +151,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         TouristGood touristGood = createTouristGood("slt", null, null, null, supplier);
         TouristRoute touristRoute=createTouristRoute(null,touristGood,LocalDateTime.of(2016,12,10,0,0,0)
                 ,LocalDateTime.of(2017,10,10,0,0),0);
-        order=createTouristOrder(touristGood,null,null,null,null,null,null,null);
+        order=createTouristOrder(touristGood,null,null,null,null,null,null,null, false);
         Traveler traveler=createTraveler(touristRoute,order);
         json=mockMvc.perform(get("/base/touristOrders")
                 .param("touristDate",LocalDateTimeFormatter.toStr(LocalDateTime.of(2015,11,10,0,0,0)))
@@ -153,6 +162,20 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         //实际
         idActual= Long.valueOf(JsonPath.read(json,"$.rows[0].id").toString());
         assertThat(order.getId().equals(idActual)).isTrue().as("出行时间校验");
+
+
+        //预期
+        order=createTouristOrder(good,null,null,null,null,null,null,null, true);
+
+        json=mockMvc.perform(get("/base/touristOrders")
+                .param("settlement","true").session(session))
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        idActual= Long.valueOf(JsonPath.read(json,"$.rows[0].id").toString());
+        assertThat(order.getId().equals(idActual)).isTrue().as("结算校验");
+
+
     }
 
 
@@ -173,7 +196,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
     @Test
     public void showAllOrderTouristDate() throws Exception{
         TouristGood good=createTouristGood("slt",null,null,null,supplier);
-        TouristOrder order=createTouristOrder(good,null,null,null,null,null,null,null);
+        TouristOrder order=createTouristOrder(good,null,null,null,null,null,null,null, false);
         List<TouristRoute> routes=new ArrayList<>();
         for(int i=0;i<10;i++){
             TouristRoute route=createTouristRoute(null,good,LocalDateTime.now(),null,random.nextInt(50)+20);
@@ -225,7 +248,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
     @Test
     public void modifyOrderTouristDate() throws Exception{
 
-        TouristOrder order=createTouristOrder(null,null,"slt",null,null,null,null,null);
+        TouristOrder order=createTouristOrder(null,null,"slt",null,null,null,null,null, false);
         TouristRoute routeF=createTouristRoute(null,null,LocalDateTime.now(),null,4);
         TouristRoute routeL=createTouristRoute(null,null,LocalDateTime.of(2016,10,10,0,0),null,4);
         Traveler traveler=createTraveler(routeF,order);
@@ -361,7 +384,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         List<String> images=new ArrayList<>(Arrays.asList(new String[]{"11","22"}));
         TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,supplier
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                ,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople,8, images);
+                , receptionPerson, receptionTelephone, eventDetails, beCareful, touristImgUri, maxPeople, 0, images);
 
         TouristRoute[] touristRoutes=new TouristRoute[2];
 
@@ -371,7 +394,6 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         }
 
         mockMvc.perform(get("/supplier/saveTouristGood")
-                .param("mallGoodsId","9")
                 .param("id",""+ touristGood.getId())
                 .param("touristName","modify")
                 .param("routes","[\n{\n\"routeNo\": \"48954\",\n\"fromDate\": \"2016-12-12 00:00:00\"\n},\n{\n \"routeNo\": \"1111\",\n\"fromDate\": \"2017-12-12 00:00:00\"\n}\n]")
@@ -395,7 +417,45 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
                 );
         TouristGood goodsAct=touristGoodRepository.findOne(touristGood.getId());
         assertThat(goodsAct.getTouristName().equals("modify")).isTrue().as("名称校验");
+
+        List<TouristRoute> routesAct=touristRouteRepository.findByGood(touristGood);
+        LocalDateTime formDate=routesAct.get(0).getFromDate();
+        System.out.println(formDate.toString());
+        assertThat(formDate!=null).isTrue().as("出发日期是否存在");
+
     }
+
+
+    @Test
+    public void showTouristGoodsList() throws Exception{
+        TouristGood touristGood=createTouristGood("slt",null,null,TouristCheckStateEnum.CheckFinish,supplier
+                ,null,null,null,null,null,null,null,null,null,null,null,null,20,10,null);
+        TouristOrder touristOrder=createTouristOrder(touristGood,null,null, OrderStateEnum.Finish,LocalDateTime.now()
+                , LocalDateTime.now(), PayTypeEnum.Alipay,"", false);
+
+        List<TouristRoute> routes=new ArrayList<>();
+        for(int i=0;i<3;i++){
+            routes.add(createTouristRoute(null,touristGood,LocalDateTime.now(),null,0));
+        }
+        List<Traveler> travelers=new ArrayList<>();
+        for(int i=0;i<5;i++){
+           travelers.add(createTraveler(routes.get(2/(i+1)),touristOrder));
+        }
+
+
+        String json=mockMvc.perform(get("/base/touristGoodList")
+                .param(pageParameterName,"0")
+                .param(sizeParameterName,"10")
+                .session(session))
+                .andExpect(jsonPath("$.rows").isArray())
+                .andReturn().getResponse().getContentAsString();
+
+        //实际
+        Long idActual=Long.valueOf(JsonPath.read(json,"$.rows[0].surplus").toString());
+        assertThat(routes.size()*touristGood.getMaxPeople()-travelers.size()==idActual).isTrue().as("库存校验");
+
+
+    };
 
 
 }

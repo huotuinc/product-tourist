@@ -281,25 +281,28 @@ public class SupplierManageController {
     @RequestMapping("/saveTouristGood")
     @ResponseBody
     @Transactional
-    public void saveTouristGood(Long id, String touristName, Long activityTypeId, Long touristTypeId
+    public void saveTouristGood(@AuthenticationPrincipal SystemUser userInfo
+            ,Long id, String touristName, Long activityTypeId, Long touristTypeId
             , String touristFeatures, @RequestParam Address destination, @RequestParam Address placeOfDeparture
             , @RequestParam Address travelledAddress, BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate
             , String receptionPerson, String receptionTelephone, String eventDetails, String beCareful
             , String touristImgUri, int maxPeople, TouristRoute[] touristRoutes
-            , long mallGoodsId,String[] photos) throws IOException{
-
-        ActivityType activityType=activityTypeRepository.getOne(activityTypeId);
-        TouristType touristType=touristTypeRepository.getOne(touristTypeId);
+            , Long mallGoodsId,String[] photos,TouristCheckStateEnum checkState) throws IOException{
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        ActivityType activityType=activityTypeId==null?null:activityTypeRepository.getOne(activityTypeId);
+        TouristType touristType=touristTypeId==null?null:touristTypeRepository.getOne(touristTypeId);
+        List<String> images=photos==null?null:Arrays.asList(photos);
         //保存商品
-        TouristGood good = touristGoodService.saveTouristGood(id, touristName, activityType, touristType
+        TouristGood good = touristGoodService.saveTouristGood(supplier, id, touristName, activityType, touristType
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount
                 ,rebate,receptionPerson,receptionTelephone,eventDetails,beCareful,touristImgUri,maxPeople
-                ,mallGoodsId, Arrays.asList(photos));
+                ,mallGoodsId, images, checkState);
 
         //保存所有线路
         List<TouristRoute> newRoutes=new ArrayList<>();
         for (TouristRoute t:touristRoutes){
-            TouristRoute newRoute=touristRouteService.saveTouristRoute(t.getId(), t.getRouteNo(), good
+            String routeNo=t.getRouteNo()==null? LocalDateTime.now().toString():t.getRouteNo();
+            TouristRoute newRoute=touristRouteService.saveTouristRoute(t.getId(), routeNo, good
                     , t.getFromDate(), t.getToDate(), maxPeople);
             newRoutes.add(newRoute);
         }
@@ -473,10 +476,11 @@ public class SupplierManageController {
      * @return
      * @throws IOException
      */
+    @RequestMapping("/showSupplierInfo")
     public String showSupplierInfo(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier=(TouristSupplier)userInfo;
         model.addAttribute("supplier",supplier);
-        return viewSupplierPath+"supplierDetails.html";
+        return viewSupplierPath+"supplierDetailsH+.html";
     }
 
     /**
@@ -492,9 +496,10 @@ public class SupplierManageController {
      */
     @RequestMapping("/modifySupplierInfo")
     @ResponseBody
-    public void modifySupplierInfo(Long id,Address address,String contacts,String contactNumber
-            ,String businessLicenseUri,String remarks)throws Exception{
-        touristSupplierService.modifySupplier(id,address,contacts,contactNumber,businessLicenseUri,remarks);
+    public void modifySupplierInfo(@RequestParam Long id,Address address,String detailedAddress
+            ,String contacts,String contactNumber,String businessLicenseUri,String remarks)throws Exception{
+        touristSupplierService.modifySupplier(id,address,contacts,contactNumber,businessLicenseUri
+                ,remarks, detailedAddress);
     }
 
 
@@ -506,11 +511,14 @@ public class SupplierManageController {
      */
     @RequestMapping("/showCollectionAccount")
 //    @PreAuthorize("hasRole('CollectionAccount')")
-    public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
+    public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo ,Model model) throws IOException{
         TouristSupplier supplier =(TouristSupplier)userInfo;
         CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
-        model.addAttribute("data",collectionAccount);
-        return "";
+        if(collectionAccount==null){
+            collectionAccount=new CollectionAccount();
+        }
+        model.addAttribute("account",collectionAccount);
+        return viewSupplierPath+"payeeAccountDetailsH+.html";
     }
 
     /**
@@ -526,11 +534,13 @@ public class SupplierManageController {
      * @param bankCard          银行卡号
      */
     @RequestMapping(value = "/saveCollectionAccount",method = RequestMethod.POST)
-    @ResponseBody
-    public void saveCollectionAccount(Long id, CollectionAccountTypeEnum accountType,String IDCard,String aliPayName
-            ,String aliPayAccount,String accountName,String bank,String bankBranch,String bankCard){
-        collectionAccountService.saveCollectionAccount(id,accountType,IDCard,aliPayName,aliPayAccount
-                ,accountName,bank,bankBranch,bankCard);
+//    @ResponseBody
+    public String saveCollectionAccount(Long id, CollectionAccountTypeEnum accountType,String IDCard,String aliPayName
+            ,String aliPayAccount,String accountName,String bank,String bankBranch,String bankCard,Model model){
+        CollectionAccount collectionAccount=collectionAccountService.saveCollectionAccount(
+                id,accountType,IDCard, aliPayName,aliPayAccount,accountName,bank,bankBranch,bankCard);
+        model.addAttribute("account",collectionAccount);
+        return viewSupplierPath+"payeeAccountDetailsH+.html";
     }
 
 

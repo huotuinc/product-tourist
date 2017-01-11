@@ -66,7 +66,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
 
     /**
      * 保存一个线路商品(包含新增和修改)
-     *
+     * @param touristSupplier    所属供应商
      * @param id                 商品ID，有：是修改，无：新增
      * @param touristName        线路名称(必须)
      * @param activityType       活动类型(必须)
@@ -86,12 +86,13 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param maxPeople          最大人数(必须)
      * @param mallGoodsId
      * @param photos             商品组图
+     * @param goodsCheckState
      * @return 新增或修改的线路商品
      */
-    TouristGood saveTouristGood(Long id, String touristName, ActivityType activityType, TouristType touristType
+    TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType, TouristType touristType
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, long mallGoodsId, List<String> photos);
+            , int maxPeople, Long mallGoodsId, List<String> photos, TouristCheckStateEnum goodsCheckState);
 
 }
