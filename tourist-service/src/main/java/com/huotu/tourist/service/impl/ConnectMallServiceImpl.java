@@ -73,6 +73,21 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
+    public long getMallUserIntegralBalanCoffers(Long mallUserId, int accountType) {
+        return 0;
+    }
+
+    @Override
+    public long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) {
+        return 0;
+    }
+
+    @Override
+    public long pushOrderToMall(TouristOrder order) {
+        return 0;
+    }
+
+    @Override
     public String getTouristBuyerHeadUrl(TouristBuyer buyer) {
         return "";
     }
