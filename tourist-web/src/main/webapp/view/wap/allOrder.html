@@ -17,7 +17,8 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="description" content=""/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/weui.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/weui.min.css">
     <link rel="stylesheet" type="text/css"
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
@@ -27,142 +28,197 @@
 <body class="bac">
 <div class="xzlx-hot">
     <div class="swiper-container">
-        <div class="weui_navbar">
-            <div class="weui_navbar_item orange weui_bar_item_on "> 全部</div>
-            <div class="weui_navbar_item orange"> 进行中</div>
-            <div class="weui_navbar_item orange"> 已完成</div>
-            <div class="weui_navbar_item orange"> 已取消</div>
+        <div class="weui_tab">
+            <div class="weui_navbar">
+                <a id="all" href="#tab1" class="weui_navbar_item orange ">
+                    全部
+                </a>
+                <a id="going" href="#tab2" class="weui_navbar_item orange">
+                    进行中
+                </a>
+                <a id="finish" href="#tab3" class="weui_navbar_item orange ">
+                    已完成
+                </a>
+                <a id="cancel" href="#tab4" class="weui_navbar_item orange ">
+                    已取消
+                </a>
+            </div>
+            <div class="weui_tab_bd" style="padding-top: 0px">
+                <div id="tab1" class="weui_tab_bd_item">
+                    <div class="xiaofeijilv">
+                        <ul>
+                            <li class="t">
+                                <div class="DDH">
+                                    <span>订单编号：1</span>
+                                    <span style="float:right; color:red">代付款</span>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="ts">
+                                    <div class="dx">
+                                        <a href="">
+                                            <div class="pic"><img src="images/imgsss.png"></div>
+                                            <div class="con">
+                                                <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
+                                                <p style="color:#000;">x1</p>
+                                            </div>
+                                            <p style="clear:both"></p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="font-size:12px; padding:6px 10px; border-bottom:1px solid #eee">
+                                    <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
+                                    <p style="float:left;color:#999">2015-10-10 16:15</p>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+                                        申请退款
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
+                                        确认完成
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
+                                        查看详情
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="tab2" class="weui_tab_bd_item">
+                    <div class="xiaofeijilv">
+                        <ul>
+                            <li class="t">
+                                <div class="DDH">
+                                    <span>订单编号：2</span>
+                                    <span style="float:right; color:red">代付款</span>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="ts">
+                                    <div class="dx">
+                                        <a href="">
+                                            <div class="pic"><img src="images/imgsss.png"></div>
+                                            <div class="con">
+                                                <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
+                                                <p style="color:#000;">x1</p>
+                                            </div>
+                                            <p style="clear:both"></p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="font-size:12px; padding:6px 10px; border-bottom:1px solid #eee">
+                                    <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
+                                    <p style="float:left;color:#999">2015-10-10 16:15</p>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+                                        申请退款
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
+                                        确认完成
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
+                                        查看详情
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="tab3" class="weui_tab_bd_item">
+                    <div class="xiaofeijilv">
+                        <ul>
+                            <li class="t">
+                                <div class="DDH">
+                                    <span>订单编号：3</span>
+                                    <span style="float:right; color:red">代付款</span>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="ts">
+                                    <div class="dx">
+                                        <a href="">
+                                            <div class="pic"><img src="images/imgsss.png"></div>
+                                            <div class="con">
+                                                <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
+                                                <p style="color:#000;">x1</p>
+                                            </div>
+                                            <p style="clear:both"></p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="font-size:12px; padding:6px 10px; border-bottom:1px solid #eee">
+                                    <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
+                                    <p style="float:left;color:#999">2015-10-10 16:15</p>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+                                        申请退款
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
+                                        确认完成
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
+                                        查看详情
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="tab4" class="weui_tab_bd_item">
+                    <div class="xiaofeijilv">
+                        <ul>
+                            <li class="t">
+                                <div class="DDH">
+                                    <span>订单编号：201604943218493</span>
+                                    <span style="float:right; color:red">代付款</span>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="ts">
+                                    <div class="dx">
+                                        <a href="">
+                                            <div class="pic"><img src="images/imgsss.png"></div>
+                                            <div class="con">
+                                                <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
+                                                <p style="color:#000;">x1</p>
+                                            </div>
+                                            <p style="clear:both"></p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="font-size:12px; padding:6px 10px; border-bottom:1px solid #eee">
+                                    <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
+                                    <p style="float:left;color:#999">2015-10-10 16:15</p>
+                                    <p style="clear:both"></p>
+                                </div>
+                                <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+                                        申请退款
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
+                                        确认完成
+                                    </a>
+                                    <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
+                                        查看详情
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!---->
-        <div class="xiaofeijilv">
-            <ul>
-                <li class="t">
-                    <div class="DDH">
-                        <span>订单编号：201604943218493</span>
-                        <span style="float:right; color:red">已完成</span>
-                        <p style="clear:both"></p>
-                    </div>
-                    <div class="ts">
-                        <div class="dx">
-                            <a href="orderInfo.html">
-                                <div class="pic"><img src="../../assets/img/imgsss.png"></div>
-                                <div class="con">
-                                    <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
-                                    <p style="color:#000;">x1</p>
-                                </div>
-                                <p style="clear:both"></p>
-                            </a>
-                        </div>
-                    </div>
-                    <div style="font-size:12px; padding:6px 10px;">
-                        <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
-                        <p style="float:left;color:#999">2015-10-10 16:15</p>
-                        <p style="clear:both"></p>
-                    </div>
-                </li>
-                <li class="t">
-                    <div class="DDH">
-                        <span>订单编号：201604943218493</span>
-                        <span style="float:right; color:red">代付款</span>
-                        <p style="clear:both"></p>
-                    </div>
-                    <div class="ts">
-                        <div class="dx">
-                            <a href="orderInfo.html">
-                                <div class="pic"><img src="../../assets/img/imgsss.png"></div>
-                                <div class="con">
-                                    <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
-                                    <p style="color:#000;">x1</p>
-                                </div>
-                                <p style="clear:both"></p>
-                            </a>
-                        </div>
-                    </div>
-                    <div style="font-size:12px; padding:6px 10px; border-bottom:1px solid #eee">
-                        <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
-                        <p style="float:left;color:#999">2015-10-10 16:15</p>
-                        <p style="clear:both"></p>
-                    </div>
-                    <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
-                        <a href="" class="weui_btn weui_btn_mini weui_btn_default f12">
-                            取消订单
-                        </a>
-                        <a href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
-                            去付款
-                        </a>
-                        <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
-                            查看详情
-                        </a>
-                    </div>
-                </li>
-                <li class="t">
-                    <div class="DDH">
-                        <span>订单编号：201604943218493</span>
-                        <span style="float:right; color:red">代付款</span>
-                        <p style="clear:both"></p>
-                    </div>
-                    <div class="ts">
-                        <div class="dx">
-                            <a href="orderInfo.html">
-                                <div class="pic"><img src="../../assets/img/imgsss.png"></div>
-                                <div class="con">
-                                    <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
-                                    <p style="color:#000;">x1</p>
-                                </div>
-                                <p style="clear:both"></p>
-                            </a>
-                        </div>
-                    </div>
-                    <div style="font-size:12px; padding:6px 10px; border-bottom:1px solid #eee">
-                        <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
-                        <p style="float:left;color:#999">2015-10-10 16:15</p>
-                        <p style="clear:both"></p>
-                    </div>
-                    <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
-                        <a href="" class="weui_btn weui_btn_mini weui_btn_default f12">
-                            申请退款
-                        </a>
-                        <a href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
-                            确认完成
-                        </a>
-                        <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
-                            查看详情
-                        </a>
-                    </div>
-                </li>
-                <li class="t">
-                    <div class="DDH">
-                        <span>订单编号：201604943218493</span>
-                        <span style="float:right; color:red">退款中</span>
-                        <p style="clear:both"></p>
-                    </div>
-                    <div class="ts">
-                        <div class="dx">
-                            <a href="orderInfo.html">
-                                <div class="pic"><img src="../../assets/img/imgsss.png"></div>
-                                <div class="con">
-                                    <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
-                                    <p style="color:#000;">x1</p>
-                                </div>
-                                <p style="clear:both"></p>
-                            </a>
-                        </div>
-                    </div>
-                    <div style="font-size:12px; padding:6px 10px;">
-                        <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
-                        <p style="float:left;color:#999">2015-10-10 16:15</p>
-                        <p style="clear:both"></p>
-                    </div>
-                </li>
-            </ul>
-        </div>
+
+
     </div>
 
     <!--底部高度-->
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
     <!--底部导航-->
-    <div class="weui_navbar daohangs">
+    <div class="weui_navbar daohangs"  th:replace="view/wap/bottom.html :: bottom">
         <a href="index.html" class="weui_navbar_item weui_bar_item_on">
             <p class="kimg dhshouyeicon"></p>
             <p>首页</p>
@@ -182,5 +238,6 @@
 </html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
-<script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
+<!--<script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>-->
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+<script src="../../assets/js/wap/allOrder.js"></script>
