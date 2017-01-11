@@ -2,17 +2,26 @@ package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.TravelerTypeEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.OrderStateQuery;
+import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
@@ -23,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 /**
@@ -32,6 +42,13 @@ import java.util.function.Consumer;
 public class TouristOrderServiceImpl implements TouristOrderService {
     @Autowired
     TouristOrderRepository touristOrderRepository;
+    @Autowired
+    TouristRouteRepository touristRouteRepository;
+    @Autowired
+    TravelerRepository travelerRepository;
+    @Autowired
+    TouristGoodRepository touristGoodRepository;
+
 
     @Override
     public URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed) {
@@ -169,8 +186,59 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             if(Arrays.asList(OrderStateQuery.revisability[(int)orderformerState.getCode()]).contains(orderlater)){
                 orderlaterStates.add(orderlater);
             }
-
         }
         return orderlaterStates;
+    }
+
+    @Override
+    @Transactional
+    public void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId
+            , Float mallIntegral, Float mallBalance, Float mallCoffers) {
+        if (travelers != null && travelers.size() > 0) {
+            TouristGood good = touristGoodRepository.getOne(goodId);
+            TouristRoute route = touristRouteRepository.getOne(routeId);
+            int num = travelerRepository.countByRoute(route);
+            if (good.getMaxPeople() - num >= travelers.size()) {
+                //todo 锁定线路不允许被其他游客同时添加
+                Random random = new Random(10000);
+                TouristOrder order = new TouristOrder();
+                order.setTouristGood(good);
+                order.setOrderState(OrderStateEnum.NotPay);
+                order.setSettlement(false);
+                order.setOrderNo(random.nextInt() + LocalDateTimeFormatter.toStr(LocalDateTime.now()) + random.nextInt());
+                order.setCreateTime(LocalDateTime.now());
+                BigDecimal adult = good.getPrice().multiply(new BigDecimal(travelers.stream().filter(traveler ->
+                        traveler
+                                .getTravelerType().equals
+                                (TravelerTypeEnum.adult)).count()));
+
+                BigDecimal child = good.getPrice()
+                        .multiply(good.getChildrenDiscount().divide(new BigDecimal(10)))
+                        .multiply(new BigDecimal(travelers.stream()
+                                .filter(traveler -> traveler.getTravelerType().equals(TravelerTypeEnum.children))
+                                .count()
+                        ));
+                BigDecimal sumNum = adult.add(child);
+                if (mallIntegral != null && mallIntegral > 0) {
+                    sumNum = sumNum.subtract(new BigDecimal(mallIntegral));
+                }
+                if (mallBalance != null && mallBalance > 0) {
+                    sumNum = sumNum.subtract(new BigDecimal(mallBalance));
+                }
+                if (mallCoffers != null && mallCoffers > 0) {
+                    sumNum = sumNum.subtract(new BigDecimal(mallCoffers));
+                }
+                order.setOrderMoney(sumNum);
+                order.setTouristBuyer(user);
+                for (Traveler traveler : travelers) {
+                    traveler.setCreateTime(LocalDateTime.now());
+                    traveler.setRoute(route);
+                }
+                // todo 保存游客 和订单
+
+            }
+        } else {
+
+        }
     }
 }

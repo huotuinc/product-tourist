@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -18,12 +18,15 @@
 <body class="bac">
 <!--轮播-->
 <div class="xzlx-hot">
+    <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
+    <!--/*@thymesVar id="user" type="com.huotu.tourist.entity.TouristBuyer"*/-->
     <div class="scrollable-content">
         <div class="swiper-container">
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
                 <!-- Slides -->
-                <div class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
+                <div class="swiper-slide"
+                     th:each="img:${good.images}"><img res:src="${img}" src="../../assets/img/swiper-1.jpg"/></div>
                 <div class="swiper-slide"><img src="../../assets/img/swiper-2.jpg"/></div>
                 <div class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
             </div>
@@ -34,18 +37,25 @@
 
         <div class="weui_panel_bd" style="background-color:#fff">
             <div class="weui_media_box weui_media_text">
-                <h4 style="margin-bottom: 2px;font-weight: 400;font-size: 17px;">【朝圣之旅】西藏云南8日轻装游，赶快报名！</h4>
-                <p class="weui_media_desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+                <h4 style="margin-bottom: 2px;font-weight: 400;font-size: 17px;" th:text="${good.touristName}">
+                    【朝圣之旅】西藏云南8日轻装游，赶快报名！</h4>
+                <p class="weui_media_desc" th:text="good.touristFeatures">由各种物质组成的巨型球状天体，叫做星球。
+                    星球有一定的形状，有自己的运行轨道。</p>
                 <ul class="weui_media_info">
                     <li class="weui_media_info_meta"
-                        style="color: #b81212;font-size: 16px;font-weight: bold;line-height: 15px;">￥300元/人
+                        style="color: #b81212;font-size: 16px;font-weight: bold;line-height: 15px;"
+                        th:text="${'￥'+good.price+'人'}">￥300元/人
                     </li>
-                    <li class="weui_media_info_meta" style="margin-top: 3px;">佣金：200元</li>
+                    <li class="weui_media_info_meta" style="margin-top: 3px;"
+                        th:if="${user!=null and user.payState.code==1}"
+                        th:text="${good.price*good.rebate}">佣金：200
+                        元
+                    </li>
                 </ul>
                 <ul class="weui_media_info">
-                    <li class="weui_media_info_meta">出发地：杭州</li>
-                    <li class="weui_media_info_meta">目的地：宁波</li>
-                    <li class="weui_media_info_meta">途径地：绍兴</li>
+                    <li class="weui_media_info_meta" th:text="${'出发地：'+good.placeOfDeparture.toString()}">出发地：杭州</li>
+                    <li class="weui_media_info_meta" th:text="'目的地：'+good.destination.toString()">目的地：宁波</li>
+                    <li class="weui_media_info_meta" th:text="'途径地：'+good.travelledAddress.toString()">途径地：绍兴</li>
                 </ul>
             </div>
         </div>
@@ -61,32 +71,34 @@
                 <div class="inner">
                     <div class="switch-container">
                         <div id="wrapperPanel" class="swiper-wrapper" style="height: auto;">
-                            <div class="swiper-slide" style="width: auto;">
-                                <a href="">
-                                    <div class="custom-image-mask"><span class="bn">2016.10.10 9:00</span> <span
-                                            class="bna">剩余8人</span>
-                                        <div class="masksd"></div>
-                                        <img src="../../assets/img/a1.jpg" style="width:100%; "/>
-                                    </div>
-                                </a>
+                            <div class="swiper-slide routeDiv " data-routeId="0" data-count="1" style="width: auto;"
+                                 th:each="route : ${good.touristRoutes}"
+                                 th:attr="data-routeId=''+${route.id},data-count=''+${routeCount[''+route.id]}">
+                                <div class="custom-image-mask">
+                                    <span class="bn" th:text="${route.fromDate}">2016.10.10 9:00</span>
+                                    <span class="bna" th:text="'剩余'+${routeCount[''+route.id]}+'人'">剩余8人</span>
+                                    <div class="masksd"></div>
+                                    <img src="../../assets/img/a1.jpg" res:src="${good.touristImgUri}"
+                                         style="width:100%; "/>
+                                </div>
                             </div>
-                            <div class="swiper-slide" style="width: auto;"><a href="">
+                            <div class="swiper-slide routeDiv " style="width: auto;" data-routeId="1" data-count="0">
                                 <div class="custom-image-mask"><span class="bn">2016.10.10 9:00</span> <span
                                         class="bna">剩余8人</span>
                                     <div class="masksd"></div>
                                     <img src="../../assets/img/a1.jpg" style="width:100%; "/></div>
-                            </a></div>
-                            <div class="swiper-slide" style="width: auto;"><a href="">
+                            </div>
+                            <div class="swiper-slide routeDiv" style="width: auto;" data-routeId="2" data-count="4">
                                 <div class="custom-image-mask"><span class="bn">2016.10.10 9:00</span> <span
                                         class="bna">剩余8人</span>
                                     <div class="masksd"></div>
                                     <img src="../../assets/img/a1.jpg" style="width:100%; "/></div>
-                            </a></div>
-                            <div class="swiper-slide" style="width: auto;"><a href="">
+                            </div>
+                            <div class="swiper-slide routeDiv " style="width: auto;" data-routeId="3" data-count="0">
                                 <div class="custom-image-mask"><span class="bn">全部时间</span> <span class="bna" style="">查看</span>
                                     <div class="masksd"></div>
                                     <img src="../../assets/img/a1.jpg" style="width:100%; "/></div>
-                            </a></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -95,35 +107,48 @@
         <div class="weui_cells weui_cells_access">
             <a class="weui_cell" href="touristSupplier.html">
                 <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
-                    <h4 class="weui_media_title">乌鲁木齐俱乐部</h4>
+                    <h4 class="weui_media_title" th:text="${good.touristSupplier.supplierName}">乌鲁木齐俱乐部</h4>
                     <ul class="weui_media_info" style="margin-top: 6px">
                         <li class="weui_media_info_meta levelz"><img class="yrzimg" src="../../assets/img/yrz.png">已认证
                         </li>
-                        <li class="weui_media_info_meta levelx">12条路线</li>
+                        <li class="weui_media_info_meta levelx" th:text="${count+'条线路'}">12条路线</li>
                     </ul>
                     <ul class="weui_media_info" style="margin-top: 8px;">
-                        <li class="weui_media_info_meta">地接人：王剑南</li>
-                        <li class="weui_media_info_meta">联系电话：0571-13205713331</li>
+                        <li class="weui_media_info_meta" th:text="${'地接人：'+good.receptionPerson}">地接人：王剑南</li>
+                        <li class="weui_media_info_meta" th:text="${'联系电话：'+good.receptionTelephone}">
+                            联系电话：0571-13205713331
+                        </li>
                     </ul>
                 </div>
                 <span class="weui_cell_ft"></span>
             </a>
         </div>
         <div class="weui_navbar" style="margin-top: 10px;">
-            <div class="weui_navbar_item orange weui_bar_item_on "> 活动详情</div>
-            <div class="weui_navbar_item orange"> 注意事项</div>
+            <div class="weui_navbar_item orange weui_bar_item_on eventDetailsBtn"> 活动详情</div>
+            <div class="weui_navbar_item orange beCarefulBtn"> 注意事项</div>
         </div>
-        <img src="../../assets/img/a1.jpg" width="100%">
+        <div class="eventDetails" style="display: block" th:utext="${good.eventDetails}">
+            <img src="../../assets/img/a1.jpg" width="100%">
+        </div>
+        <div class="beCareful" style="display: none;" th:utext="${good.beCareful}">
+            <img src="../../assets/img/a1.jpg" width="100%">
+        </div>
+
     </div>
     <p style="height:40px;"></p>
     <div class="item-action">
-        <div class="toggle-home"><a href="index.html"><span class="icon"></span>首页</a></div>
-        <div class="buy-now yuanjiaoo"><a href="procurement.html"> 立即采购 </a></div>
+        <div class="toggle-home"><a href="index.html" th:href="@{/index}"><span class="icon"></span>首页</a></div>
+        <div class="buy-now yuanjiaoo">
+            <a href="javascript:procurement();"
+               th:if="${user!=null and user.payState.code==1 && user.checkState.code==1}"
+            > 立即采购
+            </a>
+            <a href="buyerApply.html" th:if="${!(user!=null and user.payState.code==1)}"> 申请成为采购商 </a>
+        </div>
     </div>
     <!---->
 </div>
 </body>
-</html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
@@ -134,8 +159,8 @@
         autoplay: 3000
     });
 </script>
-<script type="text/javascript">
-
+<script type="text/javascript" th:inline="javascript">
+    var procurementUrl = /*[[@{/wap/procurementGood}]]*/ "procurement.html"
     $(function () {
         var swiper = new Swiper('.switch-container', {
             pagination: '.swiper-pagination',
@@ -158,5 +183,42 @@
 
             }
         });
+        //活动详情
+        $(".eventDetailsBtn").click(function () {
+            $(this).addClass("weui_bar_item_on");
+            $(".beCarefulBtn").removeClass("weui_bar_item_on");
+            $(".eventDetails").show();
+            $(".beCareful").hide();
+        });
+        //注意事项
+        $(".beCarefulBtn").click(function () {
+            $(this).addClass("weui_bar_item_on");
+            $(".eventDetailsBtn").removeClass("weui_bar_item_on");
+            $(".beCareful").show();
+            $(".eventDetails").hide();
+        });
+
+        //选择行程
+        var routeId = null;
+        $(".routeDiv").click(function () {
+            if ($(this).attr("data-count") > 0) {
+                $(".routeDiv").removeClass("select");
+                $(this).addClass("select")
+                routeId = $(this).attr("data-routeId");
+            } else {
+                $.alert("抱歉，行程已满请调换其他行程");
+            }
+        });
+
+        //提交商品选择，下一步填写订单信息
+        var goodId = /*[[${good.id}]]*/ 0;
+        procurement = function () {
+            if (goodId != null && routeId != null) {
+                window.location.href = procurementUrl + "?goodId=" + goodId + "&routeId=" + routeId
+            } else {
+                $.alert("请选择行程");
+            }
+        }
     });
 </script>
+</html>

@@ -16,6 +16,7 @@ import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.converter.PageAndSelectionResolver;
 import com.huotu.tourist.core.ServiceConfig;
 import com.huotu.tourist.util.ArrayUtil;
+import com.huotu.tourist.util.TravelerListResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -100,6 +105,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         resolver.setSizeParameterName(sizeParameterName);
         argumentResolvers.add(resolver);
         argumentResolvers.add(new TouristRouteResolver());
+        argumentResolvers.add(new TravelerListResolver());
     }
 
     @Override

@@ -1109,3 +1109,7 @@ body {
 .pj a {
     color: #000000;
 }
+
+.routeDiv.select {
+    border: solid 3px #761c19;
+}

@@ -38,4 +38,33 @@ public interface ConnectMallService {
      * @throws IOException
      */
     boolean statusNormal(TouristOrder order) throws IOException;
+
+
+    /**
+     * 获取用户的账户信息，积分余额小金库
+     *
+     * @param mallUserId  商城用户id
+     * @param accountType 账户类型，0表示积分，1表示余额，2表示小金库
+     * @return
+     */
+    long getMallUserIntegralBalanCoffers(Long mallUserId, int accountType);
+
+    /**
+     * 增加或者减少用户的账户信息，积分余额小金库
+     *
+     * @param mallUserId  商城用户id
+     * @param accountType 账户类型，0表示积分，1表示余额，2表示小金库
+     * @param amount      增加或减少的金额，负数即为减，积分为int型
+     * @return
+     */
+    long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount);
+
+    /**
+     * 推订单到商城
+     *
+     * @param order 订单信息
+     * @return
+     */
+    long pushOrderToMall(TouristOrder order);
+
 }

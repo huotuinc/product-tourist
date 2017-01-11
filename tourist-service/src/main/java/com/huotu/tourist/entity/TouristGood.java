@@ -18,7 +18,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -216,11 +227,12 @@ public class TouristGood extends BaseModel {
      * 成人折扣
      */
     @Column(precision = 4, scale = 2)
+    @Deprecated
     private BigDecimal AdultDiscount;
     /**
      * 儿童折扣
      */
-    @Column(precision = 4, scale = 2)
+    @Column(precision = 3, scale = 2)
     private BigDecimal childrenDiscount;
     /**
      * 返佣比例。按路线价格的比例 0-100。不得大于100

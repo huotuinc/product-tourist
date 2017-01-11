@@ -33,7 +33,6 @@ public class TouristRouteResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-
         return TouristRoute[].class.equals(parameter.getParameterType());
     }
 

@@ -11,9 +11,11 @@ package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -117,5 +119,6 @@ public interface TouristOrderService {
     List<OrderStateEnum> getModifyState(SystemUser user,TouristOrder touristOrder);
 
 
-
+    void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
+            , Float mallBalance, Float mallCoffers);
 }

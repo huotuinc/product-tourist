@@ -37,6 +37,7 @@ import com.huotu.tourist.service.TouristBuyerService;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristSupplierService;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,8 @@ public class DistributionPlatformController extends BaseController {
 
     @Autowired
     BannerRepository bannerRepository;
+    @Autowired
+    ResourceService resourceService;
 
     /**
      * 打开订单列表页面
@@ -162,7 +165,6 @@ public class DistributionPlatformController extends BaseController {
         return new PageAndSelection<>(page, TouristBuyer.selections);
     }
 
-
     /**
      * 跳转到 采购商支付记录列表页面
      *
@@ -194,8 +196,6 @@ public class DistributionPlatformController extends BaseController {
 
         return new PageAndSelection<>(page, PurchaserPaymentRecord.selections);
     }
-
-
 
     /**
      * 跳转到采购商产品设置列表页面
@@ -238,7 +238,6 @@ public class DistributionPlatformController extends BaseController {
     public String toTouristGoodList(HttpServletRequest request, Model model) {
         return "view/manage/platform/touristGood/touristGoodList.html";
     }
-
 
     /**
      * 跳转到活动类型列表页面
@@ -300,7 +299,6 @@ public class DistributionPlatformController extends BaseController {
         return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
 
-
     /**
      * 跳转到结算单列表页面
      *
@@ -310,7 +308,6 @@ public class DistributionPlatformController extends BaseController {
     public String toSettlementSheetList(HttpServletRequest request, Model model) {
         return "view/manage/platform/settlementSheet/settlementSheetList.html";
     }
-
 
     /**
      * 结算单列表
@@ -360,6 +357,8 @@ public class DistributionPlatformController extends BaseController {
         return new PageAndSelection(page, PresentRecord.selections);
     }
 
+    /**-------------------下面新增和修改相关-----------------------*/
+
     /**
      * banner列表页
      * @param request
@@ -375,8 +374,6 @@ public class DistributionPlatformController extends BaseController {
         objectMapper.writeValueAsString(map);
         return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
-
-    /**-------------------下面新增和修改相关-----------------------*/
 
     /**
      * 跳转至新增供应商页面
@@ -435,7 +432,6 @@ public class DistributionPlatformController extends BaseController {
         touristSupplierService.save(touristSupplier);
     }
 
-
     /**
      * 冻结供应商
      *
@@ -452,7 +448,6 @@ public class DistributionPlatformController extends BaseController {
         touristSupplierService.save(touristSupplier);
     }
 
-
     /**
      * 修改采购商审核状态
      *
@@ -468,7 +463,6 @@ public class DistributionPlatformController extends BaseController {
         touristBuyer.setCheckState(checkState);
         touristBuyerService.save(touristBuyer);
     }
-
 
     /**
      * 新增采购产品设置页面
@@ -500,7 +494,6 @@ public class DistributionPlatformController extends BaseController {
     public void delPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
         purchaserProductSettingService.delete(id);
     }
-
 
     /**
      * 新增采购产品设置
@@ -550,7 +543,6 @@ public class DistributionPlatformController extends BaseController {
         model.addAttribute("good", touristGood);
         return "view/manage/platform/trouristGood/touristGood.html";
     }
-
 
     /**
      * 推荐商品 和 取消推荐
@@ -604,7 +596,6 @@ public class DistributionPlatformController extends BaseController {
         activityTypeRepository.delete(id);
     }
 
-
     /**
      * 添加或修改线路类型
      *
@@ -629,7 +620,6 @@ public class DistributionPlatformController extends BaseController {
         touristTypeService.save(touristType);
     }
 
-
     /**
      * 添加或修改banner
      *
@@ -641,7 +631,7 @@ public class DistributionPlatformController extends BaseController {
             "application/json;charset=UTF-8")
     @ResponseBody
     @Transactional
-    public void saveOrUpdateBanner(Long id, @RequestParam String bannerName, @RequestParam String bannerImgUri, String linkUrl) {
+    public void saveOrUpdateBanner(Long id, @RequestParam String bannerName, @RequestParam String bannerImgUri, String linkUrl) throws IOException {
         Banner banner;
         if (id == null) {
             banner = new Banner();
@@ -650,7 +640,7 @@ public class DistributionPlatformController extends BaseController {
             banner = bannerRepository.getOne(id);
             banner.setUpdateTime(LocalDateTime.now());
             if (banner.getBannerImgUri() != null) {
-                //// TODO: 2016/12/30 删除图片
+                resourceService.deleteResource(banner.getBannerImgUri());
             }
         }
         banner.setBannerName(bannerName);
@@ -668,10 +658,10 @@ public class DistributionPlatformController extends BaseController {
     @RequestMapping(value = "delBanner", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     @Transactional
-    public void delBanner(@RequestParam Long id) {
+    public void delBanner(@RequestParam Long id) throws IOException {
         Banner banner = bannerRepository.getOne(id);
         if (banner.getBannerImgUri() != null) {
-            //// TODO: 2016/12/30 删除图片
+            resourceService.deleteResource(banner.getBannerImgUri());
         }
         bannerRepository.delete(banner);
     }

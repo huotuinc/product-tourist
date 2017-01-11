@@ -9,10 +9,13 @@
 
 package com.huotu.tourist.controller.wap;
 
+import com.huotu.tourist.TravelerList;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Banner;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
@@ -29,6 +32,7 @@ import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TouristTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +53,7 @@ public class IndexController {
     @Autowired
     public TravelerRepository travelerRepository;
     @Autowired
+
     public TouristSupplierRepository touristSupplierRepository;
     @Autowired
     public TouristOrderService touristOrderService;
@@ -109,7 +114,48 @@ public class IndexController {
         }
         model.addAttribute("good", good);
         model.addAttribute("routeCount", routeCount);
+        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalse(good.getTouristSupplier().getId());
+        model.addAttribute("count", count);
         return "/view/wap/touristGoodInfo.html";
+    }
+
+    /**
+     * 打开购买商品填写订单信息页面
+     *
+     * @param goodId
+     * @param routeId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/procurementGood"})
+    public String procurementGood(@RequestParam Long goodId, Long routeId, Model model) {
+        TouristGood good = touristGoodRepository.getOne(goodId);
+        int count = travelerRepository.countByRoute(touristRouteRepository.getOne(routeId));
+        model.addAttribute("amount", good.getMaxPeople() - count);
+        // TODO: 2017/1/10 获取用户账户小金库，积分，余额信息
+        model.addAttribute("good", good);
+        model.addAttribute("routeId", routeId);
+        return "view/wap/procurement.html";
+    }
+
+    /**
+     * 添加采购信息
+     *
+     * @param travelers    游客信息
+     * @param goodId       商品id
+     * @param routeId      行程ID
+     * @param buyerMoney   订单总金额
+     * @param mallIntegral 商城积分 null代表未使用积分
+     * @param mallBalance  商城余额 null代表未使用余额
+     * @param mallCoffers  商城小金库 null代表未使用小金库
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/addOrderInfo"})
+    public void addOrderInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam(required = false) @TravelerList
+            List<Traveler> travelers, @RequestParam Long goodId, @RequestParam Long routeId, Float buyerMoney
+            , Float mallIntegral, Float mallBalance, Float mallCoffers, Model model) {
+        touristOrderService.addOrderInfo(user, travelers, goodId, routeId, mallIntegral, mallBalance, mallCoffers);
     }
 
     /**

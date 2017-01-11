@@ -32,4 +32,12 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @return
      */
     List<TouristGood> findByActivityType_IdAndDeletedIsFalse(Long activityTypeId, PageRequest pageRequest);
+
+    /**
+     * 统计线路供应商
+     *
+     * @param touristSupplierId
+     * @return
+     */
+    int countByTouristSupplier_IdAndDeletedIsFalse(Long touristSupplierId);
 }
