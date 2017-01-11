@@ -396,7 +396,8 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         mockMvc.perform(get("/supplier/saveTouristGood")
                 .param("id",""+ touristGood.getId())
                 .param("touristName","modify")
-                .param("routes","[\n{\n\"routeNo\": \"48954\",\n\"fromDate\": \"2016-12-12 00:00:00\"\n},\n{\n \"routeNo\": \"1111\",\n\"fromDate\": \"2017-12-12 00:00:00\"\n}\n]")
+                .param("routes","[\n{\n\"routeNo\": \"48954\",\n\"fromDate\": \"2016-12-12 00:00:00\"\n},\n{\n " +
+                        "\"routeNo\": \"1111\",\n\"fromDate\": \"2017-12-12 00:00:00\"\n}\n]")
                 .param("activityTypeId",""+touristGood.getActivityType().getId())
                 .param("touristTypeId",""+touristGood.getTouristType().getId())
                 .param("destination","浙江省/杭州市/江干")

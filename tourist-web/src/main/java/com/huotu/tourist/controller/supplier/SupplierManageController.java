@@ -177,7 +177,7 @@ public class SupplierManageController {
 
         List<Traveler> travelers = travelerRepository.findByOrder_Id(id);
 
-        model.addAttribute("route", travelers.get(0).getRoute());
+        model.addAttribute("route", travelers.isEmpty()?new TouristRoute():travelers.get(0).getRoute());
 
         List<OrderStateEnum> orderStates=touristOrderService.getModifyState(userInfo,order);
 

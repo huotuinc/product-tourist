@@ -1,6 +1,7 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * 线路订单持久层
@@ -54,7 +55,7 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
      * @param supplierId
      * @return
      */
-    @Query("select sum(t.orderMoney*t.touristGood.rebate) as om from TouristOrder as t where t.touristGood.touristSupplier.id=?1 ")
+    @Query("select sum(t.orderMoney*t.touristGood.rebate/100) as om from TouristOrder as t where t.touristGood.touristSupplier.id=?1 ")
     BigDecimal sumCommissionTotal(Long supplierId);
 
     /**
@@ -77,4 +78,25 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
             " and o.createTime>?2 and o.createTime<?3 order by num desc")
     Page<Object> goodsSalesRankingByDate(Long supplierId, LocalDateTime orderDate,LocalDateTime endOrderDate
                                          ,Pageable pageable);
+
+    /**
+     * 查找某个采购商的某些订单状态的已结算的数量
+     * @param buyer         采购商
+     * @param orderStates   订单状态列表
+     * @return
+     */
+    @Query("select count(t) from TouristOrder as t where t.touristBuyer=?1 and t.settlement=true and t.orderState in ?2")
+    long countByTouristBuyerAndOrderStates(TouristBuyer buyer,List<OrderStateEnum> orderStates);
+
+    /**
+     * 查找某个采购商的某个订单的状态的已结算的数量
+     * @param buyer         采购商
+     * @param orderState    订单状态
+     * @return
+     */
+    @Query("select count(t) from TouristOrder as t where t.touristBuyer=?1 and t.settlement=true and t.orderState=?2")
+    long countByTouristBuyerAndOrderState(TouristBuyer buyer,OrderStateEnum orderState);
+
+    @Query("select sum(t.orderMoney*t.touristGood.rebate/100) from TouristOrder as t where t.touristBuyer=?1")
+    BigDecimal sumCommissionByBuyer(TouristBuyer buyer);
 }
