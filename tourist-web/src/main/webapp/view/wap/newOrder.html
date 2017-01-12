@@ -33,16 +33,22 @@
         <p style="clear:both"></p>
     </div>
     <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
-        <a th:if="${order.orderState.code==0}"  href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+        <a th:if="${order.orderState.code==0}"  onclick="cancelOrder(this,1)"
+           class="weui_btn weui_btn_mini weui_btn_default f12">
             取消订单
         </a>
-        <a th:if="${order.orderState.code==4}" href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+        <a th:if="${order.orderState.code==4}"
+           onclick="refundOrder(this,1)"
+           class="weui_btn weui_btn_mini weui_btn_default f12">
             取消退款
         </a>
-        <a th:if="${order.orderState.code==1||order.orderState.code==2}" href="" class="weui_btn weui_btn_mini weui_btn_default f12">
+        <a th:if="${order.orderState.code==1||order.orderState.code==2}"
+           onclick="refundOrder(this,1)" th:onclick="'refundOrder(this,'+order.id+')'"
+           class="weui_btn weui_btn_mini weui_btn_default f12">
             申请退款
         </a>
-        <a th:if="${order.orderState.code==2}"  href="" class="weui_btn weui_btn_mini weui_btn_warn f12">
+        <a th:if="${order.orderState.code==2}" onclick="affirmOrder(this,1)"
+            class="weui_btn weui_btn_mini weui_btn_warn f12">
             确认完成
         </a>
         <a href="" class="weui_btn weui_btn_mini weui_btn_primary f12">
@@ -51,6 +57,8 @@
     </div>
 </li>
 
+
 <a xmlns:th="http://www.thymeleaf.org" th:if="${list.size()>0}" class="nextJScroll" href="newOrder.html"
    th:href="@{/wap/newBuyerOrderList(states=${states},buyerId=${buyerId},lastId=${list[list.size()-1].id})}">
     &nbsp;</a>
+

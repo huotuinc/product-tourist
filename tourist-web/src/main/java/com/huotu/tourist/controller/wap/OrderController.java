@@ -44,4 +44,8 @@ public class OrderController {
         model.addAttribute("buyerId",buyerId);
         return viewWapPath+"newOrder.html";
     }
+
+//    @RequestMapping("/modifyOrderState")
+//    @ResponseBody
+//    public void modifyOrderState(Long orderId,)
 }
