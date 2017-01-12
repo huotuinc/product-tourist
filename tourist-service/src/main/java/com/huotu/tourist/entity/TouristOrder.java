@@ -11,19 +11,13 @@ package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -49,14 +43,11 @@ public class TouristOrder extends BaseModel {
             ,new SimpleSelection<TouristOrder,String>("orderNo","orderNo")
             ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
             ,new SimpleSelection<TouristOrder,String>("remarks", "remarks")
-
-            ,new SimpleSelection<TouristOrder,LocalDateTime>("payTime", "payTime")
-            ,new SimpleSelection<TouristOrder,LocalDateTime>("createTime", "createTime")
-
             , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
             , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
             , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
+            , new SimpleSelection<TouristOrder, Boolean>("settlement","settlement")
             ,new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
@@ -66,6 +57,28 @@ public class TouristOrder extends BaseModel {
                 @Override
                 public String apply(TouristOrder touristOrder) {
                     return touristOrder.getTouristBuyer().getBuyerName();
+                }
+            }
+            ,new Selection<TouristOrder, String>() {
+                @Override
+                public String getName() {
+                    return "payTime";
+                }
+
+                @Override
+                public String apply(TouristOrder touristOrder) {
+                    return LocalDateTimeFormatter.toStr(touristOrder.getPayTime());
+                }
+            }
+            ,new Selection<TouristOrder, String>() {
+                @Override
+                public String getName() {
+                    return "createTime";
+                }
+
+                @Override
+                public String apply(TouristOrder touristOrder) {
+                    return LocalDateTimeFormatter.toStr(touristOrder.getCreateTime());
                 }
             }
     );
@@ -145,7 +158,7 @@ public class TouristOrder extends BaseModel {
      * 是否结算
      */
     @Column
-    private Boolean settlement;
+    private boolean settlement;
 
 
 }

@@ -41,8 +41,8 @@ var modifyTravelerInfo=function(obj){
             IDNo=$("input[name='IDNo']","#modifyTravelerInfo").val();
             $.ajax({
                 type:'POST',
-                url: '../../mock/supplier/orderDetails.json',
-                dataType: 'json',
+                url: modifytouristInfoUrl,
+                dataType: 'text',
                 data: {id:id,name:name,sex:sex,age:age,tel:tel,IDNo:IDNo},
                 success:function(result){
                     layer.msg("保存成功！");
@@ -68,7 +68,7 @@ var modifyOrderStatus=function(id,obj){
         $.ajax({
             type:'POST',
             url: modifyOrderStateUrl,
-            dataType: 'json',
+            dataType: 'text',
             data: {id:id,orderState:orderState},
             success:function(result){
                 layer.msg("修改成功！");

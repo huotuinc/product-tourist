@@ -13,6 +13,7 @@ import com.huotu.huobanplus.common.entity.Goods;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.repository.TouristGoodRepository;
@@ -45,7 +46,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @Autowired
     public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository) throws IOException {
         merchant = merchantRestRepository.getOneByPK(
-                environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
+                environment.getProperty("tourist.customerId", environment.acceptsProfiles("develop") ? "3447" : "4886")
         );
     }
 
@@ -77,12 +78,17 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
-    public long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) throws IllegalStateException {
+    public long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) {
         return 0;
     }
 
     @Override
     public long pushOrderToMall(TouristOrder order) {
         return 0;
+    }
+
+    @Override
+    public String getTouristBuyerHeadUrl(TouristBuyer buyer) {
+        return "";
     }
 }

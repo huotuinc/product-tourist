@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.service;
 
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,4 +71,11 @@ public interface ConnectMallService {
      */
     long pushOrderToMall(TouristOrder order);
 
+
+    /**
+     * 获取采购商的头像url,未获取到则返回空字符串 “”，
+     * @param buyer     采购商
+     * @return  头像url
+     */
+    String getTouristBuyerHeadUrl(TouristBuyer buyer);
 }

@@ -346,8 +346,7 @@ var remarkEvents={
 var actionEvents = {
     'click .showDetail': function (e, value, row, index) {
         var id=row.id;
-        location.href="orderDetails.html";
-        console.log(id);
+        location.href=TouristDetailsUrl+"?id="+id;
     }
 };
 
