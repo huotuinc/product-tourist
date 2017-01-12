@@ -10,10 +10,13 @@
 package com.huotu.tourist.controller.wap;
 
 import com.huotu.tourist.TravelerList;
+import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.Banner;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.ActivityTypeRepository;
@@ -25,6 +28,7 @@ import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.PurchaserPaymentRecordService;
 import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
@@ -36,11 +40,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * index controller 方法
@@ -79,7 +88,27 @@ public class IndexController {
     private ActivityTypeRepository activityTypeRepository;
     @Autowired
     private BannerRepository bannerRepository;
+    @Autowired
+    private ConnectMallService connectMallService;
 
+    public static void main(String arg0[]) {
+        List<TouristGood> goods = new ArrayList<>();
+        TouristGood good = new TouristGood();
+        good.setDestination(new Address("浙江省", "杭州市", "滨江区"));
+        TouristGood good1 = new TouristGood();
+        good1.setDestination(new Address("浙江省", "宁波", "镇海"));
+        TouristGood good2 = new TouristGood();
+        good2.setDestination(new Address("安徽省", "合肥", "镇海"));
+        TouristGood good3 = new TouristGood();
+        good3.setDestination(new Address("安徽省", "芜湖市", "镇海"));
+        goods.add(good);
+        goods.add(good1);
+        goods.add(good2);
+        goods.add(good3);
+
+        Map<String, List<TouristGood>> maps = goods.stream().collect(Collectors.groupingBy(g -> g.getDestination()
+                .getProvince()));
+    }
 
     /**
      * 打开index.html
@@ -91,7 +120,7 @@ public class IndexController {
     public String index(Model model) {
         List<Banner> banners = bannerRepository.findByDeletedIsFalse(new PageRequest(0, 5));
         model.addAttribute("banners", banners);
-        List<TouristGood> recommendGoods = touristGoodRepository.findByRecommendIsTrueAndDeletedIsFalse(new PageRequest(0, 3));
+        List<TouristGood> recommendGoods = touristGoodRepository.findByRecommendIsTrueAndDeletedIsFalseAndTouristCheckState(new PageRequest(0, 3), TouristCheckStateEnum.CheckFinish);
         model.addAttribute("recommendGoods", recommendGoods);
         List<ActivityType> activityTypes = activityTypeRepository.findByDeletedIsFalse(new PageRequest(0, 9));
         model.addAttribute("activityTypes", activityTypes);
@@ -114,7 +143,7 @@ public class IndexController {
         }
         model.addAttribute("good", good);
         model.addAttribute("routeCount", routeCount);
-        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalse(good.getTouristSupplier().getId());
+        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(good.getTouristSupplier().getId(), TouristCheckStateEnum.CheckFinish);
         model.addAttribute("count", count);
         return "/view/wap/touristGoodInfo.html";
     }
@@ -128,13 +157,15 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = {"/procurementGood"})
-    public String procurementGood(@RequestParam Long goodId, Long routeId, Model model) {
+    public String procurementGood(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long goodId, Long routeId, Model model) {
         TouristGood good = touristGoodRepository.getOne(goodId);
         int count = travelerRepository.countByRoute(touristRouteRepository.getOne(routeId));
         model.addAttribute("amount", good.getMaxPeople() - count);
-        // TODO: 2017/1/10 获取用户账户小金库，积分，余额信息
         model.addAttribute("good", good);
         model.addAttribute("routeId", routeId);
+        model.addAttribute("mallIntegral", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 0));
+        model.addAttribute("mallBalance", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 1));
+        model.addAttribute("mallCoffers", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 2));
         return "view/wap/procurement.html";
     }
 
@@ -151,11 +182,63 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping(value = {"/addOrderInfo"})
-    public void addOrderInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam(required = false) @TravelerList
+    @RequestMapping(value = {"/addOrderInfo"}, method = RequestMethod.POST)
+    @ResponseBody
+    public Map addOrderInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam(required = false) @TravelerList
             List<Traveler> travelers, @RequestParam Long goodId, @RequestParam Long routeId, Float buyerMoney
-            , Float mallIntegral, Float mallBalance, Float mallCoffers, Model model) {
-        touristOrderService.addOrderInfo(user, travelers, goodId, routeId, mallIntegral, mallBalance, mallCoffers);
+            , Float mallIntegral, Float mallBalance, Float mallCoffers, String remark, Model model) {
+        Map map = new HashMap();
+        try {
+            TouristOrder order = touristOrderService.addOrderInfo(user, travelers, goodId, routeId, mallIntegral,
+                    mallBalance, mallCoffers, remark);
+            if (order != null) {
+                map.put("orderId", order.getId().toString());
+            } else {
+                map.put("msg", "行程游客人数不足");
+            }
+        } catch (IOException e) {
+            map.put("msg", "游客不能为空，请填添加游客");
+        } catch (IllegalStateException e) {
+            map.put("msg", "积分同步失败，请重试");
+        }
+        return map;
+    }
+
+    /**
+     * 跳转至订单支付页
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/toProcurementPayPage"})
+    public String toProcurementPayPage(@RequestParam Long orderId, Model model) {
+        model.addAttribute("order", touristOrderRepository.getOne(orderId));
+        return "view/wap/procurementPayPage.html";
+    }
+
+    /**
+     * 最新线路列表
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/newTouristList"})
+    public String newTouristList(int offset, Model model) {
+        List<TouristGood> list = touristGoodService.findNewTourists(offset);
+        model.addAttribute("list", list);
+        model.addAttribute("offset", offset);
+        return "view/wap/newTourist.html";
+    }
+
+    /**
+     * 打开活动类型的列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/activityTypeList"})
+    public String activityTypeList(Model model) {
+        model.addAttribute("activityTypes", activityTypeRepository.findAll());
+        return "view/wap/activityTypeList.html";
     }
 
     /**
@@ -166,27 +249,108 @@ public class IndexController {
      */
     @RequestMapping(value = {"/activityTypeGoods"})
     public String activityTypeGoods(@RequestParam Long activityTypeId, Model model) {
-        model.addAttribute("activityTypeGoods", touristGoodRepository.findByActivityType_IdAndDeletedIsFalse(activityTypeId, new
-                PageRequest(0, 6)));
-        // TODO: 2017/1/6 页面
-        return "";
+        model.addAttribute("activityTypeId", activityTypeId);
+        return "view/wap/activityTypeGoods.html";
     }
 
     /**
-     * 最新线路列表
+     * 指定活动类型的商品列表界面
      *
      * @param model
      * @return
      */
-    @RequestMapping(value = {"/newTouristList"})
-    public String newTouristList(int offset, Model model) {
-        // TODO: 2017/1/6 页面
-//        touristGoodRepository.findByTouristCheckState(TouristCheckStateEnum.CheckFinish, pageable)
-        model.addAttribute("list", null);
-        model.addAttribute("offset", offset);
-
-        return "view/wap/newTourist.html";
+    @RequestMapping(value = {"/activityTourist"})
+    public String activityTourist(@RequestParam Long activityTypeId, int offset, Model model) {
+        int page = offset / 10;
+        model.addAttribute("activityTypeGoods", touristGoodRepository
+                .findByActivityType_IdAndDeletedIsFalseAndTouristCheckState(activityTypeId, new
+                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+        model.addAttribute("activityTypeId", activityTypeId);
+        return "view/wap/activityTourist.html";
     }
+
+    /**
+     * 打开指定供应商的商品列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/supplierGoods"})
+    public String supplierGoods(@RequestParam Long supplierId, Model model) {
+        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(supplierId, TouristCheckStateEnum.CheckFinish);
+        model.addAttribute("count", count);
+        model.addAttribute("supplier", touristSupplierRepository.getOne(supplierId));
+        return "view/wap/touristSupplier.html";
+    }
+
+    /**
+     * 指定供应商的商品列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/supplierTourist"})
+    public String supplierTourist(@RequestParam Long supplierId, int offset, Model model) {
+        int page = offset / 10;
+        model.addAttribute("supplierGoods", touristGoodRepository
+                .findByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(supplierId, new
+                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+        model.addAttribute("supplierId", supplierId);
+        return "view/wap/supplierTourist.html";
+    }
+
+    /**
+     * 指定供应商的商品列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/destinationList"})
+    public String destinationList(Model model) {
+        List<TouristGood> towns = touristGoodService.findByDestinationTown();
+        Map<String, List<TouristGood>> maps = towns.stream().collect(Collectors.groupingBy(g -> g.getDestination().getProvince()));
+        model.addAttribute("destinationMaps", maps);
+        return "view/wap/destination.html";
+    }
+
+    /**
+     * 打开指定目的地商品列表界面
+     *
+     * @param type  = 0 , 1  省份，市区
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/destinationGoods"})
+    public String destinationGoods(@RequestParam Long type, @RequestParam String value, Model model) {
+        model.addAttribute("type", type);
+        model.addAttribute("value", value);
+        return "view/wap/destinationGoods.html";
+    }
+
+    /**
+     * 指定供应商的商品列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/destinationTourist"})
+    public String destinationTourist(@RequestParam Long type, @RequestParam String value, int offset, Model model) {
+        int page = offset / 10;
+        if (type == 0) {
+            model.addAttribute("destinationGoods", touristGoodRepository
+                    .findByDestination_ProvinceAndDeletedIsFalseAndTouristCheckState(value, new
+                            PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+        } else {
+            model.addAttribute("destinationGoods", touristGoodRepository
+                    .findByDestination_TownAndDeletedIsFalseAndTouristCheckState(value, new
+                            PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+        }
+        model.addAttribute("type", type);
+        model.addAttribute("value", value);
+        model.addAttribute("offset", offset);
+        return "view/wap/destinationTourist.html";
+    }
+
 
 
 }

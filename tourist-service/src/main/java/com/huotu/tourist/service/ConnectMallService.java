@@ -58,8 +58,9 @@ public interface ConnectMallService {
      * @param accountType 账户类型，0表示积分，1表示余额，2表示小金库
      * @param amount      增加或减少的金额，负数即为减，积分为int型
      * @return
+     * @throws IllegalStateException 更新积分失败
      */
-    long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount);
+    long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) throws IllegalStateException;
 
     /**
      * 推订单到商城

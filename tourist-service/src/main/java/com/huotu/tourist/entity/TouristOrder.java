@@ -28,7 +28,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 线路订单
@@ -103,6 +102,23 @@ public class TouristOrder extends BaseModel {
     @Column(precision = 10, scale = 2)
     private BigDecimal orderMoney;
 
+
+    /**
+     * 积分
+     */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal mallIntegral;
+    /**
+     * 余额
+     */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal mallBalance;
+    /**
+     * 小金库
+     */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal mallCoffers;
+
     /**
      * 支付时间
      */
@@ -123,7 +139,7 @@ public class TouristOrder extends BaseModel {
     private String remarks;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "order")
-    private Set<Traveler> travelers;
+    private List<Traveler> travelers;
 
     /**
      * 是否结算

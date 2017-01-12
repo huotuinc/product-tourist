@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -17,27 +17,37 @@
 
 <body class="bac">
 <div class="xzlx-hot">
+    <!--/*@thymesVar id="order" type="com.huotu.tourist.entity.TouristOrder"*/-->
     <div class="swiper-container">
+
         <!---->
         <div class="xiaofeijilv">
             <ul>
                 <li class="t">
-                    <div class="DDH"><span>订单编号：201604943218493</span>
+                    <div class="DDH">订单编号：<span th:text="${order.orderNo}">201604943218493</span>
                         <p style="clear:both"></p>
                     </div>
                     <div class="ts">
-                        <div class="dx"><a href="">
-                            <div class="pic"><img src="../../assets/img/imgsss.png"></div>
-                            <div class="con">
-                                <p style="color:#000; margin-bottom:2px">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
-                                <p style="color:#000;">x1</p>
-                            </div>
-                            <p style="clear:both"></p>
-                        </a></div>
+                        <div class="dx">
+                            <a href="touristGoodInfo.html" th:href="@{/wap/goodInfo(id=${order.touristGood.id})}">
+                                <div class="pic">
+                                    <img src="../../assets/img/imgsss.png" res:src="${order.touristGood.touristImgUri}">
+                                </div>
+                                <div class="con">
+                                    <p style="color:#000; margin-bottom:2px" th:text="${order.touristGood.touristName}">
+                                        【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
+                                    <p style="color:#000;">x1</p>
+                                </div>
+                                <p style="clear:both"></p>
+                            </a>
+                        </div>
                     </div>
                     <div style="font-size:12px; padding:6px 10px;">
-                        <p style="float:right">共<span>3</span>人,总计：￥<span>199.00</span></p>
-                        <p style="float:left;color:#999">2015-10-10 16:15</p>
+                        <p style="float:right">共<span th:text="${order.travelers.size()}">3</span>人,总计：￥<span
+                                th:text="${order.orderMoney+order.mallIntegral+order.mallBalance+order.mallCoffers}">199
+                            .00</span></p>
+                        <p style="float:left;color:#999" th:text="${order.travelers.get(0).route.fromDate}">2015-10-10
+                            16:15</p>
                         <p style="clear:both"></p>
                     </div>
                 </li>
@@ -45,22 +55,27 @@
         </div>
         <div class="weui_cells_title"> 人员信息</div>
         <div class="weui_panel_bd">
-            <div class="weui_media_box weui_media_text massgea">
-                <h4 class="weui_media_title">里里<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;女</i>
+            <!--/*@thymesVar id="traveler" type="com.huotu.tourist.entity.Traveler"*/-->
+            <div class="weui_media_box weui_media_text massgea" th:each="traveler:${order.travelers}">
+                <h4 class="weui_media_title"><span th:text="${traveler.name}">里里</span>&nbsp;/&nbsp;
+                    <i style="color: #808080; font-size: 12px; font-style: normal" th:text="${traveler.sex.value}">女
+                    </i>
                 </h4>
-                <p class="weui_media_desc ztdx">年龄:23</p>
-                <p class="weui_media_desc ztdx">联系电话:1563232323</p>
-                <p class="weui_media_desc ztdx">身份证号:332325******256569</p>
+                <p class="weui_media_desc ztdx" th:text="'年龄:'+${traveler.age}">年龄:23</p>
+                <p class="weui_media_desc ztdx" th:text="'联系电话:'+${traveler.telPhone}">联系电话:1563232323</p>
+                <p class="weui_media_desc ztdx" th:text="'身份证号:'+${traveler.IDNo}">身份证号:332325******256569</p>
             </div>
             <div class="weui_media_box weui_media_text massgea">
-                <h4 class="weui_media_title">等等<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;女</i>
+                <h4 class="weui_media_title"><span>里里</span>&nbsp;/&nbsp;<i
+                        style="color: #808080; font-size: 12px; font-style: normal">女</i>
                 </h4>
                 <p class="weui_media_desc ztdx">年龄:21</p>
                 <p class="weui_media_desc ztdx">联系电话:1563232323</p>
                 <p class="weui_media_desc ztdx">身份证号:332325******256569</p>
             </div>
             <div class="weui_media_box weui_media_text massgea">
-                <h4 class="weui_media_title">发发<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;男</i>
+                <h4 class="weui_media_title"><span>里里</span>&nbsp;/&nbsp;<i
+                        style="color: #808080; font-size: 12px; font-style: normal">女</i>
                 </h4>
                 <p class="weui_media_desc ztdx">年龄:26</p>
                 <p class="weui_media_desc ztdx">联系电话:1563232323</p>
@@ -68,17 +83,23 @@
             </div>
         </div>
         <div class="weui_cells_title"> 备注</div>
-        <div style="background-color: #fff; font-size:14px; color: #333; padding: 15px;">
+        <div style="background-color: #fff; font-size:14px; color: #333; padding: 15px;" th:text="${order.remarks}">
             西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！
         </div>
-        <div class="weui_cells weui_cells_access" style="margin-top: 10px"><a class="weui_cell" href="javascript:;">
+        <div class="weui_cells weui_cells_access" style="margin-top: 10px">
+            <a class="weui_cell" href="javascript:;">
             <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
-                <div class="weui_media_hd imgleft"><img class="weui_media_appmsg_thumb"
-                                                        src="../../assets/img/imgsss.png" alt=""></div>
-                <h4 class="weui_media_title">乌鲁木齐俱乐部</h4>
+                <div class="weui_media_hd imgleft">
+                    <img class="weui_media_appmsg_thumb"
+                         src="../../assets/img/imgsss.png"
+                         res:src="${order.touristGood.touristSupplier.businessLicenseUri}" alt="">
+                </div>
+                <h4 class="weui_media_title" th:text="${order.touristGood.touristSupplier.supplierName}">乌鲁木齐俱乐部</h4>
                 <ul class="weui_media_info" style="margin-top: 4px;line-height: 1.3em;">
-                    <li class="weui_media_info_meta">地接人：王剑南</li>
-                    <li class="weui_media_info_meta">联系电话：0571-13205713331</li>
+                    <li class="weui_media_info_meta" th:text="'地接人：'+${order.touristGood.receptionPerson}">地接人：王剑南</li>
+                    <li class="weui_media_info_meta" th:text="'联系电话：'+${order.touristGood.receptionTelephone}">
+                        联系电话：0571-13205713331
+                    </li>
                 </ul>
             </div>
             <span class="weui_cell_ft"></span> </a></div>
@@ -89,25 +110,28 @@
             <div class="weui_cell_bd weui_cell_primary">
                 <p>积分</p>
             </div>
-            <div class="weui_cell_ft twossw">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallIntegral}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>余额</p>
             </div>
-            <div class="weui_cell_ft twossw">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallBalance}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>小金库</p>
             </div>
-            <div class="weui_cell_ft twossw">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallCoffers}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>已支付</p>
             </div>
-            <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;">￥200.0</div>
+            <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;"
+                 th:text="'-￥'+${order.mallIntegral+order.mallBalance+order.mallCoffers}">￥200
+                .0
+            </div>
         </div>
     </div>
     <div style=" margin: 10px;">

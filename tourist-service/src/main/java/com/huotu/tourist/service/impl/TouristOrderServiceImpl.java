@@ -16,12 +16,12 @@ import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
@@ -48,6 +48,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     TravelerRepository travelerRepository;
     @Autowired
     TouristGoodRepository touristGoodRepository;
+    @Autowired
+    ConnectMallService connectMallService;
 
 
     @Override
@@ -192,9 +194,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     }
 
     @Override
-    @Transactional
-    public void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId
-            , Float mallIntegral, Float mallBalance, Float mallCoffers) {
+    public TouristOrder addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId
+            , Float mallIntegral, Float mallBalance, Float mallCoffers, String remark) throws IOException, IllegalStateException {
         if (travelers != null && travelers.size() > 0) {
             TouristGood good = touristGoodRepository.getOne(goodId);
             TouristRoute route = touristRouteRepository.getOne(routeId);
@@ -208,6 +209,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 order.setSettlement(false);
                 order.setOrderNo(random.nextInt() + LocalDateTimeFormatter.toStr(LocalDateTime.now()) + random.nextInt());
                 order.setCreateTime(LocalDateTime.now());
+                order.setRemarks(remark);
+
                 BigDecimal adult = good.getPrice().multiply(new BigDecimal(travelers.stream().filter(traveler ->
                         traveler
                                 .getTravelerType().equals
@@ -221,25 +224,38 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                         ));
                 BigDecimal sumNum = adult.add(child);
                 if (mallIntegral != null && mallIntegral > 0) {
+                    order.setMallIntegral(new BigDecimal(mallIntegral));
                     sumNum = sumNum.subtract(new BigDecimal(mallIntegral));
+                    connectMallService.setMallUserIntegralBalanCoffers(user.getId(), 0, mallIntegral.intValue());
                 }
                 if (mallBalance != null && mallBalance > 0) {
+                    order.setMallBalance(new BigDecimal(mallBalance));
                     sumNum = sumNum.subtract(new BigDecimal(mallBalance));
+                    connectMallService.setMallUserIntegralBalanCoffers(user.getId(), 1, mallBalance.intValue());
                 }
                 if (mallCoffers != null && mallCoffers > 0) {
+                    order.setMallCoffers(new BigDecimal(mallCoffers));
                     sumNum = sumNum.subtract(new BigDecimal(mallCoffers));
+                    connectMallService.setMallUserIntegralBalanCoffers(user.getId(), 2, mallCoffers.intValue());
                 }
                 order.setOrderMoney(sumNum);
                 order.setTouristBuyer(user);
                 for (Traveler traveler : travelers) {
                     traveler.setCreateTime(LocalDateTime.now());
                     traveler.setRoute(route);
+                    traveler.setOrder(order);
                 }
-                // todo 保存游客 和订单
-
+                order.setTravelers(travelers);
+                order = touristOrderRepository.saveAndFlush(order);
+                travelerRepository.save(travelers);
+                connectMallService.pushOrderToMall(order);
+                return order;
             }
+            return null;
         } else {
-
+            throw new IOException("游客不能为空");
         }
     }
+
+
 }

@@ -12,39 +12,16 @@
     <link rel="stylesheet" type="text/css"
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
-    <title>线路供应商</title>
+    <title>活动类型-商品列表</title>
 </head>
 
-<body class="bac">
+<body>
 <div class="xzlx-hot">
-    <!--/*@thymesVar id="supplier" type="com.huotu.tourist.entity.TouristSupplier"*/-->
-    <div class="swiper-container">
-        <div class="weui_cells weui_cells_access">
-            <a class="weui_cell" href="javascript:;">
-                <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
-                    <h4 class="weui_media_title" th:text="${supplier.supplierName}">乌鲁木齐俱乐部</h4>
-                    <ul class="weui_media_info">
-                        <li class="weui_media_info_meta levelz">
-                            <img class="yrzimg" style="float: left; margin-right: 0px;"
-                                 src="../../assets/img/yrz.png">已认证
-                        </li>
-                        <li class="weui_media_info_meta levelx" th:text="${count}+'条路线'">12条路线</li>
-                    </ul>
-                </div>
-            </a>
-        </div>
-        <!---->
-        <div class="weui_cells_title">
-            分销路线
-        </div>
-        <div class="weui_tab_bd " style="padding-bottom:0px">
-            <div class="supplierTourist">
-                <a href="supplierTourist.html" class="nextJScroll"
-                   th:href="@{/wap/supplierTourist(offset=0,supplierId=${supplier.id})}">&nbsp;</a>
-            </div>
-        </div>
+    <!---->
+    <div class="app-edit ">
+        <a href="activityTourist.html" class="nextJScroll"
+           th:href="@{/wap/activityTourist(offset=0,activityTypeId=${activityTypeId})}">&nbsp;</a>
     </div>
-
     <!--底部高度-->
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
@@ -65,17 +42,17 @@
 
     <!---->
 </div>
-</body>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="../../assets/js/jquery.jscroll.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
 <script>
-    $('.supplierTourist').jscroll({
+    $('.app-edit').jscroll({
         debug: true,
         loadingHtml: '<div class="weui-infinite-scroll"><div class="infinite-preloader"></div>滑动加载更多</div>'
     });
 </script>
-</html>
+</body>
 
+</html>

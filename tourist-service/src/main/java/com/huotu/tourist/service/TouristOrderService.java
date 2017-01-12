@@ -19,6 +19,7 @@ import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -120,7 +121,23 @@ public interface TouristOrderService {
      */
     List<OrderStateEnum> getModifyState(SystemUser user,TouristOrder touristOrder);
 
+    /**
+     * 添加订单，添加游客，商城积分同步，商城订单同步
+     *
+     * @param user
+     * @param travelers
+     * @param goodId
+     * @param routeId
+     * @param mallIntegral
+     * @param mallBalance
+     * @param mallCoffers
+     * @param remark
+     * @return null 游客人数不足，not null 订单
+     * @throws IOException 游客不能为空，IllegalStateException 积分同步失败
+     */
+    @Transactional
+    TouristOrder addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
+            , Float mallBalance, Float mallCoffers, String remark) throws IOException, IllegalStateException;
 
-    void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
-            , Float mallBalance, Float mallCoffers);
+
 }

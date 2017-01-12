@@ -70,4 +70,19 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     public boolean statusNormal(TouristOrder order) throws IOException {
         return false;
     }
+
+    @Override
+    public long getMallUserIntegralBalanCoffers(Long mallUserId, int accountType) {
+        return 0;
+    }
+
+    @Override
+    public long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) throws IllegalStateException {
+        return 0;
+    }
+
+    @Override
+    public long pushOrderToMall(TouristOrder order) {
+        return 0;
+    }
 }

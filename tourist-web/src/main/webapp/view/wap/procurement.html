@@ -57,29 +57,29 @@
             <div class="weui_cell">
                 <div class="weui_cell_bd weui_cell_primary">
                     <input type="hidden" class="travelerType" name="travelerType" value="0">
-                    <input class="weui_input" type="text" name="" placeholder="姓名">
+                    <input class="weui_input" type="text" name="name" placeholder="姓名">
                 </div>
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="tel" placeholder="手机号">
+                    <input class="weui_input" type="tel" name="telPhone" placeholder="手机号">
                 </div>
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="text" placeholder="身份证">
+                    <input class="weui_input" type="text" name="IDNo" placeholder="身份证">
                 </div>
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="number" placeholder="年龄">
+                    <input class="weui_input" type="number" name="age" placeholder="年龄">
                 </div>
             </div>
             <div class="weui_cell weui_cell_select">
                 <div class="weui_cell_bd weui_cell_primary">
-                    <select class="weui_select" name="select1" style="color:#a9a9a9;">
-                        <option selected="" value="1">男</option>
-                        <option value="2">女</option>
+                    <select class="weui_select" name="sex" style="color:#a9a9a9;">
+                        <option selected="" value="0">男</option>
+                        <option value="1">女</option>
                     </select>
                 </div>
             </div>
@@ -94,31 +94,31 @@
     </div>
     <div class="weui_cells weui_cells_form">
         <div class="weui_cell">
-            <input type="hidden" class="travelerType" name="travelerType" value="1">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" placeholder="姓名">
+                <input type="hidden" class="travelerType" name="travelerType" value="0">
+                <input class="weui_input" type="text" name="name" placeholder="姓名">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="tel" placeholder="手机号">
+                <input class="weui_input" type="tel" name="telPhone" placeholder="手机号">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="tel" placeholder="身份证">
+                <input class="weui_input" type="text" name="IDNo" placeholder="身份证">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="number" placeholder="年龄">
+                <input class="weui_input" type="number" name="age" placeholder="年龄">
             </div>
         </div>
         <div class="weui_cell weui_cell_select">
             <div class="weui_cell_bd weui_cell_primary">
-                <select class="weui_select" name="select1" style="color:#a9a9a9;">
-                    <option value="1">男</option>
-                    <option value="2">女</option>
+                <select class="weui_select" name="sex" style="color:#a9a9a9;">
+                    <option selected="" value="0">男</option>
+                    <option value="1">女</option>
                 </select>
             </div>
         </div>
@@ -128,7 +128,7 @@
 <div class="weui_cells weui_cells_form">
     <div class="weui_cell">
         <div class="weui_cell_bd weui_cell_primary">
-            <textarea class="weui_textarea" placeholder="备注" rows="3"></textarea>
+            <textarea class="weui_textarea" name="remark" placeholder="备注" rows="3"></textarea>
             <div class="weui_textarea_counter"><span>0</span>/200</div>
         </div>
     </div>
@@ -137,28 +137,37 @@
 <div class="weui_cells weui_cells_checkbox">
     <label class="weui_cell weui_check_label" for="s11">
         <div class="weui_cell_bd weui_cell_primary">
-            <p>使用积分<span class="twoss">2000积分</span><span class="twossw">减￥20.0</span></p>
+            <p>使用积分
+                <span class="twoss" th:text="${mallIntegral}+'积分'">20积分</span>
+                <span class="twossw" th:text="'减￥'+${mallIntegral}">减￥20.0</span>
+            </p>
         </div>
         <div class="weui_cell_hd">
-            <input type="checkbox" class="weui_check" name="checkbox1" id="s11" checked="checked">
+            <input type="checkbox" class="weui_check" name="mallIntegral" id="s11">
             <i class="weui_icon_checked"></i>
         </div>
     </label>
     <label class="weui_cell weui_check_label" for="s12">
         <div class="weui_cell_bd weui_cell_primary">
-            <p>使用余额<span class="twoss">￥20.0</span><span class="twossw">减￥20.0</span></p>
+            <p>使用余额
+                <span class="twoss" th:text="'￥'+${mallBalance}">￥20.0</span>
+                <span class="twossw" th:text="'减￥'+${mallBalance}">减￥20.0</span>
+            </p>
         </div>
         <div class="weui_cell_hd">
-            <input type="checkbox" class="weui_check" name="checkbox1" id="s12" checked="checked">
+            <input type="checkbox" class="weui_check" name="mallBalance" id="s12">
             <i class="weui_icon_checked"></i>
         </div>
     </label>
     <label class="weui_cell weui_check_label" for="s13">
         <div class="weui_cell_bd weui_cell_primary">
-            <p>使用小金库<span class="twoss">￥1200.0</span><span class="twossw">减￥20.0</span></p>
+            <p>使用小金库
+                <span class="twoss" th:text="'￥'+${mallCoffers}">￥20.0</span>
+                <span class="twossw" th:text="'减￥'+${mallCoffers}">减￥20.0</span>
+            </p>
         </div>
         <div class="weui_cell_hd">
-            <input type="checkbox" class="weui_check" name="checkbox1" id="s13" checked="checked">
+            <input type="checkbox" class="weui_check" name="mallCoffers" id="s13">
             <i class="weui_icon_checked"></i>
         </div>
     </label>
@@ -166,9 +175,9 @@
 <p style="height: 60px;"></p>
 <div class="xzlx-hot">
     <div class="item-action">
-        <div class="moneypay">应付￥1999:00</div>
+        <div class="moneypay">应付￥10.00</div>
         <div class="buy-now yuanjiaoo">
-            <a href="procurementPayPage.html" th:href="javascript:submitOrder();">提交采购订单</a>
+            <a id="submitBtn">提交采购订单</a>
         </div>
     </div>
 </div>
@@ -178,7 +187,8 @@
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
     $(function () {
-        var addOrderUrl = /*[[@{/wap/addOrderInfo}]]*/ 'procurementPayPage.html';
+        var addOrderUrl = /*[[@{/wap/addOrderInfo}]]*/ '../../mock/httpJson.json';
+        var toOrderInfoPage = /*[[@{/wap/toProcurementPayPage}]]*/ 'procurementPayPage.html';
 
         var goodId = /*[[${good.id}]]*/ 1;
 
@@ -194,13 +204,7 @@
         var buyerMoney = price;
 
         $(".money").text('￥' + buyerMoney);
-
-        //商城小伙伴积分
-        var mallIntegral = 200;
-        //商城小伙伴余额
-        var mallBalance = 20;
-        //商城小伙伴小金库
-        var mallCoffers = 200;
+        $(".moneypay").text('应付￥' + buyerMoney);
 
         //成人减1
         $(".priceDecrease").click(function () {
@@ -208,6 +212,7 @@
                 $("input[name='adult']").val(parseInt($("input[name='adult']").val()) - 1)
                 buyerMoney -= price;
                 $(".money").text('￥' + buyerMoney);
+                $(".moneypay").text('应付￥' + buyerMoney);
                 $('.adultDiv:last').remove();
             }
         });
@@ -219,6 +224,7 @@
                 $(".itemTemplate").clone().removeClass("itemTemplate").addClass("adultDiv").appendTo(".items")
                         .show().find(".travelerType").val(0);
                 $(".money").text('￥' + buyerMoney);
+                $(".moneypay").text('应付￥' + buyerMoney);
             }
         });
 
@@ -229,6 +235,7 @@
                 buyerMoney -= childPrice;
                 $('.childrenDiv:last').remove();
                 $(".money").text('￥' + buyerMoney);
+                $(".moneypay").text('￥' + buyerMoney);
             }
         });
 
@@ -240,6 +247,7 @@
                         .show().find(".travelerType").val(1);
                 buyerMoney += childPrice;
                 $(".money").text('￥' + buyerMoney);
+                $(".moneypay").text('应付￥' + buyerMoney);
             }
         });
 
@@ -256,8 +264,93 @@
             }
             amount -= 1;
             $(".money").text('￥' + buyerMoney);
+            $(".moneypay").text('应付￥' + buyerMoney);
         });
 
+        //商城小伙伴积分
+        var mallIntegral = /*[[${mallIntegral}]]*/ 20;
+        //商城小伙伴余额
+        var mallBalance = /*[[${mallBalance}]]*/ 20;
+        //商城小伙伴小金库
+        var mallCoffers = /*[[${mallCoffers}]]*/ 20;
+
+        $("input[type='checkbox']").change(function () {
+            var name = $(this).attr("name");
+            if ($(this).is(':checked')) {
+                if (name == 'mallIntegral')
+                    if (buyerMoney >= mallIntegral) {
+                        $(".moneypay").text('应付￥' + (buyerMoney -= mallIntegral));
+                    } else {
+                        $.alert("不能再用积分了");
+                        $(this).prop('checked', false)
+                    }
+                if (name == 'mallBalance')
+                    if (buyerMoney >= mallBalance) {
+                        $(".moneypay").text('应付￥' + (buyerMoney -= mallBalance));
+                    } else {
+                        $.alert("不能再用积分了");
+                        $(this).prop('checked', false)
+                    }
+                if (name == 'mallCoffers')
+                    if (buyerMoney >= mallCoffers) {
+                        $(".moneypay").text('应付￥' + (buyerMoney -= mallCoffers));
+                    } else {
+                        $.alert("不能再用积分了");
+                        $(this).prop('checked', false)
+                    }
+            } else {
+                if (name == 'mallIntegral')
+                    $(".moneypay").text('应付￥' + (buyerMoney += mallIntegral));
+                if (name == 'mallBalance')
+                    $(".moneypay").text('应付￥' + (buyerMoney += mallBalance));
+                if (name == 'mallCoffers')
+                    $(".moneypay").text('应付￥' + (buyerMoney += mallCoffers));
+            }
+        });
+
+        $("#submitBtn").click(function () {
+            var travelers = new Array();
+            $(".items .item").each(function () {
+                var travelerType = parseInt($(this).find("input[name='travelerType']").val());
+                var name = $(this).find("input[name='name']").val();
+                var telPhone = $(this).find("input[name='telPhone']").val();
+                var IDNo = $(this).find("input[name='IDNo']").val();
+                var age = parseInt($(this).find("input[name='age']").val());
+                var sex = parseInt($(this).find("select[name='sex']").val());
+                var traveler = {
+                    "travelerType": travelerType,
+                    "name": name,
+                    "telPhone": telPhone,
+                    "IDNo": IDNo,
+                    "age": age,
+                    "sex": sex
+                };
+                travelers.push(traveler);
+            });
+            var data = {goodId: goodId, routeId: routeId, travelers: travelers};
+            data.remark = $("textarea[name='remark']").val();
+            if ($("input[name='mallIntegral']").checked) {
+                data.mallIntegral = mallIntegral;
+            }
+            if ($("input[name='mallBalance']").checked) {
+                data.mallBalance = mallBalance;
+            }
+            if ($("input[name='mallCoffers']").checked) {
+                data.mallCoffers = mallCoffers;
+            }
+            $.ajax({
+                url: addOrderUrl,
+                method: "post",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    window.location.href = toOrderInfoPage + "?orderId=" + data.orderId;
+                },
+                error: function (error) {
+                    $.alert(error.msg)
+                }
+            });
+        })
     });
 </script>
 </body>

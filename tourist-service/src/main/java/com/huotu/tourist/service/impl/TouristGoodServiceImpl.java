@@ -1,14 +1,20 @@
 package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.TouristGoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -167,8 +173,30 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 
-//    @Override
-//    public void pushGoodToMall(TouristGood touristGood) {
-//        // TODO: 2017/1/7 商城交互同步商品 @CJ
-//    }
+    @Override
+    public List<TouristGood> findNewTourists(int offset) {
+        int pageNo = offset / 10;
+        Pageable pageable = new PageRequest(pageNo, 10, new Sort(Sort.Direction.DESC, "updateTime"));
+        Page<TouristGood> page = touristGoodRepository.findAll((root, query, cb) -> {
+            Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
+            predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
+                    TouristCheckStateEnum.CheckFinish));
+            return predicate;
+        }, pageable);
+        return page.getContent();
+    }
+
+
+    @Override
+    public List<TouristGood> findByDestinationTown() {
+        return touristGoodRepository.findAll((root, query, cb) -> {
+            Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
+            predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
+                    TouristCheckStateEnum.CheckFinish));
+            query = query.groupBy(root.get("Destination.town"));
+            return query.getGroupRestriction();
+        });
+    }
+
+
 }

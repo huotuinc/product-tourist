@@ -95,4 +95,21 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
             , int maxPeople, Long mallGoodsId, List<String> photos, TouristCheckStateEnum goodsCheckState);
 
+    /**
+     * 获取最新线路列表
+     *
+     * @param offset
+     * @return
+     */
+    List<TouristGood> findNewTourists(int offset);
+
+
+    /**
+     * 查询所有商品目的地-区信息
+     *
+     * @return
+     */
+    List<TouristGood> findByDestinationTown();
+
+
 }

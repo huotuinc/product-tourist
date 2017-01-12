@@ -105,17 +105,18 @@
             </div>
         </div>
         <div class="weui_cells weui_cells_access">
-            <a class="weui_cell" href="touristSupplier.html">
+            <a class="weui_cell" href="touristSupplier.html"
+               th:href="@{/wap/supplierGoods(supplierId=${good.touristSupplier.id})}">
                 <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
                     <h4 class="weui_media_title" th:text="${good.touristSupplier.supplierName}">乌鲁木齐俱乐部</h4>
                     <ul class="weui_media_info" style="margin-top: 6px">
                         <li class="weui_media_info_meta levelz"><img class="yrzimg" src="../../assets/img/yrz.png">已认证
                         </li>
-                        <li class="weui_media_info_meta levelx" th:text="${count+'条线路'}">12条路线</li>
+                        <li class="weui_media_info_meta levelx" th:text="${count}+'条线路'">12条路线</li>
                     </ul>
                     <ul class="weui_media_info" style="margin-top: 8px;">
-                        <li class="weui_media_info_meta" th:text="${'地接人：'+good.receptionPerson}">地接人：王剑南</li>
-                        <li class="weui_media_info_meta" th:text="${'联系电话：'+good.receptionTelephone}">
+                        <li class="weui_media_info_meta" th:text="'地接人：'+${good.receptionPerson}">地接人：王剑南</li>
+                        <li class="weui_media_info_meta" th:text="'联系电话：'+${good.receptionTelephone}">
                             联系电话：0571-13205713331
                         </li>
                     </ul>
@@ -137,9 +138,9 @@
     </div>
     <p style="height:40px;"></p>
     <div class="item-action">
-        <div class="toggle-home"><a href="index.html" th:href="@{/index}"><span class="icon"></span>首页</a></div>
+        <div class="toggle-home"><a href="index.html" th:href="@{/wap/}"><span class="icon"></span>首页</a></div>
         <div class="buy-now yuanjiaoo">
-            <a href="javascript:procurement();"
+            <a id="procurement"
                th:if="${user!=null and user.payState.code==1 && user.checkState.code==1}"
             > 立即采购
             </a>
@@ -148,7 +149,6 @@
     </div>
     <!---->
 </div>
-</body>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
@@ -212,13 +212,15 @@
 
         //提交商品选择，下一步填写订单信息
         var goodId = /*[[${good.id}]]*/ 0;
-        procurement = function () {
+        $("#procurement").click(function () {
             if (goodId != null && routeId != null) {
                 window.location.href = procurementUrl + "?goodId=" + goodId + "&routeId=" + routeId
             } else {
                 $.alert("请选择行程");
             }
-        }
+        })
     });
 </script>
+</body>
+
 </html>
