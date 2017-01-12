@@ -58,4 +58,5 @@ public enum OrderStateEnum implements CommonEnum  {
     public String getDescription() {
         return this.description;
     }
+
 }

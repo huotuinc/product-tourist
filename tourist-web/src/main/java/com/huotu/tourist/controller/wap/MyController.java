@@ -60,14 +60,17 @@ public class MyController {
 
     /**
      * 显示个人中心页面 “我的”页面
-     * @param id
+     * @param buyerId  采购商
      * @param model
      * @return          视图
      * @throws IOException
      */
     @RequestMapping("/showMyInfo")
-    public String showMyInfo(@RequestParam Long id, Model model) throws IOException{
-        TouristBuyer touristBuyer=touristBuyerRepository.getOne(id);
+    public String showMyInfo(Long buyerId, Model model) throws IOException{
+        if(buyerId==null){
+            return viewWapPath+"成为采购商的页面";
+        }
+        TouristBuyer touristBuyer=touristBuyerRepository.getOne(buyerId);
         String headUrl=connectMallService.getTouristBuyerHeadUrl(touristBuyer);
         long allNotFinish=touristOrderRepository.countByTouristBuyerAndOrderStates(
                 touristBuyer, Arrays.asList(OrderStateEnum.NotPay,OrderStateEnum.PayFinish
@@ -91,12 +94,14 @@ public class MyController {
 
     /**
      * 显示某供应商的订单列表页面
-     * @param id        采购商ID
+     * @param buyerId    采购商ID
      * @return          列表视图
      * @throws IOException
      */
     @RequestMapping("/showAllOrders")
-    public String showAllOrders(@RequestParam Long id) throws IOException{
+    public String showAllOrders(@RequestParam Long buyerId,String states,Model model) throws IOException{
+        model.addAttribute("states",states);
+        model.addAttribute("buyerId",buyerId);
         return viewWapPath+"allOrder.html";
     }
 

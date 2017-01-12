@@ -32,11 +32,21 @@
                     </div>
                     <div class="float-e-margins">
                         <label>订单操作：</label>
-                        <button onclick="modifyOrderStatus(1,this)"
-                                th:onclick="'modifyOrderStatus('+${order.id}+',this)'"
-                                th:each="o:${orderStates}" class="btn btn-success">
-                            <span class="orderState" style="display: none" th:text="${o.code}">2</span>
-                            <span th:text="${o.value}">确认订单</span>
+                        <button th:if="${order.orderState.code==1}"
+                                onclick="modifyOrderStatus(2,this)" class="btn btn-success">
+                            <span th:text="">确认订单</span>
+                        </button>
+                        <button th:if="${order.orderState.code==4}"
+                                onclick="modifyOrderStatus(1,this)" class="btn btn-success">
+                            <span th:text="">取消退款</span>
+                        </button>
+                        <button th:if="${order.orderState.code==1||order.orderState.code==2}"
+                                onclick="modifyOrderStatus(4,this)" class="btn btn-success">
+                            <span th:text="">申请退款</span>
+                        </button>
+                        <button th:if="${order.orderState.code==0}"
+                                onclick="modifyOrderStatus(6,this)" class="btn btn-success">
+                            <span th:text="">取消订单</span>
                         </button>
                     </div>
 

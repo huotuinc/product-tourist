@@ -139,5 +139,17 @@ public interface TouristOrderService {
     TouristOrder addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
             , Float mallBalance, Float mallCoffers, String remark) throws IOException, IllegalStateException;
 
+    void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
+            , Float mallBalance, Float mallCoffers);
 
+
+    /**
+     * 获取采购商的订单列表
+     * @param buyerId      采购商
+     * @param lastId            最后一条订单的ID，用于查询条件
+     * @param states            订单状态：all:全部，going:进行中，finish：已完成，cancel:已取消
+     * @return
+     * @throws IOException
+     */
+    List<TouristOrder> getBuyerOrders(Long buyerId, Long lastId, String states) throws IOException;
 }

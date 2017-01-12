@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="buyer" type="com.huotu.tourist.entity.TouristBuyer"*/-->
+<!--/*@thymesVar id="buyerId" type="java.lang.String"*/-->
 <div class="weui_navbar daohangs" th:fragment="bottom">
 <a href="index.html" class="weui_navbar_item">
     <p class="kimg dhshouyeicon"></p>
@@ -10,7 +10,7 @@
     <p>搜索</p>
 </a>
 
-<a th:href="@{/wap/showMyInfo(id=${buyer.id})}" href="my.html" class="weui_navbar_item weui_bar_item_on">
+<a th:href="@{/wap/showMyInfo(buyerId=1)}" href="my.html" class="weui_navbar_item weui_bar_item_on">
     <p class="kimg dhwodeicon"></p>
     <p>我的</p>
 </a>
