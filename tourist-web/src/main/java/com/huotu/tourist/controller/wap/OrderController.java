@@ -1,12 +1,19 @@
 package com.huotu.tourist.controller.wap;
 
+import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +31,12 @@ public class OrderController {
 
     @Autowired
     private TouristOrderService touristOrderService;
+
+    @Autowired
+    private TravelerRepository travelerRepository;
+
+    @Autowired
+    private TouristSupplierRepository touristSupplierRepository;
 
     private String viewWapPath="/view/wap/";
 
@@ -45,7 +58,25 @@ public class OrderController {
         return viewWapPath+"newOrder.html";
     }
 
-//    @RequestMapping("/modifyOrderState")
-//    @ResponseBody
-//    public void modifyOrderState(Long orderId,)
+    /**
+     * 前台查看某个订单的信息
+     * @param orderId
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/orderInfo")
+    public String orderInfo(@RequestParam Long orderId,Model model) throws IOException{
+        TouristOrder order = touristOrderRepository.findOne(orderId);
+
+        model.addAttribute("order", order);
+
+        List<Traveler> travelers = travelerRepository.findByOrder_Id(orderId);
+
+        model.addAttribute("route", travelers.isEmpty()?new TouristRoute():travelers.get(0).getRoute());
+
+        model.addAttribute("travelers", travelers);
+
+        return viewWapPath+"orderInfo.html";
+
+    }
 }

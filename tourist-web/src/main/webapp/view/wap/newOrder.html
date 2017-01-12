@@ -51,7 +51,7 @@
             class="weui_btn weui_btn_mini weui_btn_warn f12">
             确认完成
         </a>
-        <a href="orderInfo.html" class="weui_btn weui_btn_mini weui_btn_primary f12">
+        <a href="orderInfo.html" th:href="@{/wap/orderInfo(orderId=${order.id})}" class="weui_btn weui_btn_mini weui_btn_primary f12">
             查看详情
         </a>
     </div>
