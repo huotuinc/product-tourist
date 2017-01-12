@@ -351,6 +351,30 @@ public class IndexController {
         return "view/wap/destinationTourist.html";
     }
 
+    /**
+     * 打开指定目的地商品列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/recommendGoods"})
+    public String recommendGoods(Model model) {
+        return "view/wap/recommendGoods.html";
+    }
 
-
+    /**
+     * 打开热点推荐商品列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/recommendTourist"})
+    public String recommendTourist(@RequestParam int offset, Model model) {
+        int page = offset / 10;
+        model.addAttribute("recommendGoods", touristGoodRepository
+                .findByRecommendIsTrueAndDeletedIsFalseAndTouristCheckState(new
+                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+        model.addAttribute("offset", offset);
+        return "view/wap/recommendTourist.html";
+    }
 }
