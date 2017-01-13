@@ -55,6 +55,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
         if (touristGood.getMallGoodId() != null)
             return touristGood;
+        //  营销类型（需要跟普通商品做出区别），
         Goods goods = new Goods();
         goods.setOwner(merchant);
         goods.setCreateTime(new Date());
