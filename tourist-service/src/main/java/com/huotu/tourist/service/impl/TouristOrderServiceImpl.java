@@ -4,12 +4,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TravelerTypeEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
-import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.OrderStateQuery;
 import com.huotu.tourist.repository.TouristGoodRepository;
@@ -20,7 +15,9 @@ import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -242,5 +239,31 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         }
     }
 
+    @Override
+    public void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral, Float mallBalance, Float mallCoffers) {
 
+    }
+
+    @Override
+    public List<TouristOrder> getBuyerOrders(Long buyerId, Long lastId, String states) throws IOException {
+
+        return touristOrderRepository.findAll((root, query, cb) -> {
+            Predicate predicate = cb.equal(root.get("touristBuyer").get("id").as(Long.class), buyerId);
+            if(lastId!=null){
+                predicate=cb.and(predicate,cb.lessThan(root.get("id").as(Long.class),lastId));
+            }
+            if("going".equals(states)){
+                predicate=cb.and(predicate,root.get("orderState").as(OrderStateEnum.class)
+                        .in(Arrays.asList(OrderStateEnum.NotPay
+                        , OrderStateEnum.PayFinish,OrderStateEnum.NotFinish,OrderStateEnum.Refunds)));
+            }else if("finish".equals(states)){
+                predicate=cb.and(predicate,root.get("orderState").as(OrderStateEnum.class)
+                        .in(Arrays.asList(OrderStateEnum.Finish,OrderStateEnum.RefundsFinish)));
+            }else if ("cancel".equals(states)){
+                predicate=cb.and(predicate,cb.equal(
+                        root.get("orderState").as(OrderStateEnum.class),OrderStateEnum.Invalid));
+            }
+            return predicate;
+        }, new PageRequest(0,20,new Sort(Sort.Direction.DESC,"id"))).getContent();
+    }
 }

@@ -24,4 +24,8 @@ public interface SystemUser {
      */
     boolean isPlatformUser();
 
+    default boolean isBuyer(){
+        return false;
+    }
+
 }
