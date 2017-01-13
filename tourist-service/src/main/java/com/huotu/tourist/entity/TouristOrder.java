@@ -17,7 +17,14 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -102,6 +109,12 @@ public class TouristOrder extends BaseModel {
      */
     @Column(unique = true, length = 50)
     private String orderNo;
+
+    /**
+     * 商城订单号
+     */
+    @Column(unique = true, length = 100)
+    private String mallOrderNo;
 
     /**
      * 订单状态

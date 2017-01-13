@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -22,108 +22,25 @@
             <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
             <div class="weui_text_area">
                 <h2 class="weui_msg_title">采购单支付成功！</h2>
-                <a href="">
+                <!-- todo 订单详细页面-->
+                <a href="orderInfo.html" th:href="@{/wap/showOrderInfo(mallOrderNo=${mallOrderNo})}">
                     <p class="weui_msg_desc">查看采购单</p>
-                </a></div>
-        </div>
-        <div class="weui_cells weui_cells_access" style="margin-top:8px;"><a class="weui_cell" href="javascript:;">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>更多热门路线</p>
-            </div>
-        </a></div>
-
-
-        <div class="leftboxtwo">
-            <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
                 </a>
-                    <div class="zhbox" style="margin: 7px 3px;">
-                        <div class="zh-wz">
-                            <div class="zh-wz-x">
-                                <div class="zh-wz-name" style="margin: 0px 4px;">西藏云南8日轻装游，赶快报名！</div>
-                            </div>
-                            <div class="zh-wz-time"><span
-                                    style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;">￥199</span>
-                                <p style="clear:both"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-        <div class="leftboxtwo">
-            <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
-                    <div class="zhbox" style="margin: 7px 3px;">
-                        <div class="zh-wz">
-                            <div class="zh-wz-x">
-                                <div class="zh-wz-name" style="margin: 0px 4px;">西藏云南8日轻装游，赶快报名！</div>
-                            </div>
-                            <div class="zh-wz-time"><span
-                                    style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;">￥199</span>
-                                <p style="clear:both"></p>
-                            </div>
-                        </div>
-                    </div>
+        <div class="weui_cells weui_cells_access" style="margin-top:8px;">
+            <a class="weui_cell" href="javascript:;">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>热门路线</p>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="leftboxtwo">
-            <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
-                    <div class="zhbox" style="margin: 7px 3px;">
-                        <div class="zh-wz">
-                            <div class="zh-wz-x">
-                                <div class="zh-wz-name" style="margin: 0px 4px;">西藏云南8日轻装游，赶快报名！</div>
-                            </div>
-                            <div class="zh-wz-time"><span
-                                    style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;">￥199</span>
-                                <p style="clear:both"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="app-edit ">
+            <a href="recommendTourist.html" class="nextJScroll"
+               th:href="@{/wap/recommendTourist(offset=0)}">&nbsp;</a>
         </div>
-        <div class="leftboxtwo">
-            <div class="cont-zhbox" style="margin: 0px">
-                <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px"><a href="geren-index8.html"
-                                                                                      class="bz">
-                    <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"></p>
-                    <p class="cont-zhbox-nav"></p>
-                </a>
-                    <div class="zhbox" style="margin: 7px 3px;">
-                        <div class="zh-wz">
-                            <div class="zh-wz-x">
-                                <div class="zh-wz-name" style="margin: 0px 4px;">西藏云南8日轻装游，赶快报名！</div>
-                            </div>
-                            <div class="zh-wz-time"><span
-                                    style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;">￥199</span>
-                                <p style="clear:both"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
     </div>
-    <div class="weui-infinite-scroll">
-        <div class="infinite-preloader"></div>
-        滑动加载更多
-    </div>
+
     <!--底部高度-->
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
@@ -145,8 +62,15 @@
     <!---->
 </div>
 </body>
-</html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
+<script src="../../assets/js/jquery.jscroll.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+<script>
+    $('.app-edit').jscroll({
+        debug: true,
+        loadingHtml: '<div class="weui-infinite-scroll"><div class="infinite-preloader"></div>滑动加载更多</div>'
+    });
+</script>
+</html>

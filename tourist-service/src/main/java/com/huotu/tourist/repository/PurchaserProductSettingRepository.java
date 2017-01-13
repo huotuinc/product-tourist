@@ -24,4 +24,8 @@ public interface PurchaserProductSettingRepository extends JpaRepository<Purchas
         , JpaSpecificationExecutor<PurchaserProductSetting> {
 
     List<PurchaserProductSetting> findByName(String name);
+
+    List<PurchaserProductSetting> findByDeletedIsFalse();
+
+
 }

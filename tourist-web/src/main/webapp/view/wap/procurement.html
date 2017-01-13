@@ -317,6 +317,10 @@
                 var IDNo = $(this).find("input[name='IDNo']").val();
                 var age = parseInt($(this).find("input[name='age']").val());
                 var sex = parseInt($(this).find("select[name='sex']").val());
+                if (name == '' || telPhone == '' || IDNo == '' || age > 0) {
+                    $.alert("游客 姓名、身份证号、电话、年龄不能为空");
+                    return false;
+                }
                 var traveler = {
                     "travelerType": travelerType,
                     "name": name,

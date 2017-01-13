@@ -87,22 +87,27 @@
             西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！西藏云南8日轻装游，赶快报名！
         </div>
         <div class="weui_cells weui_cells_access" style="margin-top: 10px">
-            <a class="weui_cell" href="javascript:;">
-            <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
-                <div class="weui_media_hd imgleft">
-                    <img class="weui_media_appmsg_thumb"
-                         src="../../assets/img/imgsss.png"
-                         res:src="${order.touristGood.touristSupplier.businessLicenseUri}" alt="">
+            <a class="weui_cell" href="touristSupplier.html"
+               th:href="@{/wap/supplierGoods(supplierId=${order.touristGood.touristSupplier.id})}">
+                <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
+                    <div class="weui_media_hd imgleft">
+                        <img class="weui_media_appmsg_thumb"
+                             src="../../assets/img/imgsss.png"
+                             res:src="${order.touristGood.touristSupplier.businessLicenseUri}" alt="">
+                    </div>
+                    <h4 class="weui_media_title" th:text="${order.touristGood.touristSupplier.supplierName}">
+                        乌鲁木齐俱乐部</h4>
+                    <ul class="weui_media_info" style="margin-top: 4px;line-height: 1.3em;">
+                        <li class="weui_media_info_meta" th:text="'地接人：'+${order.touristGood.receptionPerson}">地接人：王剑南
+                        </li>
+                        <li class="weui_media_info_meta" th:text="'联系电话：'+${order.touristGood.receptionTelephone}">
+                            联系电话：0571-13205713331
+                        </li>
+                    </ul>
                 </div>
-                <h4 class="weui_media_title" th:text="${order.touristGood.touristSupplier.supplierName}">乌鲁木齐俱乐部</h4>
-                <ul class="weui_media_info" style="margin-top: 4px;line-height: 1.3em;">
-                    <li class="weui_media_info_meta" th:text="'地接人：'+${order.touristGood.receptionPerson}">地接人：王剑南</li>
-                    <li class="weui_media_info_meta" th:text="'联系电话：'+${order.touristGood.receptionTelephone}">
-                        联系电话：0571-13205713331
-                    </li>
-                </ul>
-            </div>
-            <span class="weui_cell_ft"></span> </a></div>
+                <span class="weui_cell_ft"></span>
+            </a>
+        </div>
     </div>
     <div class="weui_cells_title"> 支付信息</div>
     <div class="weui_cells">
@@ -135,9 +140,13 @@
         </div>
     </div>
     <div style=" margin: 10px;">
-        <a href="paySuccess.html" class="weui_btn weui_btn_primary">微信支付</a>
-        <a href="paySuccess.html" class="weui_btn weui_btn_warn">支付宝</a>
-        <a href="procurement.html" class="weui_btn weui_btn_default">取消订单</a>
+        <!-- todo 同步商城订单，跳转商城支付 -->
+        <a href="paySuccess.html" th:href="@{/wap/pay(orderId=${order.id})}" class="weui_btn weui_btn_primary">支付</a>
+        <!--<a href="paySuccess.html" class="weui_btn weui_btn_warn">支付宝</a>-->
+
+        <a href="touristGoodInfo.html" th:href="@{/wap/cancelOrder(orderId=${order.id})}"
+           class="weui_btn weui_btn_default">取消订单
+        </a>
     </div>
     <!--底部高度-->
     <p style="height: 80px; clear: both"></p>

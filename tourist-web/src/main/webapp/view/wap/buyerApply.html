@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -16,98 +16,101 @@
 </head>
 
 <body class="bac">
-
-<div class="weui_cells weui_cells_form">
-    <div class="weui_cell">
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" type="text" placeholder="请输入俱乐部名称或者姓名">
+<form action="submission.html" method="post" th:action="@{/wap/addTouristBuyer}" enctype="multipart/form-data">
+    <div class="weui_cells weui_cells_form">
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" name="buyerName" placeholder="请输入俱乐部名称或者姓名">
+            </div>
         </div>
-    </div>
-</div>
-<div class="weui_cells weui_cells_form">
-    <div class="weui_cell">
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" type="text" placeholder="负责人姓名">
-        </div>
-    </div>
-    <div class="weui_cell">
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" type="tel" placeholder="手机号">
-        </div>
-        <div class="weui_cell_ft">
-            <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_primary">获取验证码</a>
-        </div>
-    </div>
-    <div class="weui_cell">
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" type="tel" placeholder="请输入验证码">
-        </div>
-    </div>
-    <div class="weui_cell">
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" type="tel" placeholder="身份证">
-        </div>
-    </div>
-</div>
-<div class="xzlx-hot">
-    <div class="weui_cells_title">
-        上传营业执照
     </div>
     <div class="weui_cells weui_cells_form">
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <div class="weui_uploader">
-                    <div class="weui_uploader_bd">
-                        <ul class="weui_uploader_files">
-                            <li class="weui_uploader_file"
-                                style="background-image: url(../../assets/img/imgsss.png); border-radius:6px"></li>
+                <input class="weui_input" type="text" name="buyerDirector" placeholder="负责人姓名">
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="tel" name="telPhone" placeholder="手机号">
+            </div>
+            <div class="weui_cell_ft">
+                <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_primary">获取验证码</a>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="tel" placeholder="请输入验证码">
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" name="IDNo" placeholder="身份证">
+            </div>
+        </div>
+    </div>
+    <div class="xzlx-hot">
+        <div class="weui_cells_title">
+            上传营业执照
+        </div>
+        <div class="weui_cells weui_cells_form">
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <div class="weui_uploader">
+                        <div class="weui_uploader_bd">
+                            <ul class="weui_uploader_files businessLicencesUri">
+
+                            </ul>
+                            <div class="weui_uploader_input_wrp">
+                                <input class="weui_uploader_input" type="file" name="businessLicencesUri"
+                                       id="businessLicencesUri"
+                                       accept="image/jpg,image/jpeg,image/png,image/gif" multiple>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weui_cells_title">
+            手持身份证照片（正面）
+        </div>
+        <div class="weui_cells weui_cells_form">
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <div class="weui_uploader">
+                        <ul class="weui_uploader_files IDElevationsUri">
+
                         </ul>
                         <div class="weui_uploader_input_wrp">
-                            <input class="weui_uploader_input" type="file"
+                            <input class="weui_uploader_input" type="file" name="IDElevationsUri" id="IDElevationsUri"
                                    accept="image/jpg,image/jpeg,image/png,image/gif" multiple>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="weui_cells_title">
-        手持身份证照片（正面）
-    </div>
-    <div class="weui_cells weui_cells_form">
-        <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <div class="weui_uploader">
-                    <div class="weui_uploader_bd">
-                        <div class="weui_uploader_input_wrp">
-                            <input class="weui_uploader_input" type="file"
-                                   accept="image/jpg,image/jpeg,image/png,image/gif" multiple>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="weui_cells_title">
+            手持身份证照片（反面）
         </div>
-    </div>
-    <div class="weui_cells_title">
-        手持身份证照片（反面）
-    </div>
-    <div class="weui_cells weui_cells_form">
-        <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <div class="weui_uploader">
-                    <div class="weui_uploader_bd">
-                        <div class="weui_uploader_input_wrp">
-                            <input class="weui_uploader_input" type="file"
-                                   accept="image/jpg,image/jpeg,image/png,image/gif" multiple>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a href="submission.html" class="weui_btn weui_btn_primary anniu " style="margin: 10px;">提交申请</a>
+        <div class="weui_cells weui_cells_form">
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <div class="weui_uploader">
+                        <ul class="weui_uploader_files IDInverseUri">
 
-
+                        </ul>
+                        <div class="weui_uploader_input_wrp">
+                            <input class="weui_uploader_input" type="file" name="IDInverseUri" id="IDInverseUri"
+                                   accept="image/jpg,image/jpeg,image/png,image/gif" capture="camera" multiple>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span id="addBuyer" class="weui_btn weui_btn_primary anniu " style="margin: 10px;">提交申请</span>
+    </div>
+</form>
+<div class="xzlx-hot">
     <div class="weui_panel_bd">
         <div class="weui_media_box weui_media_text" style=" padding-top:4px;">
             <h4 class="weui_media_title" style="font-size:12px; color:#888">备注：</h4>
@@ -115,26 +118,67 @@
         </div>
         <p style="height:30px"></p>
     </div>
-    <a href="">
-        <div class="weui_cells argee weui_cells_checkbox">
-            <label class="weui_cell weui_check_label" for="s11">
-                <div class="weui_cell_hd">
-                    <input type="checkbox" class="weui_check" name="checkbox1" id="s11" checked="checked">
-                    <i class="weui_icon_checked"></i>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <p>我已阅读并同意《条款》</p>
-                </div>
-            </label>
+    <div class="weui_cells argee weui_cells_checkbox">
+        <label class="weui_cell weui_check_label" for="s11" style="float: left; margin-left: 15%">
+            <div class="weui_cell_hd">
+                <input type="checkbox" class="weui_check" name="checkbox1" id="s11" checked="checked">
+                <i class="weui_icon_checked"></i>
+            </div>
+        </label>
+        <div class="weui_cell_bd weui_cell_primary lefta">
+            <a href=""><p>我已阅读并同意《条款》</p></a>
         </div>
-    </a>
+    </div>
 </div>
-</body>
-</html>
+
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
-<script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+<script th:inline="javascript">
+    $(function () {
+        $("#businessLicencesUri").on('change', function (e) {
+            var file = $(this)[0].files[0];
+            console.log(file)
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    $(".businessLicencesUri").empty();
+                    $(".businessLicencesUri").append('<li class="weui_uploader_file" style="background-image: url(' + evt.target.result + '); border-radius:6px"></li>');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#IDElevationsUri").on('change', function (e) {
+            var file = $(this)[0].files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    $(".IDElevationsUri").empty();
+                    $(".IDElevationsUri").append('<li class="weui_uploader_file" style="background-image: url(' + evt.target.result + '); border-radius:6px"></li>');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#IDInverseUri").on('change', function () {
+            var file = $(this)[0].files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    $(".IDInverseUri").empty();
+                    $(".IDInverseUri").append('<li class="weui_uploader_file" style="background-image: url(' + evt.target.result + '); border-radius:6px"></li>');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        $("#addBuyer").click(function () {
+
+        });
+    });
+</script>
+</body>
+</html>
+
 
 
     

@@ -132,4 +132,16 @@ public class ResourceController {
         }
     }
 
+    /**
+     * 为fine-uploader特地准备的删除控制器
+     *
+     * @param path
+     * @return
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public void delete(String path) throws IOException {
+        resourceService.deleteResource(path);
+    }
+
 }

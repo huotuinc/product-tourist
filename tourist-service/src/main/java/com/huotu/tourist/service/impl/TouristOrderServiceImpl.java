@@ -210,12 +210,10 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 order.setOrderNo(random.nextInt() + LocalDateTimeFormatter.toStr(LocalDateTime.now()) + random.nextInt());
                 order.setCreateTime(LocalDateTime.now());
                 order.setRemarks(remark);
-
                 BigDecimal adult = good.getPrice().multiply(new BigDecimal(travelers.stream().filter(traveler ->
                         traveler
                                 .getTravelerType().equals
                                 (TravelerTypeEnum.adult)).count()));
-
                 BigDecimal child = good.getPrice()
                         .multiply(good.getChildrenDiscount().divide(new BigDecimal(10)))
                         .multiply(new BigDecimal(travelers.stream()
@@ -223,21 +221,9 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                                 .count()
                         ));
                 BigDecimal sumNum = adult.add(child);
-                if (mallIntegral != null && mallIntegral > 0) {
-                    order.setMallIntegral(new BigDecimal(mallIntegral));
-                    sumNum = sumNum.subtract(new BigDecimal(mallIntegral));
-                    connectMallService.setMallUserIntegralBalanCoffers(user.getId(), 0, mallIntegral.intValue());
-                }
-                if (mallBalance != null && mallBalance > 0) {
-                    order.setMallBalance(new BigDecimal(mallBalance));
-                    sumNum = sumNum.subtract(new BigDecimal(mallBalance));
-                    connectMallService.setMallUserIntegralBalanCoffers(user.getId(), 1, mallBalance.intValue());
-                }
-                if (mallCoffers != null && mallCoffers > 0) {
-                    order.setMallCoffers(new BigDecimal(mallCoffers));
-                    sumNum = sumNum.subtract(new BigDecimal(mallCoffers));
-                    connectMallService.setMallUserIntegralBalanCoffers(user.getId(), 2, mallCoffers.intValue());
-                }
+                order.setMallIntegral(new BigDecimal(mallIntegral));
+                order.setMallBalance(new BigDecimal(mallBalance));
+                order.setMallCoffers(new BigDecimal(mallCoffers));
                 order.setOrderMoney(sumNum);
                 order.setTouristBuyer(user);
                 for (Traveler traveler : travelers) {
@@ -248,7 +234,6 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 order.setTravelers(travelers);
                 order = touristOrderRepository.saveAndFlush(order);
                 travelerRepository.save(travelers);
-                connectMallService.pushOrderToMall(order);
                 return order;
             }
             return null;

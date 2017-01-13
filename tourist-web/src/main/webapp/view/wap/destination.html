@@ -20,12 +20,21 @@
     <!---->
     <div class="app-edit swiper-container">
         <div class="superli clearfix editing">
+            <!--/*@thymesVar id="destinationMaps" type="java.util.Map"*/-->
+            <!--/*@thymesVar id="entry" type="java.util.Map.Entry<String,List<com.huotu.tourist.entity.TouristGood>>"*/-->
+            <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
             <div class="control-group">
                 <div class="custom-tag-list clearfix">
                     <div class="custom-tag-list-menu-block js-collection-region">
-                        <ul class="custom-tag-list-side-menu">
-                            <li class="current"><a href="javascript:;"><span>全部</span></a></li>
-                            <li class="ad"><a href="javascript:;"> <span>北京</span> </a></li>
+                        <ul class="custom-tag-list-side-menu menu">
+                            <li class="current">
+                                <a href="javascript:;"><span>全部</span></a>
+                            </li>
+                            <li class="ad" th:each="entry:${destinationMaps.entrySet()}">
+                                <a href="javascript:;">
+                                    <span th:text="${entry.key}">北京 </span>
+                                </a>
+                            </li>
                             <li class="ad"><a href="javascript:;"> <span>浙江</span> </a></li>
                             <li class="ad"><a href="javascript:;"> <span>哈尔滨</span> </a></li>
                             <li class="ad"><a href="javascript:;"> <span>川藏</span> </a></li>
@@ -33,13 +42,16 @@
                         </ul>
                     </div>
                     <div class="custom-tag-list-goods" style="overflow:hidden;padding-bottom:10px;">
-                        <ul class="ulxy">
-                            <li class="ulli">
-                                <div class="ullidiv"><a href="destinationGoods.html"
-                                                        th:href="@{/wap/destinationGoods(type=1,value='西安')}"
-                                                        class="link js-goods clearfix">
-                                    <div class="ullidd"> 西安</div>
-                                </a></div>
+                        <ul class="ulxy" th:each="entry : ${destinationMaps.entrySet()}" data-province="浙江"
+                            th:attr="data-province=${entry.key}">
+                            <li class="ulli" th:each="good : ${entry.value}">
+                                <div class="ullidiv">
+                                    <a href="destinationGoods.html"
+                                       th:href="@{/wap/destinationGoods(type=1,value=${good.destination.town})}"
+                                       class="link js-goods clearfix">
+                                        <div class="ullidd" th:text="${good.destination.town}"> 西安</div>
+                                    </a>
+                                </div>
                             </li>
                             <li class="ulli">
                                 <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
@@ -62,7 +74,28 @@
                                 </a></div>
                             </li>
                         </ul>
-
+                        <ul class="ulxy" data-province="北京">
+                            <li class="ulli">
+                                <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
+                                    <div class="ullidd"> 西安</div>
+                                </a></div>
+                            </li>
+                            <li class="ulli">
+                                <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
+                                    <div class="ullidd"> 西安</div>
+                                </a></div>
+                            </li>
+                            <li class="ulli">
+                                <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
+                                    <div class="ullidd"> 南京</div>
+                                </a></div>
+                            </li>
+                            <li class="ulli">
+                                <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
+                                    <div class="ullidd"> 成都</div>
+                                </a></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -89,8 +122,28 @@
     <!---->
 </div>
 </body>
-</html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+<script>
+    $(function () {
+        $(".menu li").click(function () {
+            $(this).addClass("current");
+            $(this).siblings().removeClass("current");
+            if ($(this).find("span").text().trim() == "全部") {
+                $(".custom-tag-list-goods ul").show();
+            } else {
+                var text = $(this).find("span").text().trim();
+                $(".custom-tag-list-goods ul").each(function () {
+                    if ($(this).attr("data-province") == text) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+    })
+</script>
+</html>

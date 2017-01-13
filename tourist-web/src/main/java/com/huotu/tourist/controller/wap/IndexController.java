@@ -10,6 +10,8 @@
 package com.huotu.tourist.controller.wap;
 
 import com.huotu.tourist.TravelerList;
+import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
@@ -21,6 +23,8 @@ import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
@@ -34,6 +38,7 @@ import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TouristTypeService;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,12 +48,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -83,6 +91,12 @@ public class IndexController {
     @Autowired
     public TouristTypeService touristTypeService;
     @Autowired
+    ResourceService resourceService;
+    @Autowired
+    TouristBuyerRepository touristBuyerRepository;
+    @Autowired
+    PurchaserProductSettingRepository purchaserProductSettingRepository;
+    @Autowired
     private TouristTypeRepository touristTypeRepository;
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
@@ -108,6 +122,8 @@ public class IndexController {
 
         Map<String, List<TouristGood>> maps = goods.stream().collect(Collectors.groupingBy(g -> g.getDestination()
                 .getProvince()));
+        Map town = goods.stream().collect(Collectors.groupingBy(g -> g.getDestination().getTown()));
+
     }
 
     /**
@@ -143,7 +159,8 @@ public class IndexController {
         }
         model.addAttribute("good", good);
         model.addAttribute("routeCount", routeCount);
-        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(good.getTouristSupplier().getId(), TouristCheckStateEnum.CheckFinish);
+        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(
+                good.getTouristSupplier().getId(), TouristCheckStateEnum.CheckFinish);
         model.addAttribute("count", count);
         return "/view/wap/touristGoodInfo.html";
     }
@@ -157,7 +174,8 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = {"/procurementGood"})
-    public String procurementGood(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long goodId, Long routeId, Model model) {
+    public String procurementGood(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long goodId, Long routeId
+            , Model model) {
         TouristGood good = touristGoodRepository.getOne(goodId);
         int count = travelerRepository.countByRoute(touristRouteRepository.getOne(routeId));
         model.addAttribute("amount", good.getMaxPeople() - count);
@@ -205,6 +223,19 @@ public class IndexController {
     }
 
     /**
+     * 取消采购单
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/cancelOrder"}, method = RequestMethod.GET)
+    public String cancelOrder(@RequestParam Long orderId, Model model) {
+        TouristOrder order = touristOrderRepository.getOne(orderId);
+        TouristGood touristGood = order.getTouristGood();
+        touristOrderRepository.delete(order);
+        return goodInfo(touristGood.getId(), model);
+    }
+
+    /**
      * 跳转至订单支付页
      *
      * @param model
@@ -217,7 +248,22 @@ public class IndexController {
     }
 
     /**
+     * 支付
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/pay"})
+    public String pay(@RequestParam Long orderId, Model model) {
+        TouristOrder order = touristOrderRepository.getOne(orderId);
+        // TODO: 2017/1/13 同步订单
+        Long mallOrderNo = connectMallService.pushOrderToMall(order);
+        order.setMallOrderNo(mallOrderNo.toString());
+        return "";
+    }
+
+    /**
      * 最新线路列表
+     *
      * @param model
      * @return
      */
@@ -277,7 +323,8 @@ public class IndexController {
      */
     @RequestMapping(value = {"/supplierGoods"})
     public String supplierGoods(@RequestParam Long supplierId, Model model) {
-        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(supplierId, TouristCheckStateEnum.CheckFinish);
+        int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(supplierId
+                , TouristCheckStateEnum.CheckFinish);
         model.addAttribute("count", count);
         model.addAttribute("supplier", touristSupplierRepository.getOne(supplierId));
         return "view/wap/touristSupplier.html";
@@ -300,7 +347,7 @@ public class IndexController {
     }
 
     /**
-     * 指定供应商的商品列表界面
+     * 指定目的地列表界面
      *
      * @param model
      * @return
@@ -308,7 +355,9 @@ public class IndexController {
     @RequestMapping(value = {"/destinationList"})
     public String destinationList(Model model) {
         List<TouristGood> towns = touristGoodService.findByDestinationTown();
-        Map<String, List<TouristGood>> maps = towns.stream().collect(Collectors.groupingBy(g -> g.getDestination().getProvince()));
+        Map<String, List<TouristGood>> maps = towns.stream().collect(Collectors.groupingBy(g ->
+                g.getDestination().getProvince()));
+
         model.addAttribute("destinationMaps", maps);
         return "view/wap/destination.html";
     }
@@ -328,7 +377,7 @@ public class IndexController {
     }
 
     /**
-     * 指定供应商的商品列表界面
+     * 指定目的地商品列表
      *
      * @param model
      * @return
@@ -352,7 +401,7 @@ public class IndexController {
     }
 
     /**
-     * 打开指定目的地商品列表界面
+     * 打开热点推荐商品列表界面
      *
      * @param model
      * @return
@@ -377,4 +426,68 @@ public class IndexController {
         model.addAttribute("offset", offset);
         return "view/wap/recommendTourist.html";
     }
+
+    /**
+     * 打开搜索界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/search"})
+    public String search(Model model) {
+        return "view/wap/search.html";
+    }
+
+    /**
+     * 打开申请成为采购商界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/buyerApply"})
+    public String buyerApply(Model model) {
+        return "view/wap/buyerApply.html";
+    }
+
+
+    /**
+     * 提交采购商申请
+     *
+     * @param buyerName           采购商姓名
+     * @param buyerDirector       负责人姓名
+     * @param telPhone            电话
+     * @param IDNo                身份证
+     * @param businessLicencesUri 营业执照
+     * @param IDElevationsUri     身份证正面
+     * @param IDInverseUri        身份证背面
+     * @param model
+     * @return
+     * @throws IOException 上传图片异常
+     */
+    @RequestMapping(value = {"/addTouristBuyer"}, method = RequestMethod.POST)
+    public String addTouristBuyer(@RequestParam String buyerName, @RequestParam String buyerDirector
+            , @RequestParam String telPhone, @RequestParam String IDNo, @RequestParam MultipartFile businessLicencesUri
+            , @RequestParam MultipartFile IDElevationsUri, @RequestParam MultipartFile IDInverseUri, Model model) throws IOException {
+        TouristBuyer touristBuyer = new TouristBuyer();
+        touristBuyer.setCheckState(BuyerCheckStateEnum.Checking);
+        touristBuyer.setTelPhone(telPhone);
+        touristBuyer.setBuyerDirector(buyerDirector);
+        touristBuyer.setBuyerName(buyerName);
+        String businessLicencesUriFilename = "buyer/" + UUID.randomUUID().toString() + businessLicencesUri.getOriginalFilename();
+        resourceService.uploadResource(businessLicencesUriFilename, businessLicencesUri.getInputStream());
+        touristBuyer.setBusinessLicencesUri(businessLicencesUriFilename);
+        String IDElevationsUriFilename = "buyer/" + UUID.randomUUID().toString() + IDElevationsUri.getOriginalFilename();
+        resourceService.uploadResource(IDElevationsUriFilename, IDElevationsUri.getInputStream());
+        touristBuyer.setIDElevationsUri(IDElevationsUriFilename);
+        String IDInverseUriFilename = "buyer/" + UUID.randomUUID().toString() + IDInverseUri.getOriginalFilename();
+        resourceService.uploadResource(IDInverseUriFilename, IDInverseUri.getInputStream());
+        touristBuyer.setIDElevationsUri(IDInverseUriFilename);
+        touristBuyer.setIDNo(IDNo);
+        touristBuyer.setPayState(BuyerPayStateEnum.NotPay);
+        touristBuyer.setCreateTime(LocalDateTime.now());
+        touristBuyer.setBuyerId(telPhone);
+        touristBuyerRepository.saveAndFlush(touristBuyer);
+        return "view/wap/submission.html";
+    }
+
 }

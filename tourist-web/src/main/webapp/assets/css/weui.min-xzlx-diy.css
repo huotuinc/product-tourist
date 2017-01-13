@@ -1113,3 +1113,9 @@ body {
 .routeDiv.select {
     border: solid 3px #761c19;
 }
+
+.weui_cell_primary.lefta a {
+    color: #7F7F7F;
+    float: left;
+    margin-top: 13px;
+}
