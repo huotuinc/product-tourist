@@ -49,12 +49,14 @@ $(".saveOrUpdate").click(function () {
     }
 });
 getParams = function (params) {
+    var sort = params.sortName != undefined ? params.sortName + "," + params.sortOrder : undefined;
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.pageSize, //页面大小
         pageNo: params.pageNumber, //页码
-        sortOrder: params.sortOrder,
-        sortName: params.sortName
+        sort: sort
+        // sortOrder: params.sortOrder,
+        // sortName: params.sortName
     };
     return temp;
 };

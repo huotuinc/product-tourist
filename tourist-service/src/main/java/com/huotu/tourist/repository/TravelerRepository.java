@@ -4,6 +4,7 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.util.List;
  * 游客持久层
  * Created by slt on 2016/12/19.
  */
-public interface TravelerRepository extends JpaRepository<Traveler,Long> {
+public interface TravelerRepository extends JpaRepository<Traveler, Long>, JpaSpecificationExecutor<Traveler> {
 
 
     List<Traveler> findByRoute_Id(Long routeId);
@@ -28,7 +29,6 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long> {
 
     Long countByOrder_Id(Long orderId);
 
-//    @Query("select count(t) from Traveler as t where ")
     Long countByOrder_TouristGood(TouristGood touristGood);
 
     int countByRoute(TouristRoute route);
