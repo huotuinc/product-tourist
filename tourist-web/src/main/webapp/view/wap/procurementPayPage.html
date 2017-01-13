@@ -141,7 +141,8 @@
     </div>
     <div style=" margin: 10px;">
         <!-- todo 同步商城订单，跳转商城支付 -->
-        <a href="paySuccess.html" th:href="@{/wap/pay(orderId=${order.id})}" class="weui_btn weui_btn_primary">支付</a>
+        <a href="paySuccess.html" th:href="@{/wap/orderPay(orderId=${order.id})}"
+           class="weui_btn weui_btn_primary">支付</a>
         <!--<a href="paySuccess.html" class="weui_btn weui_btn_warn">支付宝</a>-->
 
         <a href="touristGoodInfo.html" th:href="@{/wap/cancelOrder(orderId=${order.id})}"

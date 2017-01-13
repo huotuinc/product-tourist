@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
- * 采购商产品设置
+ * 采购商支付开通
  * Created by lhx on 2016/12/16.
  */
 @Entity

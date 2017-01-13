@@ -162,6 +162,7 @@ public class TouristBuyer implements SystemUser {
      */
     @Column
     private BuyerCheckStateEnum checkState;
+
     /**
      * 支付状态
      */

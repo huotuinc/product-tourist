@@ -248,11 +248,11 @@ public class IndexController {
     }
 
     /**
-     * 支付
+     * 订单支付
      * @param model
      * @return
      */
-    @RequestMapping(value = {"/pay"})
+    @RequestMapping(value = {"/orderPay"})
     public String pay(@RequestParam Long orderId, Model model) {
         TouristOrder order = touristOrderRepository.getOne(orderId);
         // TODO: 2017/1/13 同步订单
@@ -427,16 +427,6 @@ public class IndexController {
         return "view/wap/recommendTourist.html";
     }
 
-    /**
-     * 打开搜索界面
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = {"/search"})
-    public String search(Model model) {
-        return "view/wap/search.html";
-    }
 
     /**
      * 打开申请成为采购商界面
