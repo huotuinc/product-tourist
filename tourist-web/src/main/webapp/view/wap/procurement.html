@@ -200,6 +200,14 @@
         var price = /*[[${good.price}]]*/ 10;
         //儿童价格
         var childPrice = /*[[${good.price*(childrenDiscount/10)}]]*/ 8;
+
+        //商城小伙伴积分
+        var mallIntegral = /*[[${mallIntegral}]]*/ 20;
+        //商城小伙伴余额
+        var mallBalance = /*[[${mallBalance}]]*/ 20;
+        //商城小伙伴小金库
+        var mallCoffers = /*[[${mallCoffers}]]*/ 20;
+
         //总金额
         var buyerMoney = price;
 
@@ -209,22 +217,30 @@
         //成人减1
         $(".priceDecrease").click(function () {
             if (parseInt($("input[name='adult']").val()) > 0) {
-                $("input[name='adult']").val(parseInt($("input[name='adult']").val()) - 1)
-                buyerMoney -= price;
+
+                $("input[name='adult']").val(parseInt($("input[name='adult']").val()) - 1);
+                buyerMoney =
+                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
+                if ((parseInt($("input[name='adult']").val()) == 0 && parseInt($("input[name='children']").val()) ==
+                        0) || buyerMoney - moneyPay() < 0) {
+                    $("input[type='checkbox']").prop("checked", false);
+                }
                 $(".money").text('￥' + buyerMoney);
-                $(".moneypay").text('应付￥' + buyerMoney);
                 $('.adultDiv:last').remove();
+                moneyPay();
+
             }
         });
         //成人加1
         $(".priceIncrease").click(function () {
             if (parseInt($("input[name='adult']").val()) + parseInt($("input[name='children']").val()) < amount) {
                 $("input[name='adult']").val(parseInt($("input[name='adult']").val()) + 1)
-                buyerMoney += price;
+                buyerMoney =
+                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
                 $(".itemTemplate").clone().removeClass("itemTemplate").addClass("adultDiv").appendTo(".items")
                         .show().find(".travelerType").val(0);
                 $(".money").text('￥' + buyerMoney);
-                $(".moneypay").text('应付￥' + buyerMoney);
+                moneyPay();
             }
         });
 
@@ -232,10 +248,15 @@
         $(".childPriceDecrease").click(function () {
             if (parseInt($("input[name='children']").val()) > 0) {
                 $("input[name='children']").val(parseInt($("input[name='children']").val()) - 1)
-                buyerMoney -= childPrice;
-                $('.childrenDiv:last').remove();
+                buyerMoney =
+                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
+                if ((parseInt($("input[name='adult']").val()) == 0 && parseInt($("input[name='children']").val()) ==
+                        0) || buyerMoney - moneyPay() < 0) {
+                    $("input[type='checkbox']").prop("checked", false);
+                }
                 $(".money").text('￥' + buyerMoney);
-                $(".moneypay").text('￥' + buyerMoney);
+                $('.childrenDiv:last').remove();
+                moneyPay();
             }
         });
 
@@ -245,9 +266,10 @@
                 $("input[name='children']").val(parseInt($("input[name='children']").val()) + 1)
                 $(".itemTemplate").clone().removeClass("itemTemplate").addClass("childrenDiv").appendTo(".items")
                         .show().find(".travelerType").val(1);
-                buyerMoney += childPrice;
+                buyerMoney =
+                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
                 $(".money").text('￥' + buyerMoney);
-                $(".moneypay").text('应付￥' + buyerMoney);
+                moneyPay();
             }
         });
 
@@ -257,59 +279,72 @@
             var travelerType = $(this).parent().parent().find(".travelerType").val();
             if (travelerType == 0) {
                 $("input[name='adult']").val(parseInt($("input[name='adult']").val()) - 1)
-                buyerMoney -= price;
             } else {
                 $("input[name='children']").val(parseInt($("input[name='children']").val()) - 1)
-                buyerMoney -= childPrice;
+            }
+            buyerMoney =
+                    parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
+
+            if ((parseInt($("input[name='adult']").val()) == 0 && parseInt($("input[name='children']").val()) ==
+                    0) || buyerMoney - moneyPay() < 0) {
+                $("input[type='checkbox']").prop("checked", false);
             }
             amount -= 1;
             $(".money").text('￥' + buyerMoney);
-            $(".moneypay").text('应付￥' + buyerMoney);
+            moneyPay();
         });
 
-        //商城小伙伴积分
-        var mallIntegral = /*[[${mallIntegral}]]*/ 20;
-        //商城小伙伴余额
-        var mallBalance = /*[[${mallBalance}]]*/ 20;
-        //商城小伙伴小金库
-        var mallCoffers = /*[[${mallCoffers}]]*/ 20;
 
         $("input[type='checkbox']").change(function () {
             var name = $(this).attr("name");
             if ($(this).is(':checked')) {
                 if (name == 'mallIntegral')
-                    if (buyerMoney >= mallIntegral) {
-                        $(".moneypay").text('应付￥' + (buyerMoney -= mallIntegral));
-                    } else {
+                    if (buyerMoney - moneyPay() <= 0) {
                         $.alert("不能再用积分了");
                         $(this).prop('checked', false)
                     }
                 if (name == 'mallBalance')
-                    if (buyerMoney >= mallBalance) {
-                        $(".moneypay").text('应付￥' + (buyerMoney -= mallBalance));
-                    } else {
+                    if (buyerMoney - moneyPay() <= 0) {
                         $.alert("不能再用积分了");
                         $(this).prop('checked', false)
                     }
                 if (name == 'mallCoffers')
-                    if (buyerMoney >= mallCoffers) {
-                        $(".moneypay").text('应付￥' + (buyerMoney -= mallCoffers));
-                    } else {
+                    if (buyerMoney - moneyPay() <= 0) {
                         $.alert("不能再用积分了");
                         $(this).prop('checked', false)
                     }
+
+                moneyPay();
             } else {
-                if (name == 'mallIntegral')
-                    $(".moneypay").text('应付￥' + (buyerMoney += mallIntegral));
-                if (name == 'mallBalance')
-                    $(".moneypay").text('应付￥' + (buyerMoney += mallBalance));
-                if (name == 'mallCoffers')
-                    $(".moneypay").text('应付￥' + (buyerMoney += mallCoffers));
+                moneyPay();
             }
         });
 
+        function moneyPay() {
+            var mallNum = 0;
+            $("input[type='checkbox']").each(function () {
+                var name = $(this).attr("name");
+                if ($(this).is(':checked')) {
+                    if (name == 'mallIntegral')
+                        mallNum += mallIntegral;
+                    if (name == 'mallBalance')
+                        mallNum += mallBalance;
+                    if (name == 'mallCoffers')
+                        mallNum += mallCoffers;
+                }
+            });
+            $(".moneypay").text('应付￥' + (buyerMoney - mallNum));
+            return mallNum;
+        }
+
+
         $("#submitBtn").click(function () {
+            if ($(".items .item").length < 1) {
+                $.alert("请添加游客");
+                return;
+            }
             var travelers = new Array();
+            var flag = false;
             $(".items .item").each(function () {
                 var travelerType = parseInt($(this).find("input[name='travelerType']").val());
                 var name = $(this).find("input[name='name']").val();
@@ -317,9 +352,9 @@
                 var IDNo = $(this).find("input[name='IDNo']").val();
                 var age = parseInt($(this).find("input[name='age']").val());
                 var sex = parseInt($(this).find("select[name='sex']").val());
-                if (name == '' || telPhone == '' || IDNo == '' || age > 0) {
-                    $.alert("游客 姓名、身份证号、电话、年龄不能为空");
-                    return false;
+                if (name == '' || telPhone == '' || IDNo == '' || age <= 0) {
+                    flag = true;
+                    return;
                 }
                 var traveler = {
                     "travelerType": travelerType,
@@ -331,6 +366,10 @@
                 };
                 travelers.push(traveler);
             });
+            if (flag) {
+                $.alert("请完善游客信息，姓名、电话、身份证号，年龄必填");
+                return;
+            }
             var data = {goodId: goodId, routeId: routeId, travelers: travelers};
             data.remark = $("textarea[name='remark']").val();
             if ($("input[name='mallIntegral']").checked) {

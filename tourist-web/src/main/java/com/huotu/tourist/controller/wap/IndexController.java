@@ -487,7 +487,7 @@ public class IndexController {
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerId(telPhone);
         touristBuyerRepository.saveAndFlush(touristBuyer);
-        return "view/wap/submission.html";
+        return "view/wap/msg.html";
     }
 
 }
