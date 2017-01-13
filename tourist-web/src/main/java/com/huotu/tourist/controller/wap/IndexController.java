@@ -21,6 +21,7 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.model.VerificationType;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
 import com.huotu.tourist.repository.PurchaserProductSettingRepository;
@@ -29,7 +30,6 @@ import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ActivityTypeService;
 import com.huotu.tourist.service.ConnectMallService;
@@ -38,6 +38,7 @@ import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TouristTypeService;
+import com.huotu.tourist.service.VerificationCodeService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -97,7 +98,7 @@ public class IndexController {
     @Autowired
     PurchaserProductSettingRepository purchaserProductSettingRepository;
     @Autowired
-    private TouristTypeRepository touristTypeRepository;
+    VerificationCodeService verificationCodeService;
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
     @Autowired
@@ -127,7 +128,7 @@ public class IndexController {
     }
 
     /**
-     * 打开index.html
+     * 打开index
      *
      * @param model
      * @return
@@ -140,7 +141,7 @@ public class IndexController {
         model.addAttribute("recommendGoods", recommendGoods);
         List<ActivityType> activityTypes = activityTypeRepository.findByDeletedIsFalse(new PageRequest(0, 9));
         model.addAttribute("activityTypes", activityTypes);
-        return "/view/wap/index.html";
+        return "/view/wap/index";
     }
 
     /**
@@ -162,7 +163,7 @@ public class IndexController {
         int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(
                 good.getTouristSupplier().getId(), TouristCheckStateEnum.CheckFinish);
         model.addAttribute("count", count);
-        return "/view/wap/touristGoodInfo.html";
+        return "/view/wap/touristGoodInfo";
     }
 
     /**
@@ -184,7 +185,7 @@ public class IndexController {
         model.addAttribute("mallIntegral", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 0));
         model.addAttribute("mallBalance", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 1));
         model.addAttribute("mallCoffers", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 2));
-        return "view/wap/procurement.html";
+        return "view/wap/procurement";
     }
 
     /**
@@ -244,7 +245,7 @@ public class IndexController {
     @RequestMapping(value = {"/toProcurementPayPage"})
     public String toProcurementPayPage(@RequestParam Long orderId, Model model) {
         model.addAttribute("order", touristOrderRepository.getOne(orderId));
-        return "view/wap/procurementPayPage.html";
+        return "view/wap/procurementPayPage";
     }
 
     /**
@@ -272,7 +273,7 @@ public class IndexController {
         List<TouristGood> list = touristGoodService.findNewTourists(offset);
         model.addAttribute("list", list);
         model.addAttribute("offset", offset);
-        return "view/wap/newTourist.html";
+        return "view/wap/newTourist";
     }
 
     /**
@@ -284,7 +285,7 @@ public class IndexController {
     @RequestMapping(value = {"/activityTypeList"})
     public String activityTypeList(Model model) {
         model.addAttribute("activityTypes", activityTypeRepository.findAll());
-        return "view/wap/activityTypeList.html";
+        return "view/wap/activityTypeList";
     }
 
     /**
@@ -296,7 +297,7 @@ public class IndexController {
     @RequestMapping(value = {"/activityTypeGoods"})
     public String activityTypeGoods(@RequestParam Long activityTypeId, Model model) {
         model.addAttribute("activityTypeId", activityTypeId);
-        return "view/wap/activityTypeGoods.html";
+        return "view/wap/activityTypeGoods";
     }
 
     /**
@@ -312,7 +313,7 @@ public class IndexController {
                 .findByActivityType_IdAndDeletedIsFalseAndTouristCheckState(activityTypeId, new
                         PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
         model.addAttribute("activityTypeId", activityTypeId);
-        return "view/wap/activityTourist.html";
+        return "view/wap/activityTourist";
     }
 
     /**
@@ -327,7 +328,7 @@ public class IndexController {
                 , TouristCheckStateEnum.CheckFinish);
         model.addAttribute("count", count);
         model.addAttribute("supplier", touristSupplierRepository.getOne(supplierId));
-        return "view/wap/touristSupplier.html";
+        return "view/wap/touristSupplier";
     }
 
     /**
@@ -343,7 +344,7 @@ public class IndexController {
                 .findByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(supplierId, new
                         PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
         model.addAttribute("supplierId", supplierId);
-        return "view/wap/supplierTourist.html";
+        return "view/wap/supplierTourist";
     }
 
     /**
@@ -359,7 +360,7 @@ public class IndexController {
                 g.getDestination().getProvince()));
 
         model.addAttribute("destinationMaps", maps);
-        return "view/wap/destination.html";
+        return "view/wap/destination";
     }
 
     /**
@@ -373,7 +374,7 @@ public class IndexController {
     public String destinationGoods(@RequestParam Long type, @RequestParam String value, Model model) {
         model.addAttribute("type", type);
         model.addAttribute("value", value);
-        return "view/wap/destinationGoods.html";
+        return "view/wap/destinationGoods";
     }
 
     /**
@@ -397,7 +398,7 @@ public class IndexController {
         model.addAttribute("type", type);
         model.addAttribute("value", value);
         model.addAttribute("offset", offset);
-        return "view/wap/destinationTourist.html";
+        return "view/wap/destinationTourist";
     }
 
     /**
@@ -408,7 +409,7 @@ public class IndexController {
      */
     @RequestMapping(value = {"/recommendGoods"})
     public String recommendGoods(Model model) {
-        return "view/wap/recommendGoods.html";
+        return "view/wap/recommendGoods";
     }
 
     /**
@@ -424,7 +425,7 @@ public class IndexController {
                 .findByRecommendIsTrueAndDeletedIsFalseAndTouristCheckState(new
                         PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
         model.addAttribute("offset", offset);
-        return "view/wap/recommendTourist.html";
+        return "view/wap/recommendTourist";
     }
 
 
@@ -436,7 +437,7 @@ public class IndexController {
      */
     @RequestMapping(value = {"/buyerApply"})
     public String buyerApply(Model model) {
-        return "view/wap/buyerApply.html";
+        return "view/wap/buyerApply";
     }
 
 
@@ -477,7 +478,32 @@ public class IndexController {
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerId(telPhone);
         touristBuyerRepository.saveAndFlush(touristBuyer);
-        return "view/wap/msg.html";
+        return "view/wap/msg";
+    }
+
+
+    /**
+     * 发送短信验证码
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/sendCode"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void sendCode(String phone, Model model) throws IOException {
+        verificationCodeService.sendCode(phone, VerificationType.register);
+    }
+
+    /**
+     * 验证短信验证码
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/verifyCode"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void verifyCode(String phone, String code, Model model) throws IOException {
+        verificationCodeService.verify(phone, code, VerificationType.register);
     }
 
 }

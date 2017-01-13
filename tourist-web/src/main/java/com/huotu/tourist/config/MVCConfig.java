@@ -206,6 +206,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 resolver.setCharacterEncoding(UTF8);
                 resolver.setApplicationContext(applicationContext);
                 resolver.setTemplateMode(TemplateMode.HTML);
+                resolver.setSuffix("*.html");
                 return resolver;
             }
 
