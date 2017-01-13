@@ -9,6 +9,8 @@
 
 package com.huotu.tourist.controller;
 
+import com.huotu.huobanplus.sdk.common.repository.UserRestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,8 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class LoginController {
 
+    @Autowired
+    private UserRestRepository userRestRepository;
+
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public String index() {
+        // UserId
         return "view/manage/login.html";
     }
 
