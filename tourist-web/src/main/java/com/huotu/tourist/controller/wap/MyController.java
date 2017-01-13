@@ -2,9 +2,11 @@ package com.huotu.tourist.controller.wap;
 
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,8 +68,8 @@ public class MyController {
      * @throws IOException
      */
     @RequestMapping("/showMyInfo")
-    public String showMyInfo(Long buyerId, Model model) throws IOException{
-        if(buyerId==null){
+    public String showMyInfo(@AuthenticationPrincipal SystemUser user,Long buyerId, Model model) throws IOException{
+        if(user==null||!user.isBuyer()){
             return viewWapPath+"成为采购商的页面";
         }
         TouristBuyer touristBuyer=touristBuyerRepository.getOne(buyerId);

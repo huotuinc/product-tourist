@@ -100,7 +100,9 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
     @Query("select sum(t.orderMoney*t.touristGood.rebate/100) from TouristOrder as t where t.touristBuyer=?1")
     BigDecimal sumCommissionByBuyer(TouristBuyer buyer);
 
+    @Query("select t.touristGood.activityType as tp,count(t) as n from TouristOrder t" +
+            " group by tp order by n desc")
+    Object[] searchActivityTypeGruop();
 
 
-    List<TouristOrder> findTop20ByTouristBuyer_IdAndIdLessThanOrderByIdDesc(Long buyerId,Long lastId);
 }

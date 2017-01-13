@@ -39,6 +39,7 @@ import java.util.List;
 @Table(name = "Tourist_Order")
 @Getter
 @Setter
+@Cacheable(value = false)
 public class TouristOrder extends BaseModel {
 
     public static List<Selection<TouristOrder, ?>> htmlSelections = Arrays.asList(
@@ -127,7 +128,6 @@ public class TouristOrder extends BaseModel {
      */
     @Column(precision = 10, scale = 2)
     private BigDecimal orderMoney;
-
 
     /**
      * 积分
