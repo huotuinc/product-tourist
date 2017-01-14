@@ -352,8 +352,8 @@ public class DistributionPlatformController extends BaseController {
     public PageAndSelection presentRecordList(String supplierName, PresentStateEnum presentState, @RequestParam
             (required = false) LocalDateTime createTime,
                                               Pageable pageable, HttpServletRequest request, Model model) {
-        Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, presentState, createTime
-                , pageable);
+        Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, null, presentState, createTime
+                , null, pageable);
         return new PageAndSelection(page, PresentRecord.selections);
     }
 

@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
 
@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>H+ 后台主题UI框架 - 客户管理</title>
+    <title>结算</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
 
@@ -39,7 +39,8 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-md-3"><h2>账户余额：<span class="text-danger">4568753.00</span>元</h2></div>
+                        <div class="col-md-3"><h2>账户余额：
+                            <span class="text-danger" th:text="${balance}">4568753.00</span>元</h2></div>
                         <div class="col-md-1">
                             <button style="width: 120px" class="btn btn-success">提现</button>
                         </div>
@@ -50,17 +51,17 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="well">
-                                <h4>已结算：10000.00（T+1）</h4>
+                                <h4 th:text="'已结算：'+${Settled}+'（T+1）'">已结算：10000.00（T+1）</h4>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="well">
-                                <h4>未结算：10000</h4>
+                                <h4 th:text="'未结算：'+${notSettled}">未结算：10000</h4>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="well">
-                                <h4>已提现：10000</h4>
+                                <h4 th:text="'已提现：'+${withdrawal}">已提现：10000</h4>
                             </div>
                         </div>
 
