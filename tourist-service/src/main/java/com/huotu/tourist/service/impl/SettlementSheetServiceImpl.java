@@ -1,5 +1,6 @@
 package com.huotu.tourist.service.impl;
 
+import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristOrder;
@@ -53,13 +54,17 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     }
 
     @Override
-    public Page<SettlementSheet> settlementSheetList(String supplierName, SettlementStateEnum platformChecking
-            , LocalDateTime createTime, Pageable pageable) {
+    public Page<SettlementSheet> settlementSheetList(TouristSupplier touristSupplier, String supplierName
+            , SettlementStateEnum platformChecking, LocalDateTime createTime, LocalDateTime endCreateTime
+            , Pageable pageable) {
         return settlementSheetRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
+            if(touristSupplier!=null){
+                predicate = cb.and(predicate, cb.equal(root.get("touristSupplier").as(TouristSupplier.class),
+                        touristSupplier));
+            }
             if (!StringUtils.isEmpty(supplierName)) {
-                predicate = cb.and(predicate, cb.like(root.get("touristOrder").get("touristGood").get("touristSupplier").get
-                                ("supplierName").as(String.class),
+                predicate = cb.and(predicate, cb.like(root.get("touristSupplier").get("supplierName").as(String.class),
                         supplierName));
             }
             if (platformChecking != null) {
@@ -70,23 +75,27 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
                 predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("createTime").as(LocalDateTime.class),
                         createTime));
             }
+            if (endCreateTime != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("createTime").as(LocalDateTime.class),
+                        endCreateTime));
+            }
             return predicate;
         }, pageable);
     }
 
     @Override
     public BigDecimal countSettled(TouristSupplier supplier) throws IOException {
-        return null;
+        return touristOrderRepository.countSupplierSettled(supplier, OrderStateEnum.Finish);
     }
 
     @Override
     public BigDecimal countNotSettled(TouristSupplier supplier) throws IOException {
-        return null;
+        return touristOrderRepository.countSupplierNotSettled(supplier, OrderStateEnum.Finish);
     }
 
     @Override
     public BigDecimal countWithdrawal(TouristSupplier supplier) throws IOException {
-        return null;
+        return settlementSheetRepository.countWithdrawal(supplier);
     }
 
 
@@ -98,7 +107,8 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
 
         Root<TouristOrder> root  = criteriaQuery.from(TouristOrder.class);
 
-        Predicate predicate=criteriaBuilder.equal(root.get("touristGood").get("touristSupplier"),supplier);
+        Predicate predicate=criteriaBuilder.and(criteriaBuilder.equal(root.get("touristGood").get("touristSupplier"),
+                supplier),criteriaBuilder.isNotNull(root.get("settlement")));
 
         if(endCountDate!=null){
             predicate=criteriaBuilder.and(predicate,criteriaBuilder.lessThanOrEqualTo(root.get("createTime"),
@@ -112,8 +122,10 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
 
         TypedQuery<Number> query = entityManager.createQuery(criteriaQuery);
 
+        BigDecimal number=BigDecimal.valueOf(query.getSingleResult()==null?0:query.getSingleResult().doubleValue())
+                .setScale(2,RoundingMode.HALF_UP);
 
-        return BigDecimal.valueOf(query.getSingleResult().doubleValue()).setScale(2, RoundingMode.HALF_UP);
+        return number;
 
     }
 }

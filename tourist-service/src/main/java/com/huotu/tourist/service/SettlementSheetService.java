@@ -21,13 +21,15 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
     /**
      * 结算列表
      *
-     * @param supplierName     供应商名称 可以为null
-     * @param platformChecking 平台审查状态
-     * @param createTime   创建时间
-     * @param pageable
-     * @return 结算列表
+     *
+     * @param touristSupplier   供应商
+     * @param supplierName      供应商名称 可以为null
+     * @param platformChecking  平台审查状态
+     * @param createTime        大于的创建时间
+     * @param endCreateTime     小于的创建时间
+     *@param pageable  @return  结算列表
      */
-    Page<SettlementSheet> settlementSheetList(String supplierName, SettlementStateEnum platformChecking, LocalDateTime createTime, Pageable pageable);
+    Page<SettlementSheet> settlementSheetList(TouristSupplier touristSupplier, String supplierName, SettlementStateEnum platformChecking, LocalDateTime createTime, LocalDateTime endCreateTime, Pageable pageable);
 
 
     /**

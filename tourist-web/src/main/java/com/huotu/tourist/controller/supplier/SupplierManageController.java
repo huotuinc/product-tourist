@@ -313,7 +313,7 @@ public class SupplierManageController {
         BigDecimal Settled=settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
         BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier);
-        model.addAttribute("Settled",Settled);
+        model.addAttribute("settled",Settled);
         model.addAttribute("notSettled",notSettled);
         model.addAttribute("withdrawal",withdrawal);
         model.addAttribute("balance",balance);
@@ -329,11 +329,29 @@ public class SupplierManageController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/settlementSheetList")
-    public PageAndSelection<SettlementSheet> settlementSheetList(@AuthenticationPrincipal SystemUser userInfo
-            , SettlementStateEnum platformChecking, Pageable pageable) throws IOException {
+    @RequestMapping("/settledList")
+    public PageAndSelection<SettlementSheet> settledList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
+
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        Page<SettlementSheet> sheets=settlementSheetService.settlementSheetList(supplier,null,null,createDate
+                , endCreateDate,pageable);
+
+        return new PageAndSelection<>(sheets,SettlementSheet.selections);
+    }
+
+
+    @RequestMapping("/notSettledList")
+    public PageAndSelection<TouristOrder> notSettledList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
         return null;
     }
+
+
 
 
     /**
@@ -345,6 +363,8 @@ public class SupplierManageController {
      */
     @RequestMapping("/withdrawalList")
     public PageAndSelection<PresentRecord> withdrawalList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
             , Pageable pageable) throws IOException {
         TouristSupplier supplier=(TouristSupplier)userInfo;
 

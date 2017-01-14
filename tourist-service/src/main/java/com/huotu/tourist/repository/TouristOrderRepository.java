@@ -40,6 +40,26 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
     BigDecimal countOrderMoney(TouristGood good);
 
     /**
+     * 某个供应商已结算的钱
+     * @param touristSupplier
+     * @param state
+     * @return
+     */
+    @Query("select sum(t.orderMoney) as om from TouristOrder as t where t.touristGood.touristSupplier=?1 " +
+            "and t.settlement is not null and t.orderState=?2")
+    BigDecimal countSupplierSettled(TouristSupplier touristSupplier,OrderStateEnum state);
+
+    /**
+     * 某个供应商未结算的钱
+     * @param touristSupplier
+     * @param state
+     * @return
+     */
+    @Query("select sum(t.orderMoney) as om from TouristOrder as t where t.touristGood.touristSupplier=?1 " +
+            "and t.settlement is null and t.orderState=?2")
+    BigDecimal countSupplierNotSettled(TouristSupplier touristSupplier,OrderStateEnum state);
+
+    /**
      * 统计当前状态订单的金额
      *
      * @param supplierId
@@ -86,7 +106,8 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
      * @param orderStates   订单状态列表
      * @return
      */
-    @Query("select count(t) from TouristOrder as t where t.touristBuyer=?1 and t.settlement=true and t.orderState in ?2")
+    @Query("select count(t) from TouristOrder as t where t.touristBuyer=?1 and t.settlement is not null" +
+            " and t.orderState in ?2")
     long countByTouristBuyerAndOrderStates(TouristBuyer buyer,List<OrderStateEnum> orderStates);
 
     /**
@@ -95,7 +116,8 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
      * @param orderState    订单状态
      * @return
      */
-    @Query("select count(t) from TouristOrder as t where t.touristBuyer=?1 and t.settlement=true and t.orderState=?2")
+    @Query("select count(t) from TouristOrder as t where t.touristBuyer=?1 and t.settlement is not null " +
+            "and t.orderState=?2")
     long countByTouristBuyerAndOrderState(TouristBuyer buyer,OrderStateEnum orderState);
 
     @Query("select sum(t.orderMoney*t.touristGood.rebate/100) from TouristOrder as t where t.touristBuyer=?1")

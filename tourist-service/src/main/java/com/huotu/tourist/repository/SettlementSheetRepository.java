@@ -10,9 +10,13 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristSupplier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
 
 /**
  * Created by lhx on 2016/12/20.
@@ -20,4 +24,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SettlementSheetRepository extends JpaRepository<SettlementSheet, Long>
         , JpaSpecificationExecutor<SettlementSheet> {
+
+    @Query("select sum(s.receivableAccount) from SettlementSheet as s where s.touristSupplier=?1")
+    BigDecimal countWithdrawal(TouristSupplier supplier);
 }

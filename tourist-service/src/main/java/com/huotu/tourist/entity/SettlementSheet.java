@@ -1,6 +1,7 @@
 package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
@@ -25,8 +26,10 @@ public class SettlementSheet extends BaseModel {
 
     public static final List<Selection<SettlementSheet, ?>> selections = Arrays.asList(
             new SimpleSelection<SettlementSheet, String>("id", "id")
-            ,new SimpleSelection<SettlementSheet, String>("receivableAccount", "receivableAccount")
-            ,new SimpleSelection<SettlementSheet, String>("createTime", "createTime")
+            , new SimpleSelection<SettlementSheet, String>("settlementNo", "settlementNo")
+            , new SimpleSelection<SettlementSheet, String>("receivableAccount", "receivableAccount")
+            , new SimpleSelection<SettlementSheet, String>("createTime", "createTime")
+            , new SimpleSelection<SettlementSheet, String>("selfChecking.value", "selfChecking")
             , new Selection<SettlementSheet, Map>() {
                 @Override
                 public Map apply(SettlementSheet settlementSheet) {
@@ -41,18 +44,28 @@ public class SettlementSheet extends BaseModel {
                     return "platformChecking";
                 }
             }
+            , new Selection<SettlementSheet, String>() {
+                @Override
+                public String apply(SettlementSheet settlementSheet) {
+                    return LocalDateTimeFormatter.toStr(settlementSheet.getCreateTime());
+                }
+
+                @Override
+                public String getName() {
+                    return "createTime";
+                }
+            }
     );
 
     /**
      * 结算单号
      */
-    @Column(length = 30)
+    @Column(length = 50)
     private String settlementNo;
 
     /**
      * 所属供应商
      */
-    @Column
     @ManyToOne
     private TouristSupplier touristSupplier;
 

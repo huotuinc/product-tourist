@@ -322,8 +322,8 @@ public class DistributionPlatformController extends BaseController {
     public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking,
                                                 @RequestParam(required = false) LocalDateTime createTime,
                                                 Pageable pageable, HttpServletRequest request, Model model) {
-        Page<SettlementSheet> page = settlementSheetService.settlementSheetList(supplierName, platformChecking, createTime
-                , pageable);
+        Page<SettlementSheet> page = settlementSheetService.settlementSheetList(null, supplierName, platformChecking, createTime
+                , null, pageable);
         return new PageAndSelection<>(page, SettlementSheet.selections);
     }
 
