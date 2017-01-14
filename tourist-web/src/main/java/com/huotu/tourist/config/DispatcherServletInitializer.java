@@ -18,7 +18,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{
-                MVCConfig.class
+                MVCConfig.class, RuntimeConfig.class
         };
     }
 
