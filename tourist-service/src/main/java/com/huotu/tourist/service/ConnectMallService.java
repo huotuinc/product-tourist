@@ -24,6 +24,18 @@ import java.io.IOException;
 public interface ConnectMallService {
 
     /**
+     * @return 积分转换为余额的汇率
+     */
+    int getExchangeRate();
+
+    /**
+     * 用于决策T+1
+     *
+     * @return 售后时间（天）
+     */
+    long getServiceDays();
+
+    /**
      * 将本地商品与远程商品同步
      * 并设置当前商品的商城商品id
      *
@@ -74,8 +86,9 @@ public interface ConnectMallService {
 
     /**
      * 获取采购商的头像url,未获取到则返回空字符串 “”，
-     * @param buyer     采购商
-     * @return  头像url
+     *
+     * @param buyer 采购商
+     * @return 头像url
      */
     String getTouristBuyerHeadUrl(TouristBuyer buyer);
 }

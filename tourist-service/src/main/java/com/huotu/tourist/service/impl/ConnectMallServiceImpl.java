@@ -11,7 +11,9 @@ package com.huotu.tourist.service.impl;
 
 import com.huotu.huobanplus.common.entity.Goods;
 import com.huotu.huobanplus.common.entity.Merchant;
+import com.huotu.huobanplus.common.entity.MerchantConfig;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
@@ -37,17 +39,32 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     private static final Log log = LogFactory.getLog(ConnectMallServiceImpl.class);
     private final Merchant merchant;
+    private final MerchantConfig merchantConfig;
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
     @Autowired
     private TouristGoodRepository touristGoodRepository;
 
+
+    @SuppressWarnings("unused")//不能省
     @Autowired
-    public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository) throws IOException {
+    public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository
+            , MerchantConfigRestRepository merchantConfigRestRepository) throws IOException {
         merchant = merchantRestRepository.getOneByPK(
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
+        merchantConfig = merchant.getConfig();
+    }
+
+    @Override
+    public int getExchangeRate() {
+        return merchantConfig.getExchangeRate();
+    }
+
+    @Override
+    public long getServiceDays() {
+        return merchantConfig.getServiceDays() + merchantConfig.getReceiveDays();
     }
 
     @Override

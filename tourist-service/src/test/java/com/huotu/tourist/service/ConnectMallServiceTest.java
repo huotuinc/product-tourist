@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
@@ -29,6 +31,12 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
 
     @Test
     public void go() throws IOException {
+        System.out.println(connectMallService.getExchangeRate());
+        assertThat(connectMallService.getExchangeRate())
+                .isGreaterThanOrEqualTo(0);
+        System.out.println(connectMallService.getServiceDays());
+        assertThat(connectMallService.getServiceDays())
+                .isGreaterThanOrEqualTo(0);
         TouristGood good = createRandomTouristGood();
 
         good = connectMallService.pushGoodToMall(good.getId());
