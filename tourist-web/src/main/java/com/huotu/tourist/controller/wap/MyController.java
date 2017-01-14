@@ -3,6 +3,7 @@ package com.huotu.tourist.controller.wap;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.repository.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * “我的”页面业务逻辑层
@@ -87,6 +89,12 @@ public class MyController {
             return viewWapPath+"frozen.html";
         }else if(BuyerPayStateEnum.NotPay.equals(touristBuyer.getPayState())){
             //已审核未付钱，去付钱页面
+            PurchaserProductSetting setting=new PurchaserProductSetting();
+            List<PurchaserProductSetting> settings=purchaserProductSettingRepository.findAll();
+            if(settings!=null&&!settings.isEmpty()){
+                setting=settings.get(0);
+            }
+            model.addAttribute("PurchaserProductSetting",setting);
             model.addAttribute("buyerId",touristBuyer.getId());
             return viewWapPath+"submission.html";
         }

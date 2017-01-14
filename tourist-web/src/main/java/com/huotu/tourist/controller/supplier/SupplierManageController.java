@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -310,7 +309,7 @@ public class SupplierManageController {
     public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier=(TouristSupplier)userInfo;
 
-        BigDecimal balance=settlementSheetService.countBalance(supplier);
+        BigDecimal balance=settlementSheetService.countBalance(supplier, null);
         BigDecimal Settled=settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
         BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier);
@@ -349,7 +348,7 @@ public class SupplierManageController {
             , Pageable pageable) throws IOException {
         TouristSupplier supplier=(TouristSupplier)userInfo;
 
-        presentRecordService.presentRecordList()
+//        presentRecordService.presentRecordList()
         return null;
     }
 

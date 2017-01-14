@@ -203,7 +203,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 TouristOrder order = new TouristOrder();
                 order.setTouristGood(good);
                 order.setOrderState(OrderStateEnum.NotPay);
-                order.setSettlement(false);
+                order.setSettlement(null);
                 order.setOrderNo(random.nextInt() + LocalDateTimeFormatter.toStr(LocalDateTime.now()) + random.nextInt());
                 order.setCreateTime(LocalDateTime.now());
                 order.setRemarks(remark);

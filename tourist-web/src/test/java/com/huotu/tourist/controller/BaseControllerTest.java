@@ -27,7 +27,7 @@ public class BaseControllerTest extends WebTest {
 
     @Test
     public void modifyOrderRemarks() throws Exception {
-        TouristOrder order = createTouristOrder(null, null, null, null, null, null, null,null, false);
+        TouristOrder order = createTouristOrder(null, null, null, null, null, null, null,null, null);
         String remark = UUID.randomUUID().toString();
         int status = mockMvc.perform(post("/base/modifyOrderRemarks")
                 .param("id", order.getId().toString())
@@ -59,7 +59,7 @@ public class BaseControllerTest extends WebTest {
         Traveler traveler = createTraveler(createTouristRoute(UUID.randomUUID().toString(), good,
                 null, null, 0), createTouristOrder(good, createTouristBuyer(null,null,null,null),
         null, null, null, null,null,
-                null, false));
+                null, null));
 
         String name = UUID.randomUUID().toString();
         SexEnum sex = SexEnum.man;
@@ -97,7 +97,7 @@ public class BaseControllerTest extends WebTest {
         TouristRoute route2 = createTouristRoute(UUID.randomUUID().toString(), good,
                 null, null, 0);
         TouristOrder order = createTouristOrder(good, createTouristBuyer(null, null, null, null), null,null, null,
-                null, null, null, false);
+                null, null, null, null);
         Traveler traveler = createTraveler(route1, order);
         int status = mockMvc.perform(post("/base/modifyTravelerBaseInfo")
                 .param("formerId", route1.getId().toString())

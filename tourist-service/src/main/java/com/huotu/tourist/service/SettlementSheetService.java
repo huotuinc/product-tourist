@@ -56,10 +56,11 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
 
     /**
      * 计算余额
-     * @param supplier
+     * @param supplier          供应商
+     * @param endCountDate      小于该结算日期的余额
      * @return
      * @throws IOException
      */
-    BigDecimal countBalance(TouristSupplier supplier) throws IOException;
+    BigDecimal countBalance(TouristSupplier supplier, LocalDateTime endCountDate) throws IOException;
 
 }
