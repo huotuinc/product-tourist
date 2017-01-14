@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,6 +93,12 @@ public class SupplierManageController {
     private LoginService loginService;
 
     @Autowired
+    private SettlementSheetService settlementSheetService;
+
+    @Autowired
+    private PresentRecordService presentRecordService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private String viewSupplierPath="/view/manage/supplier/";
@@ -111,6 +116,8 @@ public class SupplierManageController {
     public String showSupplierMain() {
         return viewSupplierPath+"main.html";
     }
+
+    //=============================================订单列表
 
     /**
      * 打开订单列表页面
@@ -189,22 +196,8 @@ public class SupplierManageController {
 
     }
 
-//    /**
-//     * 显示某供应商的线路商品信息
-//     *
-//     * @return
-//     * @throws Exception
-//     */
-//    @RequestMapping("/TouristGoodList")
-//    public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId, String touristName
-//            , String supplierName, TouristType touristType, ActivityType activityType
-//            , TouristCheckStateEnum touristCheckState, Pageable pageable) throws Exception {
-//        TouristSupplier supplier = touristSupplierRepository.getOne(supplierId);
-//        Page<TouristGood> goods = touristGoodService.touristGoodList(supplier, touristName, supplierName,
-//                touristType,  activityType, touristCheckState, pageable);
-//
-//        return new PageAndSelection<>(goods, TouristGood.selections);
-//    }
+
+    //=============================================线路商品
 
 
     /**
@@ -311,23 +304,57 @@ public class SupplierManageController {
     }
 
 
+    //=============================================结算账户
+    @RequestMapping("/showSettlement")
+    public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+
+        BigDecimal balance=settlementSheetService.countBalance(supplier, null);
+        BigDecimal Settled=settlementSheetService.countSettled(supplier);
+        BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
+        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier);
+        model.addAttribute("Settled",Settled);
+        model.addAttribute("notSettled",notSettled);
+        model.addAttribute("withdrawal",withdrawal);
+        model.addAttribute("balance",balance);
+        return viewSupplierPath+"settlementAccount.html";
+    }
+
+
     /**
      * 结算列表显示 todo 目前需求还不确定
      *
-     * @param supplierId       供应商ID
      * @param platformChecking
-     * @param createTime
      * @param pageable
      * @return
      * @throws IOException
      */
-    public PageAndSelection<SettlementSheet> settlementSheetList(Long supplierId
-            , SettlementStateEnum platformChecking, LocalDate createTime, Pageable pageable) throws IOException {
+    @RequestMapping("/settlementSheetList")
+    public PageAndSelection<SettlementSheet> settlementSheetList(@AuthenticationPrincipal SystemUser userInfo
+            , SettlementStateEnum platformChecking, Pageable pageable) throws IOException {
+        return null;
+    }
+
+
+    /**
+     * 提现列表
+     * @param userInfo
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/withdrawalList")
+    public PageAndSelection<PresentRecord> withdrawalList(@AuthenticationPrincipal SystemUser userInfo
+            , Pageable pageable) throws IOException {
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+
+//        presentRecordService.presentRecordList()
         return null;
     }
 
 
 
+    //=============================================销售统计
 
     /**
      * 销售统计页面
@@ -469,6 +496,7 @@ public class SupplierManageController {
 
     }
 
+    //=============================================供应商信息和收款账户
 
     /**
      * 打开供应商信息页面
@@ -544,7 +572,7 @@ public class SupplierManageController {
     }
 
 
-
+    //=============================================供应商操作员
     /**
      * 打开供应商管理员列表
      * @return

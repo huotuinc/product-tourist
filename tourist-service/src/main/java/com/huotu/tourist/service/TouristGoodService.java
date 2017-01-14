@@ -39,10 +39,11 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param activityType      活动类型
      * @param touristCheckState 线路审核状态
      * @param pageable
+     * @param lastId
      * @return
      */
     Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName, TouristType touristType
-            , ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable);
+            , ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable, Long lastId);
 
     /**
      * 获取推荐商品列表
@@ -110,6 +111,5 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @return
      */
     List<TouristGood> findByDestinationTown();
-
 
 }

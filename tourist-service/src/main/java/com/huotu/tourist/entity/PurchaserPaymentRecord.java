@@ -134,7 +134,7 @@ public class PurchaserPaymentRecord extends BaseModel {
 
     @Column(precision = 10, scale = 2)
     private BigDecimal money;
-    @Column
+    @Column(columnDefinition = "datetime")
     private LocalDateTime payDate;
 
 

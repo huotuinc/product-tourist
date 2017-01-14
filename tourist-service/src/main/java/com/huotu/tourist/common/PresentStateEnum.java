@@ -10,7 +10,7 @@ public enum PresentStateEnum implements CommonEnum  {
 
     NotChecking(0, "未审核", "未审核"),
     CheckFinish(1, "已审核", "已审核，审核通过"),
-    AlreadyPaid(2, "已付款", "已付款");
+    AlreadyPaid(2, "已发放", "已发放");
 
     private final int code;
     private final String value;

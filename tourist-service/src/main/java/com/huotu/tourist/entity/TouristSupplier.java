@@ -19,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -100,6 +101,13 @@ public class TouristSupplier extends Login implements SystemUser {
     @Lob
     @Column
     private String remarks;
+
+    /**
+     * 结算余额
+     * 当前余额 = 结算余额+所有已确认结算单总额-所有未被拒绝的提现订单总额
+     */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal settlementBalance = BigDecimal.ZERO;
 
     /**
      * 冻结

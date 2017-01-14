@@ -4,6 +4,7 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -100,7 +101,14 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
     @Query("select sum(t.orderMoney*t.touristGood.rebate/100) from TouristOrder as t where t.touristBuyer=?1")
     BigDecimal sumCommissionByBuyer(TouristBuyer buyer);
 
+    @Query("select t.touristGood.activityType as tp,count(t) as n from TouristOrder t" +
+            " group by tp order by n desc")
+    Object[] searchActivityTypeGruop();
 
 
-    List<TouristOrder> findTop20ByTouristBuyer_IdAndIdLessThanOrderByIdDesc(Long buyerId,Long lastId);
+//    @Query("select sum(o.orderMoney) from TouristOrder as o where o.touristGood.touristSupplier=?1" +
+//            "and o.settlement is not  null")
+//    BigDecimal countSettledMoney(TouristSupplier supplier,LocalDateTime endCountDate);
+
+
 }

@@ -12,7 +12,7 @@
     <!--/*@thymesVar id="list" type="java.util.ArrayList<com.huotu.tourist.entity.TouristOrder>"*/-->
     <div class="DDH">
         <span th:text="'订单编号：'+${order.orderNo}">订单编号：1</span>
-        <span style="float:right; color:red" th:text="${order.orderState.value}">代付款</span>
+        <span class="orderState" style="float:right; color:red" th:text="${order.orderState.value}">代付款</span>
         <p style="clear:both"></p>
     </div>
     <div class="ts">
@@ -33,25 +33,32 @@
         <p style="clear:both"></p>
     </div>
     <div class="button_sp_area" style="float:right;clear:both;padding-bottom:15px;margin-right: 8px;">
-        <a th:if="${order.orderState.code==0}"  onclick="cancelOrder(this,1)"
+        <a id="cancelOrder" th:if="${order.orderState.code==0}"
+           onclick="cancelOrder(this,1)" th:onclick="'cancelOrder(this,'+${order.id}+')'"
            class="weui_btn weui_btn_mini weui_btn_default f12">
             取消订单
         </a>
-        <a th:if="${order.orderState.code==4}"
-           onclick="refundOrder(this,1)"
+        <a id="goToPay" th:if="${order.orderState.code==0}"
+           href="orderInfo.html" th:href="@{/wap/orderInfo(orderId=${order.id})}"
+           class="weui_btn weui_btn_mini weui_btn_warn f12">
+            去付款
+        </a>
+        <a id="cancelRefund" th:if="${order.orderState.code==4}"
+           onclick="refundOrder(this,1)" th:onclick="'refundOrder(this,'+${order.id}+')'"
            class="weui_btn weui_btn_mini weui_btn_default f12">
             取消退款
         </a>
-        <a th:if="${order.orderState.code==1||order.orderState.code==2}"
-           onclick="refundOrder(this,1)" th:onclick="'refundOrder(this,'+order.id+')'"
+        <a id="refund" th:if="${order.orderState.code==1||order.orderState.code==2}"
+           onclick="refundOrder(this,1)" th:onclick="'refundOrder(this,'+${order.id}+')'"
            class="weui_btn weui_btn_mini weui_btn_default f12">
             申请退款
         </a>
-        <a th:if="${order.orderState.code==2}" onclick="affirmOrder(this,1)"
+        <a id="affirmOrder" th:if="${order.orderState.code==2}"
+           onclick="affirmOrder(this,1)" th:onclick="'affirmOrder(this,'+${order.id}+')'"
             class="weui_btn weui_btn_mini weui_btn_warn f12">
             确认完成
         </a>
-        <a href="orderInfo.html" th:href="@{/wap/orderInfo(orderId=${order.id})}" class="weui_btn weui_btn_mini weui_btn_primary f12">
+        <a href="orderInfo.html" th:href="@{/wap/showOrderInfo(orderId=${order.id})}" class="weui_btn weui_btn_mini weui_btn_primary f12">
             查看详情
         </a>
     </div>
