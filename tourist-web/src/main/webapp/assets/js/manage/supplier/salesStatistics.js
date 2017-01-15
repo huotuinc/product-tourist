@@ -47,6 +47,10 @@ var datecancelEdit=function(){
     });
 };
 
+var presentStateFormatter=function(value,row,index){
+    return row.presentState.value;
+};
+
 //var dateapplyEdit=function(){
 //    $('input[name="orderDate"]').on('apply.daterangepicker', function (ev, picker) {
 //        var startDate=picker.startDate.format("YYYY-MM-DD hh:mm:ss");

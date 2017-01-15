@@ -85,17 +85,20 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
 
     @Override
     public BigDecimal countSettled(TouristSupplier supplier) throws IOException {
-        return touristOrderRepository.countSupplierSettled(supplier, OrderStateEnum.Finish);
+        BigDecimal settled=touristOrderRepository.countSupplierSettled(supplier, OrderStateEnum.Finish);
+        return settled==null?new BigDecimal(0):settled.setScale(2,RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal countNotSettled(TouristSupplier supplier) throws IOException {
-        return touristOrderRepository.countSupplierNotSettled(supplier, OrderStateEnum.Finish);
+        BigDecimal notSettled=touristOrderRepository.countSupplierNotSettled(supplier, OrderStateEnum.Finish);
+        return notSettled==null?new BigDecimal(0):notSettled.setScale(2,RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal countWithdrawal(TouristSupplier supplier) throws IOException {
-        return settlementSheetRepository.countWithdrawal(supplier);
+        BigDecimal withdrawal=settlementSheetRepository.countWithdrawal(supplier);
+        return withdrawal==null?new BigDecimal(0):withdrawal.setScale(2,RoundingMode.HALF_UP);
     }
 
 

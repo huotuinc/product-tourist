@@ -38,7 +38,9 @@ public class PresentRecordServiceImpl implements PresentRecordService {
     }
 
     @Override
-    public Page<PresentRecord> presentRecordList(String supplierName, TouristSupplier touristSupplier, PresentStateEnum presentState, LocalDateTime createTime, LocalDateTime endCreateTime, Pageable pageable) {
+    public Page<PresentRecord> presentRecordList(String supplierName, TouristSupplier touristSupplier
+            , PresentStateEnum presentState, LocalDateTime createTime, LocalDateTime endCreateTime
+            , Pageable pageable) {
         return presentRecordRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(supplierName)) {
@@ -47,7 +49,7 @@ public class PresentRecordServiceImpl implements PresentRecordService {
                         supplierName));
             }
             if(touristSupplier!=null){
-                predicate=cb.and(predicate,cb.equal(root.get("").as(TouristSupplier.class),touristSupplier));
+                predicate=cb.and(predicate,cb.equal(root.get("touristSupplier").as(TouristSupplier.class),touristSupplier));
             }
             if (presentState != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("presentState").as(PresentStateEnum.class),

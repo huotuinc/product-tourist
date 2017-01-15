@@ -1,6 +1,7 @@
 package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.PresentStateEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
@@ -26,9 +27,10 @@ public class PresentRecord extends BaseModel{
     public static final List<Selection<PresentRecord, ?>> selections = Arrays.asList(
             new SimpleSelection<PresentRecord, String>("id", "id"),
             new SimpleSelection<PresentRecord, String>("amountOfMoney", "amountOfMoney")
-            , new SimpleSelection<PresentRecord, String>("accountBalance", "accountBalance")
+            , new SimpleSelection<PresentRecord, String>("recordNo", "recordNo")
+//            , new SimpleSelection<PresentRecord, String>("accountBalance", "accountBalance")
             , new SimpleSelection<PresentRecord, String>("createTime", "createTime")
-            , new SimpleSelection<PresentRecord, String>("supplierName", "touristSupplier.supplierName")
+            , new SimpleSelection<PresentRecord, String>("touristSupplier.supplierName", "supplierName")
             , new Selection<PresentRecord, Map>() {
                 @Override
                 public Map apply(PresentRecord presentRecord) {
@@ -43,8 +45,24 @@ public class PresentRecord extends BaseModel{
                     return "presentState";
                 }
             }
+            , new Selection<PresentRecord, String>() {
+                @Override
+                public String apply(PresentRecord presentRecord) {
+                    return LocalDateTimeFormatter.toStr(presentRecord.getCreateTime());
+                }
+
+                @Override
+                public String getName() {
+                    return "createTime";
+                }
+            }
 
     );
+
+    /**
+     * 提现编号
+     */
+    private String recordNo;
 
     /**
      * 所属供应商

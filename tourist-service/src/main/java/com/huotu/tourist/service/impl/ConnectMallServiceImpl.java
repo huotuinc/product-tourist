@@ -51,9 +51,12 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @Autowired
     public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository
             , MerchantConfigRestRepository merchantConfigRestRepository) throws IOException {
-        merchant = merchantRestRepository.getOneByPK(
-                environment.getProperty("tourist.customerId", environment.acceptsProfiles("develop") ? "3447" : "4886")
-        );
+
+        merchant=new Merchant();
+        merchant.setConfig(new MerchantConfig());
+//        merchant = merchantRestRepository.getOneByPK(
+//                environment.getProperty("tourist.customerId", environment.acceptsProfiles("develop") ? "3447" : "4886")
+//        );
         merchantConfig = merchant.getConfig();
     }
 

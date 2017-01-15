@@ -76,7 +76,7 @@
                     <div class="form-group">
                     <div class="form-inline">
                         <input size="50" name="createDate" placeholder="时间" class="form-control" type="text">
-                        <button style="width: 120px" type="button" class="btn  btn-success ">筛选</button>
+                        <button id="dateSearch" style="width: 120px" type="button" class="btn  btn-success ">筛选</button>
                     </div>
                 </div>
                 </div>
@@ -104,8 +104,7 @@
                                         <th data-field="createTime" data-align="center">结算时间</th>
                                         <th data-field="receivableAccount" data-align="center"
                                             data-sortable="true">应收款</th>
-                                        <th data-field="selfChecking" data-align="center"
-                                            data-sortable="true">自审状态</th>
+                                        <th data-field="selfChecking" data-align="center">自审状态</th>
                                         <th data-field="platformChecking" data-formatter="platformCheckingFormatter"
                                             data-align="center">平台审核状态</th>
                                         <th data-formatter="actionFormatter" data-events="actionEvents"
@@ -130,13 +129,13 @@
                                         <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
                                         <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
                                         <th data-field="peopleNumber" data-align="center">人员数量</th>
-                                        <th data-align="center">操作</th>
                                     </tr>
                                     </thead>
                                 </table>
                             </div>
                             <div id="tab-3" class="tab-pane">
                                 <table class="table table-hover" data-toggle="table"
+                                       th:attr="data-url=@{/supplier/withdrawalList}"
                                        data-url="../../../mock/supplier/withdrawalRecord.json"
                                        data-method="get" data-side-pagination="server"
                                        data-pagination="true" data-striped="true"
@@ -145,15 +144,15 @@
                                     <thead>
                                     <tr>
 
-                                        <th data-field="withdrawalNo" data-align="center">提现编号</th>
-                                        <th data-field="withdrawalDate" data-align="center"
+                                        <th data-field="recordNo" data-align="center">提现编号</th>
+                                        <th data-field="createTime" data-align="center"
                                             data-sortable="true">提现日期</th>
-                                        <th data-field="withdrawalMoney" data-align="center"
+                                        <th data-field="amountOfMoney" data-align="center"
                                             data-sortable="true">提现金额</th>
                                         <th data-field="currentAccountBalance" data-align="center"
                                             data-sortable="true">当前账户金额</th>
-                                        <th data-field="withdrawalState" data-align="center"
-                                            data-sortable="true">提现状态</th>
+                                        <th data-field="presentState" data-align="center"
+                                            data-formatter="presentStateFormatter">提现状态</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -174,6 +173,13 @@
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    var submitUrl=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
+    /*]]>*/
+
+</script>
 <script src="../../../assets/js/manage/supplier/salesStatistics.js"></script>
 </body>
 

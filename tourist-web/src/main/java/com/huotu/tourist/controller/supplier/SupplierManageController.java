@@ -322,9 +322,8 @@ public class SupplierManageController {
 
 
     /**
-     * 结算列表显示 todo 目前需求还不确定
+     * 结算列表显示
      *
-     * @param platformChecking
      * @param pageable
      * @return
      * @throws IOException
@@ -343,12 +342,42 @@ public class SupplierManageController {
     }
 
 
+    /**
+     * 未结算列表，订单列表
+     * @param userInfo          当前用户
+     * @param createDate        大于的时间
+     * @param endCreateDate     小于的时间
+     * @param pageable          分页
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/notSettledList")
     public PageAndSelection<TouristOrder> notSettledList(@AuthenticationPrincipal SystemUser userInfo
             ,@RequestParam(required = false)LocalDateTime createDate
             ,@RequestParam(required = false)LocalDateTime endCreateDate
             , Pageable pageable) throws IOException {
-        return null;
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, null, null, null, null
+                , null, null, createDate, endCreateDate, null, null, null, null, OrderStateEnum.Finish
+                , false, pageable);
+        List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
+
+        //人数处理
+        Selection<TouristOrder, Long> peopleNumberSelection = new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "peopleNumber";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.countByOrder_Id(order.getId());
+            }
+        };
+
+        selections.add(peopleNumberSelection);
+        selections.addAll(TouristOrder.htmlSelections);
+        return new PageAndSelection<>(page, selections);
     }
 
 
@@ -367,9 +396,33 @@ public class SupplierManageController {
             ,@RequestParam(required = false)LocalDateTime endCreateDate
             , Pageable pageable) throws IOException {
         TouristSupplier supplier=(TouristSupplier)userInfo;
+        Page<PresentRecord> records=presentRecordService.presentRecordList(null,supplier,null,createDate,endCreateDate
+                ,pageable);
 
+        List<Selection<PresentRecord, ?>> selections = new ArrayList<>();
+
+        //当前余额处理
+        Selection<PresentRecord, BigDecimal> currentAccountBalanceSelection = new Selection<PresentRecord, BigDecimal>() {
+            @Override
+            public BigDecimal apply(PresentRecord presentRecord) {
+                try {
+                    return settlementSheetService.countBalance(supplier, presentRecord.getCreateTime());
+                } catch (IOException e) {
+                    return new BigDecimal(0);
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "currentAccountBalance";
+            }
+        };
+
+        selections.add(currentAccountBalanceSelection);
+        selections.addAll(PresentRecord.selections);
+
+        return new PageAndSelection<>(records,selections);
 //        presentRecordService.presentRecordList()
-        return null;
     }
 
 
