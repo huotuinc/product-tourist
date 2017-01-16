@@ -21,7 +21,7 @@
         </div>
 
         <table id="table" data-toggle="table" data-url="../../../../mock/platform/bannerList.json"
-               th:attr="data-url=@{/distributionPlatform/supplierList}"
+               th:attr="data-url=@{/distributionPlatform/bannerList}"
                data-method="get"
                data-side-pagination="server"
                data-pagination="true" data-striped="true"
@@ -97,7 +97,13 @@
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script src="../../../../assets/libs/fine-upload/jquery.fine-uploader.min.js"></script>
-<script src="../../../../assets/js/manage/platform/bannerList.js" th:inline="javascript"></script>
+<script th:inline="javascript">
+    addUrl = /*[[@{/distributionPlatform/saveBanner}]]*/ "../../../mock/platform/httpJson.json";
+    updateUrl = /*[[@{/distributionPlatform/updateBanner}]]*/ "../../../mock/platform/httpJson.json";
+    delUrl = /*[[@{/distributionPlatform/delBanner}]]*/ "../../../mock/platform/httpJson.json";
+    g = /*[[@{/}]]*/ '';
+</script>
+<script src="../../../../assets/js/manage/platform/bannerList.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 
 <!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->

@@ -71,14 +71,7 @@ $("#modelForm").validate({
 
         },
         submitHandler: function (form, ev) {
-            var commonUtil = require("common");
-            commonUtil.setDisabled("jq-cms-Save");
-
-            var layer = require("layer");
-            layer.msg("操作成功", {time: 2000});
-            commonUtil.cancelDisabled("jq-cms-Save");
             form.submit();
-
         },
         invalidHandler: function () {
             return true;

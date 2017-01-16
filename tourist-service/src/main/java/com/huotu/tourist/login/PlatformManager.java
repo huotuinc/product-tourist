@@ -55,6 +55,8 @@ public class PlatformManager extends Login {
             return String2GrantedAuthoritySet(Stream.of("ROLE_USER"));
         if (!authorityList.contains("ROLE_USER"))
             authorityList.add("ROLE_USER");
+        if (!authorityList.contains("ROLE_MA"))
+            authorityList.add("ROLE_MA");
         return String2GrantedAuthoritySet(authorityList.stream());
     }
 

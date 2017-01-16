@@ -27,43 +27,40 @@
                     <div class="col-sm-2">
                         <select name="touristTypeId" class="form-control"
                                 placeholder="线路类型">
+                            <option value="">
+                            </option>
                             <!--suppress ThymeleafVariablesResolveInspection -->
                             <option th:each="touristType : ${touristTypes}"
                                     th:text="${touristType.typeName}"
                                     th:value="${touristType.id}" value="1">
                                 自驾游
                             </option>
-                            <option value="2">
-                                跟团
-                            </option>
+
                         </select>
                     </div>
                     <div class="col-sm-2">
                         <select name="activityTypeId" class="form-control"
                                 placeholder="活动类型">
+                            <option value=""></option>
                             <!--suppress ThymeleafVariablesResolveInspection -->
                             <option th:each="activity : ${activityTypes}"
                                     th:text="${activity.activityName}"
                                     th:value="${activity.id}" value="1">
                                 滑雪
                             </option>
-                            <option value="2">
-                                登山
-                            </option>
+
                         </select>
                     </div>
                     <div class="col-sm-2">
                         <select name="touristCheckState" class="form-control"
                                 placeholder="审核状态">
+                            <option value=""></option>
                             <!--suppress ThymeleafVariablesResolveInspection -->
                             <option value="0"
                                     th:each="checkState:${T(com.huotu.tourist.common.TouristCheckStateEnum).values()}"
                                     th:value="${checkState.getCode()}"
                                     th:text="${checkState.getValue().toString()}">已保存
                             </option>
-                            <option value="1">未审核</option>
-                            <option value="2">已审核</option>
-                            <option value="3">已回收</option>
                         </select>
                     </div>
 
@@ -149,7 +146,13 @@
 <script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../../assets/js/manage/platform/touristGoodList.js" th:inline="javascript"></script>
+<script th:inline="javascript">
+    recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
+    unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
+    showTouristGood = /*[[@{/distributionPlatform/showTouristGood}]]*/ "touristGood.html";
+    modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/ "../../../mock/platform/httpJson.json";
+</script>
+<script src="../../../../assets/js/manage/platform/touristGoodList.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 </body>
 </html>

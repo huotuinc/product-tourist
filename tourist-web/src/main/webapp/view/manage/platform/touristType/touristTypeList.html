@@ -14,9 +14,9 @@
 <div class="panel-body" style="padding-bottom:0;">
     <div class="panel panel-default">
         <div id="toolbar" class="btn-group">
-            <button id="btn_add" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                    <span th:if="${#authorization.expression('hasRole(''ROLE_MA'')')}"
-                          class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
+            <button th:if="${#authorization.expression('hasRole(''ROLE_MA'')')}" id="btn_add" class="btn btn-primary"
+                    data-toggle="modal" data-target="#myModal">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
             </button>
         </div>
 
@@ -69,7 +69,11 @@
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
-<script src="../../../../assets/js/manage/platform/touristTypeList.js" th:inline="javascript"></script>
+<script th:inline="javascript">
+    addUrl = /*[[@{/distributionPlatform/saveTouristType}]]*/ "../../../mock/platform/httpJson.json";
+    updateUrl = /*[[@{/distributionPlatform/updateTouristType}]]*/ "../../../mock/platform/httpJson.json";
+</script>
+<script src="../../../../assets/js/manage/platform/touristTypeList.js"></script>
 
 <!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
 </body>

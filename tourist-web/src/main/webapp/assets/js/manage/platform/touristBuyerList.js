@@ -1,4 +1,4 @@
-updateBuyerCheckState = /*[[@{/distributionPlatform/updateBuyerCheckState}]]*/ "../../../mock/platform/httpJson.json"
+
 actionFormatter = function (value, row, index) {
     if (row.checkState.code == 0) {
         return '<button class="btn btn-primary update" >审核通过</button> '
@@ -20,7 +20,6 @@ function updateCheckState(row, checkState) {
         url: updateBuyerCheckState,
         method: "post",
         data: {id: row.id, checkState: checkState},
-        dataType: "json",
         success: function () {
             console.log("success");
             layer.close(load);
@@ -84,7 +83,7 @@ getParams = function (params) {
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.pageSize, //页面大小
-        pageNo: params.pageNumber, //页码
+        pageNo: params.pageNumber - 1, //页码
         sort: sort,
         // sortOrder: params.sortOrder,
         // sortName: params.sortName,

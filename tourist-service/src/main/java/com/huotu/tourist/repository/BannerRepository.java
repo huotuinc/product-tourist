@@ -10,7 +10,8 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.entity.Banner;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -25,6 +26,6 @@ public interface BannerRepository extends JpaRepository<Banner, Long>
         , JpaSpecificationExecutor<Banner> {
     List<Banner> findByBannerName(String name);
 
-    List<Banner> findByDeletedIsFalse(PageRequest pageRequest);
+    Page<Banner> findByDeletedFalse(Pageable pageRequest);
 
 }

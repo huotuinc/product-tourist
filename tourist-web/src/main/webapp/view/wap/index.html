@@ -37,7 +37,7 @@
                      th:each="banner:${banners}">
                     <!--/*@thymesVar id="banner" type="com.huotu.tourist.entity.Banner"*/-->
                     <a href="javascript:;" th:href="${banner.linkUrl}">
-                        <img src="../../assets/img/swiper-1.jpg" res:src="${banenr.bannerImgUri}"/>
+                        <img src="../../assets/img/swiper-1.jpg" res:src="${banner.bannerImgUri}"/>
                     </a>
                 </div>
                 <div class="swiper-slide"><img src="../../assets/img/swiper-2.jpg"/></div>
@@ -220,7 +220,6 @@
                 <p> 我的</p>
             </a>
         </div>
-        <!---->
     </div>
 
 </div>

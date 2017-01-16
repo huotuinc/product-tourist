@@ -50,6 +50,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Login addLogin(Login login, String password) {
+        login.setEnabled(true);
        return updatePassword(login,password);
     }
 

@@ -19,7 +19,8 @@
         <span class="icon-sprite icon-list"></span>
         <h3>采购商资格产品设置</h3>
         <div class="bar">
-            <a class="btn-lit" href="purchaserProductSettingList.html">
+            <a class="btn-lit" href="purchaserProductSettingList.html"
+               th:href="@{/distributionPlatform/toPurchaserProductSettingList}">
                 <span>返回管理列表</span></a>
         </div>
     </div>
@@ -71,8 +72,8 @@
                             <th>说明：</th>
                             <td>
                                 <textarea rows="" cols="" style="width: 250px; height: 60px;" class="input-normal"
-                                          id="explain" name="explain"
-                                          th:value="${purchaserProductSetting!=null ?purchaserProductSetting.explain:''}"
+                                          id="explainStr" name="explainStr"
+                                          th:value="${purchaserProductSetting!=null ?purchaserProductSetting.explainStr:''}"
                                           placeholder="说明"></textarea>
                             </td>
                         </tr>

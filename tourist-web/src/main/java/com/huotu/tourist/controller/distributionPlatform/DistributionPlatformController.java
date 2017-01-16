@@ -30,6 +30,7 @@ import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
+import com.huotu.tourist.service.LoginService;
 import com.huotu.tourist.service.PresentRecordService;
 import com.huotu.tourist.service.PurchaserProductSettingService;
 import com.huotu.tourist.service.SettlementSheetService;
@@ -100,6 +101,8 @@ public class DistributionPlatformController extends BaseController {
     BannerRepository bannerRepository;
     @Autowired
     ResourceService resourceService;
+    @Autowired
+    LoginService loginService;
 
     /**
      * 打开订单列表页面
@@ -108,7 +111,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping("/")
     public String showSupplierMain() {
-        return "/view/manage/platform/main";
+        return "/view/manage/platform/main.html";
     }
 
     /**
@@ -118,7 +121,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toSupplierList", method = RequestMethod.GET)
     public String toSupplierList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/supplier/supplierList";
+        return "view/manage/platform/supplier/supplierList.html";
     }
 
     /**
@@ -141,7 +144,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toBuyerList", method = RequestMethod.GET)
     public String toBuyerList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/touristBuyer/touristBuyerList";
+        return "view/manage/platform/touristBuyer/touristBuyerList.html";
     }
 
     /**
@@ -172,7 +175,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserPaymentRecordList", method = RequestMethod.GET)
     public String toPurchaserPaymentRecordList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/purchaserPaymentRecord/purchaserPaymentRecordList";
+        return "view/manage/platform/purchaserPaymentRecord/purchaserPaymentRecordList.html";
     }
 
     /**
@@ -204,7 +207,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toPurchaserProductSettingList", method = RequestMethod.GET)
     public String toPurchaserProductSettingList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/purchaserProductSetting/purchaserProductSettingList";
+        return "view/manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -236,7 +239,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
     public String toTouristGoodList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/touristGood/touristGoodList";
+        return "view/manage/platform/touristGood/touristGoodList.html";
     }
 
     /**
@@ -246,7 +249,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
     public String toActivityTypeList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/activityType/activityTypeList";
+        return "view/manage/platform/activityType/activityTypeList.html";
     }
 
     /**
@@ -276,7 +279,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toTouristTypeList", method = RequestMethod.GET)
     public String toTouristTypeList() {
-        return "view/manage/platform/touristType/touristTypeList";
+        return "view/manage/platform/touristType/touristTypeList.html";
     }
 
     /**
@@ -306,7 +309,7 @@ public class DistributionPlatformController extends BaseController {
      */
     @RequestMapping(value = "toSettlementSheetList", method = RequestMethod.GET)
     public String toSettlementSheetList(HttpServletRequest request, Model model) {
-        return "view/manage/platform/settlementSheet/settlementSheetList";
+        return "view/manage/platform/settlementSheet/settlementSheetList.html";
     }
 
     /**
@@ -335,7 +338,7 @@ public class DistributionPlatformController extends BaseController {
     @RequestMapping(value = "toPresentRecordList", method = RequestMethod.GET)
     public String toPresentRecordList(HttpServletRequest request, Model model) {
         //todo
-        return "";
+        return "view/manage/platform/banner/bannerList.html";
     }
 
     /**
@@ -358,6 +361,17 @@ public class DistributionPlatformController extends BaseController {
     }
 
     /**-------------------下面新增和修改相关-----------------------*/
+
+    /**
+     * 跳转到banner页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "toBannerList", method = RequestMethod.GET)
+    public String toBannerList(HttpServletRequest request, Model model) {
+        return "view/manage/platform/banner" +
+                "/bannerList.html";
+    }
 
     /**
      * banner列表页
@@ -389,7 +403,7 @@ public class DistributionPlatformController extends BaseController {
             supplier = touristSupplierRepository.getOne(id);
         }
         model.addAttribute("supplier", supplier);
-        return "view/manage/platform/supplier/supplier";
+        return "view/manage/platform/supplier/supplier.html";
     }
 
     /**
@@ -409,12 +423,14 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"addSupplier", "updateSupplier"}, method = RequestMethod.POST)
-    @ResponseBody
-    public void addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String loginName,
-                                   @RequestParam String password, @RequestParam String businessLicenseUri
-            , @RequestParam String contacts, @RequestParam String contactNumber, @RequestParam Address address, String remarks,
-                                   HttpServletRequest request, Model model) {
+    public String addTouristSupplier(Long id, @RequestParam String supplierName, @RequestParam String loginName,
+                                     @RequestParam String password, @RequestParam String businessLicenseUri
+            , @RequestParam String contacts, @RequestParam String contactNumber, @RequestParam Address address, String
+                                             detailedAddress,
+                                     String remarks,
+                                     HttpServletRequest request, Model model) {
         TouristSupplier touristSupplier;
+
         if (id == null) {
             touristSupplier = new TouristSupplier();
         } else {
@@ -422,14 +438,17 @@ public class DistributionPlatformController extends BaseController {
         }
         touristSupplier.setCreateTime(LocalDateTime.now());
         touristSupplier.setLoginName(loginName);
-        touristSupplier.setPassword(password);
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
         touristSupplier.setRemarks(remarks);
         touristSupplier.setSupplierName(supplierName);
         touristSupplier.setContacts(contacts);
         touristSupplier.setContactNumber(contactNumber);
+        touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setAddress(address);
+        touristSupplier.setEnabled(true);
+        loginService.addLogin(touristSupplier, password);
         touristSupplierService.save(touristSupplier);
+        return "view/manage/platform/supplier/supplierList.html";
     }
 
     /**
@@ -439,8 +458,7 @@ public class DistributionPlatformController extends BaseController {
      * @param frozen 是否冻结 not null
      * @return
      */
-    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST
-            , produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = {"frozenSupplier", "unFrozenSupplier"}, method = RequestMethod.POST)
     @ResponseBody
     public void frozenSupplierOrUnFrozenSupplier(@RequestParam Long id, @RequestParam boolean frozen) {
         TouristSupplier touristSupplier = touristSupplierService.getOne(id);
@@ -478,7 +496,7 @@ public class DistributionPlatformController extends BaseController {
             purchaserProductSetting = purchaserProductSettingService.getOne(id);
         }
         model.addAttribute("purchaserProductSetting", purchaserProductSetting);
-        return "view/manage/platform/purchaserProductSetting";
+        return "view/manage/platform/purchaserProductSetting/purchaserProductSetting.html";
     }
 
     /**
@@ -502,13 +520,13 @@ public class DistributionPlatformController extends BaseController {
      * @param name      名称 not null
      * @param bannerUri 图片 not null
      * @param price     价格 not null
-     * @param explain   说明 not null
+     * @param explainStr   说明 not null
      * @param agreement 协议 not null
      * @return
      */
     @RequestMapping(value = {"savePurchaserProductSetting", "updatePurchaserProductSetting"}, method = RequestMethod.POST)
     public String savePurchaserProductSetting(Long id, @RequestParam String name, @RequestParam String bannerUri,
-                                              @RequestParam BigDecimal price, @RequestParam String explain
+                                              @RequestParam BigDecimal price, @RequestParam String explainStr
             , @RequestParam String agreement) {
         PurchaserProductSetting purchaserProductSetting;
         if (id == null) {
@@ -521,10 +539,10 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setName(name);
         purchaserProductSetting.setBannerUri(bannerUri);
         purchaserProductSetting.setPrice(price);
-        purchaserProductSetting.setExplain(explain);
+        purchaserProductSetting.setExplainStr(explainStr);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);
-        return "view/manage/platform/purchaserProductSetting/purchaserProductSettingList";
+        return "view/manage/platform/purchaserProductSetting/purchaserProductSettingList.html";
     }
 
     /**
@@ -541,7 +559,7 @@ public class DistributionPlatformController extends BaseController {
         List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
         model.addAttribute("routes", routes);
         model.addAttribute("good", touristGood);
-        return "view/manage/platform/trouristGood/touristGood";
+        return "view/manage/platform/trouristGood/touristGood.html";
     }
 
     /**

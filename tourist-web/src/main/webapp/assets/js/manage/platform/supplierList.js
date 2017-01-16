@@ -1,5 +1,4 @@
-addOrUpdateUrl = /*[[@{/distributionPlatform/toAddTouristSupplier}]]*/ "supplier.html";
-frozenSupplierUrl = /*[[@{/distributionPlatform/frozenSupplier}]]*/ "../../../mock/platform/httpJson.json";
+
 
 actionFormatter = function (value, row, index) {
     if (row.frozen == false) {
@@ -23,7 +22,6 @@ window.actionEvents = {
                 url: frozenSupplierUrl,
                 method: "post",
                 data: {id: row.id, frozen: true},
-                dataType: "json",
                 success: function () {
                     console.log("success");
                     layer.close(load);
@@ -31,7 +29,7 @@ window.actionEvents = {
                     $table.bootstrapTable('refresh');
                 },
                 error: function (error) {
-                    console.log("error");
+                    console.error("error");
                     layer.close(load);
                 }
             })
@@ -52,10 +50,10 @@ getParams = function (params) {
     return {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.pageSize, //页面大小
-        pageNo: params.pageNumber, //页码
+        pageNo: params.pageNumber - 1, //页码
         sort: sort,
         // sortOrder: params.sortOrder,
         // sortName: params.sortName,
-        supplierName: $("input[name='supplierName']").val()
+        name: $("input[name='supplierName']").val()
     };
 }

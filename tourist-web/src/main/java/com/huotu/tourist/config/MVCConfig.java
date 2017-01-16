@@ -30,6 +30,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -75,6 +76,14 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private Set<AutowireConverter> commonEnumConverterSet;
 
+    /**
+     * for upload
+     */
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        return new CommonsMultipartResolver();
+    }
+
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
         returnValueHandlers.add(pageAndSelectionResolver);
@@ -113,6 +122,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         registry.viewResolver(cssViewResolver);
         registry.viewResolver(redirectViewResolver());
         registry.viewResolver(forwardViewResolver());
+
     }
 
     @Override
@@ -206,7 +216,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 resolver.setCharacterEncoding(UTF8);
                 resolver.setApplicationContext(applicationContext);
                 resolver.setTemplateMode(TemplateMode.HTML);
-                resolver.setSuffix("*.html");
                 return resolver;
             }
 

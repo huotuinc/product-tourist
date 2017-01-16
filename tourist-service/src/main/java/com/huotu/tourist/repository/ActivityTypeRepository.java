@@ -10,7 +10,8 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.entity.ActivityType;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -32,5 +33,5 @@ public interface ActivityTypeRepository extends JpaRepository<ActivityType, Long
      * @param pageRequest
      * @return
      */
-    List<ActivityType> findByDeletedIsFalse(PageRequest pageRequest);
+    Page<ActivityType> findByDeletedFalse(Pageable pageRequest);
 }

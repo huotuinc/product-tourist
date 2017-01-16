@@ -54,7 +54,7 @@
                 <th data-field="name" data-align="center" data-sortable="true">名称</th>
                 <th data-field="bannerUri" data-formatter="bannerUriFormatter" data-align="center"> banner</th>
                 <th data-field="price" data-align="center" data-sortable="true">价格</th>
-                <th data-field="explain" data-align="center">说明</th>
+                <th data-field="explainStr" data-align="center">说明</th>
                 <th data-field="action" data-formatter="updateFormatter" data-events="actionEvents" data-align="center"
                 >操作
                 </th>
@@ -68,7 +68,11 @@
 <script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
-<script src="../../../../assets/js/manage/platform/purchaserProductSettingList.js" th:inline="javascript"></script>
+<script th:inline="javascript">
+    deleteUrl = /*[[@{/distributionPlatform/delPurchaserProductSetting}]]*/ "../../../mock/platform/httpJson.json"
+    toPurchaserProductSetting = /*[[@{/distributionPlatform/toPurchaserProductSetting}]]*/ "purchaserProductSetting.html"
+</script>
+<script src="../../../../assets/js/manage/platform/purchaserProductSettingList.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 </body>
 </html>

@@ -1,7 +1,4 @@
-recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
-unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
-showTouristGood = /*[[@{/distributionPlatform/showTouristGood}]]*/ "touristGood.html";
-modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/ "../../../mock/platform/httpJson.json";
+
 var $table = $('#table');
 $(".all").click(function () {
     $table = $('#table');
@@ -15,7 +12,7 @@ getParams = function (params) {
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.pageSize, //页面大小
-        pageNo: params.pageNumber, //页码
+        pageNo: params.pageNumber - 1, //页码
         sort: sort,
         // sortOrder: params.sortOrder,
         // sortName: params.sortName,
@@ -61,7 +58,6 @@ function updateRecommend(url, row, recommend) {
         url: url,
         method: "post",
         data: {id: row.id, recommend: recommend},
-        dataType: "json",
         success: function () {
             $table.bootstrapTable('refresh');
         },
@@ -102,7 +98,6 @@ window.actionEvents = {
                 url: modifyTouristGoodState,
                 method: "post",
                 data: {id: row.id, checkState: 2},
-                dataType: "json",
                 success: function () {
                     $table.bootstrapTable('refresh');
                 },

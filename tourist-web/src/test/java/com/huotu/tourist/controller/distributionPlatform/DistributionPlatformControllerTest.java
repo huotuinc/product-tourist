@@ -969,7 +969,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         assertThat(purchaserProductSetting.getName()).isEqualTo(name);
         assertThat(purchaserProductSetting.getBannerUri()).isEqualTo(bannerUri);
         assertThat(purchaserProductSetting.getPrice()).isEqualTo(price);
-        assertThat(purchaserProductSetting.getExplain()).isEqualTo(explain);
+        assertThat(purchaserProductSetting.getExplainStr()).isEqualTo(explain);
         assertThat(purchaserProductSetting.getAgreement()).isEqualTo(agreement);
 
         status = mockMvc.perform(post("/distributionPlatform/updatePurchaserProductSetting")
@@ -986,7 +986,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         assertThat(purchaserProductSetting.getName()).isEqualTo(name);
         assertThat(purchaserProductSetting.getBannerUri()).isEqualTo(bannerUri);
         assertThat(purchaserProductSetting.getPrice()).isEqualTo(price);
-        assertThat(purchaserProductSetting.getExplain()).isEqualTo(explain);
+        assertThat(purchaserProductSetting.getExplainStr()).isEqualTo(explain);
         assertThat(purchaserProductSetting.getAgreement()).isEqualTo(agreement);
 
         status = mockMvc.perform(post("/distributionPlatform/savePurchaserProductSetting")

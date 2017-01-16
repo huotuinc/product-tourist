@@ -5,7 +5,7 @@ $("#modelForm").validate({
             required: true,
             maxlength: 100
         },
-        explain: {
+        explainStr: {
             required: true,
             maxlength: 200
         },
@@ -25,7 +25,7 @@ $("#modelForm").validate({
             required: "名称为必输项",
             maxlength: "长度不能超过100个字符"
         },
-        explain: {
+        explainStr: {
             required: "说明为必输项",
             maxlength: "长度不能超过200个字符"
         },
@@ -42,11 +42,6 @@ $("#modelForm").validate({
 
     },
     submitHandler: function (form, ev) {
-        var commonUtil = require("common");
-        commonUtil.setDisabled("jq-cms-Save");
-        var layer = require("layer");
-        layer.msg("操作成功", {time: 2000});
-        commonUtil.cancelDisabled("jq-cms-Save");
         form.submit();
     },
     invalidHandler: function () {

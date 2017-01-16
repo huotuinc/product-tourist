@@ -33,14 +33,13 @@
                     <div class="col-sm-2">
                         <select type="text" name="buyerCheckState" class="form-control"
                                 placeholder="采购状态">
+                            <option value=""></option>
                             <!--suppress ThymeleafVariablesResolveInspection -->
                             <option value="0"
                                     th:each="checkState:${T(com.huotu.tourist.common.BuyerCheckStateEnum).values()}"
                                     th:value="${checkState.getCode()}"
                                     th:text="${checkState.getValue().toString()}">审核中
                             </option>
-                            <option value="1">已审核</option>
-                            <option value="2">已冻结</option>
                         </select>
                     </div>
                     <div class="col-sm-2">
@@ -90,7 +89,10 @@
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
-<script src="../../../../assets/js/manage/platform/touristBuyerList.js" th:inline="javascript"></script>
+<script th:inline="javascript">
+    updateBuyerCheckState = /*[[@{/distributionPlatform/updateBuyerCheckState}]]*/ "../../../mock/platform/httpJson.json"
+</script>
+<script src="../../../../assets/js/manage/platform/touristBuyerList.js"></script>
 <!--<script>seajs.use(["bootstrap", "bootstrap-table.min", "bootstrap-table-zh-CN", "supplierList"]);</script>-->
 </body>
 </html>

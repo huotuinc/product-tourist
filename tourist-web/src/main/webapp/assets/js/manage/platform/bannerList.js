@@ -1,13 +1,11 @@
-addUrl = /*[[@{/distributionPlatform/saveBanner}]]*/ "../../../mock/platform/httpJson.json";
-updateUrl = /*[[@{/distributionPlatform/updateBanner}]]*/ "../../../mock/platform/httpJson.json";
-delUrl = /*[[@{/distributionPlatform/delBanner}]]*/ "../../../mock/platform/httpJson.json";
+
 
 getParams = function (params) {
     var sort = params.sortName != undefined ? params.sortName + "," + params.sortOrder : undefined;
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.pageSize, //页面大小
-        pageNo: params.pageNumber, //页码
+        pageNo: params.pageNumber - 1, //页码
         // sortOrder: params.sortOrder,
         // sortName: params.sortName
         sort: sort
@@ -19,18 +17,25 @@ actionFormatter = function (value, row, index) {
         + '<button class="btn btn-danger del" >删除</button>';
 };
 bannerImgUriFormatter = function (value, row, index) {
-    return '<img src="' + row.bannerImgUri + '"/> ';
+    return '<img src="' + g + row.bannerImgUri + '"/> ';
 
 };
 
 window.actionEvents = {
     'click .update': function (e, value, row, index) {
         $(".oldImgDiv").show();
-        $(".oldImg").attr("src", row.bannerImgUri);
+        $(".oldImg").attr("src", g + row.bannerImgUri);
         $("input[name='bannerName']").val(row.bannerName);
         $("input[name='bannerImgUri']").val(row.bannerImgUri);
         $("input[name='linkUrl']").val(row.linkUrl);
         $("input[name='id']").val(row.id);
+        parent.uploader($('#banner-uploader'), function (path) {
+            $("#bannerImgUri").val(path);
+        }, {
+            allowedExtensions: ['jpeg', 'jpg', 'png', 'bmp'],
+            itemLimit: 1,
+            sizeLimit: 3 * 1024 * 1024
+        });
     },
     'click .del': function (e, value, row, index) {
         layer.confirm('确定删除吗？', {
@@ -42,7 +47,6 @@ window.actionEvents = {
                 url: delUrl,
                 method: "post",
                 data: {id: row.id},
-                dataType: "json",
                 success: function () {
                     var $table = $("#table");
                     $table.bootstrapTable('refresh');
@@ -64,6 +68,14 @@ $("#btn_add").click(function () {
     $("input[name='bannerImgUri']").val("");
     $("input[name='linkUrl']").val("");
     $("input[name='id']").val("");
+    // uploader
+    parent.uploader($('#banner-uploader'), function (path) {
+        $("#bannerImgUri").val(path);
+    }, {
+        allowedExtensions: ['jpeg', 'jpg', 'png', 'bmp'],
+        itemLimit: 1,
+        sizeLimit: 3 * 1024 * 1024
+    });
 
 });
 
@@ -74,7 +86,6 @@ function saveOrUpdate(url, id, activityName, bannerImgUri, linkUrl) {
         url: url,
         method: "post",
         data: {id: id, bannerName: activityName, bannerImgUri: bannerImgUri, linkUrl: linkUrl},
-        dataType: "json",
         success: function () {
             var $table = $("#table");
             $table.bootstrapTable('refresh');

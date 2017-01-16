@@ -2,7 +2,9 @@ package com.huotu.tourist.repository;
 
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.TouristGood;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -24,7 +26,8 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param touristCheckState
      * @return
      */
-    List<TouristGood> findByRecommendIsTrueAndDeletedIsFalseAndTouristCheckState(PageRequest pageRequest, TouristCheckStateEnum touristCheckState);
+    Page<TouristGood> findByRecommendTrueAndDeletedFalseAndTouristCheckState(Pageable pageRequest, TouristCheckStateEnum
+            touristCheckState);
 
     /**
      * 查找指定活动id且没有删除的商品列表
@@ -34,7 +37,8 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param touristCheckState
      * @return
      */
-    List<TouristGood> findByActivityType_IdAndDeletedIsFalseAndTouristCheckState(Long activityTypeId, PageRequest pageRequest, TouristCheckStateEnum touristCheckState);
+    Page<TouristGood> findByActivityType_IdAndDeletedFalseAndTouristCheckState(Long activityTypeId, Pageable pageRequest,
+                                                                               TouristCheckStateEnum touristCheckState);
 
     /**
      * 统计线路供应商
@@ -43,7 +47,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param touristCheckState
      * @return
      */
-    int countByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(Long touristSupplierId, TouristCheckStateEnum touristCheckState);
+    int countByTouristSupplier_IdAndDeletedFalseAndTouristCheckState(Long touristSupplierId, TouristCheckStateEnum touristCheckState);
 
     /**
      * 供应商线路列表
@@ -53,7 +57,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param checkFinish
      * @return
      */
-    List<TouristGood> findByTouristSupplier_IdAndDeletedIsFalseAndTouristCheckState(Long supplierId, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
+    List<TouristGood> findByTouristSupplier_IdAndDeletedFalseAndTouristCheckState(Long supplierId, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
 
     /**
      * 根据目的地省份信息查询商品列表
@@ -63,7 +67,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param checkFinish
      * @return
      */
-    List<TouristGood> findByDestination_ProvinceAndDeletedIsFalseAndTouristCheckState(String value, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
+    List<TouristGood> findByDestination_ProvinceAndDeletedFalseAndTouristCheckState(String value, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
 
     /**
      * 根据目的地市信息查询商品列表
@@ -73,6 +77,6 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param checkFinish
      * @return
      */
-    List<TouristGood> findByDestination_TownAndDeletedIsFalseAndTouristCheckState(String value, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
+    List<TouristGood> findByDestination_TownAndDeletedFalseAndTouristCheckState(String value, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
 
 }

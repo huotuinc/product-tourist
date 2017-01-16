@@ -1,12 +1,10 @@
-addUrl = /*[[@{/distributionPlatform/saveActivityType}]]*/ "../../../mock/platform/httpJson.json";
-updateUrl = /*[[@{/distributionPlatform/updateActivityType}]]*/ "../../../mock/platform/httpJson.json";
-delUrl = /*[[@{/distributionPlatform/delActivityType}]]*/ "../../../mock/platform/httpJson.json";
+
 getParams = function (params) {
     var sort = params.sortName != undefined ? params.sortName + "," + params.sortOrder : undefined;
     var temp = {
         //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
         pageSize: params.pageSize, //页面大小
-        pageNo: params.pageNumber, //页码
+        pageNo: params.pageNumber - 1, //页码
         // sortOrder: params.sortOrder,
         // sortName: params.sortName
         sort: sort
@@ -33,7 +31,6 @@ window.actionEvents = {
                 url: delUrl,
                 method: "post",
                 data: {id: row.id},
-                dataType: "json",
                 success: function () {
                     var $table = $("#table");
                     $table.bootstrapTable('refresh');
@@ -61,7 +58,6 @@ function saveOrUpdate(url, id, activityName) {
         url: url,
         method: "post",
         data: {id: id, activityName: activityName},
-        dataType: "json",
         success: function () {
             var $table = $("#table");
             $table.bootstrapTable('refresh');

@@ -53,7 +53,8 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="supplier/supplierList.html">供应商列表</a>
+                        <li><a class="J_menuItem" href="supplier/supplierList.html"
+                               th:href="@{/distributionPlatform/toSupplierList}">供应商列表</a>
                         </li>
                     </ul>
                 </li>
@@ -63,13 +64,16 @@
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
 
-                        <li><a class="J_menuItem" href="touristBuyer/touristBuyerList.html">采购商审核</a>
+                        <li><a class="J_menuItem" href="touristBuyer/touristBuyerList.html"
+                               th:href="@{/distributionPlatform/toBuyerList}">采购商审核</a>
                         </li>
                         <li><a class="J_menuItem"
-                               href="purchaserPaymentRecord/purchaserPaymentRecordList.html">采购商支付流水</a>
+                               href="purchaserPaymentRecord/purchaserPaymentRecordList.html"
+                               th:href="@{/distributionPlatform/toPurchaserPaymentRecordList}">采购商支付流水</a>
                         </li>
                         <li><a class="J_menuItem"
-                               href="purchaserProductSetting/purchaserProductSettingList.html">线路采购设置</a>
+                               href="purchaserProductSetting/purchaserProductSettingList.html"
+                               th:href="@{/distributionPlatform/toPurchaserProductSettingList}">线路采购设置</a>
                         </li>
                     </ul>
                 </li>
@@ -79,11 +83,14 @@
                             class="fa arrow"></span></a>
 
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="touristGood/touristGoodList.html">线路产品审核</a>
+                        <li><a class="J_menuItem" href="touristGood/touristGoodList.html"
+                               th:href="@{/distributionPlatform/toTouristGoodList}">线路产品审核</a>
                         </li>
-                        <li><a class="J_menuItem" href="touristType/touristTypeList.html">路线类型</a>
+                        <li><a class="J_menuItem" href="touristType/touristTypeList.html"
+                               th:href="@{/distributionPlatform/toTouristTypeList}">路线类型</a>
                         </li>
-                        <li><a class="J_menuItem" href="activityType/activityTypeList.html">活动类型</a>
+                        <li><a class="J_menuItem" href="activityType/activityTypeList.html"
+                               th:href="@{/distributionPlatform/toActivityTypeList}">活动类型</a>
                         </li>
                     </ul>
                 </li>
@@ -92,7 +99,8 @@
                             class="fa arrow"></span></a>
 
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="../common/orderList.html">订单列表</a>
+                        <li><a class="J_menuItem" href="../common/orderList.html"
+                               th:href="@{/distributionPlatform/toSupplierOrders}">订单列表</a>
                         </li>
 
                     </ul>
@@ -111,7 +119,8 @@
                     <a href="#"><i class="fa fa-edit"></i><span class="nav-label">前端管理</span><span
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a class="J_menuItem" href="banner/bannerList.html">首页banner</a>
+                        <li><a class="J_menuItem" href="banner/bannerList.html"
+                               th:href="@{/distributionPlatform/toBannerList}">首页banner</a>
                         </li>
                     </ul>
                 </li>
@@ -157,7 +166,7 @@
         </div>
         <div class="row J_mainContent" id="content-main">
             <iframe class="J_iframe" name="iframe0" width="100%" height="100%"
-                    src="supplier/supplierList.html" frameborder="0"
+                    src="supplier/supplierList.html" th:src="@{/distributionPlatform/toSupplierList}" frameborder="0"
                     data-id="/top/welcome" seamless></iframe>
         </div>
     </div>

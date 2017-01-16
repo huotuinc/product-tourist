@@ -50,13 +50,13 @@ public class PurchaserProductSetting extends BaseModel {
      * 说明文字
      */
     @Column(length = 200)
-    private String explain;
+    private String explainStr;
 
     /**
      * 协议
      */
-    @Lob
     @Column
+    @Lob
     private String agreement;
 
 

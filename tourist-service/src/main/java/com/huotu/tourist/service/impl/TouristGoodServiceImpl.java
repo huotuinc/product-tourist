@@ -86,7 +86,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     public Page<TouristGood> recommendTouristGoodList(String touristName, String supplierName, TouristType touristType
             , ActivityType activityType, TouristCheckStateEnum touristCheckState, Boolean recommend, Pageable pageable) {
         return touristGoodRepository.findAll((root, query, cb) -> {
-            Predicate predicate = null;
+            Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(supplierName)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristSupplier").get("supplierName").as(String.class),
                         supplierName));
@@ -193,7 +193,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
             Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
             predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
                     TouristCheckStateEnum.CheckFinish));
-            query = query.groupBy(root.get("Destination.town"));
+            query = query.groupBy(root.get("destination").get("town"));
             return query.getGroupRestriction();
         });
     }
