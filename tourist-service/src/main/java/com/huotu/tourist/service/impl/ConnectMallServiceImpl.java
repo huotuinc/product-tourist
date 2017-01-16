@@ -52,7 +52,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository
             , MerchantConfigRestRepository merchantConfigRestRepository) throws IOException {
         merchant = merchantRestRepository.getOneByPK(
-                environment.getProperty("tourist.customerId", environment.acceptsProfiles("develop") ? "3447" : "4886")
+                environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
         merchantConfig = merchant.getConfig();
     }
