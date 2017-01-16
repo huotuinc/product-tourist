@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.login.Login;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.Selection;
@@ -18,7 +19,13 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,8 +64,18 @@ public class TouristSupplier extends Login implements SystemUser {
             }
             , new SimpleSelection<TouristSupplier, String>("contacts", "contacts")
             , new SimpleSelection<TouristSupplier, String>("contactNumber", "contactNumber")
-            , new SimpleSelection<TouristSupplier, String>("createTime", "createTime")
             , new SimpleSelection<TouristSupplier, String>("frozen", "frozen")
+            , new Selection<TouristSupplier, String>() {
+                @Override
+                public String apply(TouristSupplier touristSupplier) {
+                    return LocalDateTimeFormatter.toStr(touristSupplier.getCreateTime());
+                }
+
+                @Override
+                public String getName() {
+                    return "createTime";
+                }
+            }
     );
     /**
      * 供应商名称

@@ -7,7 +7,10 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,7 +33,20 @@ public class SettlementSheet extends BaseModel {
             , new SimpleSelection<SettlementSheet, String>("receivableAccount", "receivableAccount")
             , new SimpleSelection<SettlementSheet, String>("createTime", "createTime")
             , new SimpleSelection<SettlementSheet, String>("selfChecking.value", "selfChecking")
-            , new Selection<SettlementSheet, Map>() {
+            , new Selection<SettlementSheet, String>() {
+                @Override
+                public String apply(SettlementSheet settlementSheet) {
+
+                    return settlementSheet.getTouristSupplier() != null ? settlementSheet.getTouristSupplier()
+                            .getSupplierName() : null;
+                }
+
+                @Override
+                public String getName() {
+                    return "supplierName";
+                }
+            },
+            new Selection<SettlementSheet, Map>() {
                 @Override
                 public Map apply(SettlementSheet settlementSheet) {
                     Map map = new HashMap();

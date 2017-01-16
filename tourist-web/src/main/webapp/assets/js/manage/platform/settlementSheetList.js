@@ -1,10 +1,8 @@
 actionFormatter = function (value, row, index) {
     var arr = new Array;
-    arr.push('<a class="btn btn-primary" href="settlementSheetList.html"' +
-        ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">查看明细</a> ');
+    arr.push('<button class="btn btn-primary" >查看明细</button> ');
     if (row.platformChecking.code == 0) {
-        arr.push('<a class="btn btn-primary" href="settlementSheetList.html"' +
-            ' th:href="@{/distributionPlatform/modifyTouristGoodState(id=' + row.id + ',checkState=' + 2 + ')}">审核</a> ');
+        arr.push('<button class="btn btn-primary platformChecking" >审核</button> ');
     }
     return arr.join('');
 };
@@ -15,13 +13,79 @@ presentFormatter = function (value, row, index) {
         arr.push('已发放');
     }
     if (row.presentState.code == 0) {
-        arr.push('<a class="btn btn-primary">审核通过</a> ');
+        arr.push('<a class="btn btn-primary presentStateCheckFinish">审核通过</a> ');
     }
     if (row.presentState.code == 1) {
-        arr.push('<a class="btn btn-primary">发放</a> ');
+        arr.push('<a class="btn btn-primary presentStateAlreadyPaid">发放</a> ');
     }
     return arr.join('');
 };
+
+function platformChecking(url, row, platformChecking) {
+    var load = layer.load();
+    $.ajax({
+        url: url,
+        method: "post",
+        data: {id: row.id, platformChecking: platformChecking},
+        success: function () {
+            $table = $('#table');
+            $table.bootstrapTable('refresh');
+        },
+        error: function (error) {
+        }
+    })
+    layer.close(load);
+}
+function presentRecord(url, row, platformChecking) {
+    var load = layer.load();
+    $.ajax({
+        url: url,
+        method: "post",
+        data: {id: row.id, presentState: platformChecking},
+        success: function () {
+            $table = $('#txTable');
+            $table.bootstrapTable('refresh');
+        },
+        error: function (error) {
+        }
+    })
+    layer.close(load);
+}
+
+window.actionEvents = {
+    'click .platformChecking': function (e, value, row, index) {
+        layer.confirm('确定审核通过吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            platformChecking(modifySettlementSheet, row, 1);
+        }, function () {
+
+        });
+    }
+}
+window.presentEvents = {
+    'click .presentStateCheckFinish': function (e, value, row, index) {
+        layer.confirm('确定审核通过吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            presentRecord(modifyPresentRecord, row, 1);
+        }, function () {
+
+        });
+    },
+    'click .presentStateAlreadyPaid': function (e, value, row, index) {
+        layer.confirm('确定发放吗？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            layer.close(index);
+            presentRecord(modifyPresentRecord, row, 2);
+        }, function () {
+
+        });
+    }
+}
 
 getParams = function (params) {
     var sort = params.sortName != undefined ? params.sortName + "," + params.sortOrder : undefined;
@@ -30,8 +94,6 @@ getParams = function (params) {
         pageSize: params.pageSize, //页面大小
         pageNo: params.pageNumber - 1, //页码
         sort: sort,
-        // sortOrder: params.sortOrder,
-        // sortName: params.sortName,
         supplierName: $("input[name='supplierName']").val(),
         createTime: $("input[name='createTime']").val(),
         platformChecking: $("select[name='platformChecking']").val()
@@ -46,8 +108,6 @@ getTxParams = function (params) {
         pageSize: params.pageSize, //页面大小
         pageNo: params.pageNumber - 1, //页码
         sort: sort,
-        // sortOrder: params.sortOrder,
-        // sortName: params.sortName,
         supplierName: $("input[name='supplierName']").val(),
         createTime: $("input[name='createTime']").val(),
         presentState: $("select[name='presentState']").val()

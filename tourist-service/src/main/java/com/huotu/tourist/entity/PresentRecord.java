@@ -7,7 +7,10 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,10 +31,10 @@ public class PresentRecord extends BaseModel{
             new SimpleSelection<PresentRecord, String>("id", "id"),
             new SimpleSelection<PresentRecord, String>("amountOfMoney", "amountOfMoney")
             , new SimpleSelection<PresentRecord, String>("recordNo", "recordNo")
-//            , new SimpleSelection<PresentRecord, String>("accountBalance", "accountBalance")
             , new SimpleSelection<PresentRecord, String>("createTime", "createTime")
             , new SimpleSelection<PresentRecord, String>("touristSupplier.supplierName", "supplierName")
-            , new Selection<PresentRecord, Map>() {
+            ,
+            new Selection<PresentRecord, Map>() {
                 @Override
                 public Map apply(PresentRecord presentRecord) {
                     Map map = new HashMap();

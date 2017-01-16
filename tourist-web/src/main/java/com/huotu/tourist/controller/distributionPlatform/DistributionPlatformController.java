@@ -28,8 +28,11 @@ import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.model.PageAndSelection;
+import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
+import com.huotu.tourist.repository.PresentRecordRepository;
+import com.huotu.tourist.repository.SettlementSheetRepository;
 import com.huotu.tourist.service.LoginService;
 import com.huotu.tourist.service.PresentRecordService;
 import com.huotu.tourist.service.PurchaserProductSettingService;
@@ -39,8 +42,6 @@ import com.huotu.tourist.service.TouristGoodService;
 import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristSupplierService;
 import me.jiangcai.lib.resource.service.ResourceService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +58,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,38 +71,32 @@ import java.util.Map;
 public class DistributionPlatformController extends BaseController {
     public static final String ROWS = "rows";
     public static final String TOTAL = "total";
-    private static final Log log = LogFactory.getLog(DistributionPlatformController.class);
     @Autowired
     TouristSupplierService touristSupplierService;
-
     @Autowired
     TouristBuyerService touristBuyerService;
-
     @Autowired
     PurchaserProductSettingService purchaserProductSettingService;
-
     @Autowired
     TouristGoodService touristGoodService;
-
     @Autowired
     TouristOrderService touristOrderService;
-
     @Autowired
     SettlementSheetService settlementSheetService;
-
     @Autowired
     PresentRecordService presentRecordService;
-
     @Autowired
     ActivityTypeRepository activityTypeRepository;
-
-
     @Autowired
     BannerRepository bannerRepository;
     @Autowired
     ResourceService resourceService;
     @Autowired
     LoginService loginService;
+    @Autowired
+    SettlementSheetRepository settlementSheetRepository;
+    @Autowired
+    PresentRecordRepository presentRecordRepository;
 
     /**
      * 打开订单列表页面
@@ -125,7 +121,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 供应商列表
      *
-     * @param name     供应商名称
+     * @param name    供应商名称
      * @param request
      * @return
      */
@@ -211,7 +207,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 采购商产品设置列表
      *
-     * @param name     产品设置名称
+     * @param name    产品设置名称
      * @param request
      * @return
      */
@@ -251,7 +247,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 活动类型列表
      *
-     * @param name     活动名称
+     * @param name    活动名称
      * @param request
      * @param model
      * @return
@@ -281,7 +277,7 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 线路类型列表
      *
-     * @param name     线路名称
+     * @param name    线路名称
      * @param request
      * @param model
      * @return
@@ -323,19 +319,10 @@ public class DistributionPlatformController extends BaseController {
                                                 Pageable pageable, HttpServletRequest request, Model model) {
         Page<SettlementSheet> page = settlementSheetService.settlementSheetList(null, supplierName, platformChecking, createTime
                 , null, pageable);
+
         return new PageAndSelection<>(page, SettlementSheet.selections);
     }
 
-    /**
-     * 跳转到提现单列表页面
-     *
-     * @return
-     */
-    @RequestMapping(value = "toPresentRecordList", method = RequestMethod.GET)
-    public String toPresentRecordList(HttpServletRequest request, Model model) {
-        //todo
-        return "view/manage/platform/banner/bannerList.html";
-    }
 
     /**
      * 提现单列表
@@ -353,7 +340,27 @@ public class DistributionPlatformController extends BaseController {
                                               Pageable pageable, HttpServletRequest request, Model model) {
         Page<PresentRecord> page = presentRecordService.presentRecordList(supplierName, null, presentState, createTime
                 , null, pageable);
-        return new PageAndSelection(page, PresentRecord.selections);
+        List<Selection<PresentRecord, ?>> list = new ArrayList<>();
+        list.addAll(PresentRecord.selections);
+        list.add(new Selection<PresentRecord, BigDecimal>() {
+            @Autowired
+            SettlementSheetService settlementSheetService;
+
+            @Override
+            public BigDecimal apply(PresentRecord presentRecord) {
+                try {
+                    return settlementSheetService.countBalance(presentRecord.getTouristSupplier(), null);
+                } catch (IOException e) {
+                    return new BigDecimal(0);
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "accountBalance";
+            }
+        });
+        return new PageAndSelection(page, list);
     }
 
     /**-------------------下面新增和修改相关-----------------------*/
@@ -371,6 +378,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * banner列表页
+     *
      * @param request
      * @return
      */
@@ -512,12 +520,12 @@ public class DistributionPlatformController extends BaseController {
     /**
      * 新增采购产品设置
      *
-     * @param id        id 为null 代表添加，不为null代表修改
-     * @param name      名称 not null
-     * @param bannerUri 图片 not null
-     * @param price     价格 not null
-     * @param explainStr   说明 not null
-     * @param agreement 协议 not null
+     * @param id         id 为null 代表添加，不为null代表修改
+     * @param name       名称 not null
+     * @param bannerUri  图片 not null
+     * @param price      价格 not null
+     * @param explainStr 说明 not null
+     * @param agreement  协议 not null
      * @return
      */
     @RequestMapping(value = {"savePurchaserProductSetting", "updatePurchaserProductSetting"}, method = RequestMethod.POST)
@@ -665,7 +673,6 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 删除banner
-     *
      * @param id
      * @return
      */
@@ -678,6 +685,42 @@ public class DistributionPlatformController extends BaseController {
             resourceService.deleteResource(banner.getBannerImgUri());
         }
         bannerRepository.delete(banner);
+    }
+
+    /**
+     * 审核结算单
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "modifySettlementSheet", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public void modifySettlementSheet(@RequestParam Long id, SettlementStateEnum platformChecking) throws IOException {
+        SettlementSheet settlementSheet = settlementSheetRepository.getOne(id);
+        if (settlementSheet.getPlatformChecking().equals(SettlementStateEnum.NotChecking)) {
+            settlementSheet.setPlatformChecking(platformChecking);
+        }
+    }
+
+    /**
+     * 审核结算单
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "modifyPresentRecord", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public void modifyPresentRecord(@RequestParam Long id, PresentStateEnum presentState) throws IOException {
+        PresentRecord presentRecord = presentRecordRepository.getOne(id);
+        if (presentRecord.equals(PresentStateEnum.CheckFinish) && presentRecord.getPresentState().equals(PresentStateEnum.NotChecking))
+            presentRecord.setPresentState(presentState);
+        if (presentRecord.equals(PresentStateEnum.AlreadyPaid) && presentRecord.getPresentState().equals(PresentStateEnum
+                .CheckFinish)) {
+            presentRecord.setPresentState(presentState);
+            // TODO: 2017/1/16  提现发放金额的流程
+        }
     }
 
 
