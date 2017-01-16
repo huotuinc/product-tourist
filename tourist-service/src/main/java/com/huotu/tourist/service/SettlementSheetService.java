@@ -5,6 +5,7 @@ import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristSupplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -63,6 +64,7 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
      * @return
      * @throws IOException
      */
+    @Transactional(readOnly = true)
     BigDecimal countBalance(TouristSupplier supplier, LocalDateTime endCountDate) throws IOException;
 
 }

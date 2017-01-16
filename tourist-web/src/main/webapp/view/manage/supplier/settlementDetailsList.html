@@ -16,15 +16,20 @@
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
     <link href="../../../assets/css/style.min.css?v=4.0.0" rel="stylesheet"/>
 </head>
+<!--/*@thymesVar id="settlement" type="com.huotu.tourist.entity.SettlementSheet"*/-->
 <body class="gray-bg">
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="ibox">
             <div class="ibox-content">
                     <h2>
-                        结算单号：<span>12312313123</span>,订单总金额：<span>1000.00</span>元,
-                        佣金：<span>1000</span>元,应收款：<span>1000</span>元,结算日期：<span>2010-10-10</span>
-                        ,平台审核状态：<span>已审核</span>
+                        结算单号：
+                        <span th:text="${settlement.settlementNo}">12312313123</span>,
+                        订单总金额：<span>1000.00</span>元,
+                        佣金：<span>1000</span>元,
+                        应收款：<span th:text="${settlement.receivableAccount}">1000</span>元,
+                        结算日期：<span th:text="${settlement.createTime}">2010-10-10</span>,
+                        平台审核状态：<span th:text="${settlement.platformChecking.value}">已审核</span>
                     </h2>
             </div>
         </div>

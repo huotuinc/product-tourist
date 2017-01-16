@@ -105,7 +105,7 @@ var actionFormatter = function (value, row, index) {
 var actionEvents = {
     'click .showDetail': function (e, value, row, index) {
         var id=row.id;
-        location.href="settlementDetailsList.html";
+        location.href=detailsUrl;
     },
     'click .audit': function (e, value, row, index) {
         var id=row.id;

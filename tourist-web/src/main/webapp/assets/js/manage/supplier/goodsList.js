@@ -26,7 +26,7 @@ var touristNameFormatter=function(value,row,index){
 };
 
 var touristCheckStateFormatter=function(value,row,index){
-    return row.touristCheckState.value;
+   return row.touristCheckState==null?'':row.touristCheckState.value;
 
 };
 

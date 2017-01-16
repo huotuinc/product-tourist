@@ -179,8 +179,8 @@ var submitForm=function(checkStates,obj) {
     var id=$("input[name='id']").val();
     var touristName=$("input[name='touristName']").val();
     var pictureUrl=$("#pictureUrl").attr("src");
-    var touristType=$("select[name='touristType'] option:checked").val();
-    var activityType=$("select[name='activityType'] option:checked").val();
+    var touristTypeId=$("select[name='touristType'] option:checked").val();
+    var activityTypeId=$("select[name='activityType'] option:checked").val();
     var touristFeatures=$("input[name='touristFeatures']").val();
     var destination=$("input[name='destination']").val();
     var placeOfDeparture=$("input[name='placeOfDeparture']").val();
@@ -221,7 +221,7 @@ var submitForm=function(checkStates,obj) {
         type:'POST',
         url: submitUrl,
         dataType: 'text',
-        data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristType:touristType,activityType:activityType,
+        data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristTypeId:touristTypeId,activityTypeId:activityTypeId,
             touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
             travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
             receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
