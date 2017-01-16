@@ -43,9 +43,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -222,8 +220,6 @@ public class DistributionPlatformController extends BaseController {
             , HttpServletRequest request) throws JsonProcessingException {
         Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
                 , pageable);
-        Sort sort = new Sort(Sort.Direction.ASC, "id");
-        Pageable pageable1 = new PageRequest(1, 1, sort);
         Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
         map.put(ROWS, page.getContent());
@@ -558,8 +554,8 @@ public class DistributionPlatformController extends BaseController {
         TouristGood touristGood = touristGoodRepository.findOne(id);
         List<TouristRoute> routes = touristRouteRepository.findByGood(touristGood);
         model.addAttribute("routes", routes);
-        model.addAttribute("good", touristGood);
-        return "view/manage/platform/trouristGood/touristGood.html";
+        model.addAttribute("touristGood", touristGood);
+        return "view/manage/platform/touristGood/touristGood.html";
     }
 
     /**
