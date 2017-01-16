@@ -124,10 +124,8 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
         );
 
         TypedQuery<Number> query = entityManager.createQuery(criteriaQuery);
-
         BigDecimal number=BigDecimal.valueOf(query.getSingleResult()==null?0:query.getSingleResult().doubleValue())
                 .setScale(2,RoundingMode.HALF_UP);
-
         return number;
 
     }

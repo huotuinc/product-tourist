@@ -11,7 +11,6 @@ package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.common.CollectionAccountTypeEnum;
 import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SupplierOperator;
@@ -423,6 +422,16 @@ public class SupplierManageController {
 
         return new PageAndSelection<>(records,selections);
 //        presentRecordService.presentRecordList()
+    }
+
+
+    @RequestMapping("/showSettlementDetails")
+    public String showSettlementDetails(@AuthenticationPrincipal SystemUser userInfo,@RequestParam Long id
+            , Model model) throws IOException{
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        SettlementSheet settlementSheet=settlementSheetService.getOne(id);
+        model.addAttribute("settlement",settlementSheet);
+        return viewSupplierPath+"settlementDetailsList.html";
     }
 
 
