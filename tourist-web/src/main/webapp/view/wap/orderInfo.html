@@ -63,7 +63,7 @@
             </ul>
         </div>
         <div class="weui_cells_title"> 人员信息</div>
-        <div th:remove="all-but-first" class="weui_panel_bd">
+        <div class="weui_panel_bd">
             <div th:each="t:${travelers}" class="weui_media_box weui_media_text massgea">
                 <h4 class="weui_media_title" th:text="${t.name}">里里
                     <i style="color: #808080; font-size: 12px; font-style: normal" th:text="'&nbsp;/&nbsp;'+${t.sex.value}">&nbsp;/&nbsp;女</i>
@@ -71,21 +71,22 @@
                 <p class="weui_media_desc ztdx" th:text="'年龄:'+${t.age}">年龄:23</p>
                 <p class="weui_media_desc ztdx" th:text="'联系电话:'+${t.telPhone}">联系电话:1563232323</p>
                 <p class="weui_media_desc ztdx" th:text="'身份证号:'+${t.IDNo}">身份证号:332325******256569</p>
+
             </div>
-            <div class="weui_media_box weui_media_text massgea">
-                <h4 class="weui_media_title">等等<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;女</i>
-                </h4>
-                <p class="weui_media_desc ztdx">年龄:21</p>
-                <p class="weui_media_desc ztdx">联系电话:1563232323</p>
-                <p class="weui_media_desc ztdx">身份证号:332325******256569</p>
-            </div>
-            <div class="weui_media_box weui_media_text massgea">
-                <h4 class="weui_media_title">发发<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;男</i>
-                </h4>
-                <p class="weui_media_desc ztdx">年龄:26</p>
-                <p class="weui_media_desc ztdx">联系电话:1563232323</p>
-                <p class="weui_media_desc ztdx">身份证号:332325******256569</p>
-            </div>
+            <!--<div class="weui_media_box weui_media_text massgea">-->
+                <!--<h4 class="weui_media_title">等等<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;女</i>-->
+                <!--</h4>-->
+                <!--<p class="weui_media_desc ztdx">年龄:21</p>-->
+                <!--<p class="weui_media_desc ztdx">联系电话:1563232323</p>-->
+                <!--<p class="weui_media_desc ztdx">身份证号:332325******256569</p>-->
+            <!--</div>-->
+            <!--<div class="weui_media_box weui_media_text massgea">-->
+                <!--<h4 class="weui_media_title">发发<i style="color: #808080; font-size: 12px; font-style: normal">&nbsp;/&nbsp;男</i>-->
+                <!--</h4>-->
+                <!--<p class="weui_media_desc ztdx">年龄:26</p>-->
+                <!--<p class="weui_media_desc ztdx">联系电话:1563232323</p>-->
+                <!--<p class="weui_media_desc ztdx">身份证号:332325******256569</p>-->
+            <!--</div>-->
         </div>
         <div class="weui_cells_title"> 备注</div>
         <div style="background-color: #fff; font-size:14px; color: #333; padding: 15px;" th:text="${order.remarks}">
@@ -95,7 +96,8 @@
             <a class="weui_cell" href="javascript:;">
             <div class="weui_media_box weui_media_text" style="padding: 0px; width: 100%">
                 <div class="weui_media_hd imgleft">
-                    <img class="weui_media_appmsg_thumb" th:src="${order.touristGood.touristSupplier.businessLicenseUri}"
+                    <img class="weui_media_appmsg_thumb"
+                         res:src="${order.touristGood.touristSupplier.businessLicenseUri}"
                                                         src="../../assets/img/imgsss.png" alt=""></div>
                 <h4 class="weui_media_title" th:text="${order.touristGood.touristSupplier.supplierName}">乌鲁木齐俱乐部</h4>
                 <ul class="weui_media_info" style="margin-top: 4px;line-height: 1.3em;">
@@ -111,29 +113,55 @@
             <div class="weui_cell_bd weui_cell_primary">
                 <p>积分</p>
             </div>
-            <div class="weui_cell_ft twossw">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallIntegral==null?0:order.mallIntegral}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>余额</p>
             </div>
-            <div class="weui_cell_ft twossw">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallBalance==null?0:order.mallBalance}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>小金库</p>
             </div>
-            <div class="weui_cell_ft twossw">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallCoffers==null?0:order.mallCoffers}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>已支付</p>
             </div>
-            <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;">￥200.0</div>
+            <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;" th:text="'￥'+${order.orderMoney==null?0:order.orderMoney}">￥200.0</div>
         </div>
     </div>
     <div style=" margin: 10px;">
-        <a href="javascript:;" class="weui_btn weui_btn_warn">取消订单</a>
+        <a th:if="${order.orderState.code==0}"
+           onclick="cancelOrder(this,1)" th:onclick="'cancelOrder(this,'+${order.id}+')'"
+           class="weui_btn weui_btn_warn">
+            取消订单
+        </a>
+
+        <a th:if="${order.orderState.code==0}"
+           href="orderInfo.html" th:href="@{/wap/orderInfo(orderId=${order.id})}"
+           class="weui_btn weui_btn_warn">
+            去付款
+        </a>
+
+        <a th:if="${order.orderState.code==4}"
+           onclick="refundOrder(this,1)" th:onclick="'refundOrder(this,'+${order.id}+')'"
+           class="weui_btn weui_btn_default">
+            取消退款
+        </a>
+        <a th:if="${order.orderState.code==1||order.orderState.code==2}"
+           onclick="refundOrder(this,1)" th:onclick="'refundOrder(this,'+${order.id}+')'"
+           class="weui_btn weui_btn_warn">
+            申请退款
+        </a>
+        <a th:if="${order.orderState.code==2}"
+           onclick="affirmOrder(this,1)" th:onclick="'affirmOrder(this,'+${order.id}+')'"
+           class="weui_btn weui_btn_primary">
+            确认完成
+        </a>
     </div>
 
 
@@ -156,9 +184,17 @@
     </div>
 
 </div>
-</body>
-</html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
-<script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
+<!--<script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>-->
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var modifyOrderStateUrl=/*[[@{/base/modifyOrderState}]]*/'../../mock/supplier/orderDetails.json';
+
+    /*]]>*/
+
+</script>
+<script src="../../assets/js/wap/orderInfo.js"></script>
+</body>
+</html>

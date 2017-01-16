@@ -68,10 +68,15 @@ var modifyOrderStatus=function(id,obj){
         $.ajax({
             type:'POST',
             url: modifyOrderStateUrl,
-            dataType: 'text',
+            dataType: 'json',
             data: {id:id,orderState:orderState},
             success:function(result){
-                layer.msg("修改成功！");
+                if(result.data==200){
+                    layer.msg("修改成功！");
+                }else {
+                    layer.msg("修改失败！");
+                }
+
                 //window.setTimeout("window.location=location.href",1000);
             },
             error:function(e){

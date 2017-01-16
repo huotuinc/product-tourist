@@ -21,37 +21,14 @@
     <link rel="stylesheet" type="text/css"
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
-    <title>搜索</title>
+    <title>商品列表</title>
 </head>
 
 <body>
 <div class="xzlx-hot">
-    <div class="weui_search_bar" id="search_bar">
-        <form th:action="@{/wap/showSearchGoods}" action="searchGoods.html" class="weui_search_outer">
-            <div class="weui_search_inner">
-                <i class="weui_icon_search"></i>
-                <input type="search" class="weui_search_input" id="search_input" name="name"
-                       placeholder="请输入线路商品关键字" required/>
-                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
-            </div>
-            <label for="search_input" class="weui_search_text" id="search_text">
-                <i class="weui_icon_search"></i>
-                <span>搜索线路商品</span>
-            </label>
-        </form>
-        <a href="javascript:" class="weui_search_cancel" id="search_cancel">取消</a>
-    </div>
-    <div class="con">
-        <div class="msg">热门搜索</div>
-        <ul class="list">
-            <!--/*@thymesVar id="types" type="java.util.ArrayList<com.huotu.tourist.entity.ActivityType>"*/-->
-            <li th:each="t:${types}">
-                <a th:href="@{/wap/showSearchGoods(aTypeId=${t.id})}" th:text="${t.activityName}">
-                    推荐
-                </a>
-            </li>
-
-        </ul>
+    <div class="app-edit">
+        <a href="searchGoodsListDiv.html" class="nextJScroll"
+           th:href="@{/wap/searchGoods(aTypeId=${aTypeId},name=${name})}">&nbsp;</a>
     </div>
 
 
@@ -72,38 +49,21 @@
             <p>我的</p>
         </a>
     </div>
+
+    <!---->
 </div>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
-<script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script src="../../assets/js/jquery.jscroll.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <!--<script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>-->
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
-<script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
-    var buyerId=/*[[${buyerId}]]*/ "0";
-
-    var states=/*[[${states}]]*/ "all";
-
-    var showGoodsList=/*[[@{/wap/showAllOrders}]]*/"allOrder.html";
-
-    var modifyOrderStateUrl=/*[[@{/base/modifyOrderState}]]*/'../../mock/supplier/orderDetails.json';
-
-    /*]]>*/
-
+<script>
+    $('.app-edit').jscroll({
+        debug: true,
+        loadingHtml: '<div class="weui-infinite-scroll"><div class="infinite-preloader"></div>滑动加载更多</div>'
+    });
 </script>
 <script src="../../assets/js/wap/search.js"></script>
 </body>
+
 </html>
-
-
-
-    
-   
-  
- 
-
-
-
-
-
-

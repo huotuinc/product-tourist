@@ -184,4 +184,8 @@ public class TouristBuyer implements SystemUser {
     public boolean isPlatformUser() {
         return false;
     }
+
+    public boolean isBuyer(){
+        return true;
+    };
 }

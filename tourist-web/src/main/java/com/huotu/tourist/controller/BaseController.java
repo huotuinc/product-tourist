@@ -46,6 +46,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -270,7 +271,7 @@ public class BaseController {
                     , touristCheckState, true, pageable);
         } else {
             page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
-                    activityType, touristCheckState, pageable);
+                    activityType, touristCheckState, pageable, null);
         }
         Selection<TouristGood,Long> select=new Selection<TouristGood,Long>() {
             @Override
@@ -325,12 +326,17 @@ public class BaseController {
     @RequestMapping(value = "/modifyOrderState", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public void modifyOrderState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id, @RequestParam
+    public ModelMap modifyOrderState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id, @RequestParam
             OrderStateEnum orderState) throws IOException {
+        ModelMap modelMap=new ModelMap();
         TouristOrder order = touristOrderRepository.getOne(id);
         if (touristOrderService.checkOrderStatusCanBeModified(user, order.getOrderState(), orderState)) {
             order.setOrderState(orderState);
+            modelMap.addAttribute("data",200);
+        }else {
+            modelMap.addAttribute("data",500);
         }
+        return modelMap;
     }
 
     /**

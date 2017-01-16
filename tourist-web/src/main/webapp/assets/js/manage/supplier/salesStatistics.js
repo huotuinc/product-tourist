@@ -47,6 +47,10 @@ var datecancelEdit=function(){
     });
 };
 
+var presentStateFormatter=function(value,row,index){
+    return row.presentState.value;
+};
+
 //var dateapplyEdit=function(){
 //    $('input[name="orderDate"]').on('apply.daterangepicker', function (ev, picker) {
 //        var startDate=picker.startDate.format("YYYY-MM-DD hh:mm:ss");
@@ -108,15 +112,27 @@ var actionEvents = {
     }
 };
 
+
+/**
+ * 平台审核状态格式化
+ * @param value
+ * @param row
+ * @param index
+ */
+var platformCheckingFormatter=function(value, row, index){
+    return row.platformChecking.value;
+};
+
+
 /**
  * 将2017-01-01 12:00:00-2017-01-01 12:00:00这种格式的字符串转换成两个时间格式的字符串
  * @param text
  */
-dateRangeFormat = function (text) {
+var dateRangeFormat = function (text) {
     var s = "2017-01-01 12:00:00";
-    var array = [];
-    array[0] =text.substr(0, s.length);
-    array[1] =text.substr(s.length+1);
+    var array=[];
+    array[0]=text.substr(0, s.length);
+    array[1]=text.substr(s.length+3);
     return array;
 };
 
@@ -126,15 +142,13 @@ dateRangeFormat = function (text) {
  * @param params
  */
 var getParams= function(params) {
-    var orderDates=dateRangeFormat($("input[name='orderDate']").val());
+    var orderDates=dateRangeFormat($("input[name='createDate']").val());
     var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
     var temp = {
         pageSize: params.limit, //页面大小
-        //pageNo: params.offset/params.limit, //页码
         sort:sort,
-        sortName: params.sort, sortOrder:params.order,   //排序
-        orderDate:orderDates[0]!=""?orderDates[0]:undefined,
-        endOrderDate:orderDates[1]!=""?orderDates[1]:undefined
+        createDate:orderDates[0]!=""?orderDates[0]:undefined,
+        endCreateDate:orderDates[1]!=""?orderDates[1]:undefined
     };
     return temp;
 };

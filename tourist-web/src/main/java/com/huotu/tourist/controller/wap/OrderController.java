@@ -1,9 +1,7 @@
 package com.huotu.tourist.controller.wap;
 
-import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
@@ -64,8 +62,8 @@ public class OrderController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/orderInfo")
-    public String orderInfo(@RequestParam Long orderId,Model model) throws IOException{
+    @RequestMapping("/showOrderInfo")
+    public String showOrderInfo(@RequestParam Long orderId,Model model) throws IOException{
         TouristOrder order = touristOrderRepository.findOne(orderId);
 
         model.addAttribute("order", order);

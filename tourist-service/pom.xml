@@ -91,7 +91,7 @@
         <dependency>
             <groupId>com.huotu.huobanplus</groupId>
             <artifactId>common-client</artifactId>
-            <version>1.6.0</version>
+            <version>1.7.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

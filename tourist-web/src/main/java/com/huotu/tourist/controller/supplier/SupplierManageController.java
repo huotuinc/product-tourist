@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,6 +93,12 @@ public class SupplierManageController {
     private LoginService loginService;
 
     @Autowired
+    private SettlementSheetService settlementSheetService;
+
+    @Autowired
+    private PresentRecordService presentRecordService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private String viewSupplierPath="/view/manage/supplier/";
@@ -111,6 +116,8 @@ public class SupplierManageController {
     public String showSupplierMain() {
         return viewSupplierPath+"main.html";
     }
+
+    //=============================================订单列表
 
     /**
      * 打开订单列表页面
@@ -189,22 +196,8 @@ public class SupplierManageController {
 
     }
 
-//    /**
-//     * 显示某供应商的线路商品信息
-//     *
-//     * @return
-//     * @throws Exception
-//     */
-//    @RequestMapping("/TouristGoodList")
-//    public PageAndSelection<TouristGood> touristGoodList(@RequestParam Long supplierId, String touristName
-//            , String supplierName, TouristType touristType, ActivityType activityType
-//            , TouristCheckStateEnum touristCheckState, Pageable pageable) throws Exception {
-//        TouristSupplier supplier = touristSupplierRepository.getOne(supplierId);
-//        Page<TouristGood> goods = touristGoodService.touristGoodList(supplier, touristName, supplierName,
-//                touristType,  activityType, touristCheckState, pageable);
-//
-//        return new PageAndSelection<>(goods, TouristGood.selections);
-//    }
+
+    //=============================================线路商品
 
 
     /**
@@ -311,23 +304,130 @@ public class SupplierManageController {
     }
 
 
+    //=============================================结算账户
+    @RequestMapping("/showSettlement")
+    public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+
+        BigDecimal balance=settlementSheetService.countBalance(supplier, null);
+        BigDecimal Settled=settlementSheetService.countSettled(supplier);
+        BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
+        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier);
+        model.addAttribute("settled",Settled);
+        model.addAttribute("notSettled",notSettled);
+        model.addAttribute("withdrawal",withdrawal);
+        model.addAttribute("balance",balance);
+        return viewSupplierPath+"settlementAccount.html";
+    }
+
+
     /**
-     * 结算列表显示 todo 目前需求还不确定
+     * 结算列表显示
      *
-     * @param supplierId       供应商ID
-     * @param platformChecking
-     * @param createTime
      * @param pageable
      * @return
      * @throws IOException
      */
-    public PageAndSelection<SettlementSheet> settlementSheetList(Long supplierId
-            , SettlementStateEnum platformChecking, LocalDate createTime, Pageable pageable) throws IOException {
-        return null;
+    @RequestMapping("/settledList")
+    public PageAndSelection<SettlementSheet> settledList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
+
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        Page<SettlementSheet> sheets=settlementSheetService.settlementSheetList(supplier,null,null,createDate
+                , endCreateDate,pageable);
+
+        return new PageAndSelection<>(sheets,SettlementSheet.selections);
+    }
+
+
+    /**
+     * 未结算列表，订单列表
+     * @param userInfo          当前用户
+     * @param createDate        大于的时间
+     * @param endCreateDate     小于的时间
+     * @param pageable          分页
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/notSettledList")
+    public PageAndSelection<TouristOrder> notSettledList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, null, null, null, null
+                , null, null, createDate, endCreateDate, null, null, null, null, OrderStateEnum.Finish
+                , false, pageable);
+        List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
+
+        //人数处理
+        Selection<TouristOrder, Long> peopleNumberSelection = new Selection<TouristOrder, Long>() {
+            @Override
+            public String getName() {
+                return "peopleNumber";
+            }
+
+            @Override
+            public Long apply(TouristOrder order) {
+                return travelerRepository.countByOrder_Id(order.getId());
+            }
+        };
+
+        selections.add(peopleNumberSelection);
+        selections.addAll(TouristOrder.htmlSelections);
+        return new PageAndSelection<>(page, selections);
     }
 
 
 
+
+    /**
+     * 提现列表
+     * @param userInfo
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/withdrawalList")
+    public PageAndSelection<PresentRecord> withdrawalList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        Page<PresentRecord> records=presentRecordService.presentRecordList(null,supplier,null,createDate,endCreateDate
+                ,pageable);
+
+        List<Selection<PresentRecord, ?>> selections = new ArrayList<>();
+
+        //当前余额处理
+        Selection<PresentRecord, BigDecimal> currentAccountBalanceSelection = new Selection<PresentRecord, BigDecimal>() {
+            @Override
+            public BigDecimal apply(PresentRecord presentRecord) {
+                try {
+                    return settlementSheetService.countBalance(supplier, presentRecord.getCreateTime());
+                } catch (IOException e) {
+                    return new BigDecimal(0);
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "currentAccountBalance";
+            }
+        };
+
+        selections.add(currentAccountBalanceSelection);
+        selections.addAll(PresentRecord.selections);
+
+        return new PageAndSelection<>(records,selections);
+//        presentRecordService.presentRecordList()
+    }
+
+
+
+    //=============================================销售统计
 
     /**
      * 销售统计页面
@@ -469,6 +569,7 @@ public class SupplierManageController {
 
     }
 
+    //=============================================供应商信息和收款账户
 
     /**
      * 打开供应商信息页面
@@ -544,7 +645,7 @@ public class SupplierManageController {
     }
 
 
-
+    //=============================================供应商操作员
     /**
      * 打开供应商管理员列表
      * @return

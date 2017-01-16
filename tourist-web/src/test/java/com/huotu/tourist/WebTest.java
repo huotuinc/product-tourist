@@ -201,7 +201,7 @@ public abstract class WebTest extends ServiceBaseTest {
      */
     protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer, String orderNo
             , OrderStateEnum orderState, LocalDateTime createTime, LocalDateTime payTime
-            , PayTypeEnum payType, String remark, boolean settlement) {
+            , PayTypeEnum payType, String remark, SettlementSheet settlement) {
         TouristOrder order = new TouristOrder();
         order.setTouristGood(good == null ? createTouristGood(null, null, null, null, null) : good);
         order.setTouristBuyer(buyer == null ? createTouristBuyer(null, null, null, null) : buyer);
@@ -229,14 +229,6 @@ public abstract class WebTest extends ServiceBaseTest {
         SettlementSheet settlementSheet = new SettlementSheet();
         settlementSheet.setCreateTime(createTime == null ? LocalDateTime.now() : createTime);
         settlementSheet.setPlatformChecking(platformChecking == null ? randomSettlementStateEnum() : platformChecking);
-        settlementSheet.setTouristOrder(
-                createTouristOrder(
-                        createTouristGood(null, null, null, null,
-                                createTouristSupplier(supplierName)
-                        )
-                        , null, null, null, null, null, null,null,
-                        false)
-        );
         return settlementSheetRepository.saveAndFlush(settlementSheet);
     }
 

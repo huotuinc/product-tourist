@@ -17,14 +17,7 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -39,23 +32,35 @@ import java.util.List;
 @Table(name = "Tourist_Order")
 @Getter
 @Setter
+@Cacheable(value = false)
 public class TouristOrder extends BaseModel {
 
     public static List<Selection<TouristOrder, ?>> htmlSelections = Arrays.asList(
-            new SimpleSelection<TouristOrder,Long>("id","id")
-            ,new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
-            ,new SimpleSelection<TouristOrder, String>("touristGood.touristImgUri", "touristImgUri")
-            ,new SimpleSelection<TouristOrder,BigDecimal>("orderMoney","orderMoney")
-            ,new SimpleSelection<TouristOrder,BigDecimal>("touristBuyer.buyerName","buyerName")
-            ,new SimpleSelection<TouristOrder,String>("orderNo","orderNo")
-            ,new SimpleSelection<TouristOrder,String>("payType.value", "payType")
-            ,new SimpleSelection<TouristOrder,String>("remarks", "remarks")
+            new SimpleSelection<TouristOrder, Long>("id", "id")
+            , new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
+            , new SimpleSelection<TouristOrder, String>("touristGood.touristImgUri", "touristImgUri")
+            , new SimpleSelection<TouristOrder, BigDecimal>("orderMoney", "orderMoney")
+            , new SimpleSelection<TouristOrder, BigDecimal>("touristBuyer.buyerName", "buyerName")
+            , new SimpleSelection<TouristOrder, String>("orderNo", "orderNo")
+            , new SimpleSelection<TouristOrder, String>("payType.value", "payType")
+            , new SimpleSelection<TouristOrder, String>("remarks", "remarks")
             , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
             , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
             , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
-            , new SimpleSelection<TouristOrder, Boolean>("settlement","settlement")
-            ,new Selection<TouristOrder, String>() {
+            , new Selection<TouristOrder, Boolean>() {
+                @Override
+                public Boolean apply(TouristOrder touristOrder) {
+                    return touristOrder.getSettlement()!=null;
+                }
+
+                @Override
+                public String getName() {
+                    return "settlement";
+                }
+            }
+//            , new SimpleSelection<TouristOrder, Boolean>("settlement","settlement")
+            , new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
                     return "buyerName";
@@ -66,7 +71,7 @@ public class TouristOrder extends BaseModel {
                     return touristOrder.getTouristBuyer().getBuyerName();
                 }
             }
-            ,new Selection<TouristOrder, String>() {
+            , new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
                     return "payTime";
@@ -77,7 +82,7 @@ public class TouristOrder extends BaseModel {
                     return LocalDateTimeFormatter.toStr(touristOrder.getPayTime());
                 }
             }
-            ,new Selection<TouristOrder, String>() {
+            , new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {
                     return "createTime";
@@ -128,7 +133,6 @@ public class TouristOrder extends BaseModel {
     @Column(precision = 10, scale = 2)
     private BigDecimal orderMoney;
 
-
     /**
      * 积分
      */
@@ -168,10 +172,11 @@ public class TouristOrder extends BaseModel {
     private List<Traveler> travelers;
 
     /**
-     * 是否结算
+     * 结算单
      */
-    @Column
-    private boolean settlement;
+    @ManyToOne
+    private SettlementSheet settlement;
+
 
 
 }

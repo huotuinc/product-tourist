@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
 
@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>H+ 后台主题UI框架 - 客户管理</title>
+    <title>结算</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
 
@@ -39,7 +39,8 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-md-3"><h2>账户余额：<span class="text-danger">4568753.00</span>元</h2></div>
+                        <div class="col-md-3"><h2>账户余额：
+                            <span class="text-danger" th:text="${balance}">4568753.00</span>元</h2></div>
                         <div class="col-md-1">
                             <button style="width: 120px" class="btn btn-success">提现</button>
                         </div>
@@ -50,17 +51,17 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="well">
-                                <h4>已结算：10000.00（T+1）</h4>
+                                <h4 th:text="'已结算：'+${settled==null?0:settled}+'（T+1）'">已结算：10000.00（T+1）</h4>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="well">
-                                <h4>未结算：10000</h4>
+                                <h4 th:text="'未结算：'+${notSettled==null?0:notSettled}">未结算：10000</h4>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="well">
-                                <h4>已提现：10000</h4>
+                                <h4 th:text="'已提现：'+${withdrawal==null?0:withdrawal}">已提现：10000</h4>
                             </div>
                         </div>
 
@@ -74,8 +75,8 @@
                 <div class="ibox-title">
                     <div class="form-group">
                     <div class="form-inline">
-                        <input size="50" name="Date" placeholder="时间" class="form-control" type="text">
-                        <button style="width: 120px" type="button" class="btn  btn-success ">筛选</button>
+                        <input size="50" name="createDate" placeholder="时间" class="form-control" type="text">
+                        <button id="dateSearch" style="width: 120px" type="button" class="btn  btn-success ">筛选</button>
                     </div>
                 </div>
                 </div>
@@ -92,6 +93,7 @@
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane active">
                                 <table class="table table-hover" data-toggle="table"
+                                       th:attr="data-url=@{/supplier/settledList}"
                                        data-url="../../../mock/supplier/settledList.json"
                                        data-method="get" data-side-pagination="server" data-pagination="true"
                                        data-striped="true" data-page-number="1" data-page-size="10"
@@ -99,15 +101,14 @@
                                     <thead>
                                     <tr>
                                         <th data-field="settlementNo" data-align="center">结算单号</th>
-                                        <th data-field="settlementDate" data-align="center">结算时间</th>
+                                        <th data-field="createTime" data-align="center">结算时间</th>
                                         <th data-field="receivableAccount" data-align="center"
                                             data-sortable="true">应收款</th>
-                                        <th data-field="selfAuditState" data-align="center"
-                                            data-sortable="true">自审状态</th>
-                                        <th data-field="platformAuditState" data-align="center"
-                                            data-sortable="true">平台审核状态</th>
+                                        <th data-field="selfChecking" data-align="center">自审状态</th>
+                                        <th data-field="platformChecking" data-formatter="platformCheckingFormatter"
+                                            data-align="center">平台审核状态</th>
                                         <th data-formatter="actionFormatter" data-events="actionEvents"
-                                            data-align="center" data-sortable="true">操作</th>
+                                            data-align="center">操作</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -115,26 +116,26 @@
                             <div id="tab-2" class="tab-pane">
                                 <table class="table table-hover" data-toggle="table"
                                        data-url="../../../mock/supplier/noSettlement.json"
+                                       th:attr="data-url=@{/supplier/notSettledList}"
                                        data-method="get" data-side-pagination="server" data-pagination="true"
                                        data-striped="true" data-page-number="1" data-page-size="10"
                                        data-query-params="getParams">
                                     <thead>
                                     <tr>
-                                        <th data-field="settlementNo" data-align="center">结算单号</th>
-                                        <th data-field="settlementDate" data-align="center">结算时间</th>
-                                        <th data-field="receivableAccount" data-align="center"
-                                            data-sortable="true">应收款</th>
-                                        <th data-field="selfAuditState" data-align="center"
-                                            data-sortable="true">自审状态</th>
-                                        <th data-field="platformAuditState" data-align="center"
-                                            data-sortable="true">平台审核状态</th>
-                                        <th data-align="center" data-sortable="true">操作</th>
+                                        <th data-field="orderNo" data-align="center">订单号</th>
+                                        <th data-field="touristName" data-align="center">商品名称</th>
+                                        <th data-field="orderMoney" data-align="center" data-sortable="true">订单金额</th>
+                                        <th data-field="commission" data-align="center">佣金</th>
+                                        <th data-field="createTime" data-align="center" data-sortable="true">下单时间</th>
+                                        <th data-field="payTime" data-align="center" data-sortable="true">支付时间</th>
+                                        <th data-field="peopleNumber" data-align="center">人员数量</th>
                                     </tr>
                                     </thead>
                                 </table>
                             </div>
                             <div id="tab-3" class="tab-pane">
                                 <table class="table table-hover" data-toggle="table"
+                                       th:attr="data-url=@{/supplier/withdrawalList}"
                                        data-url="../../../mock/supplier/withdrawalRecord.json"
                                        data-method="get" data-side-pagination="server"
                                        data-pagination="true" data-striped="true"
@@ -143,15 +144,15 @@
                                     <thead>
                                     <tr>
 
-                                        <th data-field="withdrawalNo" data-align="center">提现编号</th>
-                                        <th data-field="withdrawalDate" data-align="center"
+                                        <th data-field="recordNo" data-align="center">提现编号</th>
+                                        <th data-field="createTime" data-align="center"
                                             data-sortable="true">提现日期</th>
-                                        <th data-field="withdrawalMoney" data-align="center"
+                                        <th data-field="amountOfMoney" data-align="center"
                                             data-sortable="true">提现金额</th>
                                         <th data-field="currentAccountBalance" data-align="center"
                                             data-sortable="true">当前账户金额</th>
-                                        <th data-field="withdrawalState" data-align="center"
-                                            data-sortable="true">提现状态</th>
+                                        <th data-field="presentState" data-align="center"
+                                            data-formatter="presentStateFormatter">提现状态</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -172,6 +173,13 @@
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    var submitUrl=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
+    /*]]>*/
+
+</script>
 <script src="../../../assets/js/manage/supplier/salesStatistics.js"></script>
 </body>
 

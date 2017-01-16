@@ -2,6 +2,7 @@ package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.entity.PresentRecord;
+import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.repository.PresentRecordRepository;
 import com.huotu.tourist.service.PresentRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,18 @@ public class PresentRecordServiceImpl implements PresentRecordService {
     }
 
     @Override
-    public Page<PresentRecord> presentRecordList(String supplierName, PresentStateEnum presentState, LocalDateTime createTime, Pageable pageable) {
+    public Page<PresentRecord> presentRecordList(String supplierName, TouristSupplier touristSupplier
+            , PresentStateEnum presentState, LocalDateTime createTime, LocalDateTime endCreateTime
+            , Pageable pageable) {
         return presentRecordRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(supplierName)) {
                 predicate = cb.and(null, cb.like(root.get("settlementSheet").get("touristOrder").get("touristGood")
                                 .get("touristSupplier").get("supplierName").as(String.class),
                         supplierName));
+            }
+            if(touristSupplier!=null){
+                predicate=cb.and(predicate,cb.equal(root.get("touristSupplier").as(TouristSupplier.class),touristSupplier));
             }
             if (presentState != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("presentState").as(PresentStateEnum.class),
@@ -52,6 +58,10 @@ public class PresentRecordServiceImpl implements PresentRecordService {
             if (createTime != null) {
                 predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("createTime").as(LocalDateTime.class),
                         createTime));
+            }
+            if (endCreateTime != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("createTime").as(LocalDateTime.class),
+                        endCreateTime));
             }
             return predicate;
         }, pageable);
