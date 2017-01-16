@@ -3,13 +3,10 @@ package com.huotu.tourist.repository;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.TouristGood;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * 线路商品持久层
@@ -57,7 +54,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param checkFinish
      * @return
      */
-    List<TouristGood> findByTouristSupplier_IdAndDeletedFalseAndTouristCheckState(Long supplierId, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
+    Page<TouristGood> findByTouristSupplier_IdAndDeletedFalseAndTouristCheckState(Long supplierId, Pageable pageRequest, TouristCheckStateEnum checkFinish);
 
     /**
      * 根据目的地省份信息查询商品列表
@@ -67,7 +64,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param checkFinish
      * @return
      */
-    List<TouristGood> findByDestination_ProvinceAndDeletedFalseAndTouristCheckState(String value, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
+    Page<TouristGood> findByDestination_ProvinceAndDeletedFalseAndTouristCheckState(String value, Pageable pageRequest, TouristCheckStateEnum checkFinish);
 
     /**
      * 根据目的地市信息查询商品列表
@@ -77,6 +74,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
      * @param checkFinish
      * @return
      */
-    List<TouristGood> findByDestination_TownAndDeletedFalseAndTouristCheckState(String value, PageRequest pageRequest, TouristCheckStateEnum checkFinish);
+    Page<TouristGood> findByDestination_TownAndDeletedFalseAndTouristCheckState(String value, Pageable pageRequest,
+                                                                                TouristCheckStateEnum checkFinish);
 
 }

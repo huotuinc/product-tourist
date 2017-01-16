@@ -107,7 +107,8 @@
 
                                                 <select name="touristType"  class="form-control">
 
-                                                    <option th:each="t:${touristTypes}" value="3" th:checked="*{touristType.id}==${t.id}"
+                                                    <option th:each="t:${touristTypes}" value="3"
+                                                            th:checked="${good.touristType!=null} and ${good.touristType.id}==${t.id}"
                                                             th:value="${t.id}"
                                                             th:text="${t.typeName}">短途游
                                                     </option>
@@ -120,7 +121,8 @@
                                             <div class="col-sm-1">
 
                                                 <select name="activityType"  class="form-control">
-                                                    <option th:each="a:${activityTypes}" value="2" th:checked="*{activityType.id}==${a.id}"
+                                                    <option th:each="a:${activityTypes}" value="2"
+                                                            th:checked="${good.activityType!=null} and*{activityType.id}==${a.id}"
                                                             th:value="${a.id}"
                                                             th:text="${a.activityName}">跳伞
                                                 </select>

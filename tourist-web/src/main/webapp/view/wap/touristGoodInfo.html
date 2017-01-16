@@ -39,7 +39,7 @@
             <div class="weui_media_box weui_media_text">
                 <h4 style="margin-bottom: 2px;font-weight: 400;font-size: 17px;" th:text="${good.touristName}">
                     【朝圣之旅】西藏云南8日轻装游，赶快报名！</h4>
-                <p class="weui_media_desc" th:text="good.touristFeatures">由各种物质组成的巨型球状天体，叫做星球。
+                <p class="weui_media_desc" th:text="${good.touristFeatures}">由各种物质组成的巨型球状天体，叫做星球。
                     星球有一定的形状，有自己的运行轨道。</p>
                 <ul class="weui_media_info">
                     <li class="weui_media_info_meta"
@@ -54,8 +54,8 @@
                 </ul>
                 <ul class="weui_media_info">
                     <li class="weui_media_info_meta" th:text="${'出发地：'+good.placeOfDeparture.toString()}">出发地：杭州</li>
-                    <li class="weui_media_info_meta" th:text="'目的地：'+good.destination.toString()">目的地：宁波</li>
-                    <li class="weui_media_info_meta" th:text="'途径地：'+good.travelledAddress.toString()">途径地：绍兴</li>
+                    <li class="weui_media_info_meta" th:text="${'目的地：'+good.destination.toString()}">目的地：宁波</li>
+                    <li class="weui_media_info_meta" th:text="${'途径地：'+good.travelledAddress.toString()}">途径地：绍兴</li>
                 </ul>
             </div>
         </div>

@@ -287,10 +287,10 @@ public class IndexController {
      */
     @RequestMapping(value = {"/activityTourist"})
     public String activityTourist(@RequestParam Long activityTypeId, int offset, Model model) {
-        int page = offset / 10;
+        int page = (int) Math.ceil(offset / 10F);
         model.addAttribute("activityTypeGoods", touristGoodRepository
                 .findByActivityType_IdAndDeletedFalseAndTouristCheckState(activityTypeId, new
-                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish).getContent());
         model.addAttribute("activityTypeId", activityTypeId);
         return "view/wap/activityTourist.html";
     }
@@ -318,11 +318,12 @@ public class IndexController {
      */
     @RequestMapping(value = {"/supplierTourist"})
     public String supplierTourist(@RequestParam Long supplierId, int offset, Model model) {
-        int page = offset / 10;
+        int page = (int) Math.ceil(offset / 10F);
         model.addAttribute("supplierGoods", touristGoodRepository
                 .findByTouristSupplier_IdAndDeletedFalseAndTouristCheckState(supplierId, new
-                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish).getContent());
         model.addAttribute("supplierId", supplierId);
+        model.addAttribute("offset", offset);
         return "view/wap/supplierTourist.html";
     }
 
@@ -364,15 +365,15 @@ public class IndexController {
      */
     @RequestMapping(value = {"/destinationTourist"})
     public String destinationTourist(@RequestParam Long type, @RequestParam String value, int offset, Model model) {
-        int page = offset / 10;
+        int page = (int) Math.ceil(offset / 10F);
         if (type == 0) {
             model.addAttribute("destinationGoods", touristGoodRepository
                     .findByDestination_ProvinceAndDeletedFalseAndTouristCheckState(value, new
-                            PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+                            PageRequest(page, 10), TouristCheckStateEnum.CheckFinish).getContent());
         } else {
             model.addAttribute("destinationGoods", touristGoodRepository
                     .findByDestination_TownAndDeletedFalseAndTouristCheckState(value, new
-                            PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+                            PageRequest(page, 10), TouristCheckStateEnum.CheckFinish).getContent());
         }
         model.addAttribute("type", type);
         model.addAttribute("value", value);
@@ -399,10 +400,10 @@ public class IndexController {
      */
     @RequestMapping(value = {"/recommendTourist"})
     public String recommendTourist(@RequestParam int offset, Model model) {
-        int page = offset / 10;
+        int page = (int) Math.ceil(offset / 10F);
         model.addAttribute("recommendGoods", touristGoodRepository
                 .findByRecommendTrueAndDeletedFalseAndTouristCheckState(new
-                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish));
+                        PageRequest(page, 10), TouristCheckStateEnum.CheckFinish).getContent());
         model.addAttribute("offset", offset);
         return "view/wap/recommendTourist.html";
     }

@@ -127,7 +127,7 @@
             </div>
         </label>
         <div class="weui_cell_bd weui_cell_primary lefta">
-            <a href=""><p>我已阅读并同意《条款》</p></a>
+            <a href="tk.html"><p>我已阅读并同意《条款》</p></a>
         </div>
     </div>
 </div>
@@ -180,7 +180,6 @@
                     url: sendMsgUrl,
                     method: "post",
                     data: {phone: phone},
-                    dataType: "json",
                     success: function (data) {
                         $.alert("短信已发送,10分钟内有效")
                     },
@@ -199,7 +198,6 @@
                     url: vilaMsgUrl,
                     method: "post",
                     data: {phone: phone, code: code},
-                    dataType: "json",
                     success: function (data) {
                         $("#form1").submit();
                     },

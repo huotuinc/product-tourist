@@ -59,6 +59,6 @@
 
 <p style="clear: both"></p>
 <a xmlns:th="http://www.thymeleaf.org" class="nextJScroll" th:if="${!recommendGoods.isEmpty()}"
-   href="recommendTourist.html" class="nextJScroll"
-   th:href="@{/wap/recommendTourist(offset=${offset+recommendGoods.size())}">
+   href="recommendTourist.html"
+   th:href="@{/wap/recommendTourist(offset=${offset+recommendGoods.size()})}">
     &nbsp;</a>

@@ -118,7 +118,7 @@
                             <th class="control-label">备注：</th>
                             <td>
                                 <textarea rows="" cols="" style="width: 250px; height: 60px;" class="form-control"
-                                          id="remarks" name="remarks" th:value="${supplier!=null ?supplier.remarks:''}"
+                                          id="remarks" name="remarks" th:text="${supplier!=null ?supplier.remarks:''}"
                                           placeholder="备注"></textarea>
                             </td>
                         </tr>

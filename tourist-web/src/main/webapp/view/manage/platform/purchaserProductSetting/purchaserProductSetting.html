@@ -73,7 +73,7 @@
                             <td>
                                 <textarea rows="" cols="" style="width: 250px; height: 60px;" class="input-normal"
                                           id="explainStr" name="explainStr"
-                                          th:value="${purchaserProductSetting!=null ?purchaserProductSetting.explainStr:''}"
+                                          th:text="${purchaserProductSetting!=null ?purchaserProductSetting.explainStr:''}"
                                           placeholder="说明"></textarea>
                             </td>
                         </tr>
@@ -82,7 +82,7 @@
                             <td>
                                 <textarea rows="" cols="" style="width: 250px; height: 60px;" class="input-normal"
                                           id="agreement" name="agreement"
-                                          th:value="${purchaserProductSetting!=null ?purchaserProductSetting.agreement:''}"
+                                          th:text="${purchaserProductSetting!=null ?purchaserProductSetting.agreement:''}"
                                           placeholder="协议"></textarea>
                             </td>
                         </tr>
