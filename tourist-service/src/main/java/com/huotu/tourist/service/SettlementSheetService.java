@@ -51,14 +51,17 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
 
     /**
      * 计算已提现的钱
-     * @param supplier
+     * @param supplier      供应商
+     * @param endCountDate    小于该结算日期的余额
      * @return
      * @throws IOException
      */
-    BigDecimal countWithdrawal(TouristSupplier supplier) throws IOException;
+    @Transactional(readOnly = true)
+    BigDecimal countWithdrawal(TouristSupplier supplier, LocalDateTime endCountDate) throws IOException;
 
     /**
      * 计算余额
+     * 所有已确认结算单总额-所有未被拒绝的提现订单总额
      * @param supplier          供应商
      * @param endCountDate      小于该结算日期的余额
      * @return
