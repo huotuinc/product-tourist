@@ -167,9 +167,16 @@ public class IndexController {
         model.addAttribute("amount", good.getMaxPeople() - count);
         model.addAttribute("good", good);
         model.addAttribute("routeId", routeId);
-        model.addAttribute("mallIntegral", connectMallService.getMallUserIntegralBalanceCoffers(user.getId(), 0));
-        model.addAttribute("mallBalance", connectMallService.getMallUserIntegralBalanceCoffers(user.getId(), 1));
-        model.addAttribute("mallCoffers", connectMallService.getMallUserIntegralBalanceCoffers(user.getId(), 2));
+        Map userInfo = null;
+        try {
+            userInfo = connectMallService.getUserDetailByUserId(user.getId());
+            model.addAttribute("mallIntegral", userInfo.get("score"));
+            model.addAttribute("mallBalance", userInfo.get("money"));
+            model.addAttribute("mallCoffers", userInfo.get("gold"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return "view/wap/procurement.html";
     }
 
@@ -268,6 +275,9 @@ public class IndexController {
 
     /**
      * 商场订单支付回调
+     * @param mallOrderNo 商城订单号
+     * @param pay     是否支付
+     * @param payType  支付类型
      * @param model
      * @return
      */

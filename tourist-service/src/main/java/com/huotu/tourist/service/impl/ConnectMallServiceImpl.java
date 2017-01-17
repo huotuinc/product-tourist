@@ -40,7 +40,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -148,26 +147,29 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
-    public long getMallUserIntegralBalanceCoffers(Long mallUserId, int accountType) {
-        return 0;
-    }
-
-    @Override
-    public long setMallUserIntegralBalanceCoffers(Long mallUserId, int accountType, int amount) {
-        String uriAPI = String.format(mallDomain + uri, "User", "UpdateUserAccount");
+    public Map getUserDetailByUserId(Long mallUserId) throws IOException {
+        Map data = new HashMap();
+        data.put("userId", mallUserId);
+        String uriAPI = String.format(mallDomain + uri, "User", "getUserDetailByUserId");
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("appKey", appKey));
+        params.add(new BasicNameValuePair("token", token));
+        params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
         params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-            HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                HttpEntity httpEntity = httpResponse.getEntity();
+        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            HttpEntity httpEntity = httpResponse.getEntity();
+            ObjectMapper objectMapper = new ObjectMapper();
+            ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
+            if (result.resultCode == 2000) {
+                return result.getData();
+            } else {
+                throw new IOException(result.getResultMsg());
             }
-        } catch (IOException e) {
-
         }
-        return 0;
+        throw new IOException("网络异常，请稍后重试");
     }
 
     @Override
@@ -194,9 +196,8 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
             HttpEntity httpEntity = httpResponse.getEntity();
-            InputStream inputStream = httpEntity.getContent();
             ObjectMapper objectMapper = new ObjectMapper();
-            ResultContent result = objectMapper.readValue(inputStream, ResultContent.class);
+            ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
             if (result.resultCode == 2000) {
                 String mallOrderId = result.getData().get("orderId").toString();
                 return mallOrderId;
@@ -207,9 +208,16 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         throw new IOException("同步订单出错，请稍后重试");
     }
 
+
     @Override
     public String getTouristBuyerHeadUrl(TouristBuyer buyer) {
-        return "";
+        try {
+            Map data = getUserDetailByUserId(buyer.getId());
+            return data.get("headUrl").toString();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return "";
+        }
     }
 
     @Getter

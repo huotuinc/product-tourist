@@ -22,7 +22,7 @@
         <p style="float: left; margin-top:3px;">成人：</p>
         <div class="mui-number" style="float: right">
             <button type="button" class="decrease disabled priceDecrease">-</button>
-            <input type="number" readonly class="num" value="1" min="0" max="205" step="" name="adult">
+            <input type="number" readonly class="num" value="0" min="0" max="205" step="" name="adult">
             <button type="button" class="increase priceIncrease">+</button>
         </div>
     </div>
@@ -42,49 +42,49 @@
 <div class="content" style="background-color: #fff; padding:8px;border-top:1px solid #ececec;">
     <div class="number-control" style="margin:0px 20px;">
         <p style="float: left; margin-top:3px;">采购价格：</p>
-        <p style="float:right;color:#FF5558;" class="money">￥1999.00</p>
+        <p style="float:right;color:#FF5558;" class="money">￥0.00</p>
     </div>
     <p style="clear: both;"></p>
 </div>
 <div class="items">
-    <div class="item adultDiv">
-        <div class="weui_cells_title"> 请填写人员正确信息
-            <img src="../../assets/img/ddd.png"
-                 style="width: 17px;float: right;vertical-align: middle;" class="delete">
-        </div>
-        <div class="weui_cells weui_cells_form">
-            <div class="weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input type="hidden" class="travelerType" name="travelerType" value="0">
-                    <input class="weui_input" type="text" name="name" placeholder="姓名">
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="tel" name="telPhone" placeholder="手机号">
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="text" name="IDNo" placeholder="身份证">
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="number" name="age" placeholder="年龄">
-                </div>
-            </div>
-            <div class="weui_cell weui_cell_select">
-                <div class="weui_cell_bd weui_cell_primary">
-                    <select class="weui_select" name="sex" style="color:#a9a9a9;">
-                        <option selected="" value="0">男</option>
-                        <option value="1">女</option>
-                    </select>
-                </div>
-            </div>
+    <!--<div class="item adultDiv">-->
+    <!--<div class="weui_cells_title"> 请填写人员正确信息-->
+    <!--<img src="../../assets/img/ddd.png"-->
+    <!--style="width: 17px;float: right;vertical-align: middle;" class="delete">-->
+    <!--</div>-->
+    <!--<div class="weui_cells weui_cells_form">-->
+    <!--<div class="weui_cell">-->
+    <!--<div class="weui_cell_bd weui_cell_primary">-->
+    <!--<input type="hidden" class="travelerType" name="travelerType" value="0">-->
+    <!--<input class="weui_input" type="text" name="name" placeholder="姓名">-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="weui_cell">-->
+    <!--<div class="weui_cell_bd weui_cell_primary">-->
+    <!--<input class="weui_input" type="tel" name="telPhone" placeholder="手机号">-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="weui_cell">-->
+    <!--<div class="weui_cell_bd weui_cell_primary">-->
+    <!--<input class="weui_input" type="text" name="IDNo" placeholder="身份证">-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="weui_cell">-->
+    <!--<div class="weui_cell_bd weui_cell_primary">-->
+    <!--<input class="weui_input" type="number" name="age" placeholder="年龄">-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="weui_cell weui_cell_select">-->
+    <!--<div class="weui_cell_bd weui_cell_primary">-->
+    <!--<select class="weui_select" name="sex" style="color:#a9a9a9;">-->
+    <!--<option selected="" value="0">男</option>-->
+    <!--<option value="1">女</option>-->
+    <!--</select>-->
+    <!--</div>-->
+    <!--</div>-->
 
-        </div>
-    </div>
+    <!--</div>-->
+    <!--</div>-->
 </div>
 <div class="itemTemplate item " style="display: none">
     <div class="weui_cells_title"> 请填写人员正确信息
@@ -138,7 +138,7 @@
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用积分
                 <span class="twoss" th:text="${mallIntegral}+'积分'">20积分</span>
-                <span class="twossw" th:text="'减￥'+${mallIntegral}">减￥20.0</span>
+                <span class="twossw" th:text="'减￥'+${mallIntegral/100}">减￥20.0</span>
             </p>
         </div>
         <div class="weui_cell_hd">
@@ -190,23 +190,23 @@
 
         var toOrderInfoPage = /*[[@{/wap/toProcurementPayPage}]]*/ 'procurementPayPage.html';
 
-        var goodId = /*[[${good.id}]]*/ 1;
+        var goodId = /*[[${good.id}]]*/ 0;
 
-        var routeId = /*[[${routeId}]]*/ 1;
+        var routeId = /*[[${routeId}]]*/ 0;
 
         //剩余人数
         var amount = /*[[${amount}]]*/ 4;
         //成人价格
         var price = /*[[${good.price}]]*/ 10;
         //儿童价格
-        var childPrice = /*[[${good.price*(childrenDiscount/10)}]]*/ 8;
+        var childPrice = /*[[${good.price*(childrenDiscount/10)}]]*/ 10;
 
         //商城小伙伴积分
-        var mallIntegral = /*[[${mallIntegral}]]*/ 20;
+        var mallIntegral = /*[[${mallIntegral}]]*/ 100;
         //商城小伙伴余额
-        var mallBalance = /*[[${mallBalance}]]*/ 20;
+        var mallBalance = /*[[${mallBalance}]]*/ 1;
         //商城小伙伴小金库
-        var mallCoffers = /*[[${mallCoffers}]]*/ 20;
+        var mallCoffers = /*[[${mallCoffers}]]*/ 1;
 
         //总金额
         var buyerMoney = price;
