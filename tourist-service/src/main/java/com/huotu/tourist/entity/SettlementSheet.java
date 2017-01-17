@@ -28,8 +28,9 @@ public class SettlementSheet extends BaseModel {
             new SimpleSelection<SettlementSheet, String>("id", "id")
             , new SimpleSelection<SettlementSheet, String>("settlementNo", "settlementNo")
             , new SimpleSelection<SettlementSheet, String>("receivableAccount", "receivableAccount")
-            , new SimpleSelection<SettlementSheet, String>("createTime", "createTime")
+//            , new SimpleSelection<SettlementSheet, String>("createTime", "createTime")
             , new SimpleSelection<SettlementSheet, String>("selfChecking.value", "selfChecking")
+            , new SimpleSelection<SettlementSheet, String>("selfChecking.code", "selfCheckingCode")
             , new Selection<SettlementSheet, Map>() {
                 @Override
                 public Map apply(SettlementSheet settlementSheet) {

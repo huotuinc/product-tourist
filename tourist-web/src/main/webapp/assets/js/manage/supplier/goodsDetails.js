@@ -151,13 +151,14 @@ var uploadImage=function(){
     $.ajaxFileUpload({
         url: '/upload/image',
         secureuri: false,
-        fileElementId: 'fileImage',
+        fileElementId: 'upload',
         dataType: 'json',
         data: null,
         success: function(resultModel) {
             if(resultModel.success){
                 layer.close(loadPic);
                 layer.msg("上传成功");
+                touristImgUri=resultModel.fileName;
                 $("#pictureUrl").attr("src",resultModel.url);
             }
         },
@@ -178,7 +179,7 @@ var submitForm=function(checkStates,obj) {
     }
     var id=$("input[name='id']").val();
     var touristName=$("input[name='touristName']").val();
-    var pictureUrl=$("#pictureUrl").attr("src");
+    //var pictureUrl=$("#pictureUrl").attr("src");
     var touristTypeId=$("select[name='touristType'] option:checked").val();
     var activityTypeId=$("select[name='activityType'] option:checked").val();
     var touristFeatures=$("input[name='touristFeatures']").val();
@@ -221,7 +222,7 @@ var submitForm=function(checkStates,obj) {
         type:'POST',
         url: submitUrl,
         dataType: 'text',
-        data:{id:id,touristName:touristName,pictureUrl:pictureUrl,touristTypeId:touristTypeId,activityTypeId:activityTypeId,
+        data:{id:id,touristName:touristName,touristImgUri:touristImgUri,touristTypeId:touristTypeId,activityTypeId:activityTypeId,
             touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
             travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
             receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,

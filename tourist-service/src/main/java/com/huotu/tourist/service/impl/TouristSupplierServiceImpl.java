@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
 
 /**
@@ -48,7 +47,7 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
     }
 
     @Override
-    public TouristSupplier modifySupplier(Long id, Address address, String contacts, String contactNumber
+    public void modifySupplier(Long id, Address address, String contacts, String contactNumber
             , String businessLicenseUri, String remarks, String detailedAddress) {
         TouristSupplier touristSupplier = getOne(id);
         touristSupplier.setAddress(address);
@@ -58,7 +57,5 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
         touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setRemarks(remarks);
-        return save(touristSupplier);
-
     }
 }

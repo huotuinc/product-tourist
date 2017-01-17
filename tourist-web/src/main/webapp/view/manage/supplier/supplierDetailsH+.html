@@ -56,9 +56,9 @@
                                 <div class="col-sm-10">
                                     <img id="pictureUrl" style="width: 150px;height: 100px"  res:src="*{businessLicenseUri}"
                                          src="http://placehold.it/300x200?text=营业执照&size=200"/>
-                                    <label title="上传图片" for="fileImage" class="btn btn-success">
+                                    <label title="上传图片" for="upload" class="btn btn-success">
                                         <input onchange="uploadImage()" type="file" accept="image/*"
-                                               id="fileImage" name="fileImage" class="hide"/> 上传营业执照
+                                               id="upload" name="upload" class="hide"/> 上传营业执照
                                     </label>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
     /*<![CDATA[*/
 
     var submitUrl=/*[[@{/supplier/modifySupplierInfo}]]*/ '../../../mock/supplier/httpJson.json';
-
+    var businessLicenseUri=/*[[${supplier.businessLicenseUri}]]*/'';
     /*]]>*/
 
 </script>

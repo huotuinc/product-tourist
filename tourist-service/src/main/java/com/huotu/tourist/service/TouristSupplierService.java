@@ -4,6 +4,7 @@ import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.TouristSupplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 供应商相关服务
@@ -31,9 +32,9 @@ public interface TouristSupplierService extends BaseService<TouristSupplier, Lon
      * @param businessLicenseUri    营业执照uri
      * @param remarks               备注
      * @param detailedAddress       详细地址
-     * @return                      新的供应商
      */
-    TouristSupplier modifySupplier(Long id, Address address, String contacts, String contactNumber
+    @Transactional
+    void modifySupplier(Long id, Address address, String contacts, String contactNumber
             , String businessLicenseUri, String remarks, String detailedAddress);
 
 

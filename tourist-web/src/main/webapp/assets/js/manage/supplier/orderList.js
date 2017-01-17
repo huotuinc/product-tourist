@@ -116,7 +116,8 @@ var actionFormatter = function (value, row, index) {
  * @returns {string}
  */
 var touristNameFormatter=function(value,row,index){
-    return '<img src="'+row.touristImgUri+'" height="50px" width="80px"><span>'+row.touristName+'</span>';
+    var res=$("#goodsResPath").attr("src");
+    return '<img src="'+res+row.touristImgUri+'" height="50px" width="80px"><span>'+row.touristName+'</span>';
 };
 
 /**

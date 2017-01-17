@@ -16,6 +16,7 @@ import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.*;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -89,6 +90,9 @@ public class BaseController {
 
     @Autowired
     private SettlementSheetService settlementSheetService;
+
+    @Autowired
+    private ResourceService resourceService;
 
     private String viewSupplierPath="/view/manage/supplier/";
 

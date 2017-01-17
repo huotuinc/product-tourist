@@ -20,6 +20,7 @@ var uploadImage=function(){
             if(resultModel.success){
                 layer.close(loadPic);
                 layer.msg("上传成功");
+                businessLicenseUri=resultModel.fileName;
                 $("#pictureUrl").attr("src",resultModel.url);
             }
         },
@@ -40,7 +41,7 @@ var submitForm=function(obj) {
     }
     var id=$("input[name='id']").val();
     var supplierName=$("input[name='supplierName']").val();
-    var businessLicenseUri=$("#pictureUrl").attr("src");
+    //var businessLicenseUri=$("#pictureUrl").attr("src");
     var address=$("input[name='address']").val();
     var detailedAddress=$("input[name='detailedAddress']").val();
 
