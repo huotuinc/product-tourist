@@ -127,6 +127,8 @@
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
+    showSettlementDetails = /*[[@{/distributionPlatform/showSettlementDetails}]]*/
+            "../../common/settlementDetailsList.html";
     modifySettlementSheet = /*[[@{/distributionPlatform/modifySettlementSheet}]]*/
             "../../../../mock/platform/httpJson.json";
 

@@ -1,6 +1,6 @@
 actionFormatter = function (value, row, index) {
     var arr = new Array;
-    arr.push('<button class="btn btn-primary" >查看明细</button> ');
+    arr.push('<a class="btn btn-primary" href="' + showSettlementDetails + "?id=" + row.id + '"  >查看明细</a> ');
     if (row.platformChecking.code == 0) {
         arr.push('<button class="btn btn-primary platformChecking" >审核</button> ');
     }

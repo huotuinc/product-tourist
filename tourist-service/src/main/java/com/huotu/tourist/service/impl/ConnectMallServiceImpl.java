@@ -22,12 +22,22 @@ import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 使用huobanplus推送商品和订单
@@ -40,6 +50,14 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     private static final Log log = LogFactory.getLog(ConnectMallServiceImpl.class);
     private final Merchant merchant;
     private final MerchantConfig merchantConfig;
+    //商家key
+    private final String appKey;
+    //商家token
+    private final String token;
+    //商城域名
+    private final String mallDomain = "";
+    private final String uri = "/MallApi/?/?";
+
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
@@ -55,6 +73,9 @@ public class ConnectMallServiceImpl implements ConnectMallService {
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
         merchantConfig = merchant.getConfig();
+        // TODO: 2017/1/17 获取key和token
+        appKey = environment.getProperty("tourist.appKey", environment.acceptsProfiles("test") ? "3447" : "4886");
+        token = environment.getProperty("tourist.token", environment.acceptsProfiles("test") ? "3447" : "4886");
     }
 
     @Override
@@ -72,7 +93,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
         if (touristGood.getMallGoodId() != null)
             return touristGood;
-        //  营销类型（需要跟普通商品做出区别），
+        //  营销类型（需要跟普通商品做出区别）
         Goods goods = new Goods();
         goods.setOwner(merchant);
         goods.setCreateTime(new Date());
@@ -102,6 +123,19 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Override
     public long pushOrderToMall(TouristOrder order) {
+        String uriAPI = String.format(mallDomain + uri, "Order", "createOrder");
+        HttpPost httpPost = new HttpPost(uriAPI);//创建HttpPost对象
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("str", "I am Post String"));
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                HttpEntity httpEntity = httpResponse.getEntity();
+            }
+        } catch (IOException e) {
+
+        }
         return 0;
     }
 
