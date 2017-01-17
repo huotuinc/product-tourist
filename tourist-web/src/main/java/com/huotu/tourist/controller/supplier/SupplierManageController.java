@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -305,6 +304,14 @@ public class SupplierManageController {
 
 
     //=============================================结算账户
+
+    /**
+     * 显示结算页面
+     * @param userInfo      当前登录用户(供应商)
+     * @param model
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/showSettlement")
     public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier=(TouristSupplier)userInfo;
@@ -342,43 +349,44 @@ public class SupplierManageController {
     }
 
 
-    /**
-     * 未结算列表，订单列表
-     * @param userInfo          当前用户
-     * @param createDate        大于的时间
-     * @param endCreateDate     小于的时间
-     * @param pageable          分页
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/notSettledList")
-    public PageAndSelection<TouristOrder> notSettledList(@AuthenticationPrincipal SystemUser userInfo
-            ,@RequestParam(required = false)LocalDateTime createDate
-            ,@RequestParam(required = false)LocalDateTime endCreateDate
-            , Pageable pageable) throws IOException {
-        TouristSupplier supplier=(TouristSupplier)userInfo;
-        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, null, null, null, null
-                , null, null, createDate, endCreateDate, null, null, null, null, OrderStateEnum.Finish
-                , false, pageable);
-        List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
-
-        //人数处理
-        Selection<TouristOrder, Long> peopleNumberSelection = new Selection<TouristOrder, Long>() {
-            @Override
-            public String getName() {
-                return "peopleNumber";
-            }
-
-            @Override
-            public Long apply(TouristOrder order) {
-                return travelerRepository.countByOrder_Id(order.getId());
-            }
-        };
-
-        selections.add(peopleNumberSelection);
-        selections.addAll(TouristOrder.htmlSelections);
-        return new PageAndSelection<>(page, selections);
-    }
+//    /**
+//     * 订单列表
+//     * @param userInfo          当前用户
+//     * @param createDate        大于的时间
+//     * @param endCreateDate     小于的时间
+//     * @param pageable          分页
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping("/notSettledList")
+//    public PageAndSelection<TouristOrder> notSettledList(@AuthenticationPrincipal SystemUser userInfo
+//            ,Boolean Settlement
+//            ,@RequestParam(required = false)LocalDateTime createDate
+//            ,@RequestParam(required = false)LocalDateTime endCreateDate
+//            , Pageable pageable) throws IOException {
+//        TouristSupplier supplier=(TouristSupplier)userInfo;
+//        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, null, null, null, null
+//                , null, null, createDate, endCreateDate, null, null, null, null, OrderStateEnum.Finish
+//                , false, pageable);
+//        List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
+//
+//        //人数处理
+//        Selection<TouristOrder, Long> peopleNumberSelection = new Selection<TouristOrder, Long>() {
+//            @Override
+//            public String getName() {
+//                return "peopleNumber";
+//            }
+//
+//            @Override
+//            public Long apply(TouristOrder order) {
+//                return travelerRepository.countByOrder_Id(order.getId());
+//            }
+//        };
+//
+//        selections.add(peopleNumberSelection);
+//        selections.addAll(TouristOrder.htmlSelections);
+//        return new PageAndSelection<>(page, selections);
+//    }
 
 
 
@@ -426,26 +434,7 @@ public class SupplierManageController {
     }
 
 
-    /**
-     * 显示某个结算单的所有订单的页面
-     * @param userInfo
-     * @param id
-     * @param model
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/showSettlementDetails")
-    public String showSettlementDetails(@AuthenticationPrincipal SystemUser userInfo,@RequestParam Long id
-            , Model model) throws IOException{
-        TouristSupplier supplier=(TouristSupplier)userInfo;
-        SettlementSheet settlementSheet=settlementSheetService.getOne(id);
-        BigDecimal orderTotalAmount=touristOrderService.countOrderTotalMoney(supplier,OrderStateEnum.Finish
-                ,null,null,true,null,null).setScale(2, RoundingMode.HALF_UP);
-        model.addAttribute("settlement",settlementSheet);
-        model.addAttribute("orderTotalAmount",orderTotalAmount);
-        model.addAttribute("totalCommission","");
-        return viewSupplierPath+"settlementDetailsList.html";
-    }
+
 
 
 
@@ -491,7 +480,7 @@ public class SupplierManageController {
 
         Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, null, null, null, null, null,
                 orderDate, endOrderDate, payDate, endPayDate, null, null, null, null,
-                pageable);
+                pageable,null);
 
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 

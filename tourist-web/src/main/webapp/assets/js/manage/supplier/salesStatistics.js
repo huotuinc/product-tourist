@@ -82,7 +82,7 @@ var setPaymentAccount=function(){
     layer.open({
         type:2,
         area:["60%","60%"],
-        content:"payeeAccountDetails.html"
+        content:collectionAccountUrl
     });
 };
 
@@ -109,6 +109,25 @@ var actionEvents = {
     },
     'click .audit': function (e, value, row, index) {
         var id=row.id;
+        if(row.selfCheckingCode==1){
+            layer.msg("结算单已审核");
+            return;
+        }
+        $.ajax({
+            type:'POST',
+            url: auditUrl,
+            dataType: 'text',
+            data: {id:id,state:1},
+            success:function(result){
+                layer.msg("保存成功！");
+                $(".tab-pane.active").find("table").bootstrapTable('refresh');
+            },
+            error:function(e){
+                layer.msg("保存出错！");
+            }
+        });
+
+
     }
 };
 
@@ -137,18 +156,24 @@ var dateRangeFormat = function (text) {
 };
 
 
+
 /**
  * 搜素参数添加
  * @param params
  */
 var getParams= function(params) {
+    var isNotSettledList=$("#tab-2").hasClass("active");
     var orderDates=dateRangeFormat($("input[name='createDate']").val());
     var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
     var temp = {
         pageSize: params.limit, //页面大小
+        pageNo: params.offset/params.limit, //页码
         sort:sort,
         createDate:orderDates[0]!=""?orderDates[0]:undefined,
-        endCreateDate:orderDates[1]!=""?orderDates[1]:undefined
+        endCreateDate:orderDates[1]!=""?orderDates[1]:undefined,
+        orderDate:orderDates[0]!=""?orderDates[0]:undefined,
+        endOrderDate:orderDates[1]!=""?orderDates[1]:undefined,
+        settlement:isNotSettledList? false:undefined
     };
     return temp;
 };

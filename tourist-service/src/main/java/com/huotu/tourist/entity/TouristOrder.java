@@ -19,6 +19,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ public class TouristOrder extends BaseModel {
             , new SimpleSelection<TouristOrder, String>("touristGood.touristName", "touristName")
             , new SimpleSelection<TouristOrder, String>("touristGood.touristImgUri", "touristImgUri")
             , new SimpleSelection<TouristOrder, BigDecimal>("orderMoney", "orderMoney")
-            , new SimpleSelection<TouristOrder, BigDecimal>("touristBuyer.buyerName", "buyerName")
+            , new SimpleSelection<TouristOrder, String>("touristBuyer.buyerName", "buyerName")
             , new SimpleSelection<TouristOrder, String>("orderNo", "orderNo")
             , new SimpleSelection<TouristOrder, String>("payType.value", "payType")
             , new SimpleSelection<TouristOrder, String>("remarks", "remarks")
@@ -48,10 +49,25 @@ public class TouristOrder extends BaseModel {
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
             , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
             , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
+            , new Selection<TouristOrder, BigDecimal>() {
+                @Override
+                public BigDecimal apply(TouristOrder touristOrder) {
+                    if(touristOrder.getTouristGood().getRebate()==null){
+                        new BigDecimal(0);
+                    }
+                    return touristOrder.getOrderMoney().multiply(touristOrder.getTouristGood().getRebate()).setScale(2
+                            , RoundingMode.HALF_UP);
+                }
+
+                @Override
+                public String getName() {
+                    return "commission";
+                }
+            }
             , new Selection<TouristOrder, Boolean>() {
                 @Override
                 public Boolean apply(TouristOrder touristOrder) {
-                    return touristOrder.getSettlement()!=null;
+                    return touristOrder.getSettlement() != null;
                 }
 
                 @Override
@@ -60,17 +76,17 @@ public class TouristOrder extends BaseModel {
                 }
             }
 //            , new SimpleSelection<TouristOrder, Boolean>("settlement","settlement")
-            , new Selection<TouristOrder, String>() {
-                @Override
-                public String getName() {
-                    return "buyerName";
-                }
-
-                @Override
-                public String apply(TouristOrder touristOrder) {
-                    return touristOrder.getTouristBuyer().getBuyerName();
-                }
-            }
+//            , new Selection<TouristOrder, String>() {
+//                @Override
+//                public String getName() {
+//                    return "buyerName";
+//                }
+//
+//                @Override
+//                public String apply(TouristOrder touristOrder) {
+//                    return touristOrder.getTouristBuyer().getBuyerName();
+//                }
+//            }
             , new Selection<TouristOrder, String>() {
                 @Override
                 public String getName() {

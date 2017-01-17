@@ -9,33 +9,13 @@
 
 package com.huotu.tourist.controller;
 
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SexEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.common.*;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
-import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.ActivityTypeService;
-import com.huotu.tourist.service.ConnectMallService;
-import com.huotu.tourist.service.PurchaserPaymentRecordService;
-import com.huotu.tourist.service.TouristGoodService;
-import com.huotu.tourist.service.TouristOrderService;
-import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TouristTypeService;
+import com.huotu.tourist.repository.*;
+import com.huotu.tourist.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +34,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +84,16 @@ public class BaseController {
     @Autowired(required = false)
     private ConnectMallService connectMallService;
 
+    @Autowired
+    private SettlementSheetRepository settlementSheetRepository;
+
+    @Autowired
+    private SettlementSheetService settlementSheetService;
+
+    private String viewSupplierPath="/view/manage/supplier/";
+
+    private String viewCommonPath="/view/manage/common/";
+
 
     /**
      * 打开线路商品页面
@@ -122,7 +114,7 @@ public class BaseController {
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
 
-        return "/view/manage/supplier/goodsList.html";
+        return viewSupplierPath+"goodsList.html";
     }
 
 
@@ -133,7 +125,7 @@ public class BaseController {
      */
     @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
     public String toSupplierOrders(HttpServletRequest request, Model model) {
-        return "view/manage/common/orderList.html";
+        return viewCommonPath+"orderList.html";
     }
 
     /**
@@ -168,14 +160,15 @@ public class BaseController {
             , @RequestParam(required = false) LocalDateTime touristDate
             , @RequestParam(required = false) LocalDateTime endTouristDate
             , OrderStateEnum orderState, Pageable pageable, Boolean settlement
+            , Long settlementId
             , HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
             supplier = (TouristSupplier) user;
         }
-        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName, buyerName, tel,
-                payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate, orderState, settlement,
-                pageable);
+        Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName
+                , buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate
+                , orderState, settlement, pageable,settlementId);
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
         //出行时间特殊处理
@@ -415,5 +408,45 @@ public class BaseController {
         }
     }
 
+
+    /**
+     * 显示某个结算单的所有订单的页面
+     * @param id
+     * @param model
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/showSettlementDetails")
+    public String showSettlementDetails(@RequestParam Long id, Model model) throws IOException{
+        SettlementSheet settlementSheet=settlementSheetService.getOne(id);
+        BigDecimal orderTotalAmount=touristOrderService.countOrderTotalMoney(settlementSheet.getTouristSupplier()
+                ,OrderStateEnum.Finish,null,null,true,null,null).setScale(2, RoundingMode.HALF_UP);
+        model.addAttribute("settlement",settlementSheet);
+        model.addAttribute("orderTotalAmount",orderTotalAmount);
+        model.addAttribute("totalCommission","");
+        return viewCommonPath+"settlementDetailsList.html";
+    }
+
+    /**
+     * 修改结算单状态
+     * @param id            结算单ID
+     * @param user          当前登录用户
+     * @param state         修改的状态
+     * @throws IOException
+     */
+    @Transactional
+    @ResponseBody
+    @RequestMapping("/modifySettlementState")
+    public void modifySettlementState(@AuthenticationPrincipal SystemUser user
+            , @RequestParam SettlementStateEnum state,@RequestParam Long id)
+            throws IOException{
+        SettlementSheet settlementSheet=settlementSheetRepository.getOne(id);
+        if(user.isPlatformUser()){
+            settlementSheet.setPlatformChecking(state);
+        }
+        if(user.isSupplier()){
+            settlementSheet.setSelfChecking(state);
+        }
+    }
 
 }
