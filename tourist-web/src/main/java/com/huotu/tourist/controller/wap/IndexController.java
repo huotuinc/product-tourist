@@ -12,6 +12,8 @@ package com.huotu.tourist.controller.wap;
 import com.huotu.tourist.TravelerList;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Banner;
@@ -43,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -204,6 +207,7 @@ public class IndexController {
 
     /**
      * 取消采购单
+     *
      * @param model
      * @return
      */
@@ -229,17 +233,45 @@ public class IndexController {
 
     /**
      * 订单支付
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = {"/orderPay"})
-    public String pay(@RequestParam Long orderId, Model model) {
+    @Transactional
+    public String orderPay(@RequestParam Long orderId, Model model) {
         TouristOrder order = touristOrderRepository.getOne(orderId);
-        // TODO: 2017/1/13 同步订单
         Long mallOrderNo = connectMallService.pushOrderToMall(order);
         order.setMallOrderNo(mallOrderNo.toString());
+        // TODO: 2017/1/17 跳转至商场支付
+        return "redirect:";
+    }
+
+
+    /**
+     * 商场订单支付回调
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/orderPayCallback"})
+    @Transactional
+    public String orderPayCallback(@AuthenticationPrincipal TouristBuyer touristBuyer, @RequestParam Long mallOrderNo,
+                                   @RequestParam PayTypeEnum payType, Model model) {
+        if (touristBuyer.isBuyer()) {
+            TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
+            if (touristOrder.getTouristBuyer().getId().equals(touristBuyer.getId()) && touristOrder.getOrderState()
+                    .equals(OrderStateEnum.NotPay)) {
+                touristOrder.setPayType(payType);
+                touristOrder.setPayTime(LocalDateTime.now());
+                model.addAttribute("mallOrderNo", mallOrderNo);
+                return "view/wap/paySuccess.html";
+            } else {
+            }
+        }
         return "";
     }
+
 
     /**
      * 最新线路列表

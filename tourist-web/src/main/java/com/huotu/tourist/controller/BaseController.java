@@ -80,25 +80,18 @@ public class BaseController {
     public TouristRouteService touristRouteService;
     @Autowired
     public TouristGoodService touristGoodService;
-
     @Autowired
     public TouristGoodRepository touristGoodRepository;
-
     @Autowired
     public PurchaserPaymentRecordService purchaserPaymentRecordService;
-
     @Autowired
     public ActivityTypeService activityTypeService;
-
     @Autowired
     public TouristTypeService touristTypeService;
-
     @Autowired
     private TouristTypeRepository touristTypeRepository;
-
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
-
     @Autowired(required = false)
     private ConnectMallService connectMallService;
 
@@ -396,7 +389,6 @@ public class BaseController {
         if (user.isPlatformUser()) {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
                     checkState.equals(TouristCheckStateEnum.CheckFinish)) {
-                //
                 touristGood = connectMallService.pushGoodToMall(touristGood.getId());
                 touristGood.setTouristCheckState(checkState);
             } else {
@@ -405,7 +397,6 @@ public class BaseController {
             }
             return ResponseEntity.ok().build();
         }
-
         if (user.isSupplier() && !checkState.equals(TouristCheckStateEnum.CheckFinish)) {
             touristGood.setTouristCheckState(checkState);
             return ResponseEntity.ok().build();

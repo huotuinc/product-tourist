@@ -127,6 +127,8 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
             " group by tp order by n desc")
     Object[] searchActivityTypeGruop();
 
+    TouristOrder findByMallOrderNo(Long mallOrderNo);
+
 
 //    @Query("select sum(o.orderMoney) from TouristOrder as o where o.touristGood.touristSupplier=?1" +
 //            "and o.settlement is not  null")
