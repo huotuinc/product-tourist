@@ -53,7 +53,7 @@ public class PageAndSelectionResolver implements HandlerMethodReturnValueHandler
             }
             rows.add(row);
         }
-        json.put("rows", rows);
+            json.put("rows", rows);
 
         HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
         response.setHeader("Content-Type", "application/json;charset=UTF-8");

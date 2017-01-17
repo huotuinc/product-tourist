@@ -116,7 +116,7 @@
                             <div id="tab-2" class="tab-pane">
                                 <table class="table table-hover" data-toggle="table"
                                        data-url="../../../mock/supplier/noSettlement.json"
-                                       th:attr="data-url=@{/supplier/notSettledList}"
+                                       th:attr="data-url=@{/base/touristOrders}"
                                        data-method="get" data-side-pagination="server" data-pagination="true"
                                        data-striped="true" data-page-number="1" data-page-size="10"
                                        data-query-params="getParams">
@@ -175,8 +175,9 @@
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-
-    var detailsUrl=/*[[@{/supplier/showSettlementDetails}]]*/'settlementDetailsList.html';
+    var auditUrl=/*[[@{/base/modifySettlementState}]]*/'settlementDetailsList.html';
+    var detailsUrl=/*[[@{/base/showSettlementDetails}]]*/'settlementDetailsList.html';
+    var collectionAccountUrl=/*[[@{/supplier/showCollectionAccount}]]*/'payeeAccountDetails.html';
     /*]]>*/
 
 </script>
