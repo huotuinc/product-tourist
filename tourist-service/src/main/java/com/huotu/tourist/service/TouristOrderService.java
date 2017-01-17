@@ -175,9 +175,6 @@ public interface TouristOrderService {
     TouristOrder addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
             , Float mallBalance, Float mallCoffers, String remark) throws IOException, IllegalStateException;
 
-    void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral
-            , Float mallBalance, Float mallCoffers);
-
 
     /**
      * 获取采购商的订单列表

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * 游客持久层
  * Created by slt on 2016/12/19.
  */
+@Repository
 public interface TravelerRepository extends JpaRepository<Traveler, Long>, JpaSpecificationExecutor<Traveler> {
 
 

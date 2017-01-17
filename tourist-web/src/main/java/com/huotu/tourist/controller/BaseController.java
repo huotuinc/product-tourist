@@ -104,17 +104,12 @@ public class BaseController {
      */
     @RequestMapping("/showGoodsList")
     public String showGoodsList(Model model) {
-
         List<TouristType> touristTypes = touristTypeRepository.findAll();
-
         List<ActivityType> activityTypes = activityTypeRepository.findAll();
-
         TouristCheckStateEnum[] checkStates = TouristCheckStateEnum.values();
-
         model.addAttribute("touristTypes", touristTypes);
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
-
         return "/view/manage/supplier/goodsList.html";
     }
 

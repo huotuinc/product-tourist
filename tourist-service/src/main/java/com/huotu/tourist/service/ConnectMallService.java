@@ -62,7 +62,7 @@ public interface ConnectMallService {
      * @param accountType 账户类型，0表示积分，1表示余额，2表示小金库
      * @return
      */
-    long getMallUserIntegralBalanCoffers(Long mallUserId, int accountType);
+    long getMallUserIntegralBalanceCoffers(Long mallUserId, int accountType);
 
     /**
      * 增加或者减少用户的账户信息，积分余额小金库
@@ -73,15 +73,16 @@ public interface ConnectMallService {
      * @return
      * @throws IllegalStateException 更新积分失败
      */
-    long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) throws IllegalStateException;
+    long setMallUserIntegralBalanceCoffers(Long mallUserId, int accountType, int amount) throws IllegalStateException;
 
     /**
      * 推订单到商城
      *
      * @param order 订单信息
      * @return
+     * @throws IOException 同步商城订单出错
      */
-    long pushOrderToMall(TouristOrder order);
+    String pushOrderToMall(TouristOrder order) throws IOException;
 
 
     /**
