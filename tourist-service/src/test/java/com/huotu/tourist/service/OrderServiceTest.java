@@ -124,7 +124,7 @@ public class OrderServiceTest extends ServiceBaseTest {
         supplier=touristSupplierRepository.saveAndFlush(supplier);
         BigDecimal settled= settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
-        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier);
+        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
     }
 
 

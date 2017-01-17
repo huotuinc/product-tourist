@@ -80,6 +80,42 @@ public interface TouristOrderService {
      */
     BigDecimal countMoneyTotal(Long supplierId) throws IOException;
 
+
+    /**
+     * 计算订单金额
+     * @param supplier          供应商
+     * @param orderState        订单状态
+     * @param createDate        大于的创建时间
+     * @param endCreateDate     小于的创建时间
+     * @param settlement        是否结算
+     * @param touristGood       线路商品
+     * @param touristBuyer       购买人
+     * @return
+     * @throws IOException
+     */
+    @Transactional(readOnly = true)
+    BigDecimal countOrderTotalMoney(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer)
+            throws IOException;
+
+
+    /**
+     * 计算订单的总佣金
+     * @param supplier          供应商
+     * @param orderState        订单状态
+     * @param createDate        大于的创建时间
+     * @param endCreateDate     小于的创建时间
+     * @param settlement        是否已经结算
+     * @param touristGood       线路商品
+     * @param touristBuyer      采购商
+     * @return
+     * @throws IOException
+     */
+    @Transactional(readOnly = true)
+    BigDecimal countOrderTotalcommission(TouristSupplier supplier,OrderStateEnum orderState,LocalDateTime createDate
+            ,LocalDateTime endCreateDate,Boolean settlement,TouristGood touristGood,TouristBuyer touristBuyer)
+            throws IOException;
+
     /**
      * 计算总佣金
      * @param supplierId    供应商ID(必须)

@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -311,7 +312,7 @@ public class SupplierManageController {
         BigDecimal balance=settlementSheetService.countBalance(supplier, null);
         BigDecimal Settled=settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
-        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier);
+        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
         model.addAttribute("settled",Settled);
         model.addAttribute("notSettled",notSettled);
         model.addAttribute("withdrawal",withdrawal);
@@ -425,12 +426,24 @@ public class SupplierManageController {
     }
 
 
+    /**
+     * 显示某个结算单的所有订单的页面
+     * @param userInfo
+     * @param id
+     * @param model
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/showSettlementDetails")
     public String showSettlementDetails(@AuthenticationPrincipal SystemUser userInfo,@RequestParam Long id
             , Model model) throws IOException{
         TouristSupplier supplier=(TouristSupplier)userInfo;
         SettlementSheet settlementSheet=settlementSheetService.getOne(id);
+        BigDecimal orderTotalAmount=touristOrderService.countOrderTotalMoney(supplier,OrderStateEnum.Finish
+                ,null,null,true,null,null).setScale(2, RoundingMode.HALF_UP);
         model.addAttribute("settlement",settlementSheet);
+        model.addAttribute("orderTotalAmount",orderTotalAmount);
+        model.addAttribute("totalCommission","");
         return viewSupplierPath+"settlementDetailsList.html";
     }
 

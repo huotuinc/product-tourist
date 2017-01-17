@@ -21,7 +21,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -37,6 +42,8 @@ import java.util.function.Consumer;
  */
 @Service
 public class TouristOrderServiceImpl implements TouristOrderService {
+    @Autowired
+    private EntityManager entityManager;
     @Autowired
     TouristOrderRepository touristOrderRepository;
     @Autowired
@@ -132,6 +139,97 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             throw new IOException();
         }
         return touristOrderRepository.sumMoneyTotal(supplierId);
+    }
+
+    @Override
+    public BigDecimal countOrderTotalMoney(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer)
+            throws IOException {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Number> criteriaQuery = cb.createQuery(Number.class);
+        Root<TouristOrder> root  = criteriaQuery.from(TouristOrder.class);
+        Predicate predicate=cb.isTrue(cb.literal(true));
+
+        if(supplier!=null){
+            cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
+        }
+
+        if(orderState!=null){
+            cb.and(predicate,cb.equal(root.get("orderState"),orderState));
+        }
+
+        if(createDate!=null){
+            cb.and(predicate,cb.greaterThanOrEqualTo(root.get("createTime"),createDate));
+        }
+        if(endCreateDate!=null){
+            cb.and(predicate,cb.lessThanOrEqualTo(root.get("createTime"),endCreateDate));
+        }
+
+        if(settlement!=null){
+            cb.and(predicate,cb.isNotNull(root.get("settlement")));
+        }
+
+        if(touristGood!=null){
+            cb.and(predicate,cb.equal(root.get("touristGood"),touristGood));
+        }
+
+        if(touristBuyer!=null){
+            cb.and(predicate,cb.equal(root.get("touristBuyer"),touristBuyer));
+        }
+
+        criteriaQuery=criteriaQuery.where(predicate);
+
+        criteriaQuery  = criteriaQuery.select(
+                cb.sum(root.get("orderMoney"))
+        );
+
+        TypedQuery<Number> query = entityManager.createQuery(criteriaQuery);
+        BigDecimal orderTotalMoney=BigDecimal.valueOf(query.getSingleResult()==null?0:query.getSingleResult()
+                .doubleValue());
+        return orderTotalMoney;
+    }
+
+    @Override
+    public BigDecimal countOrderTotalcommission(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate, LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer) throws IOException {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Number> criteriaQuery = cb.createQuery(Number.class);
+        Root<TouristOrder> root  = criteriaQuery.from(TouristOrder.class);
+        Predicate predicate=cb.isTrue(cb.literal(true));
+
+        if(supplier!=null){
+            cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
+        }
+
+        if(orderState!=null){
+            cb.and(predicate,cb.equal(root.get("orderState"),orderState));
+        }
+
+        if(createDate!=null){
+            cb.and(predicate,cb.greaterThanOrEqualTo(root.get("createTime"),createDate));
+        }
+        if(endCreateDate!=null){
+            cb.and(predicate,cb.lessThanOrEqualTo(root.get("createTime"),endCreateDate));
+        }
+
+        if(settlement!=null){
+            cb.and(predicate,cb.isNotNull(root.get("settlement")));
+        }
+
+        if(touristGood!=null){
+            cb.and(predicate,cb.equal(root.get("touristGood"),touristGood));
+        }
+
+        if(touristBuyer!=null){
+            cb.and(predicate,cb.equal(root.get("touristBuyer"),touristBuyer));
+        }
+
+        criteriaQuery=criteriaQuery.where(predicate);
+
+
+        TypedQuery<Number> query = entityManager.createQuery(criteriaQuery);
+        BigDecimal orderTotalMoney=BigDecimal.valueOf(query.getSingleResult()==null?0:query.getSingleResult()
+                .doubleValue());
+        return orderTotalMoney;
     }
 
     @Override
