@@ -15,6 +15,7 @@ import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 该服务将建立与伙伴商城的关联
@@ -56,39 +57,30 @@ public interface ConnectMallService {
 
 
     /**
-     * 获取用户的账户信息，积分余额小金库
+     * 获取用户的账户信息
      *
-     * @param mallUserId  商城用户id
-     * @param accountType 账户类型，0表示积分，1表示余额，2表示小金库
+     * @param mallUserId  商城用户小伙伴id
      * @return
+     * @throws IOException 获取信息失败
      */
-    long getMallUserIntegralBalanCoffers(Long mallUserId, int accountType);
-
-    /**
-     * 增加或者减少用户的账户信息，积分余额小金库
-     *
-     * @param mallUserId  商城用户id
-     * @param accountType 账户类型，0表示积分，1表示余额，2表示小金库
-     * @param amount      增加或减少的金额，负数即为减，积分为int型
-     * @return
-     * @throws IllegalStateException 更新积分失败
-     */
-    long setMallUserIntegralBalanCoffers(Long mallUserId, int accountType, int amount) throws IllegalStateException;
+    Map getUserDetailByUserId(Long mallUserId) throws IOException;
 
     /**
      * 推订单到商城
      *
      * @param order 订单信息
      * @return
+     * @throws IOException 同步商城订单出错
      */
-    long pushOrderToMall(TouristOrder order);
+    String pushOrderToMall(TouristOrder order) throws IOException;
 
 
     /**
-     * 获取采购商的头像url,未获取到则返回空字符串 “”，
-     *
+     * 建议使用{@link #getUserDetailByUserId(Long)}
      * @param buyer 采购商
-     * @return 头像url
+     * @return
+     *
      */
+    @Deprecated
     String getTouristBuyerHeadUrl(TouristBuyer buyer);
 }

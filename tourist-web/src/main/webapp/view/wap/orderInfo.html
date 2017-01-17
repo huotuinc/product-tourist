@@ -169,15 +169,15 @@
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
     <div class="weui_navbar daohangs">
-        <a href="index.html" class="weui_navbar_item weui_bar_item_on">
+        <a href="index.html" th:href="@{/wap/}" class="weui_navbar_item">
             <p class="kimg dhshouyeicon"></p>
             <p>首页</p>
         </a>
-        <a href="search.html" class="weui_navbar_item ">
+        <a href="search.html" class="weui_navbar_item " th:href="@{/wap/showSearchView}">
             <p class="kimg dhsousuoicon"></p>
             <p>搜索</p>
         </a>
-        <a href="my.html" class="weui_navbar_item">
+        <a href="my.html" class="weui_navbar_item" th:href="@{/wap/showMyInfo}">
             <p class="kimg dhwodeicon"></p>
             <p> 我的</p>
         </a>

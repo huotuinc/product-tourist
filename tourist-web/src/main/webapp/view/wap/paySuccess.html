@@ -22,7 +22,6 @@
             <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
             <div class="weui_text_area">
                 <h2 class="weui_msg_title">采购单支付成功！</h2>
-                <!-- todo 订单详细页面-->
                 <a href="orderInfo.html" th:href="@{/wap/showOrderInfo(mallOrderNo=${mallOrderNo})}">
                     <p class="weui_msg_desc">查看采购单</p>
                 </a>
@@ -45,15 +44,15 @@
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
     <div class="weui_navbar daohangs">
-        <a href="index.html" class="weui_navbar_item weui_bar_item_on">
+        <a href="index.html" th:href="@{/wap/}" class="weui_navbar_item">
             <p class="kimg dhshouyeicon"></p>
             <p>首页</p>
         </a>
-        <a href="search.html" class="weui_navbar_item ">
+        <a href="search.html" class="weui_navbar_item " th:href="@{/wap/showSearchView}">
             <p class="kimg dhsousuoicon"></p>
             <p>搜索</p>
         </a>
-        <a href="my.html" class="weui_navbar_item">
+        <a href="my.html" class="weui_navbar_item" th:href="@{/wap/showMyInfo}">
             <p class="kimg dhwodeicon"></p>
             <p> 我的</p>
         </a>

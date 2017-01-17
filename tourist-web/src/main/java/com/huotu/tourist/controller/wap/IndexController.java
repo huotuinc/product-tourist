@@ -12,6 +12,8 @@ package com.huotu.tourist.controller.wap;
 import com.huotu.tourist.TravelerList;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Banner;
@@ -20,6 +22,7 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.VerificationType;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
@@ -39,10 +42,13 @@ import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TouristTypeService;
 import com.huotu.tourist.service.VerificationCodeService;
 import me.jiangcai.lib.resource.service.ResourceService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,7 +71,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = "/wap/")
 public class IndexController {
-
+    private static final Log log = LogFactory.getLog(IndexController.class);
     @Autowired
     public TravelerRepository travelerRepository;
     @Autowired
@@ -161,9 +167,16 @@ public class IndexController {
         model.addAttribute("amount", good.getMaxPeople() - count);
         model.addAttribute("good", good);
         model.addAttribute("routeId", routeId);
-        model.addAttribute("mallIntegral", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 0));
-        model.addAttribute("mallBalance", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 1));
-        model.addAttribute("mallCoffers", connectMallService.getMallUserIntegralBalanCoffers(user.getId(), 2));
+        Map userInfo = null;
+        try {
+            userInfo = connectMallService.getUserDetailByUserId(user.getId());
+            model.addAttribute("mallIntegral", userInfo.get("score"));
+            model.addAttribute("mallBalance", userInfo.get("money"));
+            model.addAttribute("mallCoffers", userInfo.get("gold"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return "view/wap/procurement.html";
     }
 
@@ -204,6 +217,7 @@ public class IndexController {
 
     /**
      * 取消采购单
+     *
      * @param model
      * @return
      */
@@ -227,19 +241,68 @@ public class IndexController {
         return "view/wap/procurementPayPage.html";
     }
 
+
     /**
      * 订单支付
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = {"/orderPay"})
-    public String pay(@RequestParam Long orderId, Model model) {
-        TouristOrder order = touristOrderRepository.getOne(orderId);
-        // TODO: 2017/1/13 同步订单
-        Long mallOrderNo = connectMallService.pushOrderToMall(order);
-        order.setMallOrderNo(mallOrderNo.toString());
+    @Transactional
+    public String orderPay(@AuthenticationPrincipal SystemUser user, @RequestParam Long orderId, @RequestParam PayTypeEnum payType,
+                           Model model) {
+        if (user.isBuyer()) {
+            TouristOrder order = touristOrderRepository.getOne(orderId);
+            String mallOrderNo;
+            try {
+                order.setPayType(payType);
+                mallOrderNo = connectMallService.pushOrderToMall(order);
+                order.setMallOrderNo(mallOrderNo);
+                // TODO: 2017/1/17 跳转至商场支付
+                return "redirect:";
+            } catch (IOException e) {
+                log.error(e.getMessage());
+                model.addAttribute("errorMsg", e.getMessage());
+            }
+        } else {
+            model.addAttribute("errorMsg", "当前用户不是采购商");
+        }
+        // TODO: 2017/1/17 跳转至错误页面
         return "";
     }
+
+
+    /**
+     * 商场订单支付回调
+     * @param mallOrderNo 商城订单号
+     * @param pay     是否支付
+     * @param payType  支付类型
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/orderPayCallback"})
+    @Transactional
+    public String orderPayCallback(@AuthenticationPrincipal SystemUser user, @RequestParam String mallOrderNo,
+                                   @RequestParam PayTypeEnum payType, @RequestParam boolean pay, Model model) {
+        if (user.isBuyer()) {
+            TouristBuyer buyer = (TouristBuyer) user;
+            TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
+            if (touristOrder.getTouristBuyer().getId().equals(buyer.getId()) && touristOrder.getOrderState()
+                    .equals(OrderStateEnum.NotPay)) {
+                touristOrder.setPayType(payType);
+                touristOrder.setPayTime(LocalDateTime.now());
+                model.addAttribute("mallOrderNo", mallOrderNo);
+                return "view/wap/paySuccess.html";
+            }
+            model.addAttribute("errorMsg", "当前采购商与订单采购商不匹配或订单状态异常");
+        } else {
+            model.addAttribute("errorMsg", "警告非法的用户访问，以记录下IP");
+        }
+        // TODO: 2017/1/17 跳转至错误页面
+        return "";
+    }
+
 
     /**
      * 最新线路列表

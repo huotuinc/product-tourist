@@ -140,9 +140,10 @@
     </div>
     <div style=" margin: 10px;">
         <!-- todo 同步商城订单，跳转商城支付 -->
-        <a href="paySuccess.html" th:href="@{/wap/orderPay(orderId=${order.id})}"
-           class="weui_btn weui_btn_primary">支付</a>
-        <!--<a href="paySuccess.html" class="weui_btn weui_btn_warn">支付宝</a>-->
+        <a href="paySuccess.html" id="weixin" th:href="@{/wap/orderPay(orderId=${order.id},payType=1)}"
+           class="weui_btn weui_btn_primary">微信支付</a>
+        <a href="paySuccess.html" id="alipay" th:href="@{/wap/orderPay(orderId=${order.id},payType=0)}"
+           class="weui_btn weui_btn_warn">支付宝</a>
 
         <a href="touristGoodInfo.html" th:href="@{/wap/cancelOrder(orderId=${order.id})}"
            class="weui_btn weui_btn_default">取消订单
@@ -152,15 +153,15 @@
     <p style="height: 80px; clear: both"></p>
     <!--底部导航-->
     <div class="weui_navbar daohangs">
-        <a href="index.html" class="weui_navbar_item weui_bar_item_on">
+        <a href="index.html" th:href="@{/wap/}" class="weui_navbar_item">
             <p class="kimg dhshouyeicon"></p>
             <p>首页</p>
         </a>
-        <a href="search.html" class="weui_navbar_item ">
+        <a href="search.html" class="weui_navbar_item " th:href="@{/wap/showSearchView}">
             <p class="kimg dhsousuoicon"></p>
             <p>搜索</p>
         </a>
-        <a href="my.html" class="weui_navbar_item">
+        <a href="my.html" class="weui_navbar_item" th:href="@{/wap/showMyInfo}">
             <p class="kimg dhwodeicon"></p>
             <p> 我的</p>
         </a>
@@ -173,3 +174,15 @@
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+<script>
+    $(function () {
+        var ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            $("#weixin").show();
+            $("#alipay").hide();
+        } else {
+            $("#weixin").hide();
+            $("#alipay").show();
+        }
+    })
+</script>

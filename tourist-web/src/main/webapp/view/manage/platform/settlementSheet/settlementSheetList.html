@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>结算列表</title>
@@ -27,10 +27,29 @@
                     </div>
                     <div class="col-sm-2">
                         <select name="platformChecking" class="form-control"
-                                placeholder="审核状态"></select>
+                                placeholder="审核状态">
+                            <option value="">
+                            </option>
+                            <!--suppress ThymeleafVariablesResolveInspection -->
+                            <option value="0"
+                                    th:each="checkState:${T(com.huotu.tourist.common.SettlementStateEnum).values()}"
+                                    th:value="${checkState.getCode()}"
+                                    th:text="${checkState.getValue().toString()}">已保存
+                            </option>
+
+                        </select>
 
                         <select name="presentState" style="display: none;" class="form-control"
-                                placeholder="审核状态"></select>
+                                placeholder="提现状态">
+                            <option value="">
+                            </option>
+                            <!--suppress ThymeleafVariablesResolveInspection -->
+                            <option value="0"
+                                    th:each="checkState:${T(com.huotu.tourist.common.PresentStateEnum).values()}"
+                                    th:value="${checkState.getCode()}"
+                                    th:text="${checkState.getValue().toString()}">已保存
+                            </option>
+                        </select>
                     </div>
 
                     <div class="col-sm-2">
@@ -49,7 +68,9 @@
 
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="settlementSheet">
-                <table id="table" data-toggle="table" data-url="../../../../mock/platform/settlementSheetList.json"
+                <table id="table" data-toggle="table"
+                       data-url="../../../../mock/platform/settlementSheetList.json"
+                       th:attr="data-url=@{/distributionPlatform/settlementSheetList}"
                        data-method="get"
                        data-side-pagination="server"
                        data-pagination="true" data-striped="true"
@@ -63,7 +84,9 @@
                         <th data-field="createTime" data-align="center" data-sortable="true">结算时间</th>
                         <th data-field="receivableAccount" data-align="center" data-sortable="true">应收款</th>
                         <th data-field="platformChecking.value" data-align="center" data-sortable="true">平台审核状态</th>
-                        <th data-field="action" data-formatter="actionFormatter" data-align="center">操作</th>
+                        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"
+                            data-align="center">操作
+                        </th>
                     </tr>
                     </thead>
                 </table>
@@ -71,6 +94,7 @@
             <div role="tabpanel" class="tab-pane" id="recommend">
                 <table id="txTable" data-toggle="table"
                        data-url="../../../../mock/platform/presentRecordList.json"
+                       th:attr="data-url=@{/distributionPlatform/presentRecordList}"
                        data-method="get"
                        data-side-pagination="server"
                        data-pagination="true" data-striped="true"
@@ -85,7 +109,9 @@
                         <th data-field="amountOfMoney" data-align="center" data-sortable="true">提现金额</th>
                         <th data-field="accountBalance" data-align="center" data-sortable="true">当前账户余额</th>
                         <th data-field="presentState.value" data-align="center">审核状态</th>
-                        <th data-field="action" data-formatter="presentFormatter" data-align="center">操作</th>
+                        <th data-field="action" data-formatter="presentFormatter" data-events="presentEvents"
+                            data-align="center">操作
+                        </th>
                     </tr>
                     </thead>
                 </table>
@@ -99,6 +125,16 @@
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+<script th:inline="javascript">
+    showSettlementDetails = /*[[@{/distributionPlatform/showSettlementDetails}]]*/
+            "../../common/settlementDetailsList.html";
+    modifySettlementSheet = /*[[@{/distributionPlatform/modifySettlementSheet}]]*/
+            "../../../../mock/platform/httpJson.json";
+
+    modifyPresentRecord = /*[[@{/distributionPlatform/modifyPresentRecord}]]*/
+            "../../../../mock/platform/httpJson.json";
+</script>
 <script src="../../../../assets/js/manage/platform/settlementSheetList.js"></script>
 </body>
 </html>

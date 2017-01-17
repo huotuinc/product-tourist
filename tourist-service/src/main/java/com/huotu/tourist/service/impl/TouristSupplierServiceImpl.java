@@ -4,6 +4,7 @@ import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.service.TouristSupplierService;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
+import java.io.IOException;
 
 /**
  * Created by lhx on 2017/1/3.
@@ -19,6 +21,8 @@ import javax.persistence.criteria.Predicate;
 public class TouristSupplierServiceImpl implements TouristSupplierService {
     @Autowired
     TouristSupplierRepository touristSupplierRepository;
+    @Autowired
+    ResourceService resourceService;
 
     @Override
     public TouristSupplier save(TouristSupplier data) {
@@ -53,8 +57,13 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
         touristSupplier.setAddress(address);
         touristSupplier.setContacts(contacts);
         touristSupplier.setContactNumber(contactNumber);
-        // TODO: 2017/1/3 删除原有图片
+        try {
+            resourceService.deleteResource(touristSupplier.getBusinessLicenseUri());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
+
         touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setRemarks(remarks);
     }

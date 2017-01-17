@@ -166,6 +166,7 @@ public class BaseControllerTest extends WebTest {
         assertThat(status).isNotEqualTo(HttpStatus.OK).as("缺少参数系统报错相应");
 
         // TODO: 2016/12/22 模拟供应商登陆
+
         status = mockMvc.perform(post("/base/modifyTouristGoodState")
                 .param("id", touristGood.getId().toString())
                 .param("checkState", TouristCheckStateEnum.Recycle.getCode().toString())

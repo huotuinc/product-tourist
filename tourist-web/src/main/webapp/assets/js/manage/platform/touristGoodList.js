@@ -1,4 +1,3 @@
-
 var $table = $('#table');
 $(".all").click(function () {
     $table = $('#table');
@@ -28,8 +27,8 @@ getParams = function (params) {
 actionFormatter = function (value, row, index) {
     var arr = new Array;
     arr.push('<a class="btn btn-primary" href="' + showTouristGood + '?id=' + row.id + '">查看</a> ');
-    arr.push('<a class="btn btn-primary" href="touristGoodList.html"' +
-        ' th:href="@{/distributionPlatform/touristGoodInfo(id=' + row.id + ')}">链接地址</a> ');
+    arr.push('<button  class="btn btn-primary updateLinkUrl" data-toggle="modal"' +
+        ' data-target="#myModal">链接地址</button> ');
     if (row.touristCheckState.code == 2 && row.recommend) {
         arr.push('<button class="btn btn-primary unRecommendTouristGood">取消推荐</button> ');
     }
@@ -62,7 +61,7 @@ function updateRecommend(url, row, recommend) {
             $table.bootstrapTable('refresh');
         },
         error: function (error) {
-
+            layer.alert("修改失败");
         }
     })
     layer.close(load);
@@ -102,12 +101,15 @@ window.actionEvents = {
                     $table.bootstrapTable('refresh');
                 },
                 error: function (error) {
-
+                    layer.alert(error);
                 }
             })
         }, function () {
 
         });
+    },
+    'click .updateLinkUrl': function (e, value, row, index) {
+        $("#linkUrl").val(linkUrl + "?id=" + row.id);
     }
 }
 

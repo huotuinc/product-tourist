@@ -4,7 +4,13 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.common.TravelerTypeEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.OrderStateQuery;
 import com.huotu.tourist.repository.TouristGoodRepository;
@@ -43,8 +49,6 @@ import java.util.function.Consumer;
 @Service
 public class TouristOrderServiceImpl implements TouristOrderService {
     @Autowired
-    private EntityManager entityManager;
-    @Autowired
     TouristOrderRepository touristOrderRepository;
     @Autowired
     TouristRouteRepository touristRouteRepository;
@@ -54,7 +58,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     TouristGoodRepository touristGoodRepository;
     @Autowired
     ConnectMallService connectMallService;
-
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed) {
@@ -301,6 +306,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             int num = travelerRepository.countByRoute(route);
             if (good.getMaxPeople() - num >= travelers.size()) {
                 //todo 锁定线路不允许被其他游客同时添加
+
                 Random random = new Random(10000);
                 TouristOrder order = new TouristOrder();
                 order.setTouristGood(good);
@@ -313,6 +319,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                         traveler
                                 .getTravelerType().equals
                                 (TravelerTypeEnum.adult)).count()));
+
                 BigDecimal child = good.getPrice()
                         .multiply(good.getChildrenDiscount().divide(new BigDecimal(10)))
                         .multiply(new BigDecimal(travelers.stream()
@@ -323,6 +330,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 order.setMallIntegral(new BigDecimal(mallIntegral));
                 order.setMallBalance(new BigDecimal(mallBalance));
                 order.setMallCoffers(new BigDecimal(mallCoffers));
+                //成人+儿童价格
                 order.setOrderMoney(sumNum);
                 order.setTouristBuyer(user);
                 for (Traveler traveler : travelers) {
@@ -339,11 +347,6 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         } else {
             throw new IOException("游客不能为空");
         }
-    }
-
-    @Override
-    public void addOrderInfo(TouristBuyer user, List<Traveler> travelers, Long goodId, Long routeId, Float mallIntegral, Float mallBalance, Float mallCoffers) {
-
     }
 
     @Override
