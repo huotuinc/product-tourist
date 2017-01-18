@@ -33,13 +33,15 @@ import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.AbstractResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -99,6 +101,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         token = environment.getProperty("tourist.token", environment.acceptsProfiles("test") ? "3447" : "4886");
         secretKey = environment.getProperty("tourist.secretKey", environment.acceptsProfiles("test") ? "3447" : "4886");
         mallDomain = environment.getProperty("tourist.mallDomain", environment.acceptsProfiles("test") ? "3447" : "4886");
+
     }
 
     /**
@@ -122,6 +125,12 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         return result;
     }
 
+    private CloseableHttpClient newHttpClient() {
+        return HttpClientBuilder.create()
+                .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(30000).build())
+                .build();
+    }
+
     @Override
     public int getExchangeRate() {
         return merchantConfig.getExchangeRate();
@@ -137,7 +146,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
         if (touristGood.getMallGoodId() != null)
             return touristGood;
-
         //  营销类型（需要跟普通商品做出区别）
         Goods goods = new Goods();
         goods.setOwner(merchant);
@@ -199,19 +207,21 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         params.add(new BasicNameValuePair("token", token));
         params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
         params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
-        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            HttpEntity httpEntity = httpResponse.getEntity();
-            ObjectMapper objectMapper = new ObjectMapper();
-            ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
+        try (CloseableHttpClient client = newHttpClient()) {
+            httpPost.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                    .setContentEncoding("UTF-8")
+                    .setParameters(params)
+                    .build()
+            );
+            ResultContent result = client.execute(httpPost, new ResultContentResponseHandler());
             if (result.resultCode == 2000) {
                 return result.getData();
             } else {
                 throw new IOException(result.getResultMsg());
             }
         }
-        throw new IOException("网络异常，请稍后重试");
+
     }
 
     @Override
@@ -227,7 +237,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         data.put("shipMobile", order.getTravelers().get(0).getTelPhone());
         data.put("memberId", order.getTouristBuyer().getId());
         data.put("payType", order.getPayType().getCode());
-        // TODO: 2017/1/18 货品列表待定
         List<Map> list = new ArrayList<>();
         List<Product> products = productRestRepository.findByGoodsPK(order.getTouristGood().getMallGoodId());
         for (Product p : products) {
@@ -238,7 +247,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             break;
         }
         data.put("orderItems", list);
-
         String uriAPI = String.format(mallDomain + uri, "Order", "createOrder");
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
@@ -246,20 +254,21 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         params.add(new BasicNameValuePair("token", token));
         params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
         params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
-        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            HttpEntity httpEntity = httpResponse.getEntity();
-            ObjectMapper objectMapper = new ObjectMapper();
-            ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
-            if (result.resultCode == 2000) return result.getData().get("orderId").toString();
-            else {
+        try (CloseableHttpClient client = newHttpClient()) {
+            httpPost.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                    .setContentEncoding("UTF-8")
+                    .setParameters(params)
+                    .build()
+            );
+            ResultContent result = client.execute(httpPost, new ResultContentResponseHandler());
+            if (result.resultCode == 2000) {
+                return result.getData().get("orderId").toString();
+            } else {
                 throw new IOException(result.getResultMsg());
             }
         }
-        throw new IOException("同步订单出错，请稍后重试");
     }
-
 
     @Override
     public String getTouristBuyerHeadUrl(TouristBuyer buyer) {
@@ -279,4 +288,15 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         String resultMsg;
         Map data;
     }
+
+    private class ResultContentResponseHandler extends AbstractResponseHandler<ConnectMallServiceImpl.ResultContent> {
+        private ObjectMapper objectMapper = new ObjectMapper();
+
+        @Override
+        public ConnectMallServiceImpl.ResultContent handleEntity(HttpEntity entity) throws IOException {
+            return objectMapper.readValue(entity.getContent(), ConnectMallServiceImpl.ResultContent.class);
+        }
+    }
+
+
 }
