@@ -50,8 +50,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -173,6 +175,10 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         product.setGoods(goods);
         product.setCode(UUID.randomUUID().toString().replace("-", ""));
         product = productRestRepository.insert(product);
+        Set<Product> products = new HashSet<>();
+        products.add(product);
+        goods.setProducts(products);
+
         touristGood.setMallGoodId(goods.getId());
         return touristGood;
     }
