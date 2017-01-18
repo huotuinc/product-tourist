@@ -32,10 +32,11 @@
                                 </span>
                         </a>
                         <ul class="dropdown-menu animated fadeInDown m-t-xs">
-                            <li><a class="J_menuItem" href="/top/modifyPassword">修改密码</a>
+                            <li><a class="J_menuItem" href="resetPassword.html"
+                                   th:href="@{/distributionPlatform/resetPasswordPage}">修改密码</a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="/loginOut">安全退出</a>
+                            <li><a href="../login.html" th:href="@{/logout}">安全退出</a>
                             </li>
                         </ul>
                     </div>

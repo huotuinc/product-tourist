@@ -27,6 +27,8 @@ import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.login.PlatformManager;
+import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.repository.ActivityTypeRepository;
@@ -46,6 +48,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -97,6 +101,8 @@ public class DistributionPlatformController extends BaseController {
     SettlementSheetRepository settlementSheetRepository;
     @Autowired
     PresentRecordRepository presentRecordRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 打开订单列表页面
@@ -106,6 +112,41 @@ public class DistributionPlatformController extends BaseController {
     @RequestMapping("/")
     public String showSupplierMain() {
         return "/view/manage/platform/main.html";
+    }
+
+    /**
+     * 打开订单列表页面
+     *
+     * @return
+     */
+    @RequestMapping("resetPasswordPage")
+    public String resetPasswordPage() {
+        return "/view/manage/platform/resetPassword.html";
+    }
+
+    /**
+     * 打开订单列表页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> resetPassword(@AuthenticationPrincipal SystemUser user, String oldPassword, String newPassword) {
+        Map<String, Object> map = new HashMap<>();
+        if (user.isPlatformUser()) {
+            PlatformManager platformManager = (PlatformManager) user;
+            if (!passwordEncoder.matches(oldPassword, platformManager.getPassword())) {
+                map.put("data", 500);
+                map.put("message", "密码错误！");
+                return map;
+            }
+            loginService.updatePassword(platformManager, newPassword);
+            map.put("data", 200);
+            return map;
+        }
+        map.put("data", "403");
+        map.put("message", "警告非法的访问，以记录IP");
+        return map;
     }
 
     /**
@@ -126,7 +167,7 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/supplierList", method = RequestMethod.GET)
-    public PageAndSelection supplierList(String name, Pageable pageable, HttpServletRequest request) {
+    public PageAndSelection<TouristSupplier> supplierList(String name, Pageable pageable, HttpServletRequest request) {
         Page<TouristSupplier> page = touristSupplierService.supplierList(name, pageable);
         return new PageAndSelection<>(page, TouristSupplier.selections);
     }
@@ -212,7 +253,7 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity purchaserProductSettingList(String name, Pageable pageable
+    public ResponseEntity<String> purchaserProductSettingList(String name, Pageable pageable
             , HttpServletRequest request) throws JsonProcessingException {
         Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
                 , pageable);
@@ -253,7 +294,7 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "activityTypeList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity activityTypeList(String name, Pageable pageable, HttpServletRequest request, Model model)
+    public ResponseEntity<String> activityTypeList(String name, Pageable pageable, HttpServletRequest request, Model model)
             throws JsonProcessingException {
         Page<ActivityType> page = activityTypeService.activityTypeList(name, pageable);
         Map<String, Object> map = new HashMap<>();
@@ -283,7 +324,7 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "touristTypeList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity touristTypeList(String name, Pageable pageable, HttpServletRequest request, Model model)
+    public ResponseEntity<String> touristTypeList(String name, Pageable pageable, HttpServletRequest request, Model model)
             throws JsonProcessingException {
         Page<TouristType> page = touristTypeService.touristTypeList(name, pageable);
         Map<String, Object> map = new HashMap<>();
@@ -314,9 +355,9 @@ public class DistributionPlatformController extends BaseController {
      * @param model            @return
      */
     @RequestMapping(value = "settlementSheetList", method = RequestMethod.GET)
-    public PageAndSelection settlementSheetList(String supplierName, SettlementStateEnum platformChecking,
-                                                @RequestParam(required = false) LocalDateTime createTime,
-                                                Pageable pageable, HttpServletRequest request, Model model) {
+    public PageAndSelection<SettlementSheet> settlementSheetList(String supplierName, SettlementStateEnum platformChecking,
+                                                                 @RequestParam(required = false) LocalDateTime createTime,
+                                                                 Pageable pageable, HttpServletRequest request, Model model) {
         Page<SettlementSheet> page = settlementSheetService.settlementSheetList(null, supplierName, platformChecking, createTime
                 , null, pageable);
 
@@ -383,7 +424,7 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "bannerList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity bannerList(Pageable pageable, HttpServletRequest request) throws JsonProcessingException {
+    public ResponseEntity<String> bannerList(Pageable pageable, HttpServletRequest request) throws JsonProcessingException {
         Page<Banner> page = bannerRepository.findAll(pageable);
         Map<String, Object> map = new HashMap<>();
         map.put(TOTAL, page.getTotalPages());
@@ -673,6 +714,7 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 删除banner
+     *
      * @param id
      * @return
      */
