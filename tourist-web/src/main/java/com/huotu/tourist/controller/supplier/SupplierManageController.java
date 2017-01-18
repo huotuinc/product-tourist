@@ -10,10 +10,8 @@
 package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.common.CollectionAccountTypeEnum;
-import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.*;
-import com.huotu.tourist.login.SupplierOperator;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
@@ -85,8 +83,8 @@ public class SupplierManageController {
     @Autowired
     private CollectionAccountService collectionAccountService;
 
-    @Autowired
-    private SupplierOperatorRepository supplierOperatorRepository;
+//    @Autowired
+//    private SupplierOperatorRepository supplierOperatorRepository;
 
     @Autowired
     private LoginService loginService;
@@ -100,6 +98,8 @@ public class SupplierManageController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private SupplierOperatorService supplierOperatorService;
     private String viewSupplierPath="/view/manage/supplier/";
 
     private String viewCommonPath="/view/manage/common/";
@@ -184,10 +184,10 @@ public class SupplierManageController {
         List<Traveler> travelers = travelerRepository.findByOrder_Id(id);
 
         model.addAttribute("route", travelers.isEmpty()?new TouristRoute():travelers.get(0).getRoute());
-
-        List<OrderStateEnum> orderStates=touristOrderService.getModifyState(userInfo,order);
-
-        model.addAttribute("orderStates",orderStates);
+//
+//        List<OrderStateEnum> orderStates=touristOrderService.getModifyState(userInfo,order);
+//
+//        model.addAttribute("orderStates",orderStates);
 
         model.addAttribute("travelers", travelers);
 
@@ -280,7 +280,7 @@ public class SupplierManageController {
             , String receptionPerson, String receptionTelephone, String eventDetails, String beCareful
             , String touristImgUri, int maxPeople, TouristRoute[] touristRoutes
             , Long mallGoodsId,String[] photos,TouristCheckStateEnum checkState) throws IOException{
-        TouristSupplier supplier=(TouristSupplier)userInfo;
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         ActivityType activityType=activityTypeId==null?null:activityTypeRepository.getOne(activityTypeId);
         TouristType touristType=touristTypeId==null?null:touristTypeRepository.getOne(touristTypeId);
         List<String> images=photos==null?null:Arrays.asList(photos);
@@ -314,7 +314,7 @@ public class SupplierManageController {
      */
     @RequestMapping("/showSettlement")
     public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
-        TouristSupplier supplier=(TouristSupplier)userInfo;
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
 
         BigDecimal balance=settlementSheetService.countBalance(supplier, null);
         BigDecimal Settled=settlementSheetService.countSettled(supplier);
@@ -341,7 +341,7 @@ public class SupplierManageController {
             ,@RequestParam(required = false)LocalDateTime endCreateDate
             , Pageable pageable) throws IOException {
 
-        TouristSupplier supplier=(TouristSupplier)userInfo;
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         Page<SettlementSheet> sheets=settlementSheetService.settlementSheetList(supplier,null,null,createDate
                 , endCreateDate,pageable);
 
@@ -403,7 +403,7 @@ public class SupplierManageController {
             ,@RequestParam(required = false)LocalDateTime createDate
             ,@RequestParam(required = false)LocalDateTime endCreateDate
             , Pageable pageable) throws IOException {
-        TouristSupplier supplier=(TouristSupplier)userInfo;
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         Page<PresentRecord> records=presentRecordService.presentRecordList(null,supplier,null,createDate,endCreateDate
                 ,pageable);
 
@@ -451,7 +451,7 @@ public class SupplierManageController {
     @RequestMapping("/showSaleStatistics")
 //    @PreAuthorize("hasRole('SaleStatistics')")
     public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
-        TouristSupplier supplier=(TouristSupplier)userInfo;
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
         model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(supplier.getId()));
         model.addAttribute("refundTotal", touristOrderService.countRefundTotal(supplier.getId()));
@@ -474,9 +474,12 @@ public class SupplierManageController {
     @RequestMapping("/orderDetailsList")
     @ResponseBody
     public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal SystemUser userInfo
-            , Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate
-            , LocalDateTime payDate, LocalDateTime endPayDate) throws IOException {
-        TouristSupplier supplier =(TouristSupplier)userInfo;
+            , Pageable pageable
+            ,@RequestParam(required = false) LocalDateTime orderDate
+            ,@RequestParam(required = false) LocalDateTime endOrderDate
+            ,@RequestParam(required = false) LocalDateTime payDate
+            ,@RequestParam(required = false) LocalDateTime endPayDate) throws IOException {
+        TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
 
         Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, null, null, null, null, null,
                 orderDate, endOrderDate, payDate, endPayDate, null, null, null, null,
@@ -525,9 +528,11 @@ public class SupplierManageController {
     @RequestMapping("/goodsSalesRanking")
     @ResponseBody
     public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo
-            ,Pageable pageable,LocalDateTime orderDate, LocalDateTime endOrderDate)
+            ,Pageable pageable
+            ,@RequestParam(required = false)LocalDateTime orderDate
+            ,@RequestParam(required = false) LocalDateTime endOrderDate)
             throws IOException{
-        TouristSupplier supplier =(TouristSupplier)userInfo;
+        TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
         Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 
         //购买次数处理
@@ -590,7 +595,7 @@ public class SupplierManageController {
      */
     @RequestMapping("/showSupplierInfo")
     public String showSupplierInfo(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
-        TouristSupplier supplier=(TouristSupplier)userInfo;
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         model.addAttribute("supplier",supplier);
         return viewSupplierPath+"supplierDetailsH+.html";
     }
@@ -624,7 +629,7 @@ public class SupplierManageController {
     @RequestMapping("/showCollectionAccount")
 //    @PreAuthorize("hasRole('CollectionAccount')")
     public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo ,Model model) throws IOException{
-        TouristSupplier supplier =(TouristSupplier)userInfo;
+        TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
         CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
         if(collectionAccount==null){
             collectionAccount=new CollectionAccount();
@@ -673,22 +678,12 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/getJurisdictionList")
-    public PageAndSelection<SupplierOperator> getJurisdictionList(Pageable pageable)
-            throws IOException {
+    public PageAndSelection<TouristSupplier> getJurisdictionList(@AuthenticationPrincipal SystemUser userInfo
+            , Pageable pageable) throws IOException {
+        TouristSupplier supplier=(TouristSupplier)userInfo;
 
-        Page<SupplierOperator> supplierManagers=supplierOperatorRepository.findAll(pageable);
-        Selection<SupplierOperator,String> loginName=new Selection<SupplierOperator, String>() {
-            @Override
-            public String getName() {
-                return "loginName";
-            }
-
-            @Override
-            public String apply(SupplierOperator supplierOperator) {
-                return supplierOperator.getLoginName();
-            }
-        };
-        return new PageAndSelection<>(supplierManagers,SupplierOperator.selections);
+        Page<TouristSupplier> supplierManagers=touristSupplierService.getJurisdictionList(supplier,pageable);
+        return new PageAndSelection<>(supplierManagers,TouristSupplier.selections);
     }
 
     /**
@@ -700,7 +695,12 @@ public class SupplierManageController {
      */
     @RequestMapping("/getJurisdiction")
     public String getJurisdiction(Long id, Model model) throws IOException{
-        SupplierOperator operator=supplierOperatorRepository.findOne(id);
+        TouristSupplier operator;
+        if(id==null){
+            operator=new TouristSupplier();
+        }else {
+            operator=touristSupplierService.getOne(id);
+        }
         model.addAttribute("operator",operator);
         return viewSupplierPath+"jurisdictionDeails.html";
     }
@@ -742,9 +742,29 @@ public class SupplierManageController {
         return modelMap;
     }
 
-    @RequestMapping("/saveSupplierOperatorInfo")
-    public void saveSupplierOperatorInfo(String loginName,String password,String tel,String name) throws IOException{
+    /**
+     * 保存供应商操作员
+     * @param id            操作员ID
+     * @param loginName     用户名
+     * @param password      密码
+     * @param tel           联系电话
+     * @param name          姓名
+     * @param authorityList 权限列表
+     * @throws IOException
+     */
+    @RequestMapping(value = "/saveSupplierOperatorInfo",method = RequestMethod.POST)
+    @ResponseBody
+    public void saveSupplierOperatorInfo(@AuthenticationPrincipal SystemUser userInfo,Long id
+            ,@RequestParam String loginName,@RequestParam String password,String tel,String name
+            ,@RequestParam String[] authorityList) throws IOException{
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+        supplierOperatorService.saveOperator(id,supplier,loginName,password,tel,name,authorityList);
+    }
 
+    @RequestMapping(value = "/delSupplierOperator",method = RequestMethod.POST)
+    @ResponseBody
+    public void delSupplierOperator(@RequestParam Long id) throws IOException{
+        loginService.delLogin(id);
     }
 
 }

@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 
-    <title>编辑用户</title>
+    <title>编辑操作员</title>
     <meta name="keywords" content=""/>
     <meta name="description" content=""/>
 
@@ -26,22 +26,22 @@
     <link href="http://resali.huobanplus.com/cdn/hotui/css/animate.min.css" rel="stylesheet"/>
     <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
 </head>
-
+<!--/*@thymesVar id="operator" type="com.huotu.tourist.entity.TouristSupplier"*/-->
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>编辑用户</h5>
+                    <h5>编辑操作员</h5>
                 </div>
                 <div class="ibox-title">
                     <button onclick="history.go(-1)" class="btn btn-primary" type="button">返回</button>
                 </div>
                 <div class="ibox-content">
-                    <!--/*@thymesVar id="login" type="com.huotu.huobanplus.sns.entity.Circle"*/-->
-                    <form method="post" class="form-horizontal" th:object="${login}">
-                        <input type="hidden" name="permissionId" th:value="*{id}"/>
+
+                    <form method="post" class="form-horizontal" th:object="${operator}">
+                        <input type="hidden" name="id" th:value="*{id}"/>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">用户名:</label>
 
@@ -51,9 +51,33 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">姓名:</label>
+
+                            <div class="col-sm-4">
+                                <input name="name" th:value="*{operatorName}" type="text" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系手机:</label>
+
+                            <div class="col-sm-4">
+                                <input name="tel" th:value="*{operatorTel}" type="text" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">密码:</label>
                             <div class="col-sm-4">
-                                <input name="password" th:value="*{password}" type="text" class="form-control"/>
+                                <input name="password" type="text" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">确认密码:</label>
+                            <div class="col-sm-4">
+                                <input name="affirmPassword" type="text" class="form-control"/>
                             </div>
                         </div>
 
@@ -64,47 +88,44 @@
 
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_CATEGORY}" value="ROLE_CATEGORY" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>分类管理</label>
+                                        <input th:checked="${operator.getAuthorityList().contains('ROLE_ORDER')}"
+                                               name="permissionChk" value="ROLE_ORDER"
+                                               style="position: absolute; opacity: 0;" type="checkbox"/>
+                                    </div>订单管理</label>
 
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_CIRCLE}" value="ROLE_CIRCLE" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>圈子管理</label>
+                                        <input name="permissionChk"
+                                               th:checked="${operator.getAuthorityList().contains('ROLE_GOODS')}"
+                                               value="ROLE_GOODS" style="position: absolute; opacity: 0;" type="checkbox"/>
+                                    </div>线路管理</label>
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_WIKI}" value="ROLE_WIKI" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>科普管理</label>
+                                        <input name="permissionChk"
+                                               th:checked="${operator.getAuthorityList().contains('ROLE_SETTLEMENT')}"
+                                               value="ROLE_SETTLEMENT" style="position: absolute; opacity: 0;" type="checkbox"/>
+                                    </div>结算账户管理</label>
 
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_TAG}" value="ROLE_TAG" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>标签管理
+                                        <input name="permissionChk"
+                                               th:checked="${operator.getAuthorityList().contains('ROLE_STATISTICS')}"
+                                               value="ROLE_STATISTICS" style="position: absolute; opacity: 0;" type="checkbox"/>
+                                    </div>销售统计管理
                                 </label>
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_USER}" value="ROLE_USER" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>用户管理</label>
+                                        <input name="permissionChk"
+                                               th:checked="${operator.getAuthorityList().contains('ROLE_SUPPLIERINFO')}"
+                                               value="ROLE_SUPPLIERINFO" style="position: absolute; opacity: 0;" type="checkbox"/>
+                                    </div>供应商信息管理</label>
 
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_MESSAGE}" value="ROLE_MESSAGE" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>消息管理</label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_PERMISSION}" value="ROLE_PERMISSION" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>权限管理</label>
-
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_REPORT}" value="ROLE_REPORT" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>举报管理
-                                </label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk" th:checked="${ROLE_RECOMMEND}" value="ROLE_RECOMMEND" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>推荐管理</label>
-
+                                        <input name="permissionChk"
+                                               th:checked="${operator.getAuthorityList().contains('ROLE_ACCOUNT')}"
+                                               value="ROLE_ACCOUNT" style="position: absolute; opacity: 0;" type="checkbox"/>
+                                    </div>收款账户管理</label>
                             </div>
 
                         </div>
@@ -112,8 +133,8 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="button" onclick="permissionConfig.submitForm(this)">保存用户</button>
-                                <a class="btn-white" href="/admin/permission/permissionList.html"><button class="btn btn-white" type="button">取消</button></a>
+                                <button class="btn btn-primary" type="button" onclick="submitForm(this)">保存</button>
+                                <!--<a class="btn-white" href="/admin/permission/permissionList.html"><button class="btn btn-white" type="button">取消</button></a>-->
                             </div>
                         </div>
                     </form>
@@ -135,48 +156,54 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    var permissionConfig={};
-    permissionConfig.searchModel={};
-    permissionConfig.currentSearchType=0;
     //        permissionConfig.sharePicPath=/*[[${sharePicPath}]]*/ '';
 
     //提交
-    permissionConfig.submitForm=function(obj) {
+    var submitForm=function(obj) {
         if($(obj).attr("class")=="btn btn-primary disabled"){
+            return;
+        }
+
+        var id=$("input[name='id']").val();
+        var loginName=$("input[name='loginName']").val();
+        var name=$("input[name='name']").val();
+        var tel=$("input[name='tel']").val();
+        var password=$("input[name='password']").val();
+        var affirmPassword=$("input[name='affirmPassword']").val();
+        if(loginName==""){
+            layer.msg("请输入用户名");
+            return;
+        }
+        if(password==""){
+            layer.msg("请输入密码");
+            return;
+        }
+        if(password!=affirmPassword){
+            layer.msg("密码不一致");
             return;
         }
         var ld=layer.load(5, {shade: false});
         $(obj).attr("class","btn btn-primary disabled");
-        var loginModel={};
-        loginModel.id=$("input[name='permissionId']").val();
-        loginModel.loginName=$("input[name='loginName']").val();
-        loginModel.password=$("input[name='password']").val();
-
-        var authors="";
-        var havePermission=$("input[name='permissionChk']:checked");
-        $(havePermission).each(function(index,val){
-            authors=authors+$(val).val();
-            if(index<havePermission.length-1){
-                authors=authors+"|";
+        var authorityList="";
+        $("input[name='permissionChk']:checked").each(function(index){
+            if(index!=0){
+                authorityList=authorityList+",";
             }
+            authorityList=authorityList+$(this).val();
         });
-        loginModel.authors=authors;
-        console.log(loginModel);
         $.ajax({
             type:'POST',
-            url: '/top/permission/savePermission',
-            dataType: 'json',
-            contentType:"application/json",
-            data: JSON.stringify(loginModel),
+            url: '/supplier/saveSupplierOperatorInfo',
+            dataType: 'text',
+            data: {id:id,tel:tel,loginName:loginName,password:password,authorityList:authorityList,name:name},
             success:function(result){
-                layer.close(ld);
                 layer.msg("保存成功！");
-                window.setTimeout("window.location='/admin/permission/permissionList.html'",1000);
-
+                layer.close(ld);
+                window.setTimeout("window.location='/supplier/showJurisdiction'",1000);
             },
             error:function(e){
-                layer.close(ld);
                 layer.msg("保存失败！");
+                layer.close(ld);
             }
         });
     };

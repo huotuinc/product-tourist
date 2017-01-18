@@ -14,18 +14,19 @@
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
     <link href="../../../assets/libs/layer/skin/layer.css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="panel-body" style="padding-bottom:0;">
 
     <div id="toolbar" class="btn-group">
-        <button id="btn_add" type="button" class="btn btn-default">
-            <a href="jurisdictionDeails.html"><span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span></a>
-        </button>
+            <a th:href="@{/supplier/getJurisdiction}" class="btn btn-success" id="btn_add"
+               href="jurisdictionDeails.html"><span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span></a>
     </div>
 
-    <table id="goodsTable" data-toggle="table" data-url="../../../mock/supplier/jurisdictionList.json"
+    <table id="goodsTable" data-toggle="table"
+           data-url="../../../mock/supplier/jurisdictionList.json"
+           th:attr="data-url=@{/supplier/getJurisdictionList}"
            data-method="get" data-side-pagination="server"
            data-pagination="true" data-striped="true"
            data-page-number="1" data-page-size="10" data-page-list="[10, 25, 50, 100, All]"
@@ -35,8 +36,8 @@
         <tr>
             <th data-field="id" data-align="center">序号</th>
             <th data-field="loginName" data-align="center">登录名</th>
-            <th data-field="name"  data-align="center">姓名</th>
-            <th data-field="tel" data-align="center">联系手机</th>
+            <th data-field="operatorName"  data-align="center">姓名</th>
+            <th data-field="operatorTel" data-align="center">联系手机</th>
             <th data-field="action"  data-align="center"
                 data-formatter="actionFormatter" data-events="actionEvents">操作
             </th>
@@ -49,7 +50,13 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
-<script src="../../../assets/js/manage/supplier/jurisdictionList.js" th:inline="javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var detailUrl=/*[[@{/supplier/getJurisdiction}]]*/'jurisdictionDeails.html';
+    /*]]>*/
+
+</script>
+<script src="../../../assets/js/manage/supplier/jurisdictionList.js"></script>
 </body>
 
 </html>

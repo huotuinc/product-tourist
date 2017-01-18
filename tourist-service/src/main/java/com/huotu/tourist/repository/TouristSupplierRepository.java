@@ -10,6 +10,8 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.entity.TouristSupplier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -20,4 +22,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface TouristSupplierRepository extends JpaRepository<TouristSupplier, Long>, JpaSpecificationExecutor<TouristSupplier> {
 
     TouristSupplier findByLoginName(String name);
+
+    Page<TouristSupplier> findByAuthSupplierAndDeleted(TouristSupplier supplier,boolean deleted,Pageable pageable);
 }

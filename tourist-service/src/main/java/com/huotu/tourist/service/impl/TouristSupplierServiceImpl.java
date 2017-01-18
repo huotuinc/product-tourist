@@ -67,4 +67,9 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
         touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setRemarks(remarks);
     }
+
+    @Override
+    public Page<TouristSupplier> getJurisdictionList(TouristSupplier authSupplier, Pageable pageable) {
+        return touristSupplierRepository.findByAuthSupplierAndDeleted(authSupplier,false,pageable);
+    }
 }

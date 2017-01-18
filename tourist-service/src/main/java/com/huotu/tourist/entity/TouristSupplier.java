@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.login.Login;
 import com.huotu.tourist.login.SystemUser;
@@ -19,18 +20,11 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 线路供应商
@@ -40,7 +34,7 @@ import java.util.List;
 @Table(name = "Tourist_Supplier")
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class TouristSupplier extends Login implements SystemUser {
 
     public static final List<Selection<TouristSupplier, ?>> selections = Arrays.asList(
@@ -64,6 +58,8 @@ public class TouristSupplier extends Login implements SystemUser {
             }
             , new SimpleSelection<TouristSupplier, String>("contacts", "contacts")
             , new SimpleSelection<TouristSupplier, String>("contactNumber", "contactNumber")
+            , new SimpleSelection<TouristSupplier, String>("operatorName","operatorName")
+            , new SimpleSelection<TouristSupplier, String>("operatorTel","operatorTel")
             , new SimpleSelection<TouristSupplier, String>("frozen", "frozen")
             , new Selection<TouristSupplier, String>() {
                 @Override
@@ -77,6 +73,10 @@ public class TouristSupplier extends Login implements SystemUser {
                 }
             }
     );
+
+    @ManyToOne
+    private TouristSupplier authSupplier;
+
     /**
      * 供应商名称
      */
@@ -132,6 +132,34 @@ public class TouristSupplier extends Login implements SystemUser {
     @Column(insertable = false)
     private boolean frozen;
 
+    /**
+     * 操作员姓名
+     */
+    @Column(length = 30)
+    private String operatorName;
+
+    /**
+     * 联系手机
+     */
+    @Column(length = 11)
+    private String operatorTel;
+
+
+    /**
+     * 权限列表
+     */
+    @ElementCollection
+    @Column(length = 50)
+    private Set<String> authorityList=new HashSet<>();
+
+    /**
+     * 获取操作员，如果为null,则代表自己是供应商
+     * @return
+     */
+    public TouristSupplier getAuthSupplier(){
+        return authSupplier==null?this:authSupplier;
+    }
+
     @Override
     public boolean isSupplier() {
         return true;
@@ -142,8 +170,23 @@ public class TouristSupplier extends Login implements SystemUser {
         return false;
     }
 
+    private static Set<SimpleGrantedAuthority> String2GrantedAuthoritySet(Stream<String> input) {
+        return input.map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+    }
+
+    /**
+     * 作为默认权限 ROLE_OPERATOR 都将被加入。
+     *
+     * @return 权限表
+     */
+    @Transient
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_SUPPLIER"));
+        if (authorityList == null || authorityList.isEmpty())
+            return String2GrantedAuthoritySet(Stream.of("ROLE_SUPPLIER"));
+        if (!authorityList.contains("ROLE_SUPPLIER"))
+            authorityList.add("ROLE_SUPPLIER");
+        return String2GrantedAuthoritySet(authorityList.stream());
     }
 }
