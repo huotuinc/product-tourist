@@ -302,7 +302,7 @@ public abstract class WebTest extends ServiceBaseTest {
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
         touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);
-        touristBuyer.setBuyerId(UUID.randomUUID().toString().replace("-", ""));
+//        touristBuyer.setBuyerId(UUID.randomUUID().toString().replace("-", ""));
         touristBuyer.setTelPhone(telPhone == null ? "13012345678" : telPhone);
         touristBuyer.setCheckState(buyerCheckState == null ? randomBuyerCheckState() : buyerCheckState);
         touristBuyer.setCreateTime(LocalDateTime.now());

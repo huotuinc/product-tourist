@@ -55,11 +55,20 @@ public interface ConnectMallService {
      */
     boolean statusNormal(TouristOrder order) throws IOException;
 
+    /**
+     * 订单状态是否正常（我们只会认可唯一的一种状态）
+     *
+     * @param mallTradeId 商城订单号
+     * @return true 表示这个订单可以被认可为已支付
+     * @throws IOException
+     */
+    boolean statusNormal(String mallTradeId) throws IOException;
+
 
     /**
      * 获取用户的账户信息
      *
-     * @param mallUserId  商城用户小伙伴id
+     * @param mallUserId 商城用户小伙伴id
      * @return
      * @throws IOException 获取信息失败
      */
@@ -77,9 +86,9 @@ public interface ConnectMallService {
 
     /**
      * 建议使用{@link #getUserDetailByUserId(Long)}
+     *
      * @param buyer 采购商
      * @return
-     *
      */
     @Deprecated
     String getTouristBuyerHeadUrl(TouristBuyer buyer);

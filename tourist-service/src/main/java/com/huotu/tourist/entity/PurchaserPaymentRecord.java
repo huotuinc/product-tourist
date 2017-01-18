@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.entity;
@@ -82,17 +82,6 @@ public class PurchaserPaymentRecord extends BaseModel {
                 @Override
                 public String getName() {
                     return "telPhone";
-                }
-            }
-            , new Selection<PurchaserPaymentRecord, String>() {
-                @Override
-                public String apply(PurchaserPaymentRecord purchaserPaymentRecord) {
-                    return purchaserPaymentRecord.getTouristBuyer().getBuyerId();
-                }
-
-                @Override
-                public String getName() {
-                    return "buyerId";
                 }
             }
             , new Selection<PurchaserPaymentRecord, String>() {

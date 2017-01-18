@@ -4,7 +4,7 @@
  *
  * (c) Copyright Hangzhou Hot Technology Co., Ltd.
  * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
- * 2013-2016. All rights reserved.
+ * 2013-2017. All rights reserved.
  */
 
 package com.huotu.tourist.entity;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 线路采购商
+ * 线路采购商，可以是一个未录入采购商数据或者未被批准的采购商
  * Created by lhx on 2016/12/16.
  */
 @Entity
@@ -146,12 +146,6 @@ public class TouristBuyer implements SystemUser {
     private String IDInverseUri;
 
     /**
-     * 采购商ID
-     */
-    @Column(length = 100, unique = true)
-    private String buyerId;
-
-    /**
      * 昵称
      */
     @Column(length = 100)
@@ -165,9 +159,17 @@ public class TouristBuyer implements SystemUser {
 
     /**
      * 支付状态
+     * 应该不存在
      */
     @Column
+    @Deprecated
     private BuyerPayStateEnum payState;
+
+    /**
+     * 最后一个意图购买资格的商城订单号
+     */
+    @Column(length = 50)
+    private String lastQualificationMallTradeId;
 
     /**
      * 身份证号

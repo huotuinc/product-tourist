@@ -21,9 +21,11 @@ import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.repository.SystemStringRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.util.SignBuilder;
@@ -65,8 +67,18 @@ import java.util.UUID;
 public class ConnectMallServiceImpl implements ConnectMallService {
 
     private static final Log log = LogFactory.getLog(ConnectMallServiceImpl.class);
+    /**
+     * 线路运行商户--行装
+     */
     private final Merchant merchant;
+    /**
+     * 商户配置--行装配置
+     */
     private final MerchantConfig merchantConfig;
+    /**
+     * 小伙伴升级成为认证采购商必须购买的货品
+     */
+    private final String qualificationsProductId;
     //商城后台设置自己的secretKey
     private final String secretKey;
     //商家key
@@ -91,7 +103,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @SuppressWarnings("unused")//不能省
     @Autowired
     public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository
-            , MerchantConfigRestRepository merchantConfigRestRepository) throws IOException {
+            , MerchantConfigRestRepository merchantConfigRestRepository, SystemStringRepository systemStringRepository) throws IOException {
         merchant = merchantRestRepository.getOneByPK(
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
@@ -101,6 +113,19 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         token = environment.getProperty("tourist.token", environment.acceptsProfiles("test") ? "3447" : "4886");
         secretKey = environment.getProperty("tourist.secretKey", environment.acceptsProfiles("test") ? "3447" : "4886");
         mallDomain = environment.getProperty("tourist.mallDomain", environment.acceptsProfiles("test") ? "3447" : "4886");
+
+        SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
+        if (qualificationsProductIdSystem == null) {
+            // TODO 根据扒拉 。。
+            qualificationsProductId = "";
+            qualificationsProductIdSystem = new SystemString();
+            qualificationsProductIdSystem.setId("QualificationsProductId");
+            qualificationsProductIdSystem.setValue(qualificationsProductId);
+            systemStringRepository.save(qualificationsProductIdSystem);
+        } else {
+            qualificationsProductId = qualificationsProductIdSystem.getValue();
+        }
+
     }
 
     /**
@@ -185,6 +210,11 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Override
     public boolean statusNormal(TouristOrder order) throws IOException {
+        return false;
+    }
+
+    @Override
+    public boolean statusNormal(String mallTradeId) throws IOException {
         return false;
     }
 
