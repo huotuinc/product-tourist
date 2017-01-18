@@ -107,19 +107,19 @@
                     </tr>
                     <tr>
                         <th>积分抵用：</th>
-                        <td>22</td>
+                        <td th:text="${order.mallIntegral}">22</td>
                         <th>支付方式：</th>
                         <td th:text="${order.payType.value}">支付宝</td>
                     </tr>
                     <tr>
                         <th>余额抵用：</th>
-                        <td>22</td>
+                        <td th:text="${order.mallBalance}">22</td>
                         <th>购买数量：</th>
                         <td th:text="${travelers.size()}">22</td>
                     </tr>
                     <tr>
                         <th>小金库抵用：</th>
-                        <td>22</td>
+                        <td th:text="${order.mallCoffers}">22</td>
                         <th>返佣：</th>
                         <td th:text="${order.orderMoney}*${order.touristGood.rebate}">22</td>
                     </tr>

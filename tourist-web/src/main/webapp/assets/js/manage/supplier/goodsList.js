@@ -31,7 +31,8 @@ var touristCheckStateFormatter=function(value,row,index){
 };
 
 var touristImgUriFormatter=function(value,row,index){
-    return '<img src="'+row.touristImgUri+'" height="50px" width="80px">';
+    var res= $("#goodsResPath").attr("src");
+    return '<img src="'+res+row.touristImgUri+'" height="50px" width="80px">';
 };
 
 var actionEvents = {
@@ -57,7 +58,8 @@ var actionEvents = {
                     success: function () {
                         //$table.bootstrapTable('refresh');
                         layer.msg('修改成功', {icon: 1});
-                        $(td).text("已回收");
+                        $("table").bootstrapTable('refresh');
+                        //$(td).text("已回收");
                     },
                     error: function (error) {
                         layer.msg("修改失败")

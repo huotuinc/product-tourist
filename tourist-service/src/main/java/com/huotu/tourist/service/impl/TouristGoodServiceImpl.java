@@ -9,6 +9,7 @@ import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.TouristGoodService;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,6 +35,9 @@ public class TouristGoodServiceImpl implements TouristGoodService {
 
     @Autowired
     TouristOrderRepository touristOrderRepository;
+
+    @Autowired
+    private ResourceService resourceService;
 
     @Override
     public TouristGood save(TouristGood data) {

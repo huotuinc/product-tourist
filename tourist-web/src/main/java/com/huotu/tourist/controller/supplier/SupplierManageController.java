@@ -726,12 +726,13 @@ public class SupplierManageController {
      * @param newPassword   新密码
      * @throws IOException
      */
-    @RequestMapping("/resetSupplierPassword")
+    @RequestMapping(value = "/resetSupplierPassword", method = RequestMethod.POST)
+    @ResponseBody
     public ModelMap resetSupplierPassword(@AuthenticationPrincipal SystemUser userInfo,String oldPassword
             ,String newPassword) throws IOException{
         ModelMap modelMap=new ModelMap();
         TouristSupplier supplier=(TouristSupplier)userInfo;
-        if(!supplier.getPassword().equals(passwordEncoder.encode(oldPassword))){
+        if(!passwordEncoder.matches(oldPassword,supplier.getPassword())){
             modelMap.addAttribute("data",500);
             modelMap.addAttribute("message","密码错误！");
             return modelMap;
