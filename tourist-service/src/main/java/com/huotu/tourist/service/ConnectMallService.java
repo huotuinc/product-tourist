@@ -12,8 +12,10 @@ package com.huotu.tourist.service;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.exception.NotLoginYetException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
@@ -92,4 +94,11 @@ public interface ConnectMallService {
      */
     @Deprecated
     String getTouristBuyerHeadUrl(TouristBuyer buyer);
+
+    /**
+     * @param request 当前请求
+     * @return 用户id, 这个值应该被赋予到 {@link TouristBuyer#id}
+     * @throws NotLoginYetException 尚未登录的话
+     */
+    long currentUserId(HttpServletRequest request) throws NotLoginYetException;
 }

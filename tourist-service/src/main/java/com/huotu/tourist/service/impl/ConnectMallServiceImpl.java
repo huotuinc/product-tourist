@@ -26,6 +26,7 @@ import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.exception.NotLoginYetException;
 import com.huotu.tourist.repository.SystemStringRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
@@ -48,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -308,6 +310,11 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             log.error(e.getMessage());
             return "";
         }
+    }
+
+    @Override
+    public long currentUserId(HttpServletRequest request) throws NotLoginYetException {
+        return 0;
     }
 
     @Getter
