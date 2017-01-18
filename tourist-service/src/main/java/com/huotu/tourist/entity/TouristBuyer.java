@@ -21,6 +21,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,7 +48,7 @@ public class TouristBuyer implements SystemUser {
             , new SimpleSelection<TouristBuyer, String>("businessLicencesUri", "businessLicencesUri")
             , new SimpleSelection<TouristBuyer, String>("buyerId", "buyerId")
             , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
-            , new SimpleSelection<TouristBuyer, String>("IDNo","IDNo")
+            , new SimpleSelection<TouristBuyer, String>("IDNo", "IDNo")
             , new Selection<TouristBuyer, Map>() {
                 @Override
                 public Map apply(TouristBuyer touristBuyer) {
@@ -94,7 +97,6 @@ public class TouristBuyer implements SystemUser {
                 }
             }
     );
-
     /**
      * 作为一个采购商，它是来自一个已登录的小伙伴；即他的id是已知的，应该属于分配值
      */
@@ -110,7 +112,6 @@ public class TouristBuyer implements SystemUser {
      */
     @Column(columnDefinition = "datetime")
     private LocalDateTime updateTime;
-
     /**
      * 采购商名称
      */
@@ -141,19 +142,16 @@ public class TouristBuyer implements SystemUser {
      */
     @Column(length = 200)
     private String IDInverseUri;
-
     /**
      * 昵称
      */
     @Column(length = 100)
     private String nickname;
-
     /**
      * 审核状态
      */
     @Column
     private BuyerCheckStateEnum checkState;
-
     /**
      * 支付状态
      * 应该不存在
@@ -161,18 +159,41 @@ public class TouristBuyer implements SystemUser {
     @Column
     @Deprecated
     private BuyerPayStateEnum payState;
-
     /**
      * 最后一个意图购买资格的商城订单号
      */
     @Column(length = 50)
     private String lastQualificationMallTradeId;
-
     /**
      * 身份证号
      */
     @Column(length = 18)
     private String IDNo;
+
+    /**
+     * 检查一个采购商是否已得到认可
+     *
+     * @param buyer 采购商
+     * @return XX
+     */
+    public static boolean isRealBuyer(TouristBuyer buyer) {
+        return buyer.getCheckState() == BuyerCheckStateEnum.CheckFinish
+                && buyer.getPayState() == BuyerPayStateEnum.PayFinish;
+    }
+
+    /**
+     * 检查一个采购商是否已得到认可
+     *
+     * @param buyerPath 采购商的查询路径
+     * @param builder   cb
+     * @return 一个JPA谓语
+     */
+    public static Predicate isRealBuyer(Path<? extends TouristBuyer> buyerPath, CriteriaBuilder builder) {
+        return builder.and(
+                builder.equal(buyerPath.get("checkState"), BuyerCheckStateEnum.CheckFinish)
+                , builder.equal(buyerPath.get("payState"), BuyerPayStateEnum.PayFinish)
+        );
+    }
 
     @Override
     public boolean isSupplier() {
@@ -184,7 +205,9 @@ public class TouristBuyer implements SystemUser {
         return false;
     }
 
-    public boolean isBuyer(){
+    public boolean isBuyer() {
         return true;
-    };
+    }
+
+    ;
 }
