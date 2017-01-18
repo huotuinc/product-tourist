@@ -15,6 +15,7 @@ import com.huotu.huobanplus.common.entity.GoodsImage;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.common.entity.MerchantConfig;
 import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.model.type.MallEmbedResource;
 import com.huotu.huobanplus.sdk.common.repository.GoodsImageRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
@@ -42,7 +43,6 @@ import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -50,10 +50,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -135,7 +133,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
-    @Transactional
     public TouristGood pushGoodToMall(long touristGoodId) throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
         if (touristGood.getMallGoodId() != null)
@@ -155,17 +152,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         goods.setDescription("行装线路商品");
         goods = goodsRestRepository.insert(goods);
         log.debug("new Goods:" + goods);
-        GoodsImage goodsImage = new GoodsImage();
-        goodsImage.setOrderBy(1);
-        goodsImage.setOriginHeight(1);
-        goodsImage.setOriginWidth(1);
-        goodsImage.setRemote(true);
-        goodsImage.setSource(touristGood.getTouristImgUri());
-        goodsImage = goodsImageRestRepository.insert(goodsImage);
-        goodsImage.setGoods(goods);
-        List<GoodsImage> list = new ArrayList<>();
-        list.add(goodsImage);
-        goods.setImages(list);
 
         Product product = new Product();
         product.setName("线路默认");
@@ -173,11 +159,25 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         product.setMerchant(merchant);
         product.setPrice(touristGood.getPrice().doubleValue());
         product.setGoods(goods);
-        product.setCode(UUID.randomUUID().toString().replace("-", ""));
+        product.setCode("" + touristGood.getId() + new Date().toString());
         product = productRestRepository.insert(product);
-        Set<Product> products = new HashSet<>();
-        products.add(product);
-        goods.setProducts(products);
+
+        GoodsImage goodsImage = new GoodsImage();
+        goodsImage.setOrderBy(1);
+        goodsImage.setOriginHeight(1);
+        goodsImage.setOriginWidth(1);
+        goodsImage.setRemote(true);
+        goodsImage.setSource(touristGood.getTouristImgUri());
+        MallEmbedResource mallEmbedResource = new MallEmbedResource();
+        mallEmbedResource.setValue(touristGood.getTouristImgUri());
+        goodsImage.setThumbnailPic(mallEmbedResource);
+        goodsImage.setSmallPic(mallEmbedResource);
+        goodsImage.setBigPic(mallEmbedResource);
+        goodsImage = goodsImageRestRepository.insert(goodsImage);
+
+        goodsImage.setGoods(goods);
+        List<GoodsImage> list = new ArrayList<>();
+        list.add(goodsImage);
 
         touristGood.setMallGoodId(goods.getId());
         return touristGood;
