@@ -26,7 +26,7 @@
                     </div>
                     <div class="zh-wz-time"><span
                             style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;"
-                            th:if="${user!=null && user.payState.code==1}" th:text="${'$'+good.price}">￥199
+                            th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}" th:text="${'$'+good.price}">￥199
                     </span>
                         <p style="clear:both"></p>
                     </div>
@@ -35,7 +35,7 @@
         </div>
     </div>
 </div>
-<div class="leftboxtwo">
+<div xmlns:th="http://www.thymeleaf.org" class="leftboxtwo" th:remove="all">
     <div class="cont-zhbox" style="margin: 0px">
         <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
             <a href="touristGoodInfo.html" class="bz">

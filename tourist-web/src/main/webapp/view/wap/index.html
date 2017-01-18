@@ -40,8 +40,8 @@
                         <img src="../../assets/img/swiper-1.jpg" res:src="${banner.bannerImgUri}"/>
                     </a>
                 </div>
-                <div class="swiper-slide"><img src="../../assets/img/swiper-2.jpg"/></div>
-                <div class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
+                <div class="swiper-slide" th:remove="all"><img src="../../assets/img/swiper-2.jpg"/></div>
+                <div class="swiper-slide" th:remove="all"><img src="../../assets/img/swiper-1.jpg"/></div>
             </div>
             <!-- If we need pagination -->
             <div class="swiper-pagination"></div>
@@ -116,14 +116,15 @@
                                 <span style="float:left" th:text="${good.touristRoutes.get(0).getFromDate()+'出发'}">12月08
                                     号出发</span>
                                 <span style="float:right; margin-right:10px;color:#FF5558; font-size: 16px;"
-                                      th:if="${user.payState.code==1}" th:text="${'$'+good.price}">￥199</span>
+                                      th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
+                                      th:text="${'$'+good.price}">￥199</span>
                                 <p style="clear:both"></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="cont-zhbox">
+            <div class="cont-zhbox" th:remove="all">
                 <div class="cont-zhbox-t"><a href="touristGoodInfo.html" class="bz">
                     <p class="cont-zhbox-img"><img src="../../assets/img/swiper-2.jpg"></p>
                     <p class="cont-zhbox-nav"></p>
@@ -141,7 +142,7 @@
                     </div>
                 </div>
             </div>
-            <div class="cont-zhbox">
+            <div class="cont-zhbox" th:remove="all">
                 <div class="cont-zhbox-t"><a href="touristGoodInfo.html" class="bz">
                     <p class="cont-zhbox-img"><img src="../../assets/img/swiper-2.jpg"></p>
                     <p class="cont-zhbox-nav"></p>
@@ -180,14 +181,14 @@
                     登山登山
                 </a>
             </li>
-            <li class="pj"><a href="activityTypeGoods.html"> 徒步步</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 自驾</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 登山</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 徒步步步</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 自驾</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 登山</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 徒步</a></li>
-            <li class="pj"><a href="activityTypeGoods.html"> 自驾</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 徒步步</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 自驾</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 登山</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 徒步步步</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 自驾</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 登山</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 徒步</a></li>
+            <li class="pj" th:remove="all"><a href="activityTypeGoods.html"> 自驾</a></li>
         </ul>
         <p style="clear: both"></p>
 

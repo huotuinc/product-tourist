@@ -91,7 +91,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     private final String mallDomain;
     private final String uri = "/MallApi/{0}/{1}";
 
-
     @Autowired
     private GoodsRestRepository goodsRestRepository;
     @Autowired
@@ -100,7 +99,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     private ProductRestRepository productRestRepository;
     @Autowired
     private GoodsImageRestRepository goodsImageRestRepository;
-
 
     @SuppressWarnings("unused")//不能省
     @Autowired
@@ -118,8 +116,26 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
         SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
         if (qualificationsProductIdSystem == null) {
-            // TODO 根据扒拉 。。
-            qualificationsProductId = "";
+            Goods goods = new Goods();
+            goods.setOwner(merchant);
+            goods.setCreateTime(new Date());
+            goods.setDisabled(false);
+            goods.setMarketable(true);
+            goods.setTitle("采购商资格产品");
+            goods.setPrice(100);
+            goods.setCode(UUID.randomUUID().toString().replace("-", ""));
+            goods.setGoodsType("行装线路");
+            goods.setDescription("行装线路商品");
+            goods = goodsRestRepository.insert(goods);
+            Product product = new Product();
+            product.setName("线路默认");
+            product.setMarketable(true);
+            product.setMerchant(merchant);
+            product.setPrice(0);
+            product.setGoods(goods);
+            product.setCode(goods.getId() + new Date().toString());
+            product = productRestRepository.insert(product);
+            qualificationsProductId = "" + product.getId();
             qualificationsProductIdSystem = new SystemString();
             qualificationsProductIdSystem.setId("QualificationsProductId");
             qualificationsProductIdSystem.setValue(qualificationsProductId);
@@ -129,6 +145,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         }
 
     }
+
 
     /**
      * 把数组所有元素排序，并按照“参数参数值”的模式用字符拼接成字符串

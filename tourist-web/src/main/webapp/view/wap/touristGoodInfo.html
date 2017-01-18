@@ -47,9 +47,8 @@
                         th:text="${'￥'+good.price+'人'}">￥300元/人
                     </li>
                     <li class="weui_media_info_meta" style="margin-top: 3px;"
-                        th:if="${user!=null and user.payState.code==1}"
-                        th:text="${good.price*good.rebate}">佣金：200
-                        元
+                        th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
+                        th:text="${good.price*good.rebate}">佣金：200 元
                     </li>
                 </ul>
                 <ul class="weui_media_info">
@@ -82,19 +81,22 @@
                                          style="width:100%; "/>
                                 </div>
                             </div>
-                            <div class="swiper-slide routeDiv " style="width: auto;" data-routeId="1" data-count="0">
+                            <div th:remove="all" class="swiper-slide routeDiv " style="width: auto;" data-routeId="1"
+                                 data-count="0">
                                 <div class="custom-image-mask"><span class="bn">2016.10.10 9:00</span> <span
                                         class="bna">剩余8人</span>
                                     <div class="masksd"></div>
                                     <img src="../../assets/img/a1.jpg" style="width:100%; "/></div>
                             </div>
-                            <div class="swiper-slide routeDiv" style="width: auto;" data-routeId="2" data-count="4">
+                            <div th:remove="all" class="swiper-slide routeDiv" style="width: auto;" data-routeId="2"
+                                 data-count="4">
                                 <div class="custom-image-mask"><span class="bn">2016.10.10 9:00</span> <span
                                         class="bna">剩余8人</span>
                                     <div class="masksd"></div>
                                     <img src="../../assets/img/a1.jpg" style="width:100%; "/></div>
                             </div>
-                            <div class="swiper-slide routeDiv " style="width: auto;" data-routeId="3" data-count="0">
+                            <div th:remove="all" class="swiper-slide routeDiv " style="width: auto;" data-routeId="3"
+                                 data-count="0">
                                 <div class="custom-image-mask"><span class="bn">全部时间</span> <span class="bna" style="">查看</span>
                                     <div class="masksd"></div>
                                     <img src="../../assets/img/a1.jpg" style="width:100%; "/></div>
@@ -141,10 +143,10 @@
         <div class="toggle-home"><a href="index.html" th:href="@{/wap/}"><span class="icon"></span>首页</a></div>
         <div class="buy-now yuanjiaoo">
             <a id="procurement"
-               th:if="${user!=null and user.payState.code==1 && user.checkState.code==1}"
+               th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
             > 立即采购
             </a>
-            <a href="buyerApply.html" th:if="${!(user!=null and user.payState.code==1)}"> 申请成为采购商 </a>
+            <a href="buyerApply.html" th:if="${!#authorization.expression('hasRole(''ROLE_BUYER'')')}"> 申请成为采购商 </a>
         </div>
     </div>
 </div>

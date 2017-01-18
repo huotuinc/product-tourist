@@ -7,6 +7,7 @@
   ~ 2013-2017. All rights reserved.
   -->
 
+<!--/*@thymesVar id="recommendGoods" type="java.util.list"*/-->
 <div xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" class="leftboxtwo"
      th:each="good:${recommendGoods}">
     <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
@@ -24,9 +25,9 @@
                         <div class="zh-wz-name" style="margin: 0px 4px;" th:text="${good.touristName}">西藏云南8日轻装游，赶快报名！
                         </div>
                     </div>
-                    <div class="zh-wz-time"><span
-                            style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;"
-                            th:if="${user!=null && user.payState.code==1}" th:text="${'$'+good.price}">￥199
+                    <div class="zh-wz-time"><span th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
+                                                  style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;"
+                                                  th:text="${'$'+good.price}">￥199
                     </span>
                         <p style="clear:both"></p>
                     </div>
@@ -35,7 +36,7 @@
         </div>
     </div>
 </div>
-<div class="leftboxtwo">
+<div class="leftboxtwo" xmlns:th="http://www.thymeleaf.org" th:remove="all">
     <div class="cont-zhbox" style="margin: 0px">
         <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
             <a href="touristGoodInfo.html" class="bz">

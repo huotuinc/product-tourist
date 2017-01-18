@@ -16,6 +16,9 @@ import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,12 +26,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 线路采购商，可以是一个未录入采购商数据或者未被批准的采购商
@@ -38,7 +43,7 @@ import java.util.Map;
 @Table(name = "Tourist_Buyer")
 @Getter
 @Setter
-public class TouristBuyer implements SystemUser {
+public class TouristBuyer implements SystemUser, UserDetails {
 
     public static final List<Selection<TouristBuyer, ?>> selections = Arrays.asList(
             new SimpleSelection<TouristBuyer, String>("id", "id"),
@@ -157,7 +162,6 @@ public class TouristBuyer implements SystemUser {
      * 应该不存在
      */
     @Column
-    @Deprecated
     private BuyerPayStateEnum payState;
     /**
      * 最后一个意图购买资格的商城订单号
@@ -189,7 +193,7 @@ public class TouristBuyer implements SystemUser {
      * @return 一个JPA谓语
      */
     public static Predicate isRealBuyer(Path<? extends TouristBuyer> buyerPath, CriteriaBuilder builder) {
-        return builder.and(
+        return (Predicate) builder.and(
                 builder.equal(buyerPath.get("checkState"), BuyerCheckStateEnum.CheckFinish)
                 , builder.equal(buyerPath.get("payState"), BuyerPayStateEnum.PayFinish)
         );
@@ -209,5 +213,42 @@ public class TouristBuyer implements SystemUser {
         return true;
     }
 
-    ;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (isRealBuyer(this)) {
+            return Collections.singleton(new SimpleGrantedAuthority("ROLE_BUYER"));
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return id.toString();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -34,10 +34,10 @@
                                     <span th:text="${entry.key}">北京 </span>
                                 </a>
                             </li>
-                            <li class="ad"><a href="javascript:;"> <span>浙江</span> </a></li>
-                            <li class="ad"><a href="javascript:;"> <span>哈尔滨</span> </a></li>
-                            <li class="ad"><a href="javascript:;"> <span>川藏</span> </a></li>
-                            <li class="ad"><a href="javascript:;"> <span>云南</span> </a></li>
+                            <li class="ad" th:remove="all"><a href="javascript:;"> <span>浙江</span> </a></li>
+                            <li class="ad" th:remove="all"><a href="javascript:;"> <span>哈尔滨</span> </a></li>
+                            <li class="ad" th:remove="all"><a href="javascript:;"> <span>川藏</span> </a></li>
+                            <li class="ad" th:remove="all"><a href="javascript:;"> <span>云南</span> </a></li>
                         </ul>
                     </div>
                     <div class="custom-tag-list-goods" style="overflow:hidden;padding-bottom:10px;">
@@ -52,28 +52,28 @@
                                     </a>
                                 </div>
                             </li>
-                            <li class="ulli">
+                            <li class="ulli" th:remove="all">
                                 <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
                                     <div class="ullidd"> 西安</div>
                                 </a></div>
                             </li>
-                            <li class="ulli">
+                            <li class="ulli" th:remove="all">
                                 <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
                                     <div class="ullidd"> 西安</div>
                                 </a></div>
                             </li>
-                            <li class="ulli">
+                            <li class="ulli" th:remove="all">
                                 <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
                                     <div class="ullidd"> 南京</div>
                                 </a></div>
                             </li>
-                            <li class="ulli">
+                            <li class="ulli" th:remove="all">
                                 <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
                                     <div class="ullidd"> 成都</div>
                                 </a></div>
                             </li>
                         </ul>
-                        <ul class="ulxy" data-province="北京">
+                        <ul class="ulxy" data-province="北京" th:remove="all">
                             <li class="ulli">
                                 <div class="ullidiv"><a href="destinationGoods.html" class="link js-goods clearfix">
                                     <div class="ullidd"> 西安</div>

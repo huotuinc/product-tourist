@@ -183,7 +183,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
 
     @Override
     public List<TouristGood> findNewTourists(int offset) {
-        int pageNo = offset / 10;
+        int pageNo = (int) Math.ceil(offset / 10F);
         Pageable pageable = new PageRequest(pageNo, 10, new Sort(Sort.Direction.DESC, "updateTime"));
         Page<TouristGood> page = touristGoodRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);

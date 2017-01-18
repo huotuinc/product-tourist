@@ -353,6 +353,7 @@ public class IndexController {
                 .findByActivityType_IdAndDeletedFalseAndTouristCheckState(activityTypeId, new
                         PageRequest(page, 10), TouristCheckStateEnum.CheckFinish).getContent());
         model.addAttribute("activityTypeId", activityTypeId);
+        model.addAttribute("offset", offset);
         return "view/wap/activityTourist.html";
     }
 
