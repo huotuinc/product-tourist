@@ -268,8 +268,7 @@ public class IndexController {
         } else {
             model.addAttribute("errorMsg", "当前用户不是采购商");
         }
-        // TODO: 2017/1/17 跳转至错误页面
-        return "";
+        return "wap/errorMsg.html";
     }
 
 
@@ -299,8 +298,7 @@ public class IndexController {
         } else {
             model.addAttribute("errorMsg", "警告非法的用户访问，以记录下IP");
         }
-        // TODO: 2017/1/17 跳转至错误页面
-        return "";
+        return "wap/errorMsg.html";
     }
 
 

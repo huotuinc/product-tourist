@@ -11,11 +11,15 @@ package com.huotu.tourist.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.huobanplus.common.entity.Goods;
+import com.huotu.huobanplus.common.entity.GoodsImage;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.common.entity.MerchantConfig;
+import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.sdk.common.repository.GoodsImageRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
+import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
@@ -38,6 +42,7 @@ import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -47,6 +52,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 使用huobanplus推送商品和订单
@@ -74,6 +80,10 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     private GoodsRestRepository goodsRestRepository;
     @Autowired
     private TouristGoodRepository touristGoodRepository;
+    @Autowired
+    private ProductRestRepository productRestRepository;
+    @Autowired
+    private GoodsImageRestRepository goodsImageRestRepository;
 
 
     @SuppressWarnings("unused")//不能省
@@ -97,13 +107,13 @@ public class ConnectMallServiceImpl implements ConnectMallService {
      * @param params 需要排序并参与字符拼接的参数组
      * @return 拼接后字符串
      */
-    public static Map sortMap(Map<String, String> params) {
+    public static Map<String, Object> sortMap(Map<String, Object> params) {
         List<String> keys = new ArrayList<>(params.keySet());
         Collections.sort(keys);
-        Map result = new HashMap();
+        Map<String, Object> result = new HashMap<>();
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
-            String value = params.get(key);
+            Object value = params.get(key);
             if (value == null || value.equals("")) {
                 continue;
             }
@@ -123,10 +133,12 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
+    @Transactional
     public TouristGood pushGoodToMall(long touristGoodId) throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
         if (touristGood.getMallGoodId() != null)
             return touristGood;
+
         //  营销类型（需要跟普通商品做出区别）
         Goods goods = new Goods();
         goods.setOwner(merchant);
@@ -134,15 +146,39 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         goods.setDisabled(false);
         goods.setMarketable(true);
         goods.setTitle(touristGood.getTouristName());
+        goods.setPrice(touristGood.getPrice().doubleValue());
+        goods.setCode(UUID.randomUUID().toString().replace("-", ""));
+        goods.setGoodsType("行装线路");
+        goods.setCost(touristGood.getPrice().doubleValue());
+        goods.setDescription("行装线路商品");
         goods = goodsRestRepository.insert(goods);
         log.debug("new Goods:" + goods);
+        GoodsImage goodsImage = new GoodsImage();
+        goodsImage.setOrderBy(1);
+        goodsImage.setOriginHeight(1);
+        goodsImage.setOriginWidth(1);
+        goodsImage.setRemote(true);
+        goodsImage.setSource(touristGood.getTouristImgUri());
+        goodsImage = goodsImageRestRepository.insert(goodsImage);
+        goodsImage.setGoods(goods);
+        List<GoodsImage> list = new ArrayList<>();
+        list.add(goodsImage);
+        goods.setImages(list);
+
+        Product product = new Product();
+        product.setName("线路默认");
+        product.setMarketable(true);
+        product.setMerchant(merchant);
+        product.setPrice(touristGood.getPrice().doubleValue());
+        product.setGoods(goods);
+        product.setCode(UUID.randomUUID().toString().replace("-", ""));
+        product = productRestRepository.insert(product);
         touristGood.setMallGoodId(goods.getId());
         return touristGood;
     }
 
     @Override
     public boolean statusNormal(TouristOrder order) throws IOException {
-
         return false;
     }
 
@@ -174,7 +210,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Override
     public String pushOrderToMall(TouristOrder order) throws IOException {
-        Map data = new HashMap();
+        Map<String, Object> data = new HashMap<>();
         data.put("payed", order.getMallBalance().intValue());
         data.put("vault", order.getMallCoffers().intValue());
         data.put("cashScore", order.getMallIntegral().intValue());
@@ -184,7 +220,19 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         data.put("shipName", order.getTravelers().get(0).getName());
         data.put("shipMobile", order.getTravelers().get(0).getTelPhone());
         data.put("memberId", order.getTouristBuyer().getId());
-        data.put("payType", order.getPayType());
+        data.put("payType", order.getPayType().getCode());
+        // TODO: 2017/1/18 货品列表待定
+        List<Map> list = new ArrayList<>();
+        List<Product> products = productRestRepository.findByGoodsPK(order.getTouristGood().getMallGoodId());
+        for (Product p : products) {
+            Map pro = new HashMap();
+            pro.put("bn", p.getCode());
+            pro.put("num", order.getTravelers().size());
+            list.add(pro);
+            break;
+        }
+        data.put("orderItems", list);
+
         String uriAPI = String.format(mallDomain + uri, "Order", "createOrder");
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
@@ -198,10 +246,8 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             HttpEntity httpEntity = httpResponse.getEntity();
             ObjectMapper objectMapper = new ObjectMapper();
             ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
-            if (result.resultCode == 2000) {
-                String mallOrderId = result.getData().get("orderId").toString();
-                return mallOrderId;
-            } else {
+            if (result.resultCode == 2000) return result.getData().get("orderId").toString();
+            else {
                 throw new IOException(result.getResultMsg());
             }
         }
@@ -222,7 +268,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Getter
     @Setter
-    static class ResultContent {
+    private static class ResultContent {
         int resultCode;
         String resultMsg;
         Map data;
