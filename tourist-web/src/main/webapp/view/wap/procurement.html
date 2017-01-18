@@ -134,7 +134,7 @@
 </div>
 <div class="weui_cells_title">账户抵扣</div>
 <div class="weui_cells weui_cells_checkbox">
-    <label class="weui_cell weui_check_label" for="s11">
+    <label class="weui_cell weui_check_label" for="s11" th:if="${mallIntegral>0}">
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用积分
                 <span class="twoss" th:text="${mallIntegral}+'积分'">20积分</span>
@@ -146,7 +146,7 @@
             <i class="weui_icon_checked"></i>
         </div>
     </label>
-    <label class="weui_cell weui_check_label" for="s12">
+    <label class="weui_cell weui_check_label" for="s12" th:if="${mallBalance>0}">
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用余额
                 <span class="twoss" th:text="'￥'+${mallBalance}">￥20.0</span>
@@ -158,7 +158,7 @@
             <i class="weui_icon_checked"></i>
         </div>
     </label>
-    <label class="weui_cell weui_check_label" for="s13">
+    <label class="weui_cell weui_check_label" for="s13" th:if="${mallCoffers>0}">
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用小金库
                 <span class="twoss" th:text="'￥'+${mallCoffers}">￥20.0</span>
@@ -199,17 +199,18 @@
         //成人价格
         var price = /*[[${good.price}]]*/ 10;
         //儿童价格
-        var childPrice = /*[[${good.price*(childrenDiscount/10)}]]*/ 10;
+        var childPrice = /*[[${good.price*(childrenDiscount/10)}]]*/ 8;
 
         //商城小伙伴积分
-        var mallIntegral = /*[[${mallIntegral}]]*/ 100;
+        var mallIntegralMoney = /*[[${mallIntegral/100}]]*/ 0;
+        var mallIntegral = /*[[${mallIntegral}]]*/ 0;
         //商城小伙伴余额
-        var mallBalance = /*[[${mallBalance}]]*/ 1;
+        var mallBalance = /*[[${mallBalance}]]*/ 0;
         //商城小伙伴小金库
-        var mallCoffers = /*[[${mallCoffers}]]*/ 1;
+        var mallCoffers = /*[[${mallCoffers}]]*/ 0;
 
         //总金额
-        var buyerMoney = price;
+        var buyerMoney = 0;
 
         $(".money").text('￥' + buyerMoney);
         $(".moneypay").text('应付￥' + buyerMoney);
@@ -326,7 +327,7 @@
                 var name = $(this).attr("name");
                 if ($(this).is(':checked')) {
                     if (name == 'mallIntegral')
-                        mallNum += mallIntegral;
+                        mallNum += mallIntegralMoney;
                     if (name == 'mallBalance')
                         mallNum += mallBalance;
                     if (name == 'mallCoffers')

@@ -19,8 +19,6 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -101,7 +99,6 @@ public class TouristBuyer implements SystemUser {
      * 作为一个采购商，它是来自一个已登录的小伙伴；即他的id是已知的，应该属于分配值
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * 创建时间

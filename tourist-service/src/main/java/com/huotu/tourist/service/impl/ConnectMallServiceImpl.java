@@ -15,6 +15,7 @@ import com.huotu.huobanplus.common.entity.GoodsImage;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.common.entity.MerchantConfig;
 import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.model.type.MallEmbedResource;
 import com.huotu.huobanplus.sdk.common.repository.GoodsImageRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
@@ -34,17 +35,18 @@ import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.AbstractResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -52,10 +54,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -149,6 +149,12 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         return result;
     }
 
+    private CloseableHttpClient newHttpClient() {
+        return HttpClientBuilder.create()
+                .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(30000).build())
+                .build();
+    }
+
     @Override
     public int getExchangeRate() {
         return merchantConfig.getExchangeRate();
@@ -160,12 +166,10 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
-    @Transactional
     public TouristGood pushGoodToMall(long touristGoodId) throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
         if (touristGood.getMallGoodId() != null)
             return touristGood;
-
         //  营销类型（需要跟普通商品做出区别）
         Goods goods = new Goods();
         goods.setOwner(merchant);
@@ -180,17 +184,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         goods.setDescription("行装线路商品");
         goods = goodsRestRepository.insert(goods);
         log.debug("new Goods:" + goods);
-        GoodsImage goodsImage = new GoodsImage();
-        goodsImage.setOrderBy(1);
-        goodsImage.setOriginHeight(1);
-        goodsImage.setOriginWidth(1);
-        goodsImage.setRemote(true);
-        goodsImage.setSource(touristGood.getTouristImgUri());
-        goodsImage = goodsImageRestRepository.insert(goodsImage);
-        goodsImage.setGoods(goods);
-        List<GoodsImage> list = new ArrayList<>();
-        list.add(goodsImage);
-        goods.setImages(list);
 
         Product product = new Product();
         product.setName("线路默认");
@@ -198,11 +191,25 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         product.setMerchant(merchant);
         product.setPrice(touristGood.getPrice().doubleValue());
         product.setGoods(goods);
-        product.setCode(UUID.randomUUID().toString().replace("-", ""));
+        product.setCode("" + touristGood.getId() + new Date().toString());
         product = productRestRepository.insert(product);
-        Set<Product> products = new HashSet<>();
-        products.add(product);
-        goods.setProducts(products);
+
+        GoodsImage goodsImage = new GoodsImage();
+        goodsImage.setOrderBy(1);
+        goodsImage.setOriginHeight(1);
+        goodsImage.setOriginWidth(1);
+        goodsImage.setRemote(true);
+        goodsImage.setSource(touristGood.getTouristImgUri());
+        MallEmbedResource mallEmbedResource = new MallEmbedResource();
+        mallEmbedResource.setValue(touristGood.getTouristImgUri());
+        goodsImage.setThumbnailPic(mallEmbedResource);
+        goodsImage.setSmallPic(mallEmbedResource);
+        goodsImage.setBigPic(mallEmbedResource);
+        goodsImage = goodsImageRestRepository.insert(goodsImage);
+
+        goodsImage.setGoods(goods);
+        List<GoodsImage> list = new ArrayList<>();
+        list.add(goodsImage);
 
         touristGood.setMallGoodId(goods.getId());
         return touristGood;
@@ -229,19 +236,21 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         params.add(new BasicNameValuePair("token", token));
         params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
         params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
-        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            HttpEntity httpEntity = httpResponse.getEntity();
-            ObjectMapper objectMapper = new ObjectMapper();
-            ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
+        try (CloseableHttpClient client = newHttpClient()) {
+            httpPost.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                    .setContentEncoding("UTF-8")
+                    .setParameters(params)
+                    .build()
+            );
+            ResultContent result = client.execute(httpPost, new ResultContentResponseHandler());
             if (result.resultCode == 2000) {
                 return result.getData();
             } else {
                 throw new IOException(result.getResultMsg());
             }
         }
-        throw new IOException("网络异常，请稍后重试");
+
     }
 
     @Override
@@ -257,7 +266,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         data.put("shipMobile", order.getTravelers().get(0).getTelPhone());
         data.put("memberId", order.getTouristBuyer().getId());
         data.put("payType", order.getPayType().getCode());
-        // TODO: 2017/1/18 货品列表待定
         List<Map> list = new ArrayList<>();
         List<Product> products = productRestRepository.findByGoodsPK(order.getTouristGood().getMallGoodId());
         for (Product p : products) {
@@ -268,7 +276,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             break;
         }
         data.put("orderItems", list);
-
         String uriAPI = String.format(mallDomain + uri, "Order", "createOrder");
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
@@ -276,20 +283,21 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         params.add(new BasicNameValuePair("token", token));
         params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
         params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
-        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            HttpEntity httpEntity = httpResponse.getEntity();
-            ObjectMapper objectMapper = new ObjectMapper();
-            ResultContent result = objectMapper.readValue(httpEntity.getContent(), ResultContent.class);
-            if (result.resultCode == 2000) return result.getData().get("orderId").toString();
-            else {
+        try (CloseableHttpClient client = newHttpClient()) {
+            httpPost.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                    .setContentEncoding("UTF-8")
+                    .setParameters(params)
+                    .build()
+            );
+            ResultContent result = client.execute(httpPost, new ResultContentResponseHandler());
+            if (result.resultCode == 2000) {
+                return result.getData().get("orderId").toString();
+            } else {
                 throw new IOException(result.getResultMsg());
             }
         }
-        throw new IOException("同步订单出错，请稍后重试");
     }
-
 
     @Override
     public String getTouristBuyerHeadUrl(TouristBuyer buyer) {
@@ -309,4 +317,15 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         String resultMsg;
         Map data;
     }
+
+    private class ResultContentResponseHandler extends AbstractResponseHandler<ConnectMallServiceImpl.ResultContent> {
+        private ObjectMapper objectMapper = new ObjectMapper();
+
+        @Override
+        public ConnectMallServiceImpl.ResultContent handleEntity(HttpEntity entity) throws IOException {
+            return objectMapper.readValue(entity.getContent(), ConnectMallServiceImpl.ResultContent.class);
+        }
+    }
+
+
 }

@@ -20,8 +20,11 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Set;
 
 /**
  * 目前还没有提供采购商的认证
@@ -35,8 +38,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //需要依赖于userDetailsService 强制userDetailsService优先加载。
 class SecurityConfig {
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -88,8 +93,18 @@ class SecurityConfig {
 //                    .permitAll()
                     .and().csrf().disable()
                     .formLogin()
-//                .failureHandler()
+//                    .failureHandler()
                     .loginProcessingUrl("/auth")
+                    .successHandler((request, response, authentication) -> {
+                        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+                        String path = request.getContextPath();
+                        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+                        if (roles.contains("ROLE_MA")) {
+                            response.sendRedirect(basePath + "distributionPlatform/");
+                        } else if (roles.contains("ROLE_SUPPLIER")) {
+                            response.sendRedirect(basePath + "supplier/");
+                        }
+                    })
                     .loginPage("/login")//
                     .failureUrl("/login?type=error")
                     .permitAll()
@@ -97,5 +112,6 @@ class SecurityConfig {
                     .logout().logoutUrl("/logout").permitAll();
 
         }
+
     }
 }
