@@ -15,4 +15,18 @@ package com.huotu.tourist.exception;
  * @author CJ
  */
 public class NotLoginYetException extends Exception {
+    public NotLoginYetException() {
+    }
+
+    public NotLoginYetException(String message) {
+        super(message);
+    }
+
+    public NotLoginYetException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NotLoginYetException(Throwable cause) {
+        super(cause);
+    }
 }

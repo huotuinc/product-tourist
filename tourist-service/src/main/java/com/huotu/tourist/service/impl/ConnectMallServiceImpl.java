@@ -33,6 +33,8 @@ import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.util.SignBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -49,8 +51,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PreDestroy;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,6 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * 使用huobanplus推送商品和订单
@@ -90,6 +103,10 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     //商城域名
     private final String mallDomain;
     private final String uri = "/MallApi/{0}/{1}";
+    /**
+     * 用于解密HTS1
+     */
+    private final SecretKey key;
 
     @Autowired
     private GoodsRestRepository goodsRestRepository;
@@ -102,7 +119,8 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Autowired
     private SystemStringRepository systemStringRepository;
-
+    @Autowired
+    private Environment environment;
 
     @SuppressWarnings("unused")//不能省
     @Autowired
@@ -110,7 +128,9 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             , MerchantConfigRestRepository merchantConfigRestRepository, SystemStringRepository
                                           systemStringRepository, GoodsRestRepository goodsRestRepository,
                                   ProductRestRepository productRestRepository) throws
-            IOException {
+            IOException, NoSuchAlgorithmException, DecoderException, InvalidKeyException, InvalidKeySpecException {
+        String keyCode = environment.getProperty("tourist.mall.des.key", "0102030405060708");
+        key = SecretKeyFactory.getInstance("DES").generateSecret(new DESKeySpec(Hex.decodeHex(keyCode.toCharArray())));
         merchant = merchantRestRepository.getOneByPK(
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
@@ -153,7 +173,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     }
 
-
     /**
      * 把数组所有元素排序，并按照“参数参数值”的模式用字符拼接成字符串
      *
@@ -173,6 +192,18 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             result.put(key, value);
         }
         return result;
+    }
+
+    @PreDestroy
+    public void destroy() throws IOException {
+        // 在单元测试中 应该清理掉脏数据
+        if (environment.acceptsProfiles("unit_test")) {
+            Product product = productRestRepository.getOneByPK(qualificationsProductId);
+            final Goods goods = product.getGoods();
+            productRestRepository.delete(product);
+            goodsRestRepository.delete(goods);
+        }
+
     }
 
     private CloseableHttpClient newHttpClient() {
@@ -363,7 +394,21 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Override
     public long currentUserId(HttpServletRequest request) throws NotLoginYetException {
-        return 0;
+        try {
+            String cookieValue = Stream.of(request.getCookies())
+                    .filter(cookie -> cookie.getName().equalsIgnoreCase("UserID_HTS1"))
+                    .findAny()
+                    .orElseThrow(NotLoginYetException::new).getValue();
+            byte[] encryptData = Hex.decodeHex(cookieValue.toCharArray());
+
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] data = cipher.doFinal(encryptData);
+            return new DataInputStream(new ByteArrayInputStream(data)).readLong();
+        } catch (Exception ex) {
+            throw new NotLoginYetException(ex);
+        }
     }
 
     @Getter

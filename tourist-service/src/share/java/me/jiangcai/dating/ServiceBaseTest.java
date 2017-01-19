@@ -25,6 +25,7 @@ import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,6 +43,7 @@ import java.util.UUID;
  * @author CJ
  */
 @WebAppConfiguration
+@ActiveProfiles({"test", "unit_test"})
 @ContextConfiguration(classes = {TestConfig.class, ServiceConfig.class})
 public abstract class ServiceBaseTest extends SpringWebTest {
 
