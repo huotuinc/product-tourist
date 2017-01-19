@@ -13,6 +13,8 @@ import com.huotu.tourist.WebTest;
 import com.huotu.tourist.service.LoginService;
 import org.junit.Test;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 /**
  * 执行登录测试
  *
@@ -24,6 +26,12 @@ public class LoginControllerTest extends WebTest {
     public void go() throws Exception {
         mvcLogin(null, LoginService.DefaultRootName, LoginService.DefaultRootPassword);
 
+    }
+
+    @Test
+    public void loginTest() throws Exception{
+        String json=mockMvc.perform(get("/login"))
+                .andReturn().getResponse().getContentAsString();
     }
 
 }

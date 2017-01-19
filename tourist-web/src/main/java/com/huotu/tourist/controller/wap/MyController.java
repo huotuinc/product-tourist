@@ -3,8 +3,7 @@ package com.huotu.tourist.controller.wap;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.entity.PurchaserProductSetting;
-import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.*;
@@ -69,26 +68,30 @@ public class MyController {
 
     /**
      * 显示个人中心页面 “我的”页面
-     * @param buyerId  采购商
      * @param model
      * @return          视图
      * @throws IOException
      */
     @RequestMapping("/showMyInfo")
-    public String showMyInfo(@AuthenticationPrincipal SystemUser user,Long buyerId, Model model) throws IOException{
-        if(user==null||!user.isBuyer()){
-            //成为采购商页面
+    public String showMyInfo(@AuthenticationPrincipal SystemUser user, Model model) throws IOException{
+        TouristBuyer touristBuyer=(TouristBuyer)user;
+        //账户是否被冻结
+        if(BuyerCheckStateEnum.Frozen.equals(touristBuyer.getCheckState())){
+            return viewWapPath+"frozen.html";
+        }
+
+        //申请采购商
+        if(touristBuyer.getCheckState()==null){
             return viewWapPath+"buyerApply.html";
         }
-        TouristBuyer touristBuyer=touristBuyerRepository.getOne(buyerId);
+
+        //该采购商还在审核
         if(BuyerCheckStateEnum.Checking.equals(touristBuyer.getCheckState())){
-            //审核中，页面
             return viewWapPath+"msg.html";
-        }else if(BuyerCheckStateEnum.Frozen.equals(touristBuyer.getCheckState())){
-            //该账户已被冻结
-            return viewWapPath+"frozen.html";
-        }else if(BuyerPayStateEnum.NotPay.equals(touristBuyer.getPayState())){
-            //已审核未付钱，去付钱页面
+        }
+
+        //已审核未付钱，去付钱页面
+        if(BuyerPayStateEnum.NotPay.equals(touristBuyer.getPayState())){
             PurchaserProductSetting setting=new PurchaserProductSetting();
             List<PurchaserProductSetting> settings=purchaserProductSettingRepository.findAll();
             if(settings!=null&&!settings.isEmpty()){
@@ -98,6 +101,7 @@ public class MyController {
             model.addAttribute("buyerId",touristBuyer.getId());
             return viewWapPath+"submission.html";
         }
+
 
         String headUrl=connectMallService.getTouristBuyerHeadUrl(touristBuyer);
         long allNotFinish=touristOrderRepository.countByTouristBuyerAndOrderStates(
@@ -122,15 +126,54 @@ public class MyController {
 
     /**
      * 显示某采购商的订单列表页面
-     * @param buyerId    采购商ID
      * @return          列表视图
      * @throws IOException
      */
     @RequestMapping("/showAllOrders")
-    public String showAllOrders(@RequestParam Long buyerId,String states,Model model) throws IOException{
+    public String showAllOrders(String states,Model model) throws IOException{
         model.addAttribute("states",states);
-        model.addAttribute("buyerId",buyerId);
         return viewWapPath+"allOrder.html";
+    }
+
+
+    /**
+     *  获取某采购商的订单列表
+     * @param lastId        最后一条ID
+     * @param states        状态
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/newBuyerOrderList")
+    public String newBuyerOrderList(@AuthenticationPrincipal SystemUser user,Long lastId, String states, Model model)
+            throws IOException{
+
+        TouristBuyer touristBuyer=(TouristBuyer)user;
+        List<TouristOrder> orders=touristOrderService.getBuyerOrders(touristBuyer.getId(),lastId,states);
+        model.addAttribute("list",orders);
+        model.addAttribute("states",states);
+        return viewWapPath+"newOrder.html";
+    }
+
+    /**
+     * 前台查看某个订单的信息
+     * @param orderId
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/showOrderInfo")
+    public String showOrderInfo(@RequestParam Long orderId, Model model) throws IOException{
+        TouristOrder order = touristOrderRepository.findOne(orderId);
+
+        model.addAttribute("order", order);
+
+        List<Traveler> travelers = travelerRepository.findByOrder_Id(orderId);
+
+        model.addAttribute("route", travelers.isEmpty()?new TouristRoute():travelers.get(0).getRoute());
+
+        model.addAttribute("travelers", travelers);
+
+        return viewWapPath+"orderInfo.html";
+
     }
 
 
