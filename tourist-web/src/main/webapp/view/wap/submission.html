@@ -55,6 +55,7 @@
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
     var buyerOrderPayUrl = /*[[@{/wap/buyerOrderPay}]]*/ "my.html";
+    var returnUrl = /*[[@{/wap/orderPayCallback(orderType=1)}]]*/ "";
     var ua = window.navigator.userAgent.toLowerCase();
     if (ua.match(/MicroMessenger/i) == 'micromessenger') {
         $("#weixin").show();
@@ -83,7 +84,7 @@
                 layer.close(load);
                 if (result.code == 200) {
                     //前台跳转到商城支付
-                    utils.GetPaymentUrl(result.customerId, result.orderId, data.payType);
+                    utils.GetPaymentUrl(result.customerId, result.orderId, data.payType, returnUrl);
                 } else {
                     layer.alert(result.msg);
                 }

@@ -1,10 +1,19 @@
 package com.huotu.tourist.controller.wap;
 
+import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
+import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.login.SystemUser;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.SystemStringRepository;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.ConnectMallService;
@@ -21,8 +30,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +46,14 @@ public class OrderController {
     private static final Log log = LogFactory.getLog(OrderController.class);
     @Autowired
     TouristBuyerRepository touristBuyerRepository;
+    @Autowired
+    SystemStringRepository systemStringRepository;
+    @Autowired
+    ProductRestRepository productRestRepository;
+    @Autowired
+    PurchaserProductSettingRepository purchaserProductSettingRepository;
+    @Autowired
+    PurchaserPaymentRecordRepository purchaserPaymentRecordRepository;
     @Autowired
     private TouristOrderRepository touristOrderRepository;
     @Autowired
@@ -116,7 +135,6 @@ public class OrderController {
         return map;
     }
 
-
     /**
      * 商场订单支付回调
      *
@@ -134,9 +152,11 @@ public class OrderController {
                                            model) {
         if (user.isBuyer()) {
             TouristBuyer buyer = (TouristBuyer) user;
+            //线路订单
             if (orderType == 0) {
                 TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
-                if (pay && touristOrder.getTouristBuyer().getId().equals(buyer.getId()) && touristOrder.getOrderState()
+                if (pay && touristOrder.getTouristBuyer().getId().equals(buyer.getId()) && touristOrder
+                        .getOrderState()
                         .equals(OrderStateEnum.NotPay)) {
                     touristOrder.setPayType(payType);
                     touristOrder.setPayTime(LocalDateTime.now());
@@ -145,7 +165,26 @@ public class OrderController {
                 }
                 model.addAttribute("errorMsg", "当前采购商与订单采购商不匹配或订单状态异常");
             } else {
-                // TODO: 2017/1/19  采购商支付开通
+                //采购商资格付款订单
+                if (pay && buyer.getMallOrderNo().equals(mallOrderNo) && buyer.getPayState() == BuyerPayStateEnum
+                        .NotPay) {
+                    buyer.setPayState(BuyerPayStateEnum.PayFinish);
+                    PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
+                    purchaserPaymentRecord.setPayDate(LocalDateTime.now());
+                    purchaserPaymentRecord.setTouristBuyer(buyer);
+                    SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
+                    try {
+                        Product product = productRestRepository.getOne(qualificationsProductIdSystem.getValue());
+                        purchaserPaymentRecord.setMoney(new BigDecimal(product.getPrice()));
+                    } catch (IOException e) {
+                        List<PurchaserProductSetting> productSettings = purchaserProductSettingRepository.findAll();
+                        purchaserPaymentRecord.setMoney(productSettings.get(0).getPrice());
+                    }
+                    purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
+                    touristBuyerRepository.saveAndFlush(buyer);
+                    return "redirect:/wap/showMyInfo";
+                }
+                model.addAttribute("errorMsg", pay ? "支付成功，订单号与当前采购商单号不一致或当前采购商以支付" : "商城支付失败，请重试");
             }
         } else {
             model.addAttribute("errorMsg", "警告非法的用户访问，以记录下IP");
