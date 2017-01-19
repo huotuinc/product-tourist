@@ -31,12 +31,10 @@
     </div>
     <div class="panel panel-default">
         <div id="toolbar" class="btn-group">
-            <button id="btn_export" type="button" class="btn btn-primary">
-                <a style="color: #FFFFFF" href="purchaserProductSetting.html"
-                   th:href="@{/distributionPlatform/toPurchaserProductSetting}">
+            <a style="color: #FFFFFF" href="purchaserProductSetting.html" class="btn btn-primary"
+               th:href="@{/distributionPlatform/toPurchaserProductSetting}">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true">新增</span>
                 </a>
-            </button>
         </div>
 
         <table id="table" data-toggle="table" data-url="../../../../mock/platform/purchaserProductSetting.json"

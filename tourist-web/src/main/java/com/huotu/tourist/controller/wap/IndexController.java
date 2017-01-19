@@ -274,27 +274,35 @@ public class IndexController {
 
     /**
      * 商场订单支付回调
+     *
      * @param mallOrderNo 商城订单号
-     * @param pay     是否支付
-     * @param payType  支付类型
+     * @param pay         是否支付成功
+     * @param payType     支付类型
+     * @param orderType   订单类型 0 线路订单，1 采购商订单
      * @param model
      * @return
      */
     @RequestMapping(value = {"/orderPayCallback"})
     @Transactional
     public String orderPayCallback(@AuthenticationPrincipal SystemUser user, @RequestParam String mallOrderNo,
-                                   @RequestParam PayTypeEnum payType, @RequestParam boolean pay, Model model) {
+                                   @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType, Model
+                                           model) {
         if (user.isBuyer()) {
             TouristBuyer buyer = (TouristBuyer) user;
-            TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
-            if (touristOrder.getTouristBuyer().getId().equals(buyer.getId()) && touristOrder.getOrderState()
-                    .equals(OrderStateEnum.NotPay)) {
-                touristOrder.setPayType(payType);
-                touristOrder.setPayTime(LocalDateTime.now());
-                model.addAttribute("mallOrderNo", mallOrderNo);
-                return "view/wap/paySuccess.html";
+            if (orderType == 0) {
+                TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
+                if (pay && touristOrder.getTouristBuyer().getId().equals(buyer.getId()) && touristOrder.getOrderState()
+                        .equals(OrderStateEnum.NotPay)) {
+                    touristOrder.setPayType(payType);
+                    touristOrder.setPayTime(LocalDateTime.now());
+                    model.addAttribute("mallOrderNo", mallOrderNo);
+                    return "view/wap/paySuccess.html";
+                }
+                model.addAttribute("errorMsg", "当前采购商与订单采购商不匹配或订单状态异常");
+            } else {
+                // TODO: 2017/1/19  采购商支付开通
+
             }
-            model.addAttribute("errorMsg", "当前采购商与订单采购商不匹配或订单状态异常");
         } else {
             model.addAttribute("errorMsg", "警告非法的用户访问，以记录下IP");
         }
@@ -498,10 +506,10 @@ public class IndexController {
      * @throws IOException 上传图片异常
      */
     @RequestMapping(value = {"/addTouristBuyer"}, method = RequestMethod.POST)
-    public String addTouristBuyer(@RequestParam String buyerName, @RequestParam String buyerDirector
+    public String addTouristBuyer(@RequestParam Long id, @RequestParam String buyerName, @RequestParam String buyerDirector
             , @RequestParam String telPhone, @RequestParam String IDNo, @RequestParam MultipartFile businessLicencesUri
             , @RequestParam MultipartFile IDElevationsUri, @RequestParam MultipartFile IDInverseUri, Model model) throws IOException {
-        TouristBuyer touristBuyer = new TouristBuyer();
+        TouristBuyer touristBuyer = touristBuyerRepository.getOne(id);
         touristBuyer.setCheckState(BuyerCheckStateEnum.Checking);
         touristBuyer.setTelPhone(telPhone);
         touristBuyer.setBuyerDirector(buyerDirector);
@@ -518,7 +526,6 @@ public class IndexController {
         touristBuyer.setIDNo(IDNo);
         touristBuyer.setPayState(BuyerPayStateEnum.NotPay);
         touristBuyer.setCreateTime(LocalDateTime.now());
-//        touristBuyer.setBuyerId(telPhone);
         touristBuyerRepository.saveAndFlush(touristBuyer);
         return "view/wap/msg.html";
     }

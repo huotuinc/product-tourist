@@ -11,6 +11,7 @@ package com.huotu.tourist.entity;
 
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
@@ -159,10 +160,17 @@ public class TouristBuyer implements SystemUser, UserDetails {
     private BuyerCheckStateEnum checkState;
     /**
      * 支付状态
-     * 应该不存在
+     * 冗余字段
      */
     @Column
     private BuyerPayStateEnum payState;
+
+    /**
+     * 支付类型
+     */
+    @Column
+    private PayTypeEnum payType;
+
     /**
      * 最后一个意图购买资格的商城订单号
      */

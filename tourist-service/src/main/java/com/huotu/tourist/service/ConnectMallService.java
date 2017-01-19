@@ -77,6 +77,15 @@ public interface ConnectMallService {
     Map getUserDetailByUserId(Long mallUserId) throws IOException;
 
     /**
+     * 推采购商支付订单到商城
+     *
+     * @param buyer 采购商
+     * @return 商城订单号
+     * @throws IOException 同步商城订单出错
+     */
+    String pushBuyerOrderToMall(TouristBuyer buyer) throws IOException;
+
+    /**
      * 推订单到商城
      *
      * @param order 订单信息

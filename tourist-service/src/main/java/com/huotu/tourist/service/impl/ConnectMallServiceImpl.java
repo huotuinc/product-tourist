@@ -100,10 +100,17 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @Autowired
     private GoodsImageRestRepository goodsImageRestRepository;
 
+    @Autowired
+    private SystemStringRepository systemStringRepository;
+
+
     @SuppressWarnings("unused")//不能省
     @Autowired
     public ConnectMallServiceImpl(Environment environment, MerchantRestRepository merchantRestRepository
-            , MerchantConfigRestRepository merchantConfigRestRepository, SystemStringRepository systemStringRepository) throws IOException {
+            , MerchantConfigRestRepository merchantConfigRestRepository, SystemStringRepository
+                                          systemStringRepository, GoodsRestRepository goodsRestRepository,
+                                  ProductRestRepository productRestRepository) throws
+            IOException {
         merchant = merchantRestRepository.getOneByPK(
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
@@ -131,9 +138,9 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             product.setName("线路默认");
             product.setMarketable(true);
             product.setMerchant(merchant);
-            product.setPrice(0);
+            product.setPrice(100);
             product.setGoods(goods);
-            product.setCode(goods.getId() + new Date().toString());
+            product.setCode(new Date().toString());
             product = productRestRepository.insert(product);
             qualificationsProductId = "" + product.getId();
             qualificationsProductIdSystem = new SystemString();
@@ -225,11 +232,9 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         goodsImage.setSmallPic(mallEmbedResource);
         goodsImage.setBigPic(mallEmbedResource);
         goodsImage = goodsImageRestRepository.insert(goodsImage);
-
         goodsImage.setGoods(goods);
         List<GoodsImage> list = new ArrayList<>();
         list.add(goodsImage);
-
         touristGood.setMallGoodId(goods.getId());
         return touristGood;
     }
@@ -273,6 +278,29 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     @Override
+    public String pushBuyerOrderToMall(TouristBuyer buyer) throws IOException {
+        Map<String, Object> data = new HashMap<>();
+        data.put("payed", 0);
+        data.put("vault", 0);
+        data.put("cashScore", 0);
+        data.put("memo", buyer.getBuyerName() + "采购订单");
+        data.put("remark", buyer.getBuyerName() + "采购订单");
+        data.put("identityCard", buyer.getIDNo());
+        data.put("shipName", buyer.getBuyerName());
+        data.put("shipMobile", buyer.getTelPhone());
+        data.put("memberId", buyer.getId());
+        data.put("payType", buyer.getPayType().getCode());
+        SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
+        List<Map> list = new ArrayList<>();
+        Map pro = new HashMap();
+        pro.put("bn", systemString.getValue());
+        pro.put("num", 1);
+        list.add(pro);
+        data.put("orderItems", list);
+        return pushOrder(data);
+    }
+
+    @Override
     public String pushOrderToMall(TouristOrder order) throws IOException {
         Map<String, Object> data = new HashMap<>();
         data.put("payed", order.getMallBalance().intValue());
@@ -295,6 +323,10 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             break;
         }
         data.put("orderItems", list);
+        return pushOrder(data);
+    }
+
+    private String pushOrder(Map<String, Object> data) throws IOException {
         String uriAPI = String.format(mallDomain + uri, "Order", "createOrder");
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
