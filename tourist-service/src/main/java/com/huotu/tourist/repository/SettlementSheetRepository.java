@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by lhx on 2016/12/20.
@@ -27,4 +28,6 @@ public interface SettlementSheetRepository extends JpaRepository<SettlementSheet
 
     @Query("select sum(s.receivableAccount) from SettlementSheet as s where s.touristSupplier=?1")
     BigDecimal countWithdrawal(TouristSupplier supplier);
+
+    List<SettlementSheet> findByTouristSupplier(TouristSupplier supplier);
 }

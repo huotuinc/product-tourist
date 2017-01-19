@@ -127,15 +127,19 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
     TouristOrder findByMallOrderNo(String mallOrderNo);
 
 
-    @Query("update TouristOrder as o set o.settlement=?1 where o.settlement is null and o.orderState=?2 " +
-            "and o.createTime>?3")
-    @Modifying
-    @Transactional
-    int setOrderSettlement(SettlementSheet settlementSheet, OrderStateEnum orderState,LocalDateTime dateTime);
+//    @Query("update TouristOrder as o set o.settlement=?1 where o.settlement is null and o.orderState=?2 " +
+//            "and o.createTime>?3")
+//    @Modifying
+//    @Transactional
+//    int setOrderSettlement(SettlementSheet settlementSheet, OrderStateEnum orderState,LocalDateTime dateTime);
 
 
-    @Query("select o from TouristOrder as o where o.orderState=?1 and o.createTime>?2")
+    @Query("select o from TouristOrder as o where o.orderState=?1 and o.createTime<?2")
     List<TouristOrder> getsatisfactorySettlementOrders(OrderStateEnum orderState,LocalDateTime localDateTime);
+
+    @Query("select o from TouristOrder as o where o.settlement is not null")
+    List<TouristOrder> findBySettlement();
+
 
 //    @Query("select sum(o.orderMoney) from TouristOrder as o where o.touristGood.touristSupplier=?1" +
 //            "and o.settlement is not  null")

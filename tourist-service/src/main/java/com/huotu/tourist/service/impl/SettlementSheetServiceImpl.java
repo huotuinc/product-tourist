@@ -77,8 +77,8 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     public void settleOrder() throws IOException {
         long days=connectMallService.getServiceDays();
 
-        //订单的下单时间需要大于的时间
-        LocalDateTime endTime= LocalDate.now().atStartOfDay().plusDays(days+1);
+        //订单的下单时间需要小于的时间
+        LocalDateTime endTime= LocalDate.now().atStartOfDay().plusDays(-(days+1));
 
         //符合要求的订单列表
         List<TouristOrder> orders=touristOrderRepository.getsatisfactorySettlementOrders(OrderStateEnum.Finish,endTime);
@@ -109,15 +109,12 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
             }
             order.setSettlement(settlementSheet);
         }
+        for(Map.Entry<Long,SettlementSheet> s:sheetMap.entrySet()){
+            settlementSheetRepository.save(s.getValue());
+        }
 
+        touristOrderRepository.save(orders);
 
-//        settlementSheetRepository.save();
-
-
-
-//       SettlementSheet settlementSheet=settlementSheetService.createSettlement(null,null);
-
-//        touristOrderRepository.setOrderSettlement(settlementSheet,OrderStateEnum.Finish,null);
     }
 
     @Override
