@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.service;
 
+import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
@@ -110,4 +111,6 @@ public interface ConnectMallService {
      * @throws NotLoginYetException 尚未登录的话
      */
     long currentUserId(HttpServletRequest request) throws NotLoginYetException;
+
+    Merchant getMerchant();
 }

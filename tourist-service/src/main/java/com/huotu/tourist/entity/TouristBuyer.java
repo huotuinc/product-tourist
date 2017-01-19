@@ -183,6 +183,12 @@ public class TouristBuyer implements SystemUser, UserDetails {
     private String IDNo;
 
     /**
+     * 商城订单号
+     */
+    @Column(length = 50)
+    private String mallOrderNo;
+
+    /**
      * 检查一个采购商是否已得到认可
      *
      * @param buyer 采购商

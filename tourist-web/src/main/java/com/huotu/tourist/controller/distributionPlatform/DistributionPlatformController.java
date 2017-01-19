@@ -11,6 +11,8 @@ package com.huotu.tourist.controller.distributionPlatform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
@@ -22,6 +24,7 @@ import com.huotu.tourist.entity.PresentRecord;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristRoute;
@@ -34,7 +37,9 @@ import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
 import com.huotu.tourist.repository.PresentRecordRepository;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.SettlementSheetRepository;
+import com.huotu.tourist.repository.SystemStringRepository;
 import com.huotu.tourist.service.LoginService;
 import com.huotu.tourist.service.PresentRecordService;
 import com.huotu.tourist.service.PurchaserProductSettingService;
@@ -101,6 +106,12 @@ public class DistributionPlatformController extends BaseController {
     SettlementSheetRepository settlementSheetRepository;
     @Autowired
     PresentRecordRepository presentRecordRepository;
+    @Autowired
+    SystemStringRepository systemStringRepository;
+    @Autowired
+    ProductRestRepository productRestRepository;
+    @Autowired
+    PurchaserPaymentRecordRepository purchaserPaymentRecordRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -335,6 +346,8 @@ public class DistributionPlatformController extends BaseController {
         return ResponseEntity.ok(objectMapper.writeValueAsString(map));
     }
 
+    /**-------------------下面新增和修改相关-----------------------*/
+
     /**
      * 跳转到结算单列表页面
      *
@@ -363,7 +376,6 @@ public class DistributionPlatformController extends BaseController {
 
         return new PageAndSelection<>(page, SettlementSheet.selections);
     }
-
 
     /**
      * 提现单列表
@@ -403,8 +415,6 @@ public class DistributionPlatformController extends BaseController {
         });
         return new PageAndSelection(page, list);
     }
-
-    /**-------------------下面新增和修改相关-----------------------*/
 
     /**
      * 跳转到banner页面
@@ -572,11 +582,12 @@ public class DistributionPlatformController extends BaseController {
     @RequestMapping(value = {"savePurchaserProductSetting", "updatePurchaserProductSetting"}, method = RequestMethod.POST)
     public String savePurchaserProductSetting(Long id, @RequestParam String name, @RequestParam String bannerUri,
                                               @RequestParam BigDecimal price, @RequestParam String explainStr
-            , @RequestParam String agreement) {
+            , @RequestParam String agreement) throws IOException {
         PurchaserProductSetting purchaserProductSetting;
         if (id == null) {
             purchaserProductSetting = new PurchaserProductSetting();
             purchaserProductSetting.setCreateTime(LocalDateTime.now());
+            purchaserPaymentRecordRepository.deleteAll();
         } else {
             purchaserProductSetting = purchaserProductSettingService.getOne(id);
             purchaserProductSetting.setUpdateTime(LocalDateTime.now());
@@ -584,6 +595,11 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setName(name);
         purchaserProductSetting.setBannerUri(bannerUri);
         purchaserProductSetting.setPrice(price);
+        //**更新采购商资格货品价格**/
+        SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
+        Product product = productRestRepository.getOne(systemString.getId());
+        product.setPrice(price.doubleValue());
+
         purchaserProductSetting.setExplainStr(explainStr);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);

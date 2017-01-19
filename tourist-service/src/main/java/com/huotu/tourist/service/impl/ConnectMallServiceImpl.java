@@ -366,6 +366,11 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         return 0;
     }
 
+    @Override
+    public Merchant getMerchant() {
+        return this.merchant;
+    }
+
     @Getter
     @Setter
     private static class ResultContent {
