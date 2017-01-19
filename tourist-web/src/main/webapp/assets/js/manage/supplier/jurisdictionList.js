@@ -12,7 +12,7 @@ var actionFormatter = function (value, row, index) {
 var actionEvents = {
     'click .showDetail': function (e, value, row, index) {
         var id=row.id;
-        location.href="jurisdictionDeails.html";
+        location.href=detailUrl+"?id="+id;
     },
     'click .recycle': function (e, value, row, index) {
         var id=row.id;
@@ -20,6 +20,21 @@ var actionEvents = {
             btn: ['确定','取消'] //按钮
         }, function(){
             //ajax异步回收
+            $.ajax({
+                type:'POST',
+                url: '/supplier/delSupplierOperator',
+                dataType: 'text',
+                data: {id:id},
+                success:function(result){
+                    layer.msg("删除成功！");
+                    $("table").bootstrapTable('refresh');
+                },
+                error:function(e){
+                    layer.msg("删除失败！");
+                }
+            });
+
+
             layer.msg('修改成功', {icon: 1});
 
         }, function(index){
@@ -32,13 +47,8 @@ var actionEvents = {
 var getParams= function(params) {
     var temp = {
         pageSize: params.limit, //页面大小
-        pageNo: params.offset, //页码
-        touristName: $("input[name='touristName']").val(),
-        touristTypeId:$("select[name='touristType'] option:selected").val(),
-        activityTypeId:$("select[name='activityType'] option:selected").val(),
-        touristCheckState:$("select[name='touristCheckState'] option:selected").val()
+        pageNo: params.offset/params.limit //页码
     };
-    //console.log(temp);
     return temp;
 };
 

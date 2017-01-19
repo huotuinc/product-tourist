@@ -49,9 +49,15 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Login addLogin(Login login, String password) {
+    public Login saveLogin(Login login, String password) {
         login.setEnabled(true);
        return updatePassword(login,password);
+    }
+
+    @Override
+    public void delLogin(Long id) {
+        Login login=loginRepository.getOne(id);
+        login.setDeleted(true);
     }
 
     @PostConstruct

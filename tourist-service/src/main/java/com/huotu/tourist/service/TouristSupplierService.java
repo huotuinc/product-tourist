@@ -38,6 +38,12 @@ public interface TouristSupplierService extends BaseService<TouristSupplier, Lon
             , String businessLicenseUri, String remarks, String detailedAddress);
 
 
-
+    /**
+     * 返回某个供应商的所有操作员
+     * @param authSupplier      实际供应商
+     * @param pageable          分页
+     * @return
+     */
+    Page<TouristSupplier> getJurisdictionList(TouristSupplier authSupplier,Pageable pageable);
 
 }

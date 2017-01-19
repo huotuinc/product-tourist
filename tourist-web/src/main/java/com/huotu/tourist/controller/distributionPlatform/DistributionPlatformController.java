@@ -491,7 +491,7 @@ public class DistributionPlatformController extends BaseController {
         touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setAddress(address);
         touristSupplier.setEnabled(true);
-        loginService.addLogin(touristSupplier, password);
+        loginService.saveLogin(touristSupplier, password);
         touristSupplierService.save(touristSupplier);
         return "view/manage/platform/supplier/supplierList.html";
     }

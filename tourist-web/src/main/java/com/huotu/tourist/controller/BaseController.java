@@ -157,7 +157,7 @@ public class BaseController {
             , HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
-            supplier = (TouristSupplier) user;
+            supplier = ((TouristSupplier)user).getAuthSupplier();
         }
         Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName
                 , buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate
@@ -241,7 +241,7 @@ public class BaseController {
             , HttpServletRequest request) {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
-            supplier = (TouristSupplier) user;
+            supplier =((TouristSupplier)user).getAuthSupplier();
         }
         ActivityType activityType = null;
         TouristType touristType = null;
@@ -256,7 +256,7 @@ public class BaseController {
             page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
                     , touristCheckState, true, pageable);
         } else {
-            page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
+            page = touristGoodService.touristGoodList(supplier.getAuthSupplier(), touristName, supplierName, touristType,
                     activityType, touristCheckState, pageable, null);
         }
         Selection<TouristGood,Long> select=new Selection<TouristGood,Long>() {

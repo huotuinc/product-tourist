@@ -11,6 +11,7 @@ package com.huotu.tourist.service;
 
 import com.huotu.tourist.login.Login;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author CJ
@@ -31,12 +32,20 @@ public interface LoginService extends UserDetailsService {
     <T extends Login> T updatePassword(T login, String rawPassword);
 
     /**
-     * 新增登录用户
+     * 保存登录用户
      * @param login     登录用户
      * @param password  密码
      * @return
      */
-    Login addLogin(Login login,String password);
+    Login saveLogin(Login login, String password);
+
+
+    /**
+     * 删除的Login ID
+     * @param id
+     */
+    @Transactional
+    void delLogin(Long id);
 
 
 }
