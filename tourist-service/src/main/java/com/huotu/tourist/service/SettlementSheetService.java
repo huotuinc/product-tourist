@@ -29,7 +29,17 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
      * 根据（T+1）规则创建结算单
      * @throws IOException
      */
-    void createSettlement() throws IOException;
+    @Transactional
+    void settleOrder() throws IOException;
+
+    /**
+     * 创建一个结算单
+     * @param supplier              供应商
+     * @param receivableAccount     应收款
+     * @return                      创建完成的结算单
+     * @throws IOException
+     */
+    SettlementSheet createSettlement(TouristSupplier supplier,BigDecimal receivableAccount) throws IOException;
 
     /**
      * 结算列表

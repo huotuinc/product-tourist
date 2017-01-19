@@ -1,10 +1,7 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -129,6 +126,16 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
 
     TouristOrder findByMallOrderNo(String mallOrderNo);
 
+
+    @Query("update TouristOrder as o set o.settlement=?1 where o.settlement is null and o.orderState=?2 " +
+            "and o.createTime>?3")
+    @Modifying
+    @Transactional
+    int setOrderSettlement(SettlementSheet settlementSheet, OrderStateEnum orderState,LocalDateTime dateTime);
+
+
+    @Query("select o from TouristOrder as o where o.orderState=?1 and o.createTime>?2")
+    List<TouristOrder> getsatisfactorySettlementOrders(OrderStateEnum orderState,LocalDateTime localDateTime);
 
 //    @Query("select sum(o.orderMoney) from TouristOrder as o where o.touristGood.touristSupplier=?1" +
 //            "and o.settlement is not  null")

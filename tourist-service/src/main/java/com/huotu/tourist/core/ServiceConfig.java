@@ -12,6 +12,7 @@ package com.huotu.tourist.core;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
@@ -20,6 +21,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         , "com.huotu.tourist.service"
 })
 @EnableJpaRepositories("com.huotu.tourist.repository")
+@ImportResource(value = {"classpath:spring-jpa.xml"})
 @Import({CommonConfig.class, DataSupportConfig.class})
 public class ServiceConfig {
 
