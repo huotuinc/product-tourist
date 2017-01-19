@@ -10,10 +10,24 @@
 package com.huotu.tourist.controller;
 
 import com.huotu.huobanplus.sdk.common.repository.UserRestRepository;
+import com.huotu.tourist.common.BuyerAuthentication;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.exception.NotLoginYetException;
+import com.huotu.tourist.repository.TouristBuyerRepository;
+import com.huotu.tourist.service.ConnectMallService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpRequestResponseHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 负责提供登录功能的控制器
@@ -26,9 +40,33 @@ public class LoginController {
     @Autowired
     private UserRestRepository userRestRepository;
 
+    @Autowired
+    private TouristBuyerRepository touristBuyerRepository;
+
+    @Autowired
+    private ConnectMallService connectMallService;
+
+    private SecurityContextRepository httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
+
+    SavedRequestAwareAuthenticationSuccessHandler successHandler=new SavedRequestAwareAuthenticationSuccessHandler();
+
     @RequestMapping(method = RequestMethod.GET, value = "/login")
-    public String index() {
-        // UserId
+    public String index(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Long userId=null;
+        try{
+            userId=connectMallService.currentUserId(request);
+        }catch (NotLoginYetException ex){
+        }
+        if(userId!=null){
+            HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
+            SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
+            TouristBuyer buyer=touristBuyerRepository.getOne(userId);
+            BuyerAuthentication buyerAuthentication=new BuyerAuthentication(buyer);
+            context.setAuthentication(buyerAuthentication);
+            httpSessionSecurityContextRepository.saveContext(context,request,response);
+            successHandler.onAuthenticationSuccess(request,response,buyerAuthentication);
+        }
+
         return "view/manage/login.html";
     }
 

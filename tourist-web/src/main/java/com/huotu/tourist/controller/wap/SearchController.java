@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/wap/")
-public class GoodsController {
+public class SearchController {
 
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
