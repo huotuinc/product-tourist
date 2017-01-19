@@ -20,6 +20,18 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
 
 
     /**
+     * 每天凌晨3点，结算订单，生成结算单
+     * @throws IOException
+     */
+    void settlementSheetTask() throws IOException;
+
+    /**
+     * 根据（T+1）规则创建结算单
+     * @throws IOException
+     */
+    void createSettlement() throws IOException;
+
+    /**
      * 结算列表
      *
      *

@@ -17,7 +17,7 @@ function getUrlParam(name) {
 var loadOrderList=function(){
     $(".weui_navbar_item.orange").click(function(){
         var states=$(this).attr("id");
-        location.href=showOrderList+"?states="+states+"&buyerId="+buyerId;
+        location.href=showOrderList+"?states="+states;
     });
 };
 

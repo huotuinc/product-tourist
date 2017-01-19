@@ -12,6 +12,7 @@ import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -54,6 +55,19 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     @Override
     public void delete(Long aLong) {
         settlementSheetRepository.delete(aLong);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 3 * * ?")
+    public void settlementSheetTask() throws IOException {
+
+    }
+
+    @Override
+    public void createSettlement() throws IOException {
+//        LocalDateTime endTime=LocalDateTime.now().;
+
+
     }
 
     @Override

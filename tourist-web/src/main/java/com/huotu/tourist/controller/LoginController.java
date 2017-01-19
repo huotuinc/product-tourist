@@ -46,6 +46,9 @@ public class LoginController {
     @Autowired
     private ConnectMallService connectMallService;
 
+    @Autowired
+    private Environment environment;
+
     private SecurityContextRepository httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
 
     SavedRequestAwareAuthenticationSuccessHandler successHandler=new SavedRequestAwareAuthenticationSuccessHandler();
@@ -55,7 +58,12 @@ public class LoginController {
         Long userId=null;
         try{
             userId=connectMallService.currentUserId(request);
+
         }catch (NotLoginYetException ex){
+
+        }
+        if(environment.acceptsProfiles("test")){
+            userId=100L;
         }
         if(userId!=null){
             HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);

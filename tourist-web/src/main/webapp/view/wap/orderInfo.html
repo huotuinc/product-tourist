@@ -98,7 +98,7 @@
                 <div class="weui_media_hd imgleft">
                     <img class="weui_media_appmsg_thumb"
                          res:src="${order.touristGood.touristSupplier.businessLicenseUri}"
-                                                        src="../../assets/img/imgsss.png" alt=""></div>
+                         src="../../assets/img/imgsss.png" alt=""></div>
                 <h4 class="weui_media_title" th:text="${order.touristGood.touristSupplier.supplierName}">乌鲁木齐俱乐部</h4>
                 <ul class="weui_media_info" style="margin-top: 4px;line-height: 1.3em;">
                     <li class="weui_media_info_meta" th:text="'第接人：'+${order.touristGood.receptionPerson}">地接人：王剑南</li>
@@ -142,7 +142,7 @@
         </a>
 
         <a th:if="${order.orderState.code==0}"
-           href="orderInfo.html" th:href="@{/wap/orderInfo(orderId=${order.id})}"
+           href="orderInfo.html" th:href="@{/wap/toProcurementPayPage(orderId=${order.id})}"
            class="weui_btn weui_btn_warn">
             去付款
         </a>

@@ -48,7 +48,7 @@
                     <div class="xiaofeijilv">
                         <ul class="touristsRegion">
                             <a href="newOrder.html" class="nextJScroll"
-                               th:href="@{/wap/newBuyerOrderList(states=${states},buyerId=${buyerId})}">&nbsp;</a>
+                               th:href="@{/wap/newBuyerOrderList(states=${states})}">&nbsp;</a>
                         </ul>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
             <p class="kimg dhsousuoicon"></p>
             <p>搜索</p>
         </a>
-        <a href="my.html" class="weui_navbar_item" th:href="@{/wap/showMyInfo}">
+        <a href="my.html" class="weui_navbar_item weui_bar_item_on" th:href="@{/wap/showMyInfo}">
             <p class="kimg dhwodeicon"></p>
             <p> 我的</p>
         </a>
@@ -88,8 +88,6 @@
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-    var buyerId=/*[[${buyerId}]]*/ "0";
-
     var states=/*[[${states}]]*/ "all";
 
     var showOrderList=/*[[@{/wap/showAllOrders}]]*/"allOrder.html";

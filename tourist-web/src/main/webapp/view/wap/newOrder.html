@@ -39,7 +39,7 @@
             取消订单
         </a>
         <a id="goToPay" th:if="${order.orderState.code==0}"
-           href="orderInfo.html" th:href="@{/wap/orderInfo(orderId=${order.id})}"
+           href="orderInfo.html" th:href="@{/wap/toProcurementPayPage(orderId=${order.id})}"
            class="weui_btn weui_btn_mini weui_btn_warn f12">
             去付款
         </a>
@@ -66,6 +66,6 @@
 
 
 <a xmlns:th="http://www.thymeleaf.org" th:if="${list.size()>0}" class="nextJScroll" href="newOrder.html"
-   th:href="@{/wap/newBuyerOrderList(states=${states},buyerId=${buyerId},lastId=${list[list.size()-1].id})}">
+   th:href="@{/wap/newBuyerOrderList(states=${states},lastId=${list[list.size()-1].id})}">
     &nbsp;</a>
 
