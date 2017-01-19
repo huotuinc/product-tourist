@@ -15,13 +15,11 @@ import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Banner;
-import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
-import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.VerificationType;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
@@ -462,20 +460,6 @@ public class IndexController {
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyerRepository.saveAndFlush(touristBuyer);
         return "view/wap/msg.html";
-    }
-
-
-    /**
-     * 采购商采购资格支付界面
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = {"/toSubmission"})
-    public String toSubmission(@AuthenticationPrincipal SystemUser user, Model model) {
-        List<PurchaserProductSetting> purchaserProductSettingList = purchaserProductSettingRepository.findAll();
-        model.addAttribute("purchaserProductSetting", purchaserProductSettingList.get(0));
-        return "view/wap/buyerApply.html";
     }
 
 

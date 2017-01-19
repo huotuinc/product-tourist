@@ -21,9 +21,9 @@ bannerUriFormatter = function (value, row, index) {
     ].join('');
 };
 updateFormatter = function (value, row, index) {
+    // , '<button class="btn btn-danger del delete">删除</button> '
     return [
         '<a class="btn btn-primary update" href="' + toPurchaserProductSetting + '?id=' + row.id + '">修改</a> '
-        , '<button class="btn btn-danger del delete">删除</button> '
     ].join('');
 };
 

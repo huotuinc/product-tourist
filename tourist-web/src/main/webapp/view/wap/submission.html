@@ -49,8 +49,6 @@
     <p style="height: 20px"></p>
     <button id="weixin" class="weui_btn weui_btn_primary anniu ">微信支付开通</button>
     <button id="alipay" class="weui_btn weui_btn_warn anniu">支付宝支付开通</button>
-
-
 </div>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1" type="text/javascript"></script>
@@ -84,7 +82,7 @@
             success: function (result) {
                 layer.close(load);
                 if (result.code == 200) {
-                    //前台跳转到
+                    //前台跳转到商城支付
                     utils.GetPaymentUrl(result.customerId, result.orderId, data.payType);
                 } else {
                     layer.alert(result.msg);

@@ -3,10 +3,25 @@ package com.huotu.tourist.controller.wap;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
-import com.huotu.tourist.repository.*;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.ConnectMallService;
+import com.huotu.tourist.service.PurchaserPaymentRecordService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
+import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TouristTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -48,14 +63,6 @@ public class MyController {
     public ActivityTypeService activityTypeService;
     @Autowired
     public TouristTypeService touristTypeService;
-    @Autowired
-    private TouristTypeRepository touristTypeRepository;
-    @Autowired
-    private ActivityTypeRepository activityTypeRepository;
-    @Autowired
-    private BannerRepository bannerRepository;
-    @Autowired
-    private TouristBuyerRepository touristBuyerRepository;
 
     @Autowired
     private PurchaserProductSettingRepository purchaserProductSettingRepository;
@@ -177,6 +184,18 @@ public class MyController {
     }
 
 
+    /**
+     * 采购商采购资格支付界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/toSubmission"})
+    public String toSubmission(@AuthenticationPrincipal SystemUser user, Model model) {
+        List<PurchaserProductSetting> purchaserProductSettingList = purchaserProductSettingRepository.findAll();
+        model.addAttribute("purchaserProductSetting", purchaserProductSettingList.get(0));
+        return "view/wap/buyerApply.html";
+    }
 
 
 

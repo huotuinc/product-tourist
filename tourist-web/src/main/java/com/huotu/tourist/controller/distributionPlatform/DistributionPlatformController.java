@@ -554,19 +554,19 @@ public class DistributionPlatformController extends BaseController {
         return "view/manage/platform/purchaserProductSetting/purchaserProductSetting.html";
     }
 
-    /**
-     * 删除采购产品设置页面
-     *
-     * @param request
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "delPurchaserProductSetting", method = RequestMethod.POST, produces =
-            "application/json;charset=UTF-8")
-    @ResponseBody
-    public void delPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
-        purchaserProductSettingService.delete(id);
-    }
+//    /**
+//     * 删除采购产品设置页面
+//     *
+//     * @param request
+//     * @param model
+//     * @return
+//     */
+//    @RequestMapping(value = "delPurchaserProductSetting", method = RequestMethod.POST, produces =
+//            "application/json;charset=UTF-8")
+//    @ResponseBody
+//    public void delPurchaserProductSetting(Long id, HttpServletRequest request, Model model) {
+//        purchaserProductSettingService.delete(id);
+//    }
 
     /**
      * 新增采购产品设置

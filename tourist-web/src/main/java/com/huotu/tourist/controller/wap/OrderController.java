@@ -4,14 +4,10 @@ import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ConnectMallService;
-import com.huotu.tourist.service.TouristOrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,53 +38,7 @@ public class OrderController {
     @Autowired
     private TouristOrderRepository touristOrderRepository;
     @Autowired
-    private TouristOrderService touristOrderService;
-    @Autowired
-    private TravelerRepository travelerRepository;
-    @Autowired
     private ConnectMallService connectMallService;
-    private String viewWapPath="/view/wap/";
-
-    /**
-     *  获取某采购商的订单列表
-     * @param lastId        最后一条ID
-     * @param states        状态
-     * @param buyerId       采购商ID
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/newBuyerOrderList")
-    public String newBuyerOrderList(Long lastId,Long buyerId, String states, Model model) throws IOException{
-
-        List<TouristOrder> orders=touristOrderService.getBuyerOrders(buyerId,lastId,states);
-        model.addAttribute("list",orders);
-        model.addAttribute("states",states);
-        model.addAttribute("buyerId",buyerId);
-        return viewWapPath+"newOrder.html";
-    }
-
-    /**
-     * 前台查看某个订单的信息
-     * @param orderId
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/showOrderInfo")
-    public String showOrderInfo(@RequestParam Long orderId,Model model) throws IOException{
-        TouristOrder order = touristOrderRepository.findOne(orderId);
-
-        model.addAttribute("order", order);
-
-        List<Traveler> travelers = travelerRepository.findByOrder_Id(orderId);
-
-        model.addAttribute("route", travelers.isEmpty()?new TouristRoute():travelers.get(0).getRoute());
-
-        model.addAttribute("travelers", travelers);
-
-        return viewWapPath+"orderInfo.html";
-
-    }
-
 
     /**
      * 采购商资格订单支付
