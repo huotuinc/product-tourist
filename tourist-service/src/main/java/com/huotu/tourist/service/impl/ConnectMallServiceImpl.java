@@ -21,7 +21,6 @@ import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
-import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
@@ -63,7 +62,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.time.LocalDateTime;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -97,17 +96,16 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     //商城后台设置自己的secretKey
     private final String secretKey;
     //商家key
-    private final String appKey;
+    private final String appId;
     //商家token
     private final String token;
     //商城域名
     private final String mallDomain;
-    private final String uri = "/MallApi/{0}/{1}";
     /**
      * 用于解密HTS1
      */
     private final SecretKey key;
-
+    private String uri = "/MallApi/{0}/{1}";
     @Autowired
     private GoodsRestRepository goodsRestRepository;
     @Autowired
@@ -135,12 +133,18 @@ public class ConnectMallServiceImpl implements ConnectMallService {
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
         merchantConfig = merchant.getConfig();
-        // TODO: 2017/1/17 获取key和token
-        appKey = environment.getProperty("tourist.appKey", environment.acceptsProfiles("test") ? "3447" : "4886");
-        token = environment.getProperty("tourist.token", environment.acceptsProfiles("test") ? "3447" : "4886");
-        secretKey = environment.getProperty("tourist.secretKey", environment.acceptsProfiles("test") ? "3447" : "4886");
-        mallDomain = environment.getProperty("tourist.mallDomain", environment.acceptsProfiles("test") ? "3447" : "4886");
-
+        appId = environment.getProperty("tourist.appId"
+                , environment.acceptsProfiles("test") ? "tcxe6l3447" : "");
+        token = environment.getProperty("tourist.token"
+                , environment.acceptsProfiles("test") ? "8662452542f243fc8c26ebea86aeb4" : "");
+        secretKey = environment.getProperty("tourist.secretKey"
+                , environment.acceptsProfiles("test") ? "1j68kk79" : "");
+        mallDomain = environment.getProperty("tourist.mallDomain"
+                , environment.acceptsProfiles("test") ? "http://mallapiv2.51flashmall.com" : "");
+        log.info("appId=" + appId);
+        log.info("token=" + token);
+        log.info("secretKey=" + secretKey);
+        log.info("mallDomain=" + mallDomain);
         SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
         if (qualificationsProductIdSystem == null) {
             Goods goods = new Goods();
@@ -284,13 +288,15 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     public Map getUserDetailByUserId(Long mallUserId) throws IOException {
         Map data = new HashMap();
         data.put("userId", mallUserId);
-        String uriAPI = String.format(mallDomain + uri, "User", "getUserDetailByUserId");
+        data.put("appId", appId);
+        data.put("token", token);
+        data.put("timestamp", new Date().getTime());
+        String uriAPI = MessageFormat.format(mallDomain + uri, "User", "getUserDetailByUserId");
+        log.info(uriAPI);
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("appKey", appKey));
-        params.add(new BasicNameValuePair("token", token));
-        params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
-        params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
+        params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(data, null, secretKey)));
+        log.info("sign:" + SignBuilder.buildSign(data, null, secretKey));
         try (CloseableHttpClient client = newHttpClient()) {
             httpPost.setEntity(EntityBuilder.create()
                     .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
@@ -358,13 +364,13 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     }
 
     private String pushOrder(Map<String, Object> data) throws IOException {
-        String uriAPI = String.format(mallDomain + uri, "Order", "createOrder");
+        String uriAPI = MessageFormat.format(mallDomain + uri, "Order", "createOrder");
+        data.put("appId", appId);
+        data.put("token", token);
+        data.put("timestamp", new Date().getTime());
         HttpPost httpPost = new HttpPost(uriAPI);
         List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("appKey", appKey));
-        params.add(new BasicNameValuePair("token", token));
         params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
-        params.add(new BasicNameValuePair("timestamp", LocalDateTimeFormatter.toStr(LocalDateTime.now())));
         try (CloseableHttpClient client = newHttpClient()) {
             httpPost.setEntity(EntityBuilder.create()
                     .setContentType(ContentType.APPLICATION_FORM_URLENCODED)

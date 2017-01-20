@@ -597,9 +597,8 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setPrice(price);
         //**更新采购商资格货品价格**/
         SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
-        Product product = productRestRepository.getOne(systemString.getId());
+        Product product = productRestRepository.getOne(systemString.getValue());
         product.setPrice(price.doubleValue());
-
         purchaserProductSetting.setExplainStr(explainStr);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);

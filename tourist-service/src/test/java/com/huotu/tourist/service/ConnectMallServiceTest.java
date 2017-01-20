@@ -12,7 +12,9 @@ package com.huotu.tourist.service;
 import com.huotu.huobanplus.common.entity.Product;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.exception.NotLoginYetException;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.codec.DecoderException;
@@ -36,6 +38,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -87,6 +90,7 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
 
     @Test
     public void go() throws IOException {
+
         System.out.println(connectMallService.getExchangeRate());
         assertThat(connectMallService.getExchangeRate())
                 .isGreaterThanOrEqualTo(0);
@@ -97,6 +101,13 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
 
         good = connectMallService.pushGoodToMall(good.getId());
         try {
+            //小伙伴id
+            TouristBuyer buyer = createRandomTouristBuyer(256421L);
+            Map map = connectMallService.getUserDetailByUserId(buyer.getId());
+
+            TouristOrder touristOrder = createRandomTouristOrder(good, buyer);
+            String mallOrderId = connectMallService.pushOrderToMall(touristOrder);
+            touristOrder.setMallOrderNo(mallOrderId);
             System.out.println(goodsRestRepository.getOneByPK(good.getMallGoodId()).getOwner().getNickName());
         } finally {
             for (Product product : productRestRepository.findByGoodsPK(good.getMallGoodId())) {
@@ -106,5 +117,6 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         }
 
     }
+
 
 }

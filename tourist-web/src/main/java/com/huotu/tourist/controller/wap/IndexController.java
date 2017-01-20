@@ -172,7 +172,6 @@ public class IndexController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "view/wap/procurement.html";
     }
 

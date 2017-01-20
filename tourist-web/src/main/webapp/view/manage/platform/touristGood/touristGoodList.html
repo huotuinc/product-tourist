@@ -171,10 +171,13 @@
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 <script th:inline="javascript">
     linkUrl = /*[[@{/wap/goodInfo}]]*/ '';
-    recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
-    unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/ "../../../mock/platform/httpJson.json"
+    recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/
+            "../../../../mock/platform/httpJson.json"
+    unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/
+            "../../../../mock/platform/httpJson.json"
     showTouristGood = /*[[@{/distributionPlatform/showTouristGood}]]*/ "touristGood.html";
-    modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/ "../../../mock/platform/httpJson.json";
+    modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/
+            "../../../../mock/platform/httpJson.json";
 </script>
 <script src="../../../../assets/js/manage/platform/touristGoodList.js"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>

@@ -138,9 +138,9 @@ public class OrderController {
     /**
      * 商场订单支付回调
      *
-     * @param mallOrderNo 商城订单号
-     * @param pay         是否支付成功
-     * @param payType     支付类型
+     * @param mallOrderNo 商城订单号 必须
+     * @param pay         是否支付成功 必须
+     * @param payType     支付类型 必须
      * @param orderType   订单类型 0 线路订单，1 采购商订单
      * @param model
      * @return

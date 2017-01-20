@@ -9,17 +9,30 @@
 
 package me.jiangcai.dating;
 
+import com.huotu.tourist.common.BuyerPayStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.SexEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.TravelerTypeEnum;
 import com.huotu.tourist.core.ServiceConfig;
 import com.huotu.tourist.entity.ActivityType;
 import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,6 +46,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -51,6 +65,14 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     protected ResourceService resourceService;
     @Autowired
     protected ApplicationContext applicationContext;
+    @Autowired
+    TouristBuyerRepository touristBuyerRepository;
+    @Autowired
+    TouristRouteRepository touristRouteRepository;
+    @Autowired
+    TravelerRepository travelerRepository;
+    @Autowired
+    TouristOrderRepository touristOrderRepository;
     @Autowired
     private TouristTypeRepository touristTypeRepository;
     @Autowired
@@ -233,6 +255,59 @@ public abstract class ServiceBaseTest extends SpringWebTest {
      */
     protected ActivityType createRandomActivityType() {
         return createActivityType(null);
+    }
+
+    protected TouristBuyer createRandomTouristBuyer(Long id) {
+        TouristBuyer buyer = new TouristBuyer();
+        buyer.setId(id);
+        buyer.setBuyerName(UUID.randomUUID().toString().replace("-", ""));
+        buyer.setBuyerDirector(UUID.randomUUID().toString().replace("-", ""));
+        buyer.setTelPhone("13030000000");
+        buyer.setPayState(BuyerPayStateEnum.NotPay);
+        buyer.setPayState(BuyerPayStateEnum.NotPay);
+        buyer.setCreateTime(LocalDateTime.now());
+        buyer.setIDNo("312225100000000000");
+        return touristBuyerRepository.saveAndFlush(buyer);
+    }
+
+
+    protected TouristOrder createRandomTouristOrder(TouristGood good, TouristBuyer buyer) {
+
+        TouristRoute touristRoute = new TouristRoute();
+        touristRoute.setGood(good);
+        touristRoute.setRouteNo(UUID.randomUUID().toString().replace("-", "-"));
+        touristRoute.setCreateTime(LocalDateTime.now());
+        touristRoute.setFromDate(LocalDateTime.now());
+        touristRoute.setToDate(LocalDateTime.MAX);
+        touristRoute.setMaxPeople(good.getMaxPeople());
+
+        Traveler traveler = new Traveler();
+        traveler.setRoute(touristRouteRepository.saveAndFlush(touristRoute));
+        traveler.setSex(SexEnum.man);
+        traveler.setCreateTime(LocalDateTime.now());
+        traveler.setName(UUID.randomUUID().toString().replace("-", ""));
+        traveler.setIDNo("341225111111111111");
+        traveler.setTelPhone("13000000000");
+        traveler.setTravelerType(TravelerTypeEnum.adult);
+        traveler.setAge(25);
+        traveler = travelerRepository.saveAndFlush(traveler);
+        List<Traveler> travelers = new ArrayList<>();
+        travelers.add(traveler);
+
+        TouristOrder touristOrder = new TouristOrder();
+        touristOrder.setTouristGood(good);
+        touristOrder.setTouristBuyer(buyer);
+        touristOrder.setCreateTime(LocalDateTime.now());
+        touristOrder.setOrderState(OrderStateEnum.NotPay);
+        touristOrder.setMallBalance(new BigDecimal(0));
+        touristOrder.setMallBalance(new BigDecimal(0));
+        touristOrder.setMallCoffers(new BigDecimal(0));
+        touristOrder.setTravelers(travelers);
+        touristOrder.setOrderMoney(good.getPrice().multiply(new BigDecimal(travelers.size())));
+        touristOrder.setOrderNo(UUID.randomUUID().toString().replace("-", ""));
+        touristOrder.setPayType(PayTypeEnum.WeixinPay);
+
+        return touristOrderRepository.saveAndFlush(touristOrder);
     }
 
     /**
