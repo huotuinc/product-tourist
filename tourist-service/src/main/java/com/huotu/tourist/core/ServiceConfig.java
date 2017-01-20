@@ -12,7 +12,6 @@ package com.huotu.tourist.core;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -23,7 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 @EnableJpaRepositories("com.huotu.tourist.repository")
 @EnableScheduling
-@ImportResource(value = {"classpath:spring-jpa.xml"})
+//@ImportResource(value = {"classpath:spring-jpa.xml"})
 @Import({CommonConfig.class, DataSupportConfig.class})
 public class ServiceConfig {
 
