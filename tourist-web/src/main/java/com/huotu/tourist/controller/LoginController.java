@@ -62,17 +62,19 @@ public class LoginController {
         }catch (NotLoginYetException ex){
 
         }
-        if(environment.acceptsProfiles("test")){
-            userId=100L;
-        }
+//        if(environment.acceptsProfiles("test")){
+//            userId=100L;
+//        }
         if(userId!=null){
             HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
             SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
-            TouristBuyer buyer=touristBuyerRepository.getOne(userId);
-            BuyerAuthentication buyerAuthentication=new BuyerAuthentication(buyer);
-            context.setAuthentication(buyerAuthentication);
-            httpSessionSecurityContextRepository.saveContext(context,request,response);
-            successHandler.onAuthenticationSuccess(request,response,buyerAuthentication);
+            TouristBuyer buyer=touristBuyerRepository.findOne(userId);
+            if(buyer!=null){
+                BuyerAuthentication buyerAuthentication=new BuyerAuthentication(buyer);
+                context.setAuthentication(buyerAuthentication);
+                httpSessionSecurityContextRepository.saveContext(context,request,response);
+                successHandler.onAuthenticationSuccess(request,response,buyerAuthentication);
+            }
         }
 
         return "view/manage/login.html";

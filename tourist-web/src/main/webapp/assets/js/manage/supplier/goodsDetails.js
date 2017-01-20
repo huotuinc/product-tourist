@@ -169,6 +169,15 @@ var uploadImage=function(){
     });
 };
 
+////多图上传
+//parent.uploader($('#banner-uploader'), function (path) {
+//    $("#bannerImgUri").val(path);
+//}, {
+//    allowedExtensions: ['jpeg', 'jpg', 'png', 'bmp'],
+//    itemLimit: 5,
+//    sizeLimit: 3 * 1024 * 1024
+//});
+
 /**
  * 提交表单
  * @param obj

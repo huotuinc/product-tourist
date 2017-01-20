@@ -53,8 +53,9 @@ public class TouristOrder extends BaseModel {
                 @Override
                 public BigDecimal apply(TouristOrder touristOrder) {
                     if(touristOrder.getTouristGood().getRebate()==null){
-                        new BigDecimal(0);
+                        return new BigDecimal(0);
                     }
+
                     return touristOrder.getOrderMoney().multiply(touristOrder.getTouristGood().getRebate()).setScale(2
                             , RoundingMode.HALF_UP);
                 }
