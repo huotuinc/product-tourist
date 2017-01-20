@@ -95,14 +95,19 @@ public interface ConnectMallService {
      */
     String pushOrderToMall(TouristOrder order) throws IOException;
 
+    /**
+     * 获取商城商品
+     *
+     * @param mallOrderId 订单id
+     * @return
+     */
+    Map orderDetail(String mallOrderId) throws IOException;
 
     /**
      * 建议使用{@link #getUserDetailByUserId(Long)}
-     *
      * @param buyer 采购商
      * @return
      */
-    @Deprecated
     String getTouristBuyerHeadUrl(TouristBuyer buyer);
 
     /**

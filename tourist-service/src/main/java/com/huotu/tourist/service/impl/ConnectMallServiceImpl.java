@@ -64,12 +64,11 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -135,13 +134,13 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         );
         merchantConfig = merchant.getConfig();
         appId = environment.getProperty("tourist.appId"
-                , environment.acceptsProfiles("test") ? "tcxe6l3447" : "");
+                , environment.acceptsProfiles("test") ? "9blgq84886" : "");
         token = environment.getProperty("tourist.token"
-                , environment.acceptsProfiles("test") ? "8662452542f243fc8c26ebea86aeb4" : "");
+                , environment.acceptsProfiles("test") ? "de7d6b0848534667b7e4a471abf77c" : "");
         secretKey = environment.getProperty("tourist.secretKey"
-                , environment.acceptsProfiles("test") ? "1j68kk79" : "");
+                , environment.acceptsProfiles("test") ? "iav014i4" : "");
         mallDomain = environment.getProperty("tourist.mallDomain"
-                , environment.acceptsProfiles("test") ? "http://mallapiv2.51flashmall.com" : "");
+                , environment.acceptsProfiles("test") ? "http://api.pdmall.com" : "");
         log.info("appId=" + appId);
         log.info("token=" + token);
         log.info("secretKey=" + secretKey);
@@ -178,26 +177,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     }
 
-    /**
-     * 把数组所有元素排序，并按照“参数参数值”的模式用字符拼接成字符串
-     *
-     * @param params 需要排序并参与字符拼接的参数组
-     * @return 拼接后字符串
-     */
-    public static Map<String, Object> sortMap(Map<String, Object> params) {
-        List<String> keys = new ArrayList<>(params.keySet());
-        Collections.sort(keys);
-        Map<String, Object> result = new HashMap<>();
-        for (int i = 0; i < keys.size(); i++) {
-            String key = keys.get(i);
-            Object value = params.get(key);
-            if (value == null || value.equals("")) {
-                continue;
-            }
-            result.put(key, value);
-        }
-        return result;
-    }
 
     @PreDestroy
     public void destroy() throws IOException {
@@ -207,6 +186,39 @@ public class ConnectMallServiceImpl implements ConnectMallService {
             final Goods goods = product.getGoods();
             productRestRepository.delete(product);
             goodsRestRepository.delete(goods);
+        }
+    }
+
+
+    private <T> T executeMallAPI(String apiSub, String apiName, ContentResolver<T> resolver, NameValuePair... parameters) throws IOException {
+        String uriAPI = MessageFormat.format(mallDomain + uri, apiSub, apiName);
+        final String timestamp = String.valueOf(System.currentTimeMillis());
+        Map<String, Object> logicParameters = new HashMap<>();
+        for (NameValuePair pair : parameters) {
+            if (!StringUtils.isEmpty(pair.getValue())) {
+                logicParameters.put(pair.getName(), pair.getValue());
+            }
+        }
+        logicParameters.put("appId", appId);
+        logicParameters.put("token", token);
+        logicParameters.put("timestamp", timestamp);
+        String sign = SignBuilder.buildSign(new TreeMap<>(logicParameters), null, secretKey);
+
+        List<NameValuePair> toPost = new ArrayList<>(Arrays.asList(parameters));
+        toPost.add(new BasicNameValuePair("appId", appId));
+        toPost.add(new BasicNameValuePair("token", token));
+        toPost.add(new BasicNameValuePair("timestamp", timestamp));
+        toPost.add(new BasicNameValuePair("sign", sign));
+
+        try (CloseableHttpClient client = newHttpClient()) {
+            HttpPost httpPost = new HttpPost(uriAPI);
+            httpPost.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                    .setContentEncoding("UTF-8")
+                    .setParameters(toPost)
+                    .build()
+            );
+            return client.execute(httpPost, new ResultContentResponseHandler<>(resolver));
         }
 
     }
@@ -253,7 +265,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         product.setMerchant(merchant);
         product.setPrice(touristGood.getPrice().doubleValue());
         product.setGoods(goods);
-        product.setCode("" + touristGood.getId() + new Date().toString());
+        product.setCode("" + touristGood.getId() + System.currentTimeMillis());
         product = productRestRepository.insert(product);
 
         GoodsImage goodsImage = new GoodsImage();
@@ -285,156 +297,59 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         return false;
     }
 
-    public int getScore(long mallUserId) throws IOException {
-        return executeMallAPI("User", "getUserDetailByUserId", new ContentResolver<Integer>() {
-            @Override
-            public Integer fromResultContent(ResultContent content) throws IOException {
-                return null;
-            }
-        }, new BasicNameValuePair("userId", String.valueOf(mallUserId)));
-    }
-
-    private <T> T executeMallAPI(String apiSub, String apiName, ContentResolver<T> resolver, NameValuePair... parameters) throws IOException {
-        String uriAPI = String.format(mallDomain + uri, apiSub, apiName);
-        final String timestamp = String.valueOf(System.currentTimeMillis());
-
-        Map<String, Object> logicParameters = new LinkedHashMap<>();
-
-        for (NameValuePair pair : parameters) {
-            if (!StringUtils.isEmpty(pair.getValue())) {
-                logicParameters.put(pair.getName(), pair.getValue());
-            }
-        }
-
-        logicParameters.put("appKey", appKey);
-        logicParameters.put("token", token);
-        logicParameters.put("timestamp", timestamp);
-
-        String sign = SignBuilder.buildSign(logicParameters, null, secretKey);
-
-///
-        List<NameValuePair> toPost = new ArrayList<>(Arrays.asList(parameters));
-        toPost.add(new BasicNameValuePair("appKey", appKey));
-        toPost.add(new BasicNameValuePair("token", token));
-        toPost.add(new BasicNameValuePair("timestamp", timestamp));
-        toPost.add(new BasicNameValuePair("sign", sign));
-
-        try (CloseableHttpClient client = newHttpClient()) {
-            HttpPost httpPost = new HttpPost(uriAPI);
-            httpPost.setEntity(EntityBuilder.create()
-                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
-                    .setContentEncoding("UTF-8")
-                    .setParameters(toPost)
-                    .build()
-            );
-
-            return client.execute(httpPost, new ResultContentResponseHandler<>(resolver));
-        }
-
-    }
-
     @Override
     public Map getUserDetailByUserId(Long mallUserId) throws IOException {
-        Map data = new HashMap();
-        data.put("userId", mallUserId);
-        data.put("appId", appId);
-        data.put("token", token);
-        data.put("timestamp", new Date().getTime());
-        String uriAPI = MessageFormat.format(mallDomain + uri, "User", "getUserDetailByUserId");
-        log.info(uriAPI);
-        HttpPost httpPost = new HttpPost(uriAPI);
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(data, null, secretKey)));
-        log.info("sign:" + SignBuilder.buildSign(data, null, secretKey));
-        try (CloseableHttpClient client = newHttpClient()) {
-            httpPost.setEntity(EntityBuilder.create()
-                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
-                    .setContentEncoding("UTF-8")
-                    .setParameters(params)
-                    .build()
-            );
-            ResultContent result = client.execute(httpPost, new ResultContentResponseHandler());
-            if (result.resultCode == 2000) {
-                return result.getData();
-            } else {
-                throw new IOException(result.getResultMsg());
-            }
-        }
-
+        return executeMallAPI("User", "getUserDetailByUserId", ResultContent::getData
+                , new BasicNameValuePair("userId", String.valueOf(mallUserId)));
     }
 
     @Override
     public String pushBuyerOrderToMall(TouristBuyer buyer) throws IOException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("payed", 0);
-        data.put("vault", 0);
-        data.put("cashScore", 0);
-        data.put("memo", buyer.getBuyerName() + "采购订单");
-        data.put("remark", buyer.getBuyerName() + "采购订单");
-        data.put("identityCard", buyer.getIDNo());
-        data.put("shipName", buyer.getBuyerName());
-        data.put("shipMobile", buyer.getTelPhone());
-        data.put("memberId", buyer.getId());
-        data.put("payType", buyer.getPayType().getCode());
+        NameValuePair payed = new BasicNameValuePair("payed", "0");
+        NameValuePair vault = new BasicNameValuePair("vault", "0");
+        NameValuePair cashScore = new BasicNameValuePair("cashScore", "0");
+        NameValuePair memo = new BasicNameValuePair("memo", buyer.getBuyerName() + "采购订单");
+        NameValuePair remark = new BasicNameValuePair("remark", buyer.getBuyerName() + "采购订单");
+        NameValuePair identityCard = new BasicNameValuePair("identityCard", buyer.getIDNo());
+        NameValuePair shipName = new BasicNameValuePair("shipName", buyer.getBuyerName());
+        NameValuePair shipMobile = new BasicNameValuePair("shipMobile", buyer.getTelPhone());
+        NameValuePair memberId = new BasicNameValuePair("shipMobile", buyer.getId() + "");
+        NameValuePair payType = new BasicNameValuePair("payType", buyer.getPayType().getCode() + "");
         SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
-        List<Map> list = new ArrayList<>();
-        Map pro = new HashMap();
-        pro.put("bn", systemString.getValue());
-        pro.put("num", 1);
-        list.add(pro);
-        data.put("orderItems", list);
-        return pushOrder(data);
+        Product product = productRestRepository.getOneByPK(systemString.getValue());
+        String orderItem = product.getGoods().getId() + "_" + product.getId() + "_" + 1;
+        NameValuePair orderItems = new BasicNameValuePair("orderItems", orderItem);
+        return (String) executeMallAPI("Order", "Create", content -> content.getData().get("orderId")
+                , payed, vault, cashScore, memo, remark, identityCard, shipName, shipMobile, memberId, payType, orderItems);
     }
 
     @Override
     public String pushOrderToMall(TouristOrder order) throws IOException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("payed", order.getMallBalance().intValue());
-        data.put("vault", order.getMallCoffers().intValue());
-        data.put("cashScore", order.getMallIntegral().intValue());
-        data.put("memo", order.getRemarks());
-        data.put("remark", order.getTravelers().get(0).getRemarks());
-        data.put("identityCard", order.getTravelers().get(0).getIDNo());
-        data.put("shipName", order.getTravelers().get(0).getName());
-        data.put("shipMobile", order.getTravelers().get(0).getTelPhone());
-        data.put("memberId", order.getTouristBuyer().getId());
-        data.put("payType", order.getPayType().getCode());
-        List<Map> list = new ArrayList<>();
         List<Product> products = productRestRepository.findByGoodsPK(order.getTouristGood().getMallGoodId());
-        for (Product p : products) {
-            Map pro = new HashMap();
-            pro.put("bn", p.getCode());
-            pro.put("num", order.getTravelers().size());
-            list.add(pro);
-            break;
-        }
-        data.put("orderItems", list);
-        return pushOrder(data);
+        String item = order.getTouristGood().getMallGoodId() + "_" + products.get(0).getId() + "_" + order.getTravelers()
+                .size();
+
+        NameValuePair payed = new BasicNameValuePair("payed", order.getMallBalance().intValue() + "");
+        NameValuePair vault = new BasicNameValuePair("vault", order.getMallCoffers().intValue() + "");
+        NameValuePair cashScore = new BasicNameValuePair("cashScore", order.getMallIntegral().intValue() + "");
+        NameValuePair memo = new BasicNameValuePair("memo", order.getRemarks());
+        NameValuePair remark = new BasicNameValuePair("remark", order.getTravelers().get(0).getRemarks());
+        NameValuePair identityCard = new BasicNameValuePair("identityCard", order.getTravelers().get(0).getIDNo());
+        NameValuePair shipName = new BasicNameValuePair("shipName", order.getTravelers().get(0).getName());
+        NameValuePair shipMobile = new BasicNameValuePair("shipMobile", order.getTravelers().get(0).getTelPhone());
+        NameValuePair memberId = new BasicNameValuePair("memberId", order.getTouristBuyer().getId() + "");
+        NameValuePair payType = new BasicNameValuePair("payType", order.getPayType().getCode() + "");
+        NameValuePair orderItems = new BasicNameValuePair("orderItems", item);
+        return (String) executeMallAPI("Order", "Create", content -> content.getData().get("orderId")
+                , payed, vault, cashScore, memo, remark, identityCard, shipName, shipMobile, memberId, payType, orderItems);
     }
 
-    private String pushOrder(Map<String, Object> data) throws IOException {
-        String uriAPI = MessageFormat.format(mallDomain + uri, "Order", "createOrder");
-        data.put("appId", appId);
-        data.put("token", token);
-        data.put("timestamp", new Date().getTime());
-        HttpPost httpPost = new HttpPost(uriAPI);
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("sign", SignBuilder.buildSign(sortMap(data), null, secretKey)));
-        try (CloseableHttpClient client = newHttpClient()) {
-            httpPost.setEntity(EntityBuilder.create()
-                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
-                    .setContentEncoding("UTF-8")
-                    .setParameters(params)
-                    .build()
-            );
-            ResultContent result = client.execute(httpPost, new ResultContentResponseHandler());
-            if (result.resultCode == 2000) {
-                return result.getData().get("orderId").toString();
-            } else {
-                throw new IOException(result.getResultMsg());
-            }
-        }
+    @Override
+    public Map orderDetail(String mallOrderId) throws IOException {
+        return executeMallAPI("Order", "orderDetail", ResultContent::getData
+                , new BasicNameValuePair("orderId", String.valueOf(mallOrderId)));
     }
+
 
     @Override
     public String getTouristBuyerHeadUrl(TouristBuyer buyer) {

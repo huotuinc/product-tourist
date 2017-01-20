@@ -102,13 +102,20 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         good = connectMallService.pushGoodToMall(good.getId());
         try {
             //小伙伴id
-            TouristBuyer buyer = createRandomTouristBuyer(256421L);
+            TouristBuyer buyer = createRandomTouristBuyer(18767101124L);
             Map map = connectMallService.getUserDetailByUserId(buyer.getId());
-
+            assertThat(map).isNotEmpty();
             TouristOrder touristOrder = createRandomTouristOrder(good, buyer);
             String mallOrderId = connectMallService.pushOrderToMall(touristOrder);
+            map = connectMallService.orderDetail(mallOrderId);
+            assertThat(map).isNotEmpty();
+
             touristOrder.setMallOrderNo(mallOrderId);
             System.out.println(goodsRestRepository.getOneByPK(good.getMallGoodId()).getOwner().getNickName());
+
+            String buyerOrder = connectMallService.pushBuyerOrderToMall(buyer);
+            map = connectMallService.orderDetail(buyerOrder);
+            assertThat(map).isNotEmpty();
         } finally {
             for (Product product : productRestRepository.findByGoodsPK(good.getMallGoodId())) {
                 productRestRepository.delete(product);

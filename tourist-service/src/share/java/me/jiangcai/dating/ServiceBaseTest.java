@@ -278,14 +278,15 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         touristRoute.setRouteNo(UUID.randomUUID().toString().replace("-", "-"));
         touristRoute.setCreateTime(LocalDateTime.now());
         touristRoute.setFromDate(LocalDateTime.now());
-        touristRoute.setToDate(LocalDateTime.MAX);
+        touristRoute.setToDate(LocalDateTime.now());
         touristRoute.setMaxPeople(good.getMaxPeople());
+        touristRoute = touristRouteRepository.saveAndFlush(touristRoute);
 
         Traveler traveler = new Traveler();
-        traveler.setRoute(touristRouteRepository.saveAndFlush(touristRoute));
+        traveler.setRoute(touristRoute);
         traveler.setSex(SexEnum.man);
         traveler.setCreateTime(LocalDateTime.now());
-        traveler.setName(UUID.randomUUID().toString().replace("-", ""));
+        traveler.setName("赵四");
         traveler.setIDNo("341225111111111111");
         traveler.setTelPhone("13000000000");
         traveler.setTravelerType(TravelerTypeEnum.adult);
@@ -300,7 +301,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         touristOrder.setCreateTime(LocalDateTime.now());
         touristOrder.setOrderState(OrderStateEnum.NotPay);
         touristOrder.setMallBalance(new BigDecimal(0));
-        touristOrder.setMallBalance(new BigDecimal(0));
+        touristOrder.setMallIntegral(new BigDecimal(0));
         touristOrder.setMallCoffers(new BigDecimal(0));
         touristOrder.setTravelers(travelers);
         touristOrder.setOrderMoney(good.getPrice().multiply(new BigDecimal(travelers.size())));
