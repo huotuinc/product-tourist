@@ -52,7 +52,6 @@ var dateRangeEdit=function(){
     });
 };
 
-
 /**
  * 删除行程时间
  */
@@ -129,7 +128,7 @@ var setRichText=function(){
  */
 var sendFile=function(file,editor,welEditable) {
     data = new FormData();
-    data.append("fileImage", file);
+    data.append("upload", file);
     $.ajax({
         data: data,
         type: "POST",
@@ -146,8 +145,9 @@ var sendFile=function(file,editor,welEditable) {
 /**
  * 图片上传
  */
-var uploadImage=function(){
+var uploadImage=function(isMoreImg,obj){
     var loadPic=layer.load(0, {shade: false});
+
     $.ajaxFileUpload({
         url: '/upload/image',
         secureuri: false,
@@ -158,8 +158,10 @@ var uploadImage=function(){
             if(resultModel.success){
                 layer.close(loadPic);
                 layer.msg("上传成功");
-                touristImgUri=resultModel.fileName;
-                $("#pictureUrl").attr("src",resultModel.url);
+                var imgTemp=getImgTemp(resultModel.fileName,resultModel.url);
+                var parentDiv=$(obj).parent().parent().parent();
+                var imgTempDiv=$(".imgTemp",parentDiv);
+                bulidImgTemp(isMoreImg,imgTemp,imgTempDiv);
             }
         },
         error: function(data, status, e) {
@@ -169,14 +171,33 @@ var uploadImage=function(){
     });
 };
 
-////多图上传
-//parent.uploader($('#banner-uploader'), function (path) {
-//    $("#bannerImgUri").val(path);
-//}, {
-//    allowedExtensions: ['jpeg', 'jpg', 'png', 'bmp'],
-//    itemLimit: 5,
-//    sizeLimit: 3 * 1024 * 1024
-//});
+/**
+ * 返回一个图片模板
+ * @param url
+ * @param path
+ */
+var getImgTemp=function(path,url){
+    var temp='<div class="col-sm-2"> ' +
+        '<img style="width: 230px;height: 150px" src="'+url+'"/> ' +
+        '<input name="path" value="'+path+'" type="hidden"/> ' +
+        '<a onclick="delImg(this)" title="Close" class="fancybox-item fancybox-close" href="javascript:;"></a> </div>';
+    return temp;
+
+};
+
+/**
+ *
+ * @param isMoreImg 是否是多图
+ * @param imgTemp   图片模板
+ * @param obj       添加的对象
+ */
+var bulidImgTemp=function(isMoreImg,imgTemp,obj){
+    if(!isMoreImg){
+        $(obj).empty();
+    }
+    $(obj).append(imgTemp);
+
+};
 
 /**
  * 提交表单
@@ -249,5 +270,31 @@ var submitForm=function(checkStates,obj) {
             $(obj).attr("class","btn btn-success");
         }
     });
+};
+
+
+/**
+ * 删除图片
+ */
+var delImg=function(obj){
+    var imgDiv=$(obj).parent();
+    var path=$("input[name='path']",imgDiv).val();
+    //ajax删除图片
+    $.ajax({
+        type:'POST',
+        url: '/upload/delete',
+        dataType: 'text',
+        data:{path:path},
+        success:function(){
+            layer.msg("删除失败");
+
+        },
+        error:function(){
+            layer.msg("删除失败");
+        }
+    });
+    $(imgDiv).remove();
+
+
 };
 

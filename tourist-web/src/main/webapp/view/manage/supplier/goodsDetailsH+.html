@@ -79,18 +79,25 @@
                                             <label class="col-sm-1 control-label">封面图片：</label>
 
                                             <div class="col-sm-10">
-                                                <div class="col-sm-3">
-                                                    <img id="pictureUrl" style="width: 350px;height: 200px"
-                                                         res:src="*{touristImgUri}"
-                                                         src="http://placehold.it/300x200?text=封面&size=50"/>
-                                                    <a title="Close" class="fancybox-item fancybox-close"
-                                                       href="javascript:;"></a>
+                                                <div class="imgTemp">
+                                                    <div class="col-sm-2">
+                                                        <img id="pictureUrl" style="width: 230px;height: 150px"
+                                                             th:src="*{touristImgUri}"
+                                                             src="http://placehold.it/300x200?text=封面&size=50"/>
+                                                        <input name="path" value="" th:value="*{touristImgUri}" type="hidden"/>
+                                                        <a onclick="delImg(this)" title="Close" class="fancybox-item fancybox-close"
+                                                           href="javascript:;"></a>
+                                                    </div>
                                                 </div>
-                                                <label title="上传图片" for="upload" class="btn btn-success">
-                                                    <input onchange="uploadImage()" type="file" accept="image/*"
-                                                           id="upload" name="upload" class="hide"/> 上传新图片
-                                                </label>
-                                                <span class="help-block m-b-none">推荐图片大小:300x200</span>
+
+                                                <div class="col-sm-2">
+                                                    <label title="上传图片" for="cover" class="btn btn-success">
+                                                        <input onchange="uploadImage(false,this)" type="file" accept="image/*"
+                                                               id="cover" name="cover" class="hide"/> 上传新图片
+                                                    </label>
+                                                </div>
+
+                                                <!--<span class="help-block m-b-none">推荐图片大小:300x200</span>-->
                                             </div>
                                         </div>
 
@@ -98,25 +105,25 @@
                                             <label class="col-sm-1 control-label">上传组图：</label>
 
                                             <div class="col-sm-10">
-                                                <div class="col-sm-2">
-                                                    <img style="width: 230px;height: 150px"
-                                                         res:src="*{touristImgUri}"
-                                                         src="http://placehold.it/300x200?text=封面&size=50"/>
-                                                    <a style="display: none" title="Close"
-                                                       class="fancybox-item fancybox-close"
-                                                       href="javascript:;"></a>
+                                                <div class="imgTemp">
+                                                    <div th:each="g:*{images}" class="col-sm-2">
+                                                        <img style="width: 230px;height: 150px"
+                                                             res:src="${g}"
+                                                             src="http://placehold.it/300x200?text=封面&size=50"/>
+                                                        <input name="path" value="" th:value="${g}" type="hidden"/>
+                                                        <a onclick="delImg(this)" title="Close" class="fancybox-item fancybox-close"
+                                                           href="javascript:;"></a>
+                                                    </div>
                                                 </div>
+
+
+
                                                 <div class="col-sm-2">
-                                                    <img style="width: 230px;height: 150px"
-                                                         res:src="*{touristImgUri}"
-                                                         src="http://placehold.it/300x200?text=封面&size=50"/>
-                                                    <a title="Close" class="fancybox-item fancybox-close"
-                                                       href="javascript:;"></a>
+                                                    <label title="上传图片" for="photos" class="btn btn-success">
+                                                        <input onchange="uploadImage(true,this)" type="file" accept="image/*"
+                                                               id="photos" name="photos" class="hide"/> 上传新图片
+                                                    </label>
                                                 </div>
-                                                <label title="上传图片" for="upload" class="btn btn-success">
-                                                    <input onchange="uploadImage()" type="file" accept="image/*"
-                                                           id="upload" name="upload" class="hide"/> 上传新图片
-                                                </label>
                                             </div>
                                         </div>
 
@@ -355,11 +362,11 @@
 
 </script>
 <script>
-    $(document).ready(function(){
-        $("img").click(function(){
-            $(this).next("a").show();
-        });
-    });
+//    $(document).ready(function(){
+//        $("img").click(function(){
+//            $(this).next("a").show();
+//        });
+//    });
 </script>
 <script src="../../../assets/js/manage/supplier/goodsDetails.js"></script>
 
