@@ -9,7 +9,6 @@
 
 package com.huotu.tourist.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.huobanplus.common.entity.Goods;
 import com.huotu.huobanplus.common.entity.GoodsImage;
 import com.huotu.huobanplus.common.entity.Merchant;
@@ -29,26 +28,26 @@ import com.huotu.tourist.exception.NotLoginYetException;
 import com.huotu.tourist.repository.SystemStringRepository;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
+import com.huotu.tourist.service.mall.ContentResolver;
+import com.huotu.tourist.service.mall.ResultContent;
+import com.huotu.tourist.service.mall.ResultContentResponseHandler;
 import com.huotu.tourist.util.SignBuilder;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.AbstractResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PreDestroy;
 import javax.crypto.Cipher;
@@ -64,9 +63,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -284,6 +285,54 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         return false;
     }
 
+    public int getScore(long mallUserId) throws IOException {
+        return executeMallAPI("User", "getUserDetailByUserId", new ContentResolver<Integer>() {
+            @Override
+            public Integer fromResultContent(ResultContent content) throws IOException {
+                return null;
+            }
+        }, new BasicNameValuePair("userId", String.valueOf(mallUserId)));
+    }
+
+    private <T> T executeMallAPI(String apiSub, String apiName, ContentResolver<T> resolver, NameValuePair... parameters) throws IOException {
+        String uriAPI = String.format(mallDomain + uri, apiSub, apiName);
+        final String timestamp = String.valueOf(System.currentTimeMillis());
+
+        Map<String, Object> logicParameters = new LinkedHashMap<>();
+
+        for (NameValuePair pair : parameters) {
+            if (!StringUtils.isEmpty(pair.getValue())) {
+                logicParameters.put(pair.getName(), pair.getValue());
+            }
+        }
+
+        logicParameters.put("appKey", appKey);
+        logicParameters.put("token", token);
+        logicParameters.put("timestamp", timestamp);
+
+        String sign = SignBuilder.buildSign(logicParameters, null, secretKey);
+
+///
+        List<NameValuePair> toPost = new ArrayList<>(Arrays.asList(parameters));
+        toPost.add(new BasicNameValuePair("appKey", appKey));
+        toPost.add(new BasicNameValuePair("token", token));
+        toPost.add(new BasicNameValuePair("timestamp", timestamp));
+        toPost.add(new BasicNameValuePair("sign", sign));
+
+        try (CloseableHttpClient client = newHttpClient()) {
+            HttpPost httpPost = new HttpPost(uriAPI);
+            httpPost.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                    .setContentEncoding("UTF-8")
+                    .setParameters(toPost)
+                    .build()
+            );
+
+            return client.execute(httpPost, new ResultContentResponseHandler<>(resolver));
+        }
+
+    }
+
     @Override
     public Map getUserDetailByUserId(Long mallUserId) throws IOException {
         Map data = new HashMap();
@@ -420,23 +469,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @Override
     public Merchant getMerchant() {
         return this.merchant;
-    }
-
-    @Getter
-    @Setter
-    private static class ResultContent {
-        int resultCode;
-        String resultMsg;
-        Map data;
-    }
-
-    private class ResultContentResponseHandler extends AbstractResponseHandler<ConnectMallServiceImpl.ResultContent> {
-        private ObjectMapper objectMapper = new ObjectMapper();
-
-        @Override
-        public ConnectMallServiceImpl.ResultContent handleEntity(HttpEntity entity) throws IOException {
-            return objectMapper.readValue(entity.getContent(), ConnectMallServiceImpl.ResultContent.class);
-        }
     }
 
 
