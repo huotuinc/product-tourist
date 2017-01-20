@@ -140,7 +140,10 @@ public class ResourceController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public void delete(String path) throws IOException {
+    public void delete(String path,String qquuid) throws IOException {
+        if(path==null){
+            path=qquuid;
+        }
         resourceService.deleteResource(path);
     }
 

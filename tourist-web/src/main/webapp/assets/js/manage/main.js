@@ -33,6 +33,12 @@ uploader = function (ui, uploadedPathConsumer, validation, otherConfig) {
                 notAvailablePath: 'http://resali.huobanplus.com/cdn/jquery-fine-uploader/5.10.0/placeholders/not_available-generic.png'
             }
         },
+        deleteFile: {
+            enabled: true,
+            method: "POST",
+            endpoint: "/upload/delete"
+        },
+
         callbacks: {
             onComplete: function (id, name, responseJSON) {
                 if (responseJSON.newUuid)
