@@ -68,13 +68,14 @@ window.actionEvents = {
 };
 
 businessLicencesUriFormatter = function (value, row, index) {
-    return ['<img src="' + row.businessLicencesUri + '">'].join('');
+    return ['<img src="' + row.businessLicencesUri + '" width="50" height="50">'].join('');
 };
 
 IDCardImgFormatter = function (value, row, index) {
+
     return [
-        '<img src="' + row.IDCardImg.IDElevationsUri + '" style="vertical-align:bottom">正面</img>',
-        '<img src="' + row.IDCardImg.IDInverseUri + '" style="vertical-align:bottom">反面</img>'
+        '<img src="' + row.IDCardImg.IDElevationsUri + '" style="vertical-align:bottom" width="50" height="50">正面</img>',
+        '<img src="' + row.IDCardImg.IDInverseUri + '" style="vertical-align:bottom" width="50" height="50">反面</img>'
     ].join('');
 };
 

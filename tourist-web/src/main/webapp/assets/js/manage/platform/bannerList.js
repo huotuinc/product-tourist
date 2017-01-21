@@ -18,7 +18,7 @@ actionFormatter = function (value, row, index) {
         + '<button class="btn btn-danger del" >删除</button>';
 };
 bannerImgUriFormatter = function (value, row, index) {
-    return '<img src="' + row.bannerImgUri + '"/> ';
+    return '<img src="' + row.bannerImgUri + '" width="50" height="50"/> ';
 };
 
 window.actionEvents = {
