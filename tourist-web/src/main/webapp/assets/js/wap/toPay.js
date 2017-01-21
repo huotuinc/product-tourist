@@ -112,7 +112,7 @@ $(function () {
                 mallNum += toCost / rate;
 
                 useSpanEle.text('减￥' + toCost / rate);
-                useSpanEle.attr('data-value', toCost);
+                useSpanEle.attr('data-value', toCost / rate);
             }
         });
         $(".moneypay").text('应付￥' + (buyerMoney - mallNum));

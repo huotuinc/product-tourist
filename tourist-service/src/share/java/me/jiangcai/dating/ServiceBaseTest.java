@@ -298,7 +298,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         traveler.setSex(SexEnum.man);
         traveler.setCreateTime(LocalDateTime.now());
         traveler.setName("赵四");
-        traveler.setIDNo("341225111111111111");
+        traveler.setNumber("341225111111111111");
         traveler.setTelPhone("13000000000");
         traveler.setTravelerType(TravelerTypeEnum.adult);
         traveler.setAge(25);
