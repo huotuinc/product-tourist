@@ -185,7 +185,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary btnSearch" data-dismiss="modal">关联</button>
+                    <button class="btn btn-primary btnSearch doUpdateMallGoodsID" data-dismiss="modal">关联</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -198,17 +198,18 @@
 <script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
     linkUrl = /*[[@{/wap/goodInfo}]]*/ '';
     recommendTouristGood = /*[[@{/distributionPlatform/recommendTouristGood}]]*/
-            "../../../../mock/platform/httpJson.json"
+            "../../../../mock/platform/httpJson.json";
     unRecommendTouristGood = /*[[@{/distributionPlatform/unRecommendTouristGood}]]*/
-            "../../../../mock/platform/httpJson.json"
+            "../../../../mock/platform/httpJson.json";
     showTouristGood = /*[[@{/distributionPlatform/showTouristGood}]]*/ "touristGood.html";
     modifyTouristGoodState = /*[[@{/distributionPlatform/modifyTouristGoodState}]]*/
             "../../../../mock/platform/httpJson.json";
 </script>
 <script src="../../../../assets/js/manage/platform/touristGoodList.js"></script>
-<script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
+
 </body>
 </html>

@@ -45,6 +45,8 @@ import com.huotu.tourist.service.TouristOrderService;
 import com.huotu.tourist.service.TouristRouteService;
 import com.huotu.tourist.service.TouristTypeService;
 import me.jiangcai.lib.resource.service.ResourceService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,6 +79,7 @@ import java.util.List;
 @RequestMapping(value = "/base/")
 public class BaseController {
 
+    private static final Log log = LogFactory.getLog(BaseController.class);
     @Autowired
     public TravelerRepository travelerRepository;
     @Autowired
@@ -107,20 +110,14 @@ public class BaseController {
     private ConnectMallService connectMallService;
     @Autowired
     private ProductRestRepository productRestRepository;
-
     @Autowired
     private SettlementSheetRepository settlementSheetRepository;
-
     @Autowired
     private SettlementSheetService settlementSheetService;
-
     @Autowired
     private ResourceService resourceService;
-
     private String viewSupplierPath = "/view/manage/supplier/";
-
     private String viewCommonPath = "/view/manage/common/";
-
 
     /**
      * 打开线路商品页面
@@ -139,7 +136,6 @@ public class BaseController {
 
         return viewSupplierPath + "goodsList.html";
     }
-
 
     /**
      * 跳转到订单列表页面
@@ -415,20 +411,28 @@ public class BaseController {
     @ResponseBody
     @Transactional
     public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,
-                                                 @RequestParam TouristCheckStateEnum checkState, Long mallProductId)
+                                                 @RequestParam TouristCheckStateEnum checkState, long mallProductId)
             throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(id);
         if (user.isPlatformUser()) {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
-                    checkState.equals(TouristCheckStateEnum.CheckFinish) && mallProductId != null) {
-                Product product = productRestRepository.getOneByPK(mallProductId);
-                if (product != null) {
-                    touristGood.setTouristCheckState(checkState);
-                    touristGood.setMallProductId(mallProductId);
+                    checkState.equals(TouristCheckStateEnum.CheckFinish)) {
+                try {
+                    Product product = productRestRepository.getOneByPK(mallProductId);
+                    if (product != null) {
+                        touristGood.setTouristCheckState(checkState);
+                        touristGood.setMallProductId(mallProductId);
+                    }
+                } catch (IOException ex) {
+                    log.debug("IO on huobanplus", ex);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType
+                            .parseMediaType("text/plain;charset=UTF-8"))
+                            .body("你输入的编号有问题");
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .body("{msg:'当前状态不能进行审核通过'}");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType
+                        .parseMediaType("text/plain;charset=UTF-8"))
+                        .body("当前状态不能进行审核通过");
             }
             return ResponseEntity.ok().build();
         }
@@ -436,8 +440,9 @@ public class BaseController {
             touristGood.setTouristCheckState(checkState);
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .body("{msg:'当前状态不能进行审核通过'}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType
+                    .parseMediaType("text/plain;charset=UTF-8"))
+                    .body("当前状态不能进行审核通过");
         }
     }
 
