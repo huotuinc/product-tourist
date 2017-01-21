@@ -37,35 +37,21 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class LoginController {
 
+    SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
     @Autowired
     private UserRestRepository userRestRepository;
-
     @Autowired
     private TouristBuyerRepository touristBuyerRepository;
-
     @Autowired
     private ConnectMallService connectMallService;
-
     @Autowired
     private Environment environment;
-
     private SecurityContextRepository httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
-
-    SavedRequestAwareAuthenticationSuccessHandler successHandler=new SavedRequestAwareAuthenticationSuccessHandler();
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public String index(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Long userId=null;
         try{
-            userId=connectMallService.currentUserId(request);
-
-        }catch (NotLoginYetException ex){
-
-        }
-//        if(environment.acceptsProfiles("test")){
-//            userId=100L;
-//        }
-        if(userId!=null){
+            long userId = connectMallService.currentUserId(request);
             HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
             SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
             TouristBuyer buyer=touristBuyerRepository.findOne(userId);
@@ -75,6 +61,8 @@ public class LoginController {
                 httpSessionSecurityContextRepository.saveContext(context,request,response);
                 successHandler.onAuthenticationSuccess(request,response,buyerAuthentication);
             }
+        } catch (NotLoginYetException ex) {
+
         }
 
         return "view/manage/login.html";
