@@ -303,7 +303,7 @@ var delImg=function(obj){
         dataType: 'text',
         data:{path:path},
         success:function(){
-            layer.msg("删除失败");
+            layer.msg("删除成功");
 
         },
         error:function(){
