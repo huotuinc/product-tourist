@@ -82,7 +82,7 @@
             </a>
         </div>
         <div class="txmoney">
-            <p class="red"  th:text="'￥'+${commission}">￥209.00</p>
+            <p class="red"  th:text="'￥'+${commission==null?0:commission}">￥209.00</p>
             <!--<p class="hui">可提现总金额/元</p>-->
         </div>
         <div style="margin: 10px">

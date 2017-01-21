@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 /**
  * 负责提供登录功能的控制器
@@ -60,6 +61,7 @@ public class LoginController {
             if (buyer==null){
                 buyer=new TouristBuyer();
                 buyer.setId(userId);
+                buyer.setCreateTime(LocalDateTime.now());
                 buyer = touristBuyerRepository.save(buyer);
             }
 
