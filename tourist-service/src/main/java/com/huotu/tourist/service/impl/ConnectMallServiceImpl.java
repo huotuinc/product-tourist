@@ -46,6 +46,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -54,7 +55,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -271,7 +271,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
                     .filter(cookie -> cookie.getName().equalsIgnoreCase("mem_authcode"))
                     .findAny()
                     .orElseThrow(NotLoginYetException::new).getValue();
-            byte[] encryptData = Base64.getDecoder().decode(cookieValue);
+            byte[] encryptData = Base64.getDecoder().decode(URLDecoder.decode(cookieValue, "UTF-8"));
 
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, key);

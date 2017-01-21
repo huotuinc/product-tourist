@@ -35,6 +35,8 @@ import javax.servlet.http.Cookie;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -56,14 +58,14 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
 
 
     @Test
-    public void newCookie() throws NotLoginYetException {
+    public void newCookie() throws NotLoginYetException, UnsupportedEncodingException {
         assertCookie("FT2UE1TgbNAKuZNu1M0nkA==", 9527);
         assertCookie("iccr3VoVgMJfYuFNl6XPWA==", 1057597);
     }
 
-    private void assertCookie(String encryptCode, long userId) throws NotLoginYetException {
+    private void assertCookie(String encryptCode, long userId) throws NotLoginYetException, UnsupportedEncodingException {
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-        mockHttpServletRequest.setCookies(new Cookie("mem_authcode", encryptCode));
+        mockHttpServletRequest.setCookies(new Cookie("mem_authcode", URLEncoder.encode(encryptCode, "UTF-8")));
 
 //        http://www.cnblogs.com/lzrabbit/p/3639503.html
 //        就用这个吧，取出来，先URLDecoder.decode，再解密

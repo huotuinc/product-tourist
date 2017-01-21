@@ -23,6 +23,7 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -49,18 +50,23 @@ public class LoginController {
     private SecurityContextRepository httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")
+    @Transactional
     public String index(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try{
             long userId = connectMallService.currentUserId(request);
             HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
             SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
             TouristBuyer buyer=touristBuyerRepository.findOne(userId);
-            if(buyer!=null){
-                BuyerAuthentication buyerAuthentication=new BuyerAuthentication(buyer);
-                context.setAuthentication(buyerAuthentication);
-                httpSessionSecurityContextRepository.saveContext(context,request,response);
-                successHandler.onAuthenticationSuccess(request,response,buyerAuthentication);
+            if (buyer==null){
+                buyer=new TouristBuyer();
+                buyer.setId(userId);
+                buyer = touristBuyerRepository.save(buyer);
             }
+
+            BuyerAuthentication buyerAuthentication=new BuyerAuthentication(buyer);
+            context.setAuthentication(buyerAuthentication);
+            httpSessionSecurityContextRepository.saveContext(context,request,response);
+            successHandler.onAuthenticationSuccess(request,response,buyerAuthentication);
         } catch (NotLoginYetException ex) {
 
         }
