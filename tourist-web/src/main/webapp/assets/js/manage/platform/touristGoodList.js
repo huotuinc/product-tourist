@@ -69,7 +69,7 @@ $(function () {
 
     window.touristImgUriFormatter = function (value, row, index) {
         return [
-            '<img src="' + row.touristImgUri + '" />'
+            '<img src="' + row.touristImgUri + '" width="50" height="50" />'
         ].join('');
     };
 
