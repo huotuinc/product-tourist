@@ -157,6 +157,7 @@ public class OrderController {
             if (pay && touristOrder.getOrderState() == OrderStateEnum.NotPay) {
                 touristOrder.setPayType(payType);
                 touristOrder.setPayTime(LocalDateTime.now());
+                touristOrder.setOrderState(OrderStateEnum.PayFinish);
                 model.addAttribute("mallOrderNo", mallOrderNo);
             }
             log.error("当前采购商与订单采购商不匹配或订单状态异常");
