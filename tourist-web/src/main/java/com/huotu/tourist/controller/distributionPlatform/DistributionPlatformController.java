@@ -97,8 +97,6 @@ public class DistributionPlatformController extends BaseController {
     @Autowired
     BannerRepository bannerRepository;
     @Autowired
-    ResourceService resourceService;
-    @Autowired
     LoginService loginService;
     @Autowired
     SettlementSheetRepository settlementSheetRepository;
@@ -110,6 +108,8 @@ public class DistributionPlatformController extends BaseController {
     ProductRestRepository productRestRepository;
     @Autowired
     PurchaserPaymentRecordRepository purchaserPaymentRecordRepository;
+    @Autowired
+    ResourceService resourceService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -432,14 +432,9 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "bannerList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> bannerList(Pageable pageable, HttpServletRequest request) throws JsonProcessingException {
+    public PageAndSelection bannerList(Pageable pageable, HttpServletRequest request) throws JsonProcessingException {
         Page<Banner> page = bannerRepository.findAll(pageable);
-        Map<String, Object> map = new HashMap<>();
-        map.put(TOTAL, page.getTotalPages());
-        map.put(ROWS, page.getContent());
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValueAsString(map);
-        return ResponseEntity.ok(objectMapper.writeValueAsString(map));
+        return new PageAndSelection<>(page, Banner.getDefaultSelections(resourceService));
     }
 
     /**
