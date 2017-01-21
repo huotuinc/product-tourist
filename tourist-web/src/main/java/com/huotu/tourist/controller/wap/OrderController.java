@@ -119,6 +119,7 @@ public class OrderController {
                 order.setMallOrderNo(mallOrderNo);
                 map.put("code", 200);
                 map.put("msg", "success");
+                map.put("mallOrderNo", mallOrderNo);
                 return map;
             } catch (IOException e) {
                 log.error(e.getMessage());

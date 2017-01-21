@@ -323,13 +323,13 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 BigDecimal child = good.getPrice()
                         .multiply(good.getChildrenDiscount().divide(new BigDecimal(10)))
                         .multiply(new BigDecimal(travelers.stream()
-                                .filter(traveler -> traveler.getTravelerType().equals(TravelerTypeEnum.children))
+                                .filter(traveler -> traveler.getTravelerType() == TravelerTypeEnum.children)
                                 .count()
                         ));
                 BigDecimal sumNum = adult.add(child);
-                order.setMallIntegral(new BigDecimal(mallIntegral));
-                order.setMallBalance(new BigDecimal(mallBalance));
-                order.setMallCoffers(new BigDecimal(mallCoffers));
+                order.setMallIntegral(mallIntegral == null ? new BigDecimal(0) : new BigDecimal(mallIntegral));
+                order.setMallBalance(mallBalance == null ? new BigDecimal(0) : new BigDecimal(mallBalance));
+                order.setMallCoffers(mallCoffers == null ? new BigDecimal(0) : new BigDecimal(mallCoffers));
                 //成人+儿童价格
                 order.setOrderMoney(sumNum);
                 order.setTouristBuyer(user);
@@ -338,9 +338,9 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                     traveler.setRoute(route);
                     traveler.setOrder(order);
                 }
+                travelerRepository.save(travelers);
                 order.setTravelers(travelers);
                 order = touristOrderRepository.saveAndFlush(order);
-                travelerRepository.save(travelers);
                 return order;
             }
             return null;

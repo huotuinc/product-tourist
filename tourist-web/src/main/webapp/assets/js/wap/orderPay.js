@@ -31,14 +31,14 @@ function orderPay(data) {
         success: function (apiResult) {
             if (apiResult.code == 200) {
                 //前台跳转到
-                utils.GetPaymentUrl($("#customerId").val(), $("#orderId").val(), data.payType
+                utils.GetPaymentUrl($("#customerId").val(), apiResult.mallOrderNo, data.payType
                     , $.touristUrl + "/wap/");
                 if ($.makePaySuccess) {
                     $.ajax({
                         url: $.buyerOrderNotifyUrl,
                         method: 'post',
                         data: {
-                            mallOrderNo: $("#orderId").val(),
+                            mallOrderNo: apiResult.mallOrderNo,
                             payType: data.payType == 1 ? 0 : 1,
                             pay: true,
                             orderType: 0
