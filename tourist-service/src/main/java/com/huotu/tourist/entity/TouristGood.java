@@ -277,7 +277,7 @@ public class TouristGood extends BaseModel {
      * 商城商品id
      */
     @Column
-    private Long mallGoodId;
+    private Long mallProductId;
 
     /**
      * 商品组图,保存的是图片path

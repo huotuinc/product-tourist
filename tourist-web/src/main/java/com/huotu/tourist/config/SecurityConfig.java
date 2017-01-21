@@ -74,7 +74,8 @@ class SecurityConfig {
                             // 安全系统无关的uri
 //                            mvcConfig.staticResourceAntPatterns()
                     )
-                    .antMatchers("/assets/**");
+                    .antMatchers("/assets/**")
+                    .antMatchers("/wap/orderPayCallback");
         }
 
         @Override

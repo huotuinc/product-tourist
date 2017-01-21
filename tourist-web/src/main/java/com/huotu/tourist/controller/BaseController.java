@@ -9,13 +9,39 @@
 
 package com.huotu.tourist.controller;
 
-import com.huotu.tourist.common.*;
-import com.huotu.tourist.entity.*;
+import com.huotu.huobanplus.common.entity.Product;
+import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.SexEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
-import com.huotu.tourist.repository.*;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.SettlementSheetRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.ConnectMallService;
+import com.huotu.tourist.service.PurchaserPaymentRecordService;
+import com.huotu.tourist.service.SettlementSheetService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
+import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TouristTypeService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -72,25 +98,21 @@ public class BaseController {
     @Autowired
     public TouristTypeService touristTypeService;
     @Autowired
+    ProductRestRepository productRestRepository;
+    @Autowired
     private TouristTypeRepository touristTypeRepository;
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
     @Autowired(required = false)
     private ConnectMallService connectMallService;
-
     @Autowired
     private SettlementSheetRepository settlementSheetRepository;
-
     @Autowired
     private SettlementSheetService settlementSheetService;
-
     @Autowired
     private ResourceService resourceService;
-
-    private String viewSupplierPath="/view/manage/supplier/";
-
-    private String viewCommonPath="/view/manage/common/";
-
+    private String viewSupplierPath = "/view/manage/supplier/";
+    private String viewCommonPath = "/view/manage/common/";
 
     /**
      * 打开线路商品页面
@@ -107,9 +129,8 @@ public class BaseController {
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
 
-        return viewSupplierPath+"goodsList.html";
+        return viewSupplierPath + "goodsList.html";
     }
-
 
     /**
      * 跳转到订单列表页面
@@ -118,7 +139,7 @@ public class BaseController {
      */
     @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
     public String toSupplierOrders(HttpServletRequest request, Model model) {
-        return viewCommonPath+"orderList.html";
+        return viewCommonPath + "orderList.html";
     }
 
     /**
@@ -157,11 +178,11 @@ public class BaseController {
             , HttpServletRequest request, Model model) throws IOException {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
-            supplier = ((TouristSupplier)user).getAuthSupplier();
+            supplier = ((TouristSupplier) user).getAuthSupplier();
         }
         Page<TouristOrder> page = touristOrderService.touristOrders(supplier, supplierName, orderNo, touristName
                 , buyerName, tel, payType, orderDate, endOrderDate, payDate, endPayDate, touristDate, endTouristDate
-                , orderState, settlement, pageable,settlementId);
+                , orderState, settlement, pageable, settlementId);
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
         //出行时间特殊处理
@@ -220,7 +241,6 @@ public class BaseController {
         return new PageAndSelection<>(page, selections);
     }
 
-
     /**
      * 线路列表/推荐线路列表通过是否推荐属性进行判断是否推荐
      *
@@ -241,7 +261,7 @@ public class BaseController {
             , HttpServletRequest request) {
         TouristSupplier supplier = null;
         if (user.isSupplier()) {
-            supplier =((TouristSupplier)user).getAuthSupplier();
+            supplier = ((TouristSupplier) user).getAuthSupplier();
         }
         ActivityType activityType = null;
         TouristType touristType = null;
@@ -259,7 +279,7 @@ public class BaseController {
             page = touristGoodService.touristGoodList(supplier.getAuthSupplier(), touristName, supplierName, touristType,
                     activityType, touristCheckState, pageable, null);
         }
-        Selection<TouristGood,Long> select=new Selection<TouristGood,Long>() {
+        Selection<TouristGood, Long> select = new Selection<TouristGood, Long>() {
             @Override
             public String getName() {
                 return "surplus";
@@ -299,7 +319,6 @@ public class BaseController {
         touristOrder.setRemarks(remark);
     }
 
-
     /**
      * 修改订单状态
      *
@@ -314,13 +333,13 @@ public class BaseController {
     @Transactional
     public ModelMap modifyOrderState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id, @RequestParam
             OrderStateEnum orderState) throws IOException {
-        ModelMap modelMap=new ModelMap();
+        ModelMap modelMap = new ModelMap();
         TouristOrder order = touristOrderRepository.getOne(id);
         if (touristOrderService.checkOrderStatusCanBeModified(user, order.getOrderState(), orderState)) {
             order.setOrderState(orderState);
-            modelMap.addAttribute("data",200);
-        }else {
-            modelMap.addAttribute("data",500);
+            modelMap.addAttribute("data", 200);
+        } else {
+            modelMap.addAttribute("data", 500);
         }
         return modelMap;
     }
@@ -364,26 +383,30 @@ public class BaseController {
         travelerRepository.modifyRouteIdByRouteId(touristRouteRepository.getOne(laterId), touristRouteRepository.getOne(formerId));
     }
 
-
     /**
      * 修改线路商品的状态
      *
      * @param user
-     * @param id         线路商品ID
-     * @param checkState 状态
+     * @param id            线路商品ID
+     * @param checkState    状态
+     * @param mallProductId 商城线路商品
      * @throws IOException
      */
     @RequestMapping(value = "/modifyTouristGoodState", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
     public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,
-                                                 @RequestParam TouristCheckStateEnum checkState) throws IOException {
+                                                 @RequestParam TouristCheckStateEnum checkState, Long mallProductId)
+            throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(id);
         if (user.isPlatformUser()) {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
-                    checkState.equals(TouristCheckStateEnum.CheckFinish)) {
-                touristGood = connectMallService.pushGoodToMall(touristGood.getId());
-                touristGood.setTouristCheckState(checkState);
+                    checkState.equals(TouristCheckStateEnum.CheckFinish) && mallProductId != null) {
+                Product product = productRestRepository.getOneByPK(mallProductId);
+                if (product != null) {
+                    touristGood.setTouristCheckState(checkState);
+                    touristGood.setMallProductId(mallProductId);
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON_UTF8)
                         .body("{msg:'当前状态不能进行审核通过'}");
@@ -402,40 +425,42 @@ public class BaseController {
 
     /**
      * 显示某个结算单的所有订单的页面
+     *
      * @param id
      * @param model
      * @return
      * @throws IOException
      */
     @RequestMapping("/showSettlementDetails")
-    public String showSettlementDetails(@RequestParam Long id, Model model) throws IOException{
-        SettlementSheet settlementSheet=settlementSheetService.getOne(id);
-        BigDecimal orderTotalAmount=touristOrderService.countOrderTotalMoney(settlementSheet.getTouristSupplier()
-                ,OrderStateEnum.Finish,null,null,true,null,null).setScale(2, RoundingMode.HALF_UP);
-        model.addAttribute("settlement",settlementSheet);
-        model.addAttribute("orderTotalAmount",orderTotalAmount);
-        model.addAttribute("totalCommission","");
-        return viewCommonPath+"settlementDetailsList.html";
+    public String showSettlementDetails(@RequestParam Long id, Model model) throws IOException {
+        SettlementSheet settlementSheet = settlementSheetService.getOne(id);
+        BigDecimal orderTotalAmount = touristOrderService.countOrderTotalMoney(settlementSheet.getTouristSupplier()
+                , OrderStateEnum.Finish, null, null, true, null, null).setScale(2, RoundingMode.HALF_UP);
+        model.addAttribute("settlement", settlementSheet);
+        model.addAttribute("orderTotalAmount", orderTotalAmount);
+        model.addAttribute("totalCommission", "");
+        return viewCommonPath + "settlementDetailsList.html";
     }
 
     /**
      * 修改结算单状态
-     * @param id            结算单ID
-     * @param user          当前登录用户
-     * @param state         修改的状态
+     *
+     * @param id    结算单ID
+     * @param user  当前登录用户
+     * @param state 修改的状态
      * @throws IOException
      */
     @Transactional
     @ResponseBody
     @RequestMapping("/modifySettlementState")
     public void modifySettlementState(@AuthenticationPrincipal SystemUser user
-            , @RequestParam SettlementStateEnum state,@RequestParam Long id)
-            throws IOException{
-        SettlementSheet settlementSheet=settlementSheetRepository.getOne(id);
-        if(user.isPlatformUser()){
+            , @RequestParam SettlementStateEnum state, @RequestParam Long id)
+            throws IOException {
+        SettlementSheet settlementSheet = settlementSheetRepository.getOne(id);
+        if (user.isPlatformUser()) {
             settlementSheet.setPlatformChecking(state);
         }
-        if(user.isSupplier()){
+        if (user.isSupplier()) {
             settlementSheet.setSelfChecking(state);
         }
     }

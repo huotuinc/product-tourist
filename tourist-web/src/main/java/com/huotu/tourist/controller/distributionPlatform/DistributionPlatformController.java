@@ -11,7 +11,6 @@ package com.huotu.tourist.controller.distributionPlatform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.huotu.huobanplus.common.entity.Product;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
@@ -24,7 +23,6 @@ import com.huotu.tourist.entity.PresentRecord;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.SettlementSheet;
-import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristRoute;
@@ -596,9 +594,9 @@ public class DistributionPlatformController extends BaseController {
         purchaserProductSetting.setBannerUri(bannerUri);
         purchaserProductSetting.setPrice(price);
         //**更新采购商资格货品价格**/
-        SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
-        Product product = productRestRepository.getOne(systemString.getValue());
-        product.setPrice(price.doubleValue());
+//        SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
+//        Product product = productRestRepository.getOne(systemString.getValue());
+//        product.setPrice(price.doubleValue());
         purchaserProductSetting.setExplainStr(explainStr);
         purchaserProductSetting.setAgreement(agreement);
         purchaserProductSettingService.save(purchaserProductSetting);

@@ -150,7 +150,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, Long mallGoodsId, List<String> photos, TouristCheckStateEnum goodsCheckState) {
+            , int maxPeople, Long mallProductId, List<String> photos, TouristCheckStateEnum goodsCheckState) {
         TouristGood touristGood = null;
         if (id != null) {
             touristGood = touristGoodRepository.getOne(id);
@@ -159,7 +159,7 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         }
         touristGood.setTouristSupplier(touristSupplier);
         touristGood.setCreateTime(LocalDateTime.now());
-        touristGood.setMallGoodId(mallGoodsId);
+        touristGood.setMallProductId(mallProductId);
         touristGood.setTouristName(touristName);
         touristGood.setActivityType(activityType);
         touristGood.setTouristType(touristType);

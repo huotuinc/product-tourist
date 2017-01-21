@@ -164,7 +164,36 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="productModalLabel">商城货品id关联</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="linkUrl" class="col-sm-2 control-label">货品id</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="mallProductId" id="mallProductId" class="form-control"
+                                   placeholder="货品id">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnSearch" data-dismiss="modal">关联</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+</div>
+
 <script src="../../../../assets/js/jquery.min.js"></script>
 <script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../../../assets/libs/bootstrap-table/bootstrap-table.min.js"></script>

@@ -33,7 +33,8 @@ actionFormatter = function (value, row, index) {
         arr.push('<button class="btn btn-primary unRecommendTouristGood">取消推荐</button> ');
     }
     if (row.touristCheckState.code < 2) {
-        arr.push('<button class="btn btn-primary modifyCheckState" >审核通过</button> ');
+        arr.push('<button class="btn btn-primary modifyCheckState"data-toggle="modal"' +
+            ' data-target="#productModal" >审核通过</button> ');
     }
     if (!row.recommend) {
         arr.push('<button class="btn btn-primary recommendTouristGood" >推荐</button> ');
@@ -89,24 +90,22 @@ window.actionEvents = {
         });
     },
     'click .modifyCheckState': function (e, value, row, index) {
-        layer.confirm('确定取审核通过吗？', {
-            btn: ['确定', '取消']
-        }, function (index) {
-            layer.close(index);
-            $.ajax({
-                url: modifyTouristGoodState,
-                method: "post",
-                data: {id: row.id, checkState: 2},
-                success: function () {
-                    $table.bootstrapTable('refresh');
-                },
-                error: function (error) {
-                    layer.alert(error);
-                }
-            })
-        }, function () {
-
+        if ($("#mallProductId").val() == null) {
+            layer.alert("商城货品id不能为空");
+            return;
+        }
+        $.ajax({
+            url: modifyTouristGoodState,
+            method: "post",
+            data: {id: row.id, checkState: 2, mallProductId: $("#mallProductId").val()},
+            success: function () {
+                $table.bootstrapTable('refresh');
+            },
+            error: function (error) {
+                layer.alert(error);
+            }
         });
+
     },
     'click .updateLinkUrl': function (e, value, row, index) {
         $("#linkUrl").val(linkUrl + "?id=" + row.id);

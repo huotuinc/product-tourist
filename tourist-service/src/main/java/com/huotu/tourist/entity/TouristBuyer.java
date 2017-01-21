@@ -185,7 +185,7 @@ public class TouristBuyer implements SystemUser, UserDetails {
     /**
      * 商城订单号
      */
-    @Column(length = 50)
+    @Column(unique = true, length = 50)
     private String mallOrderNo;
 
     /**

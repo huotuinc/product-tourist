@@ -9,24 +9,17 @@
 
 package com.huotu.tourist.service.impl;
 
-import com.huotu.huobanplus.common.entity.Goods;
-import com.huotu.huobanplus.common.entity.GoodsImage;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.common.entity.MerchantConfig;
 import com.huotu.huobanplus.common.entity.Product;
-import com.huotu.huobanplus.model.type.MallEmbedResource;
-import com.huotu.huobanplus.sdk.common.repository.GoodsImageRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
-import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.exception.NotLoginYetException;
 import com.huotu.tourist.repository.SystemStringRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.mall.ContentResolver;
 import com.huotu.tourist.service.mall.ResultContent;
@@ -49,7 +42,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PreDestroy;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -58,18 +50,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -101,22 +92,20 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     private final String token;
     //商城域名
     private final String mallDomain;
+//    appid：tcxe6l3447
+//    token：8662452542f243fc8c26ebea86aeb4
+//    secretKey：1j68kk79
+//    mallapiv2.51flashmall.com/MallApi/Order/Create
+
+//    小伙伴：256421
     /**
      * 用于解密HTS1
      */
     private final SecretKey key;
     private String uri = "/MallApi/{0}/{1}";
     @Autowired
-    private GoodsRestRepository goodsRestRepository;
-    @Autowired
-    private TouristGoodRepository touristGoodRepository;
-    @Autowired
     private ProductRestRepository productRestRepository;
-    @Autowired
-    private GoodsImageRestRepository goodsImageRestRepository;
 
-    @Autowired
-    private SystemStringRepository systemStringRepository;
     @Autowired
     private Environment environment;
 
@@ -134,61 +123,24 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         );
         merchantConfig = merchant.getConfig();
         appId = environment.getProperty("tourist.appId"
-                , environment.acceptsProfiles("test") ? "9blgq84886" : "");
+                , environment.acceptsProfiles("test") ? "tcxe6l3447" : null);
         token = environment.getProperty("tourist.token"
-                , environment.acceptsProfiles("test") ? "de7d6b0848534667b7e4a471abf77c" : "");
+                , environment.acceptsProfiles("test") ? "8662452542f243fc8c26ebea86aeb4" : null);
         secretKey = environment.getProperty("tourist.secretKey"
-                , environment.acceptsProfiles("test") ? "iav014i4" : "");
+                , environment.acceptsProfiles("test") ? "1j68kk79" : null);
         mallDomain = environment.getProperty("tourist.mallDomain"
-                , environment.acceptsProfiles("test") ? "http://api.pdmall.com" : "");
+                , environment.acceptsProfiles("test") ? "http://api.pdmall.com" : null);
+        qualificationsProductId = environment.getProperty("tourist.qualificationsProductId"
+                , environment.acceptsProfiles("test") ? "22659" : null);
         log.info("appId=" + appId);
         log.info("token=" + token);
         log.info("secretKey=" + secretKey);
         log.info("mallDomain=" + mallDomain);
-        SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
-        if (qualificationsProductIdSystem == null) {
-            Goods goods = new Goods();
-            goods.setOwner(merchant);
-            goods.setCreateTime(new Date());
-            goods.setDisabled(false);
-            goods.setMarketable(true);
-            goods.setTitle("采购商资格产品");
-            goods.setPrice(100);
-            goods.setCode(UUID.randomUUID().toString().replace("-", ""));
-            goods.setGoodsType("行装线路");
-            goods.setDescription("行装线路商品");
-            goods = goodsRestRepository.insert(goods);
-            Product product = new Product();
-            product.setName("线路默认");
-            product.setMarketable(true);
-            product.setMerchant(merchant);
-            product.setPrice(100);
-            product.setGoods(goods);
-            product.setCode(new Date().toString());
-            product = productRestRepository.insert(product);
-            qualificationsProductId = "" + product.getId();
-            qualificationsProductIdSystem = new SystemString();
-            qualificationsProductIdSystem.setId("QualificationsProductId");
-            qualificationsProductIdSystem.setValue(qualificationsProductId);
-            systemStringRepository.save(qualificationsProductIdSystem);
-        } else {
-            qualificationsProductId = qualificationsProductIdSystem.getValue();
-        }
-
-    }
-
-
-    @PreDestroy
-    public void destroy() throws IOException {
-        // 在单元测试中 应该清理掉脏数据
-        if (environment.acceptsProfiles("unit_test")) {
-            Product product = productRestRepository.getOneByPK(qualificationsProductId);
-            final Goods goods = product.getGoods();
-            productRestRepository.delete(product);
-            goodsRestRepository.delete(goods);
+        log.info("qualificationsProductId=" + qualificationsProductId);
+        if (appId == null || token == null || secretKey == null || mallDomain == null || qualificationsProductId == null) {
+            throw new IOException("缺少系统配置，请检查配置");
         }
     }
-
 
     private <T> T executeMallAPI(String apiSub, String apiName, ContentResolver<T> resolver, NameValuePair... parameters) throws IOException {
         String uriAPI = MessageFormat.format(mallDomain + uri, apiSub, apiName);
@@ -213,14 +165,13 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         try (CloseableHttpClient client = newHttpClient()) {
             HttpPost httpPost = new HttpPost(uriAPI);
             httpPost.setEntity(EntityBuilder.create()
-                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
-                    .setContentEncoding("UTF-8")
+                    .setContentType(ContentType.create("application/x-www-form-urlencoded", Charset.forName("UTF-8")))
+                    .setContentEncoding("utf-8")
                     .setParameters(toPost)
                     .build()
             );
             return client.execute(httpPost, new ResultContentResponseHandler<>(resolver));
         }
-
     }
 
     private CloseableHttpClient newHttpClient() {
@@ -237,54 +188,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @Override
     public long getServiceDays() {
         return merchantConfig.getServiceDays() + merchantConfig.getReceiveDays();
-    }
-
-    @Override
-    public TouristGood pushGoodToMall(long touristGoodId) throws IOException {
-        TouristGood touristGood = touristGoodRepository.getOne(touristGoodId);
-        if (touristGood.getMallGoodId() != null)
-            return touristGood;
-        //  营销类型（需要跟普通商品做出区别）
-        Goods goods = new Goods();
-        goods.setOwner(merchant);
-        goods.setCreateTime(new Date());
-        goods.setDisabled(false);
-        goods.setMarketable(true);
-        goods.setTitle(touristGood.getTouristName());
-        goods.setPrice(touristGood.getPrice().doubleValue());
-        goods.setCode(UUID.randomUUID().toString().replace("-", ""));
-        goods.setGoodsType("行装线路");
-        goods.setCost(touristGood.getPrice().doubleValue());
-        goods.setDescription("行装线路商品");
-        goods = goodsRestRepository.insert(goods);
-        log.debug("new Goods:" + goods);
-
-        Product product = new Product();
-        product.setName("线路默认");
-        product.setMarketable(true);
-        product.setMerchant(merchant);
-        product.setPrice(touristGood.getPrice().doubleValue());
-        product.setGoods(goods);
-        product.setCode("" + touristGood.getId() + System.currentTimeMillis());
-        product = productRestRepository.insert(product);
-
-        GoodsImage goodsImage = new GoodsImage();
-        goodsImage.setOrderBy(1);
-        goodsImage.setOriginHeight(1);
-        goodsImage.setOriginWidth(1);
-        goodsImage.setRemote(true);
-        goodsImage.setSource(touristGood.getTouristImgUri());
-        MallEmbedResource mallEmbedResource = new MallEmbedResource();
-        mallEmbedResource.setValue(touristGood.getTouristImgUri());
-        goodsImage.setThumbnailPic(mallEmbedResource);
-        goodsImage.setSmallPic(mallEmbedResource);
-        goodsImage.setBigPic(mallEmbedResource);
-        goodsImage = goodsImageRestRepository.insert(goodsImage);
-        goodsImage.setGoods(goods);
-        List<GoodsImage> list = new ArrayList<>();
-        list.add(goodsImage);
-        touristGood.setMallGoodId(goods.getId());
-        return touristGood;
     }
 
     @Override
@@ -313,11 +216,11 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         NameValuePair identityCard = new BasicNameValuePair("identityCard", buyer.getIDNo());
         NameValuePair shipName = new BasicNameValuePair("shipName", buyer.getBuyerName());
         NameValuePair shipMobile = new BasicNameValuePair("shipMobile", buyer.getTelPhone());
-        NameValuePair memberId = new BasicNameValuePair("shipMobile", buyer.getId() + "");
+        NameValuePair memberId = new BasicNameValuePair("memberId", buyer.getId() + "");
         NameValuePair payType = new BasicNameValuePair("payType", buyer.getPayType().getCode() + "");
-        SystemString systemString = systemStringRepository.getOne("QualificationsProductId");
-        Product product = productRestRepository.getOneByPK(systemString.getValue());
-        String orderItem = product.getGoods().getId() + "_" + product.getId() + "_" + 1;
+        Product product = productRestRepository.getOneByPK(qualificationsProductId);
+        String orderItem = product.getGoods().getId() + "_" + qualificationsProductId + "_" + 1;
+
         NameValuePair orderItems = new BasicNameValuePair("orderItems", orderItem);
         return (String) executeMallAPI("Order", "Create", content -> content.getData().get("orderId")
                 , payed, vault, cashScore, memo, remark, identityCard, shipName, shipMobile, memberId, payType, orderItems);
@@ -325,10 +228,6 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Override
     public String pushOrderToMall(TouristOrder order) throws IOException {
-        List<Product> products = productRestRepository.findByGoodsPK(order.getTouristGood().getMallGoodId());
-        String item = order.getTouristGood().getMallGoodId() + "_" + products.get(0).getId() + "_" + order.getTravelers()
-                .size();
-
         NameValuePair payed = new BasicNameValuePair("payed", order.getMallBalance().intValue() + "");
         NameValuePair vault = new BasicNameValuePair("vault", order.getMallCoffers().intValue() + "");
         NameValuePair cashScore = new BasicNameValuePair("cashScore", order.getMallIntegral().intValue() + "");
@@ -339,6 +238,9 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         NameValuePair shipMobile = new BasicNameValuePair("shipMobile", order.getTravelers().get(0).getTelPhone());
         NameValuePair memberId = new BasicNameValuePair("memberId", order.getTouristBuyer().getId() + "");
         NameValuePair payType = new BasicNameValuePair("payType", order.getPayType().getCode() + "");
+        Product product = productRestRepository.getOneByPK(order.getTouristGood().getMallProductId());
+        String item = product.getGoods().getId() + "_" + order.getTouristGood().getMallProductId() + "_" + order.getTravelers()
+                .size();
         NameValuePair orderItems = new BasicNameValuePair("orderItems", item);
         return (String) executeMallAPI("Order", "Create", content -> content.getData().get("orderId")
                 , payed, vault, cashScore, memo, remark, identityCard, shipName, shipMobile, memberId, payType, orderItems);
@@ -346,7 +248,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
 
     @Override
     public Map orderDetail(String mallOrderId) throws IOException {
-        return executeMallAPI("Order", "orderDetail", ResultContent::getData
+        return executeMallAPI("Order", "Detail", ResultContent::getData
                 , new BasicNameValuePair("orderId", String.valueOf(mallOrderId)));
     }
 
@@ -385,6 +287,4 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     public Merchant getMerchant() {
         return this.merchant;
     }
-
-
 }

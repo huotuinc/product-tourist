@@ -30,6 +30,12 @@ import java.util.List;
 public interface TouristGoodService extends BaseService<TouristGood, Long> {
 
     /**
+     * 在使用该profile时，表示我们将在商城中生成我们所需的资源
+     * 反之则是预配资源
+     */
+    String Mall_Resource_Create_Profile = "mall_create";
+
+    /**
      * 线路列表
      *
      * @param supplier          供应商ID
@@ -85,7 +91,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param beCareful          注意事项(必须)
      * @param touristImgUri      商品图片(必须)
      * @param maxPeople          最大人数(必须)
-     * @param mallGoodsId
+     * @param mallProductId
      * @param photos             商品组图
      * @param goodsCheckState
      * @return 新增或修改的线路商品
@@ -94,7 +100,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
             , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
             , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
             , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, Long mallGoodsId, List<String> photos, TouristCheckStateEnum goodsCheckState);
+            , int maxPeople, Long mallProductId, List<String> photos, TouristCheckStateEnum goodsCheckState);
 
     /**
      * 获取最新线路列表

@@ -20,4 +20,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TouristBuyerRepository extends JpaRepository<TouristBuyer, Long>, JpaSpecificationExecutor<TouristBuyer> {
 
+    TouristBuyer findByMallOrderNo(String mallOrderNo);
+
 }

@@ -11,10 +11,8 @@ package com.huotu.tourist.service;
 
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.exception.NotLoginYetException;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -38,16 +36,6 @@ public interface ConnectMallService {
      * @return 售后时间（天）
      */
     long getServiceDays();
-
-    /**
-     * 将本地商品与远程商品同步
-     * 并设置当前商品的商城商品id
-     *
-     * @param touristGoodId 本地商品id
-     * @return 已更新好的本地商品
-     */
-    @Transactional
-    TouristGood pushGoodToMall(long touristGoodId) throws IOException;
 
     /**
      * 订单状态是否正常（我们只会认可唯一的一种状态）

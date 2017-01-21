@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -142,53 +143,47 @@ public class OrderController {
      * @param pay         是否支付成功 必须
      * @param payType     支付类型 必须
      * @param orderType   订单类型 0 线路订单，1 采购商订单
-     * @param model
      * @return
      */
-    @RequestMapping(value = {"/orderPayCallback"})
+    @RequestMapping(value = {"/orderPayCallback"}, method = RequestMethod.POST)
     @Transactional
-    public String orderPayCallback(@AuthenticationPrincipal SystemUser user, @RequestParam String mallOrderNo,
-                                   @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType, Model
-                                           model) {
-        if (user.isBuyer()) {
-            TouristBuyer buyer = (TouristBuyer) user;
-            //线路订单
-            if (orderType == 0) {
-                TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
-                if (pay && touristOrder.getTouristBuyer().getId().equals(buyer.getId()) && touristOrder
-                        .getOrderState()
-                        .equals(OrderStateEnum.NotPay)) {
-                    touristOrder.setPayType(payType);
-                    touristOrder.setPayTime(LocalDateTime.now());
-                    model.addAttribute("mallOrderNo", mallOrderNo);
-                    return "view/wap/paySuccess.html";
-                }
-                model.addAttribute("errorMsg", "当前采购商与订单采购商不匹配或订单状态异常");
-            } else {
-                //采购商资格付款订单
-                if (pay && buyer.getMallOrderNo().equals(mallOrderNo) && buyer.getPayState() == BuyerPayStateEnum
-                        .NotPay) {
-                    buyer.setPayState(BuyerPayStateEnum.PayFinish);
-                    PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
-                    purchaserPaymentRecord.setPayDate(LocalDateTime.now());
-                    purchaserPaymentRecord.setTouristBuyer(buyer);
-                    SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
-                    try {
-                        Product product = productRestRepository.getOne(qualificationsProductIdSystem.getValue());
-                        purchaserPaymentRecord.setMoney(new BigDecimal(product.getPrice()));
-                    } catch (IOException e) {
-                        List<PurchaserProductSetting> productSettings = purchaserProductSettingRepository.findAll();
-                        purchaserPaymentRecord.setMoney(productSettings.get(0).getPrice());
-                    }
-                    purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
-                    touristBuyerRepository.saveAndFlush(buyer);
-                    return "redirect:/wap/showMyInfo";
-                }
-                model.addAttribute("errorMsg", pay ? "支付成功，订单号与当前采购商单号不一致或当前采购商以支付" : "商城支付失败，请重试");
+    @ResponseBody
+    public void orderPayCallback(@RequestParam String mallOrderNo,
+                                 @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType,
+                                 HttpServletRequest request, Model model) {
+        log.info("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
+                "orderType:" + orderType + " ========");
+        //线路订单
+        if (orderType == 0) {
+            TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
+            if (pay && touristOrder.getOrderState()
+                    .equals(OrderStateEnum.NotPay)) {
+                touristOrder.setPayType(payType);
+                touristOrder.setPayTime(LocalDateTime.now());
+                model.addAttribute("mallOrderNo", mallOrderNo);
             }
+            log.error("当前采购商与订单采购商不匹配或订单状态异常");
         } else {
-            model.addAttribute("errorMsg", "警告非法的用户访问，以记录下IP");
+            if (pay) {
+                TouristBuyer buyer = touristBuyerRepository.findByMallOrderNo(mallOrderNo);
+                log.info("======== buyerId:" + buyer.getId() + "========");
+                buyer.setPayState(BuyerPayStateEnum.PayFinish);
+                PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
+                purchaserPaymentRecord.setPayDate(LocalDateTime.now());
+                purchaserPaymentRecord.setTouristBuyer(buyer);
+                SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
+                try {
+                    Product product = productRestRepository.getOne(qualificationsProductIdSystem.getValue());
+                    purchaserPaymentRecord.setMoney(new BigDecimal(product.getPrice()));
+                } catch (IOException e) {
+                    List<PurchaserProductSetting> productSettings = purchaserProductSettingRepository.findAll();
+                    purchaserPaymentRecord.setMoney(productSettings.get(0).getPrice());
+                }
+                purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
+                touristBuyerRepository.saveAndFlush(buyer);
+            }
+            log.error(pay ? "支付成功，订单号与当前采购商单号不一致或当前采购商以支付" : "商城支付失败，请重试");
         }
-        return "wap/errorMsg.html";
+
     }
 }

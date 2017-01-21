@@ -168,6 +168,17 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     }
 
     /**
+     * @return 已创建的随机线路
+     */
+    protected TouristGood createRandomTouristGood(Long mallProductId) {
+        return createTouristGood(null, null, null, null, null
+                , UUID.randomUUID().toString(), randomAddress(), randomAddress(), randomAddress(), randomPrice()
+                , randomRate(), randomRate(), RandomStringUtils.randomAlphabetic(6), randomMobile()
+                , UUID.randomUUID().toString(), UUID.randomUUID().toString(), null
+                , 30, mallProductId, Collections.emptyList());
+    }
+
+    /**
      * @return 随机比例 <1
      */
     protected BigDecimal randomRate() {
@@ -202,7 +213,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
      * @param beCareful          注意事项
      * @param touristImgUri      商品图片
      * @param maxPeople          最大人数
-     * @param mallGoodsId
+     * @param mallProductId
      * @param images             组图
      * @return 线路商品
      */
@@ -210,7 +221,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
             , TouristCheckStateEnum checkState, TouristSupplier touristSupplier, String touristFeatures
             , Address destination, Address placeOfDeparture, Address travelledAddress, BigDecimal price
             , BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson, String receptionTelephone
-            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, Long mallGoodsId, List<String> images) {
+            , String eventDetails, String beCareful, String touristImgUri, Integer maxPeople, Long mallProductId, List<String> images) {
         TouristGood touristGood = new TouristGood();
         touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
         touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
@@ -218,7 +229,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
         touristGood.setRecommend(false);
-        touristGood.setMallGoodId(mallGoodsId);
+        touristGood.setMallProductId(mallProductId);
         touristGood.setTouristFeatures(touristFeatures);
         touristGood.setDestination(destination);
         touristGood.setPlaceOfDeparture(placeOfDeparture);
@@ -264,7 +275,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         buyer.setBuyerDirector(UUID.randomUUID().toString().replace("-", ""));
         buyer.setTelPhone("13030000000");
         buyer.setPayState(BuyerPayStateEnum.NotPay);
-        buyer.setPayState(BuyerPayStateEnum.NotPay);
+        buyer.setPayType(PayTypeEnum.WeixinPay);
         buyer.setCreateTime(LocalDateTime.now());
         buyer.setIDNo("312225100000000000");
         return touristBuyerRepository.saveAndFlush(buyer);
