@@ -149,7 +149,6 @@ public class TouristBuyer implements SystemUser, UserDetails {
                         return resourceService.getResource(buyer.getBusinessLicencesUri()).httpUrl().toString();
                     }
                 }
-                , new SimpleSelection<TouristBuyer, String>("buyerId", "buyerId")
                 , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
                 , new SimpleSelection<TouristBuyer, String>("IDNo", "IDNo")
                 , new Selection<TouristBuyer, Map>() {
