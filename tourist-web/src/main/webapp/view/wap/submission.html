@@ -82,6 +82,11 @@
 <script th:inline="javascript">
     $.touristUrl = /*[[${@environment.getProperty('tourist.url','http://test.xl.51flashmall.com')}]]*/ 'http://FUCK ME';
     $.buyerOrderPayUrl = /*[[@{/wap/buyerOrderPay}]]*/ "../../mock/createTrade.json";
+    /**
+     * 此处为true则通过前端调用通知
+     */
+    $.makePaySuccess = /*[[${@environment.acceptsProfiles('mockMakePaySuccess')}]]*/ true;
+    $.buyerOrderNotifyUrl = /*[[@{/wap/orderPayCallback}]]*/ "submission.html";
 </script>
 <script src="../../assets/js/wap/buyerPay.js" th:src="@{/assets/js/wap/buyerPay.js}"></script>
 </body>

@@ -17,6 +17,7 @@ $(function () {
         orderPay(data);
     });
 });
+
 function orderPay(data) {
     var load = layer.load();
     $.ajax({
@@ -31,7 +32,22 @@ function orderPay(data) {
             if (apiResult.code == 200) {
                 //前台跳转到
                 utils.GetPaymentUrl($("#customerId").val(), $("#orderId").val(), data.payType
-                    , $.touristUrl + "/wap/")
+                    , $.touristUrl + "/wap/");
+                if ($.makePaySuccess) {
+                    $.ajax({
+                        url: $.buyerOrderNotifyUrl,
+                        method: 'post',
+                        data: {
+                            mallOrderNo: $("#orderId").val(),
+                            payType: data.payType == 1 ? 0 : 1,
+                            pay: true,
+                            orderType: 0
+                        },
+                        success: function () {
+                            location.href = $.touristUrl + "/wap/";
+                        }
+                    });
+                }
             } else {
                 layer.alert(apiResult.msg);
             }

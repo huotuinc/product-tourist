@@ -177,6 +177,11 @@
 <script th:inline="javascript">
     $.orderPayUrl = /*[[@{/wap/orderPay}]]*/ "../../mock/createTrade.json";
     $.touristUrl = /*[[${@environment.getProperty('tourist.url','http://test.xl.51flashmall.com')}]]*/ 'http://FUCK ME';
+    /**
+     * 此处为true则通过前端调用通知
+     */
+    $.makePaySuccess = /*[[${@environment.acceptsProfiles('mockMakePaySuccess')}]]*/ true;
+    $.buyerOrderNotifyUrl = /*[[@{/wap/orderPayCallback}]]*/ "submission.html";
 </script>
 <script src="../../assets/js/wap/orderPay.js" th:src="@{/assets/js/wap/orderPay.js}"></script>
 </body>
