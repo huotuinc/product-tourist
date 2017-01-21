@@ -245,11 +245,11 @@ public class TouristBuyer implements SystemUser, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (isRealBuyer(this)) {
+//        if (isRealBuyer(this)) {
             return Collections.singleton(new SimpleGrantedAuthority("ROLE_BUYER"));
-        } else {
-            return null;
-        }
+//        } else {
+//            return null;
+//        }
     }
 
     @Override
