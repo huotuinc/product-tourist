@@ -411,12 +411,12 @@ public class BaseController {
     @ResponseBody
     @Transactional
     public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,
-                                                 @RequestParam TouristCheckStateEnum checkState, long mallProductId)
+                                                 @RequestParam TouristCheckStateEnum checkState, Long mallProductId)
             throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(id);
         if (user.isPlatformUser()) {
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
-                    checkState.equals(TouristCheckStateEnum.CheckFinish)) {
+                    checkState.equals(TouristCheckStateEnum.CheckFinish)&&mallProductId!=null) {
                 try {
                     Product product = productRestRepository.getOneByPK(mallProductId);
                     if (product != null) {

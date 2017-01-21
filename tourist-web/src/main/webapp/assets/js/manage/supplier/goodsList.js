@@ -31,8 +31,8 @@ var touristCheckStateFormatter=function(value,row,index){
 };
 
 var touristImgUriFormatter=function(value,row,index){
-    var res= $("#goodsResPath").attr("src");
-    return '<img src="'+res+row.touristImgUri+'" height="50px" width="80px">';
+    //var res= $("#goodsResPath").attr("src");
+    return '<img src="'+row.touristImgUri+'" height="50px" width="80px">';
 };
 
 var actionEvents = {
