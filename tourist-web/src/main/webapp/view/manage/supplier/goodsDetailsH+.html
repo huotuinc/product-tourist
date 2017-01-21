@@ -79,10 +79,10 @@
                                             <label class="col-sm-1 control-label">封面图片：</label>
 
                                             <div class="col-sm-10">
-                                                <div class="imgTemp">
-                                                    <div class="col-sm-2">
+                                                <div class="imgTempSingle">
+                                                    <div class="col-sm-2" style="width: 230px;margin-right: 20px">
                                                         <img id="pictureUrl" style="width: 230px;height: 150px"
-                                                             th:src="*{touristImgUri}"
+                                                             res:src="*{touristImgUri}"
                                                              src="http://placehold.it/300x200?text=封面&size=50"/>
                                                         <input name="path" value="" th:value="*{touristImgUri}" type="hidden"/>
                                                         <a onclick="delImg(this)" title="Close" class="fancybox-item fancybox-close"
@@ -105,8 +105,9 @@
                                             <label class="col-sm-1 control-label">上传组图：</label>
 
                                             <div class="col-sm-10">
-                                                <div class="imgTemp">
-                                                    <div th:each="g:*{images}" class="col-sm-2">
+                                                <div class="imgTempMore">
+                                                    <div th:each="g:*{images}" class="col-sm-2"
+                                                         style="width: 230px;margin-right: 20px">
                                                         <img style="width: 230px;height: 150px"
                                                              res:src="${g}"
                                                              src="http://placehold.it/300x200?text=封面&size=50"/>
@@ -115,9 +116,6 @@
                                                            href="javascript:;"></a>
                                                     </div>
                                                 </div>
-
-
-
                                                 <div class="col-sm-2">
                                                     <label title="上传图片" for="photos" class="btn btn-success">
                                                         <input onchange="uploadImage(true,this)" type="file" accept="image/*"

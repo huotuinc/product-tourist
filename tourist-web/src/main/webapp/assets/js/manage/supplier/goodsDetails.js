@@ -134,7 +134,7 @@ var sendFile=function(file,editor,welEditable) {
         type: "POST",
         url: "/upload/image",
         cache: false,
-        contentType:'application/json',
+        contentType: false,
         processData: false,
         success: function(data) {
             editor.insertImage(welEditable, data.url);
@@ -147,20 +147,26 @@ var sendFile=function(file,editor,welEditable) {
  */
 var uploadImage=function(isMoreImg,obj){
     var loadPic=layer.load(0, {shade: false});
+    var formerId=$(obj).attr("id");
+    var formerName=$(obj).attr("name");
+    $(obj).attr("id","upload");
+    $(obj).attr("name","upload");
 
     $.ajaxFileUpload({
         url: '/upload/image',
-        secureuri: false,
         fileElementId: 'upload',
         dataType: 'json',
-        data: null,
         success: function(resultModel) {
             if(resultModel.success){
                 layer.close(loadPic);
                 layer.msg("上传成功");
                 var imgTemp=getImgTemp(resultModel.fileName,resultModel.url);
-                var parentDiv=$(obj).parent().parent().parent();
-                var imgTempDiv=$(".imgTemp",parentDiv);
+                var imgTempDiv;
+                if(isMoreImg){
+                    imgTempDiv=$(".imgTempMore");
+                }else {
+                    imgTempDiv=$(".imgTempSingle");
+                }
                 bulidImgTemp(isMoreImg,imgTemp,imgTempDiv);
             }
         },
@@ -169,6 +175,9 @@ var uploadImage=function(isMoreImg,obj){
             layer.msg("上传失败，请检查网络后重试"+e);
         }
     });
+
+    $("#upload").attr({"id":formerId,"name":formerName});
+
 };
 
 /**
@@ -177,7 +186,7 @@ var uploadImage=function(isMoreImg,obj){
  * @param path
  */
 var getImgTemp=function(path,url){
-    var temp='<div class="col-sm-2"> ' +
+    var temp='<div class="col-sm-2" style="width: 230px;margin-right: 20px"> ' +
         '<img style="width: 230px;height: 150px" src="'+url+'"/> ' +
         '<input name="path" value="'+path+'" type="hidden"/> ' +
         '<a onclick="delImg(this)" title="Close" class="fancybox-item fancybox-close" href="javascript:;"></a> </div>';
@@ -243,7 +252,15 @@ var submitForm=function(checkStates,obj) {
     }
 
 
+    var coverPath=$("input[name='path']",".imgTempSingle").val();
 
+    var photos="";
+    $("input[name='path']",".imgTempMore").each(function(index,val){
+        if(index!=0){
+            photos=photos+",";
+        }
+        photos=photos+$(val).val();
+    });
 
     var ld=layer.load(5, {shade: false});
     $(obj).attr("class","btn btn-primary disabled");
@@ -252,7 +269,7 @@ var submitForm=function(checkStates,obj) {
         type:'POST',
         url: submitUrl,
         dataType: 'text',
-        data:{id:id,touristName:touristName,touristImgUri:touristImgUri,touristTypeId:touristTypeId,activityTypeId:activityTypeId,
+        data:{id:id,touristName:touristName,photos:photos,touristImgUri:coverPath,touristTypeId:touristTypeId,activityTypeId:activityTypeId,
             touristFeatures:touristFeatures,destination:destination,placeOfDeparture:placeOfDeparture,
             travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
             receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
