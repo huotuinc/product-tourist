@@ -32,10 +32,11 @@ public interface TouristSupplierService extends BaseService<TouristSupplier, Lon
      * @param businessLicenseUri    营业执照uri
      * @param remarks               备注
      * @param detailedAddress       详细地址
+     * @param supplierName          供应商名称
      */
     @Transactional
     void modifySupplier(Long id, Address address, String contacts, String contactNumber
-            , String businessLicenseUri, String remarks, String detailedAddress);
+            , String businessLicenseUri, String remarks, String detailedAddress, String supplierName);
 
 
     /**
