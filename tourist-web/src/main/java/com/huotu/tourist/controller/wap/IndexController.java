@@ -437,10 +437,14 @@ public class IndexController {
      * @throws IOException 上传图片异常
      */
     @RequestMapping(value = {"/addTouristBuyer"}, method = RequestMethod.POST)
-    public String addTouristBuyer(@RequestParam Long id, @RequestParam String buyerName, @RequestParam String buyerDirector
+    public String addTouristBuyer(@AuthenticationPrincipal TouristBuyer buyer, @RequestParam
+            String
+            buyerName,
+                                  @RequestParam String
+                                          buyerDirector
             , @RequestParam String telPhone, @RequestParam String IDNo, @RequestParam MultipartFile businessLicencesUri
             , @RequestParam MultipartFile IDElevationsUri, @RequestParam MultipartFile IDInverseUri, Model model) throws IOException {
-        TouristBuyer touristBuyer = touristBuyerRepository.getOne(id);
+        TouristBuyer touristBuyer = touristBuyerRepository.getOne(buyer.getId());
         touristBuyer.setCheckState(BuyerCheckStateEnum.Checking);
         touristBuyer.setTelPhone(telPhone);
         touristBuyer.setBuyerDirector(buyerDirector);
