@@ -438,10 +438,7 @@ public class IndexController {
      */
     @RequestMapping(value = {"/addTouristBuyer"}, method = RequestMethod.POST)
     public String addTouristBuyer(@AuthenticationPrincipal TouristBuyer buyer, @RequestParam
-            String
-            buyerName,
-                                  @RequestParam String
-                                          buyerDirector
+            String buyerName, @RequestParam String buyerDirector
             , @RequestParam String telPhone, @RequestParam String IDNo, @RequestParam MultipartFile businessLicencesUri
             , @RequestParam MultipartFile IDElevationsUri, @RequestParam MultipartFile IDInverseUri, Model model) throws IOException {
         TouristBuyer touristBuyer = touristBuyerRepository.getOne(buyer.getId());
@@ -455,9 +452,9 @@ public class IndexController {
         String IDElevationsUriFilename = "buyer/" + UUID.randomUUID().toString() + IDElevationsUri.getOriginalFilename();
         resourceService.uploadResource(IDElevationsUriFilename, IDElevationsUri.getInputStream());
         touristBuyer.setIDElevationsUri(IDElevationsUriFilename);
-        String IDInverseUriFilename = "buyer/" + UUID.randomUUID().toString() + IDInverseUri.getOriginalFilename();
-        resourceService.uploadResource(IDInverseUriFilename, IDInverseUri.getInputStream());
-        touristBuyer.setIDElevationsUri(IDInverseUriFilename);
+        String idInverseUri = "buyer/" + UUID.randomUUID().toString() + IDInverseUri.getOriginalFilename();
+        resourceService.uploadResource(idInverseUri, IDInverseUri.getInputStream());
+        touristBuyer.setIDInverseUri(idInverseUri);
         touristBuyer.setIDNo(IDNo);
         touristBuyer.setPayState(BuyerPayStateEnum.NotPay);
         touristBuyer.setCreateTime(LocalDateTime.now());
