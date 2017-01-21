@@ -11,14 +11,14 @@ getParams = function (params) {
         sort: sort
     };
     return temp;
-}
+};
+
 actionFormatter = function (value, row, index) {
     return '<button  class="btn btn-primary update" data-toggle="modal" data-target="#myModal">修改</button> '
         + '<button class="btn btn-danger del" >删除</button>';
 };
 bannerImgUriFormatter = function (value, row, index) {
     return '<img src="' + g + row.bannerImgUri + '"/> ';
-
 };
 
 window.actionEvents = {

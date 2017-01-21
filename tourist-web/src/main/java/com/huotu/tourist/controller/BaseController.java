@@ -117,9 +117,9 @@ public class BaseController {
     @Autowired
     private ResourceService resourceService;
 
-    private String viewSupplierPath="/view/manage/supplier/";
+    private String viewSupplierPath = "/view/manage/supplier/";
 
-    private String viewCommonPath="/view/manage/common/";
+    private String viewCommonPath = "/view/manage/common/";
 
 
     /**
@@ -137,7 +137,7 @@ public class BaseController {
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
 
-        return viewSupplierPath+"goodsList.html";
+        return viewSupplierPath + "goodsList.html";
     }
 
 
@@ -148,7 +148,7 @@ public class BaseController {
      */
     @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
     public String toSupplierOrders(HttpServletRequest request, Model model) {
-        return viewCommonPath+"orderList.html";
+        return viewCommonPath + "orderList.html";
     }
 
     /**
@@ -281,12 +281,14 @@ public class BaseController {
             activityType = activityTypeService.getOne(activityTypeId);
         }
         Page<TouristGood> page;
+
         if (recommend != null && recommend) {
             page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
                     , touristCheckState, true, pageable);
         } else {
-            page = touristGoodService.touristGoodList(supplier.getAuthSupplier(), touristName, supplierName, touristType,
+            page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
                     activityType, touristCheckState, pageable, null);
+
         }
         Selection<TouristGood, Long> select = new Selection<TouristGood, Long>() {
             @Override
@@ -389,11 +391,11 @@ public class BaseController {
     @ResponseBody
     @Transactional
     public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId
-            ,@RequestParam Long orderId) throws IOException {
-        TouristOrder order=touristOrderRepository.getOne(orderId);
-        TouristRoute laterRoute=touristRouteRepository.getOne(laterId);
-        List<Traveler> formers=travelerRepository.findByRoute_Id(formerId);
-        for(Traveler t:formers){
+            , @RequestParam Long orderId) throws IOException {
+        TouristOrder order = touristOrderRepository.getOne(orderId);
+        TouristRoute laterRoute = touristRouteRepository.getOne(laterId);
+        List<Traveler> formers = travelerRepository.findByRoute_Id(formerId);
+        for (Traveler t : formers) {
             t.setRoute(laterRoute);
         }
         order.setTravelers(formers);

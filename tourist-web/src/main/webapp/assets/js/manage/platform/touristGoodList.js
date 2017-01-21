@@ -33,7 +33,7 @@ actionFormatter = function (value, row, index) {
         arr.push('<button class="btn btn-primary unRecommendTouristGood">取消推荐</button> ');
     }
     if (row.touristCheckState.code < 2) {
-        arr.push('<button class="btn btn-primary modifyCheckState"data-toggle="modal"' +
+        arr.push('<button class="btn btn-primary modifyCheckState" data-toggle="modal"' +
             ' data-target="#productModal" >审核通过</button> ');
     }
     if (!row.recommend) {
