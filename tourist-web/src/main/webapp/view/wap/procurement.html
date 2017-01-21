@@ -1,5 +1,8 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="mallIntegral" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="mallBalance" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="mallCoffers" type="java.lang.Number"*/-->
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -137,20 +140,24 @@
     <label class="weui_cell weui_check_label" for="s11" th:if="${mallIntegral>0}">
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用积分
-                <span class="twoss" th:text="${mallIntegral}+'积分'">20积分</span>
-                <span class="twossw" th:text="'减￥'+${mallIntegral/100}">减￥20.0</span>
+                <span class="twoss" data-name="mallIntegral" data-value="20" th:attr="data-value=${mallIntegral}"
+                      th:text="${mallIntegral}+'积分'">20
+                    积分</span>
+                <span class="twossw mallIntegral" data-name="mallIntegral">减￥0</span>
             </p>
         </div>
         <div class="weui_cell_hd">
-            <input type="checkbox" class="weui_check" name="mallIntegral" id="s11">
+            <input type="checkbox" class="weui_check" name="mallIntegral" id="s11" data-value="100">
             <i class="weui_icon_checked"></i>
         </div>
     </label>
     <label class="weui_cell weui_check_label" for="s12" th:if="${mallBalance>0}">
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用余额
-                <span class="twoss" th:text="'￥'+${mallBalance}">￥20.0</span>
-                <span class="twossw" th:text="'减￥'+${mallBalance}">减￥20.0</span>
+                <span class="twoss" data-name="mallBalance" data-value="20" th:attr="data-value=${mallBalance}"
+                      th:text="'￥'+${mallBalance}">￥20
+                    .0</span>
+                <span class="twossw mallBalance" data-name="mallBalance">减￥0</span>
             </p>
         </div>
         <div class="weui_cell_hd">
@@ -161,8 +168,10 @@
     <label class="weui_cell weui_check_label" for="s13" th:if="${mallCoffers>0}">
         <div class="weui_cell_bd weui_cell_primary">
             <p>使用小金库
-                <span class="twoss" th:text="'￥'+${mallCoffers}">￥20.0</span>
-                <span class="twossw" th:text="'减￥'+${mallCoffers}">减￥20.0</span>
+                <span class="twoss" data-name="mallCoffers" data-value="20" th:attr="data-value=${mallCoffers}"
+                      th:text="'￥'+${mallCoffers}">￥20
+                    .0</span>
+                <span class="twossw mallCoffers" data-name="mallCoffers">减￥0</span>
             </p>
         </div>
         <div class="weui_cell_hd">
@@ -185,208 +194,23 @@
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
-    $(function () {
-        var addOrderUrl = /*[[@{/wap/addOrderInfo}]]*/ '../../mock/httpJson.json';
+    var addOrderUrl = /*[[@{/wap/addOrderInfo}]]*/ '../../mock/httpJson.json';
 
-        var toOrderInfoPage = /*[[@{/wap/toProcurementPayPage}]]*/ 'procurementPayPage.html';
+    var toOrderInfoPage = /*[[@{/wap/toProcurementPayPage}]]*/ 'procurementPayPage.html';
 
-        var goodId = /*[[${good.id}]]*/ 0;
+    var goodId = /*[[${good.id}]]*/ 0;
 
-        var routeId = /*[[${routeId}]]*/ 0;
+    var routeId = /*[[${routeId}]]*/ 0;
 
-        //剩余人数
-        var amount = /*[[${amount}]]*/ 4;
-        //成人价格
-        var price = /*[[${good.price}]]*/ 10;
-        //儿童价格
-        var childPrice = /*[[${good.price*(good.childrenDiscount/10)}]]*/ 8;
+    //剩余人数
+    var amount = /*[[${amount}]]*/ 4;
+    //成人价格
+    var price = /*[[${good.price}]]*/ 10;
+    //儿童价格
+    var childPrice = /*[[${good.price*(good.childrenDiscount/10)}]]*/ 8;
 
-        //商城小伙伴积分
-        var mallIntegralMoney = /*[[${mallIntegral/100}]]*/ 0;
-        var mallIntegral = /*[[${mallIntegral}]]*/ 0;
-        //商城小伙伴余额
-        var mallBalance = /*[[${mallBalance}]]*/ 0;
-        //商城小伙伴小金库
-        var mallCoffers = /*[[${mallCoffers}]]*/ 0;
-
-        //总金额
-        var buyerMoney = 0;
-
-        $(".money").text('￥' + buyerMoney);
-        $(".moneypay").text('应付￥' + buyerMoney);
-
-        //成人减1
-        $(".priceDecrease").click(function () {
-            if (parseInt($("input[name='adult']").val()) > 0) {
-
-                $("input[name='adult']").val(parseInt($("input[name='adult']").val()) - 1);
-                buyerMoney =
-                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
-                if ((parseInt($("input[name='adult']").val()) == 0 && parseInt($("input[name='children']").val()) ==
-                        0) || buyerMoney - moneyPay() < 0) {
-                    $("input[type='checkbox']").prop("checked", false);
-                }
-                $(".money").text('￥' + buyerMoney);
-                $('.adultDiv:last').remove();
-                moneyPay();
-
-            }
-        });
-        //成人加1
-        $(".priceIncrease").click(function () {
-            if (parseInt($("input[name='adult']").val()) + parseInt($("input[name='children']").val()) < amount) {
-                $("input[name='adult']").val(parseInt($("input[name='adult']").val()) + 1)
-                buyerMoney =
-                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
-                $(".itemTemplate").clone().removeClass("itemTemplate").addClass("adultDiv").appendTo(".items")
-                        .show().find(".travelerType").val(0);
-                $(".money").text('￥' + buyerMoney);
-                moneyPay();
-            }
-        });
-
-        //儿童减1
-        $(".childPriceDecrease").click(function () {
-            if (parseInt($("input[name='children']").val()) > 0) {
-                $("input[name='children']").val(parseInt($("input[name='children']").val()) - 1)
-                buyerMoney =
-                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
-                if ((parseInt($("input[name='adult']").val()) == 0 && parseInt($("input[name='children']").val()) ==
-                        0) || buyerMoney - moneyPay() < 0) {
-                    $("input[type='checkbox']").prop("checked", false);
-                }
-                $(".money").text('￥' + buyerMoney);
-                $('.childrenDiv:last').remove();
-                moneyPay();
-            }
-        });
-
-        //儿童加1
-        $(".childPriceIncrease").click(function () {
-            if (parseInt($("input[name='adult']").val()) + parseInt($("input[name='children']").val()) < amount) {
-                $("input[name='children']").val(parseInt($("input[name='children']").val()) + 1)
-                $(".itemTemplate").clone().removeClass("itemTemplate").addClass("childrenDiv").appendTo(".items")
-                        .show().find(".travelerType").val(1);
-                buyerMoney =
-                        parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
-                $(".money").text('￥' + buyerMoney);
-                moneyPay();
-            }
-        });
-
-        //删除人员信息
-        $(".items").on('click', '.delete', function () {
-            $(this).parent().parent().remove();
-            var travelerType = $(this).parent().parent().find(".travelerType").val();
-            if (travelerType == 0) {
-                $("input[name='adult']").val(parseInt($("input[name='adult']").val()) - 1)
-            } else {
-                $("input[name='children']").val(parseInt($("input[name='children']").val()) - 1)
-            }
-            buyerMoney =
-                    parseInt($("input[name='adult']").val()) * price + parseInt($("input[name='children']").val()) * childPrice;
-
-            if ((parseInt($("input[name='adult']").val()) == 0 && parseInt($("input[name='children']").val()) ==
-                    0) || buyerMoney - moneyPay() < 0) {
-                $("input[type='checkbox']").prop("checked", false);
-            }
-            amount -= 1;
-            $(".money").text('￥' + buyerMoney);
-            moneyPay();
-        });
-
-
-        $("input[type='checkbox']").change(function () {
-            var name = $(this).attr("name");
-            if ($(this).is(':checked')) {
-                if (name == 'mallIntegral')
-                    buyerMoney = Math.max(mallIntegralMoney - buyerMoney, 0);
-                if (name == 'mallBalance')
-                    buyerMoney = Math.max(mallBalance - buyerMoney, 0);
-                if (name == 'mallCoffers')
-                    buyerMoney = Math.max(mallCoffers - buyerMoney, 0);
-                moneyPay();
-            } else {
-                moneyPay();
-            }
-        });
-
-        function moneyPay() {
-            var mallNum = 0;
-            $("input[type='checkbox']").each(function () {
-                var name = $(this).attr("name");
-                if ($(this).is(':checked')) {
-                    if (name == 'mallIntegral')
-                        mallNum += mallIntegralMoney;
-                    if (name == 'mallBalance')
-                        mallNum += mallBalance;
-                    if (name == 'mallCoffers')
-                        mallNum += mallCoffers;
-                }
-            });
-            $(".moneypay").text('应付￥' + (buyerMoney - mallNum));
-            return mallNum;
-        }
-
-
-        $("#submitBtn").click(function () {
-            if ($(".items .item").length < 1) {
-                $.alert("请添加游客");
-                return;
-            }
-            var travelers = new Array();
-            var flag = false;
-            $(".items .item").each(function () {
-                var travelerType = parseInt($(this).find("input[name='travelerType']").val());
-                var name = $(this).find("input[name='name']").val();
-                var telPhone = $(this).find("input[name='telPhone']").val();
-                var IDNo = $(this).find("input[name='IDNo']").val();
-                var age = parseInt($(this).find("input[name='age']").val());
-                var sex = parseInt($(this).find("select[name='sex']").val());
-                if (name == '' || telPhone == '' || IDNo == '' || age <= 0) {
-                    flag = true;
-                    return;
-                }
-                var traveler = {
-                    "travelerType": travelerType,
-                    "name": name,
-                    "telPhone": telPhone,
-                    "number": IDNo,
-                    "age": age,
-                    "sex": sex
-                };
-                travelers.push(traveler);
-            });
-            if (flag) {
-                $.alert("请完善游客信息，姓名、电话、身份证号，年龄必填");
-                return;
-            }
-            var data = {goodId: goodId, routeId: routeId, travelers: JSON.stringify(travelers)};
-            data.remark = $("textarea[name='remark']").val();
-            if ($("input[name='mallIntegral']").checked) {
-                data.mallIntegral = mallIntegral;
-            }
-            if ($("input[name='mallBalance']").checked) {
-                data.mallBalance = mallBalance;
-            }
-            if ($("input[name='mallCoffers']").checked) {
-                data.mallCoffers = mallCoffers;
-            }
-            $.ajax({
-                url: addOrderUrl,
-                method: "post",
-                data: data,
-                dataType: "json",
-                success: function (apiResult) {
-                    window.location.href = toOrderInfoPage + "?orderId=" + apiResult.orderId;
-                },
-                error: function (error) {
-                    $.alert(error.msg)
-                }
-            });
-        })
-    });
 </script>
+<script src="../../assets/js/wap/toPay.js" th:src="@{/assets/js/wap/toPay.js}"></script>
 </body>
 
 </html>
