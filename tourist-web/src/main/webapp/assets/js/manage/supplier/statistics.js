@@ -6,7 +6,6 @@ $(function(){
     exportEdit();
     dateSearch();
     datecancelEdit();
-    checkwithdrawals();
     //dateapplyEdit();
 
 });
@@ -77,14 +76,6 @@ var dateRangeEdit=function(){
             linkedCalendars: false
         }
     );
-};
-
-var setPaymentAccount=function(){
-    layer.open({
-        type:2,
-        area:["60%","60%"],
-        content:collectionAccountUrl
-    });
 };
 
 

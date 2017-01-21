@@ -210,7 +210,7 @@ var withdrawals=function(){
  * @param params
  */
 var getParams= function(params) {
-    var isNotSettledList=$("#tab-2").hasClass("active");
+    //var isNotSettledList=$("#tab-2").hasClass("active");
     var orderDates=dateRangeFormat($("input[name='createDate']").val());
     var sort=params.sort!=undefined?params.sort+","+params.order:"id,desc";
     var temp = {
@@ -221,7 +221,7 @@ var getParams= function(params) {
         endCreateDate:orderDates[1]!=""?orderDates[1]:undefined,
         orderDate:orderDates[0]!=""?orderDates[0]:undefined,
         endOrderDate:orderDates[1]!=""?orderDates[1]:undefined,
-        settlement:isNotSettledList? false:undefined
+        settlement:false
     };
     return temp;
 };

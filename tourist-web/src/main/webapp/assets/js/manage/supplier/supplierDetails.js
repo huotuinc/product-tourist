@@ -21,6 +21,7 @@ var uploadImage=function(){
                 layer.close(loadPic);
                 layer.msg("上传成功");
                 businessLicenseUri=resultModel.fileName;
+                //$("input[name='path']").val();
                 $("#pictureUrl").attr("src",resultModel.url);
             }
         },
