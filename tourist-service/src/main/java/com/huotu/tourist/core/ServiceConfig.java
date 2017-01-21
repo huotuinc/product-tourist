@@ -22,7 +22,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 @EnableJpaRepositories("com.huotu.tourist.repository")
 @EnableScheduling
-//@ImportResource(value = {"classpath:spring-jpa.xml"})
 @Import({CommonConfig.class, DataSupportConfig.class})
 public class ServiceConfig {
 
