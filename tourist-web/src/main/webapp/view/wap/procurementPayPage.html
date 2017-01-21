@@ -116,7 +116,7 @@
             <div class="weui_cell_bd weui_cell_primary">
                 <p>积分</p>
             </div>
-            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallIntegral}">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallIntegral/100}">-￥20.0</div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
@@ -135,7 +135,7 @@
                 <p>已支付</p>
             </div>
             <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;"
-                 th:text="'-￥'+${order.mallIntegral+order.mallBalance+order.mallCoffers}">￥200
+                 th:text="'-￥'+${order.mallIntegral/100+order.mallBalance+order.mallCoffers}">￥200
                 .0
             </div>
         </div>
