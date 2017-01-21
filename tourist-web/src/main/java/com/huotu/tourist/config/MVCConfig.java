@@ -112,7 +112,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         resolver.setSizeParameterName(sizeParameterName);
         argumentResolvers.add(resolver);
         argumentResolvers.add(new TouristRouteResolver());
-        argumentResolvers.add(new TravelerListResolver());
+        argumentResolvers.add(0, new TravelerListResolver());
     }
 
     @Override

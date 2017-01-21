@@ -190,7 +190,7 @@ public class IndexController {
      */
     @RequestMapping(value = {"/addOrderInfo"}, method = RequestMethod.POST)
     @ResponseBody
-    public Map addOrderInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam(required = false) @TravelerList
+    public Map addOrderInfo(@AuthenticationPrincipal TouristBuyer user, @TravelerList
             List<Traveler> travelers, @RequestParam Long goodId, @RequestParam Long routeId, Float buyerMoney
             , Float mallIntegral, Float mallBalance, Float mallCoffers, String remark, Model model) {
         Map map = new HashMap();

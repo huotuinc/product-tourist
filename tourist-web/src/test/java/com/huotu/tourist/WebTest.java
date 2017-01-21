@@ -369,7 +369,7 @@ public abstract class WebTest extends ServiceBaseTest {
      */
     protected MockHttpSession mvcLogin(String uri, String username, String password) throws Exception {
         if (uri == null)
-            uri = "/";
+            uri = "/distributionPlatform/";
         MockHttpSession session = (MockHttpSession) mockMvc.perform(get(uri))
 //                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isFound())
@@ -381,7 +381,7 @@ public abstract class WebTest extends ServiceBaseTest {
                 .param("password", password).session(session))
 //                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isFound())
-                .andExpect(header().string("location", "http://localhost" + uri));
+                .andExpect(header().string("location", "http://localhost:80" + uri));
 
         return session;
     }
