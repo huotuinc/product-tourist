@@ -104,7 +104,7 @@ public class MyController {
         }
 
 
-//        String headUrl=connectMallService.getTouristBuyerHeadUrl(touristBuyer);
+        String headUrl=connectMallService.getTouristBuyerHeadUrl(touristBuyer);
         long allNotFinish=touristOrderRepository.countByTouristBuyerAndOrderStates(
                 touristBuyer, Arrays.asList(OrderStateEnum.NotPay,OrderStateEnum.PayFinish
                         ,OrderStateEnum.NotFinish,OrderStateEnum.Refunds));
@@ -114,7 +114,7 @@ public class MyController {
                 touristBuyer,OrderStateEnum.Invalid);
         BigDecimal commission=touristOrderRepository.sumCommissionByBuyer(touristBuyer);
 
-        model.addAttribute("headUrl","");
+        model.addAttribute("headUrl",headUrl);
         model.addAttribute("buyer",touristBuyer);
         model.addAttribute("allNotFinish",allNotFinish);
         model.addAttribute("allFinish",allFinish);
