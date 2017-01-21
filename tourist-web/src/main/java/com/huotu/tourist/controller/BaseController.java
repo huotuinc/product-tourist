@@ -372,7 +372,7 @@ public class BaseController {
         traveler.setSex(sex);
         traveler.setAge(age);
         traveler.setTelPhone(tel);
-        traveler.setIDNo(IDNo);
+        traveler.setNumber(IDNo);
     }
 
     /**

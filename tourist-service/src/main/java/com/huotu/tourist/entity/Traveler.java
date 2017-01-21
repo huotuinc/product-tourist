@@ -47,7 +47,7 @@ public class Traveler extends BaseModel {
      * 身份证号
      */
     @Column(length = 18)
-    private String IDNo;
+    private String number;
 
     /**
      * 性别

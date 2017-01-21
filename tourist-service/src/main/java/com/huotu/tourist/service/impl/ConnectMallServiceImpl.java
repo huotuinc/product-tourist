@@ -233,7 +233,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         NameValuePair cashScore = new BasicNameValuePair("cashScore", order.getMallIntegral().intValue() + "");
         NameValuePair memo = new BasicNameValuePair("memo", order.getRemarks());
         NameValuePair remark = new BasicNameValuePair("remark", order.getTravelers().get(0).getRemarks());
-        NameValuePair identityCard = new BasicNameValuePair("identityCard", order.getTravelers().get(0).getIDNo());
+        NameValuePair identityCard = new BasicNameValuePair("identityCard", order.getTravelers().get(0).getNumber());
         NameValuePair shipName = new BasicNameValuePair("shipName", order.getTravelers().get(0).getName());
         NameValuePair shipMobile = new BasicNameValuePair("shipMobile", order.getTravelers().get(0).getTelPhone());
         NameValuePair memberId = new BasicNameValuePair("memberId", order.getTouristBuyer().getId() + "");

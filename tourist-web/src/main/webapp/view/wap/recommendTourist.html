@@ -8,7 +8,8 @@
   -->
 
 <!--/*@thymesVar id="recommendGoods" type="java.util.list"*/-->
-<div xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" class="leftboxtwo"
+<div xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" class="leftboxtwo"
      th:each="good:${recommendGoods}">
     <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
     <!--/*@thymesVar id="user" type="com.huotu.tourist.entity.TouristBuyer"*/-->
@@ -25,7 +26,7 @@
                         <div class="zh-wz-name" style="margin: 0px 4px;" th:text="${good.touristName}">西藏云南8日轻装游，赶快报名！
                         </div>
                     </div>
-                    <div class="zh-wz-time"><span th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
+                    <div class="zh-wz-time"><span sec:authorize="hasRole('ROLE_BUYER')"
                                                   style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;"
                                                   th:text="${'$'+good.price}">￥199
                     </span>

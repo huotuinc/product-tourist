@@ -7,7 +7,8 @@
   ~ 2013-2017. All rights reserved.
   -->
 
-<div xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" class="leftboxtwo"
+<div xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" class="leftboxtwo"
      th:each="good:${list}">
     <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
     <!--/*@thymesVar id="user" type="com.huotu.tourist.entity.TouristBuyer"*/-->
@@ -26,7 +27,7 @@
                     </div>
                     <div class="zh-wz-time"><span
                             style="float:left;color:#FF5558;font-size: 16px;padding: 8px 0px 3px 0px;"
-                            th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}" th:text="${'$'+good.price}">￥199
+                            sec:authorize="hasRole('ROLE_BUYER')" th:text="${'$'+good.price}">￥199
                     </span>
                         <p style="clear:both"></p>
                     </div>

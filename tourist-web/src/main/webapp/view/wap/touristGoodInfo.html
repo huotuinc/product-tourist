@@ -1,5 +1,6 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -47,7 +48,7 @@
                         th:text="${'￥'+good.price+'人'}">￥300元/人
                     </li>
                     <li class="weui_media_info_meta" style="margin-top: 3px;"
-                        th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
+                        sec:authorize="hasRole('ROLE_BUYER')"
                         th:text="${good.price*good.rebate}">佣金：200 元
                     </li>
                 </ul>
@@ -142,11 +143,8 @@
     <div class="item-action">
         <div class="toggle-home"><a href="index.html" th:href="@{/wap/}"><span class="icon"></span>首页</a></div>
         <div class="buy-now yuanjiaoo">
-            <a id="procurement"
-               th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
-            > 立即采购
-            </a>
-            <a href="buyerApply.html" th:if="${!#authorization.expression('hasRole(''ROLE_BUYER'')')}"> 申请成为采购商 </a>
+            <a id="procurement" sec:authorize="hasRole('ROLE_BUYER')"> 立即采购 </a>
+            <a href="buyerApply.html" sec:authorize="!hasRole('ROLE_BUYER')"> 申请成为采购商 </a>
         </div>
     </div>
 </div>

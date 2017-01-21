@@ -8,7 +8,8 @@
   ~ 2013-2017. All rights reserved.
   -->
 
-<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -116,7 +117,7 @@
                                 <span style="float:left" th:text="${good.touristRoutes.get(0).getFromDate()+'出发'}">12月08
                                     号出发</span>
                                 <span style="float:right; margin-right:10px;color:#FF5558; font-size: 16px;"
-                                      th:if="${#authorization.expression('hasRole(''ROLE_BUYER'')')}"
+                                      sec:authorize="hasRole('ROLE_BUYER')"
                                       th:text="${'$'+good.price}">￥199</span>
                                 <p style="clear:both"></p>
                             </div>

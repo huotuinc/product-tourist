@@ -41,6 +41,7 @@ public class TravelerListResolver implements HandlerMethodArgumentResolver {
         String travelersStr = webRequest.getParameter("travelers");
         ObjectMapper objectMapper = new ObjectMapper();
         travelers = objectMapper.readValue(travelersStr, new TypeReference<List<Traveler>>() {
+
         });
         return travelers;
 

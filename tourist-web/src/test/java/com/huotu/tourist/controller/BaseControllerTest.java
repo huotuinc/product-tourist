@@ -81,7 +81,7 @@ public class BaseControllerTest extends WebTest {
         assertThat(traveler.getSex()).isEqualTo(sex);
         assertThat(traveler.getAge()).isEqualTo(age);
         assertThat(traveler.getTelPhone()).isEqualTo(tel);
-        assertThat(traveler.getIDNo()).isEqualTo(IDNo);
+        assertThat(traveler.getNumber()).isEqualTo(IDNo);
 
         status = mockMvc.perform(post("/base/modifyTravelerBaseInfo")
                 .param("id", traveler.getId().toString())

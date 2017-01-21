@@ -36,10 +36,10 @@ function orderPay(requestData) {
                         url: $.buyerOrderNotifyUrl,
                         method: 'post',
                         data: {
-                            mallOrderNo: $("#orderId").val(),
+                            mallOrderNo: apiResult.orderId,
                             payType: requestData.payType == 1 ? 0 : 1,
                             pay: true,
-                            orderType: 0
+                            orderType: 1
                         },
                         success: function () {
                             location.href = $.touristUrl + "/wap/";

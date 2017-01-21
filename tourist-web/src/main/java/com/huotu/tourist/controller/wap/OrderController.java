@@ -1,13 +1,11 @@
 package com.huotu.tourist.controller.wap;
 
-import com.huotu.huobanplus.common.entity.Product;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
-import com.huotu.tourist.entity.SystemString;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.login.SystemUser;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -151,13 +148,12 @@ public class OrderController {
     public void orderPayCallback(@RequestParam String mallOrderNo,
                                  @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType,
                                  HttpServletRequest request, Model model) {
-        log.info("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
+        log.debug("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
                 "orderType:" + orderType + " ========");
         //线路订单
         if (orderType == 0) {
             TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
-            if (pay && touristOrder.getOrderState()
-                    .equals(OrderStateEnum.NotPay)) {
+            if (pay && touristOrder.getOrderState() == OrderStateEnum.NotPay) {
                 touristOrder.setPayType(payType);
                 touristOrder.setPayTime(LocalDateTime.now());
                 model.addAttribute("mallOrderNo", mallOrderNo);
@@ -166,19 +162,13 @@ public class OrderController {
         } else {
             if (pay) {
                 TouristBuyer buyer = touristBuyerRepository.findByMallOrderNo(mallOrderNo);
-                log.info("======== buyerId:" + buyer.getId() + "========");
+                log.debug("======== buyerId:" + buyer.getId() + "========");
                 buyer.setPayState(BuyerPayStateEnum.PayFinish);
                 PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
                 purchaserPaymentRecord.setPayDate(LocalDateTime.now());
                 purchaserPaymentRecord.setTouristBuyer(buyer);
-                SystemString qualificationsProductIdSystem = systemStringRepository.findOne("QualificationsProductId");
-                try {
-                    Product product = productRestRepository.getOne(qualificationsProductIdSystem.getValue());
-                    purchaserPaymentRecord.setMoney(new BigDecimal(product.getPrice()));
-                } catch (IOException e) {
-                    List<PurchaserProductSetting> productSettings = purchaserProductSettingRepository.findAll();
-                    purchaserPaymentRecord.setMoney(productSettings.get(0).getPrice());
-                }
+                List<PurchaserProductSetting> productSettings = purchaserProductSettingRepository.findAll();
+                purchaserPaymentRecord.setMoney(productSettings.get(0).getPrice());
                 purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
                 touristBuyerRepository.saveAndFlush(buyer);
             }

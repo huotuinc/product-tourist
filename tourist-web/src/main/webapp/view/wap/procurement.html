@@ -199,7 +199,7 @@
         //成人价格
         var price = /*[[${good.price}]]*/ 10;
         //儿童价格
-        var childPrice = /*[[${good.price*(childrenDiscount/10)}]]*/ 8;
+        var childPrice = /*[[${good.price*(good.childrenDiscount/10)}]]*/ 8;
 
         //商城小伙伴积分
         var mallIntegralMoney = /*[[${mallIntegral/100}]]*/ 0;
@@ -300,21 +300,11 @@
             var name = $(this).attr("name");
             if ($(this).is(':checked')) {
                 if (name == 'mallIntegral')
-                    if (buyerMoney - moneyPay() <= 0) {
-                        $.alert("不能再用积分了");
-                        $(this).prop('checked', false)
-                    }
+                    buyerMoney = Math.max(mallIntegralMoney - buyerMoney, 0);
                 if (name == 'mallBalance')
-                    if (buyerMoney - moneyPay() <= 0) {
-                        $.alert("不能再用积分了");
-                        $(this).prop('checked', false)
-                    }
+                    buyerMoney = Math.max(mallBalance - buyerMoney, 0);
                 if (name == 'mallCoffers')
-                    if (buyerMoney - moneyPay() <= 0) {
-                        $.alert("不能再用积分了");
-                        $(this).prop('checked', false)
-                    }
-
+                    buyerMoney = Math.max(mallCoffers - buyerMoney, 0);
                 moneyPay();
             } else {
                 moneyPay();
@@ -361,7 +351,7 @@
                     "travelerType": travelerType,
                     "name": name,
                     "telPhone": telPhone,
-                    "IDNo": IDNo,
+                    "number": IDNo,
                     "age": age,
                     "sex": sex
                 };
@@ -371,7 +361,7 @@
                 $.alert("请完善游客信息，姓名、电话、身份证号，年龄必填");
                 return;
             }
-            var data = {goodId: goodId, routeId: routeId, travelers: travelers};
+            var data = {goodId: goodId, routeId: routeId, travelers: JSON.stringify(travelers)};
             data.remark = $("textarea[name='remark']").val();
             if ($("input[name='mallIntegral']").checked) {
                 data.mallIntegral = mallIntegral;
@@ -387,8 +377,8 @@
                 method: "post",
                 data: data,
                 dataType: "json",
-                success: function (data) {
-                    window.location.href = toOrderInfoPage + "?orderId=" + data.orderId;
+                success: function (apiResult) {
+                    window.location.href = toOrderInfoPage + "?orderId=" + apiResult.orderId;
                 },
                 error: function (error) {
                     $.alert(error.msg)
