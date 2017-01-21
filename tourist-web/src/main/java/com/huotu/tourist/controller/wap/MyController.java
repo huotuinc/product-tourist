@@ -181,8 +181,14 @@ public class MyController {
      */
     @RequestMapping(value = {"/toSubmission"})
     public String toSubmission(@AuthenticationPrincipal SystemUser user, Model model) {
-        List<PurchaserProductSetting> purchaserProductSettingList = purchaserProductSettingRepository.findAll();
-        model.addAttribute("purchaserProductSetting", purchaserProductSettingList.get(0));
+//        List<PurchaserProductSetting> purchaserProductSettingList = purchaserProductSettingRepository.findAll();
+//        PurchaserProductSetting setting;
+//        if(purchaserProductSettingList.isEmpty()){
+//            setting=new PurchaserProductSetting();
+//        }else {
+//            setting=purchaserProductSettingList.get(0);
+//        }
+//        model.addAttribute("purchaserProductSetting",setting);
         return viewWapPath+"buyerApply.html";
     }
 
