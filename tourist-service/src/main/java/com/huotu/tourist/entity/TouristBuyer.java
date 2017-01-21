@@ -17,6 +17,8 @@ import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +29,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,63 +49,6 @@ import java.util.function.Predicate;
 @Setter
 public class TouristBuyer implements SystemUser, UserDetails {
 
-    public static final List<Selection<TouristBuyer, ?>> selections = Arrays.asList(
-            new SimpleSelection<TouristBuyer, String>("id", "id"),
-            new SimpleSelection<TouristBuyer, String>("buyerName", "buyerName")
-            , new SimpleSelection<TouristBuyer, String>("buyerDirector", "buyerDirector")
-            , new SimpleSelection<TouristBuyer, String>("telPhone", "telPhone")
-            , new SimpleSelection<TouristBuyer, String>("businessLicencesUri", "businessLicencesUri")
-            , new SimpleSelection<TouristBuyer, String>("buyerId", "buyerId")
-            , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
-            , new SimpleSelection<TouristBuyer, String>("IDNo", "IDNo")
-            , new Selection<TouristBuyer, Map>() {
-                @Override
-                public Map apply(TouristBuyer touristBuyer) {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("IDElevationsUri", touristBuyer.getIDElevationsUri());
-                    map.put("IDInverseUri", touristBuyer.getIDInverseUri());
-                    return map;
-                }
-
-                @Override
-                public String getName() {
-                    return "IDCardImg";
-                }
-            }, new Selection<TouristBuyer, Map>() {
-                @Override
-                public String getName() {
-                    return "checkState";
-                }
-
-                @Override
-                public Map apply(TouristBuyer touristBuyer) {
-                    if (touristBuyer.getCheckState() == null) {
-                        return null;
-                    }
-                    Map<String, String> map = new HashMap<>();
-                    map.put("code", touristBuyer.checkState.getCode().toString());
-                    map.put("value", touristBuyer.checkState.getValue().toString());
-                    return map;
-                }
-            }
-            , new Selection<TouristBuyer, Map>() {
-                @Override
-                public String getName() {
-                    return "payState";
-                }
-
-                @Override
-                public Map apply(TouristBuyer touristBuyer) {
-                    if (touristBuyer.getPayState() == null) {
-                        return null;
-                    }
-                    Map<String, String> map = new HashMap<>();
-                    map.put("code", touristBuyer.payState.getCode().toString());
-                    map.put("value", touristBuyer.payState.getValue().toString());
-                    return map;
-                }
-            }
-    );
     /**
      * 作为一个采购商，它是来自一个已登录的小伙伴；即他的id是已知的，应该属于分配值
      */
@@ -164,13 +110,11 @@ public class TouristBuyer implements SystemUser, UserDetails {
      */
     @Column
     private BuyerPayStateEnum payState;
-
     /**
      * 支付类型
      */
     @Column
     private PayTypeEnum payType;
-
     /**
      * 最后一个意图购买资格的商城订单号
      */
@@ -181,12 +125,85 @@ public class TouristBuyer implements SystemUser, UserDetails {
      */
     @Column(length = 18)
     private String IDNo;
-
     /**
      * 商城订单号
      */
     @Column(unique = true, length = 50)
     private String mallOrderNo;
+
+    public static final List<Selection<TouristBuyer, ?>> getSelections(ResourceService resourceService) {
+        return Arrays.asList(
+                new SimpleSelection<TouristBuyer, String>("id", "id"),
+                new SimpleSelection<TouristBuyer, String>("buyerName", "buyerName")
+                , new SimpleSelection<TouristBuyer, String>("buyerDirector", "buyerDirector")
+                , new SimpleSelection<TouristBuyer, String>("telPhone", "telPhone")
+                , new Selection<TouristBuyer, String>() {
+                    @Override
+                    public String getName() {
+                        return "businessLicencesUri";
+                    }
+
+                    @Override
+                    @SneakyThrows(IOException.class)
+                    public String apply(TouristBuyer buyer) {
+                        return resourceService.getResource(buyer.getBusinessLicencesUri()).httpUrl().toString();
+                    }
+                }
+                , new SimpleSelection<TouristBuyer, String>("buyerId", "buyerId")
+                , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
+                , new SimpleSelection<TouristBuyer, String>("IDNo", "IDNo")
+                , new Selection<TouristBuyer, Map>() {
+                    @Override
+                    @SneakyThrows(IOException.class)
+                    public Map apply(TouristBuyer touristBuyer) {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("IDElevationsUri", resourceService.getResource(touristBuyer.getIDElevationsUri())
+                                .httpUrl().toString());
+                        map.put("IDInverseUri", resourceService.getResource(touristBuyer.getIDInverseUri())
+                                .httpUrl().toString());
+                        return map;
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "IDCardImg";
+                    }
+                }, new Selection<TouristBuyer, Map>() {
+                    @Override
+                    public String getName() {
+                        return "checkState";
+                    }
+
+                    @Override
+                    public Map apply(TouristBuyer touristBuyer) {
+                        if (touristBuyer.getCheckState() == null) {
+                            return null;
+                        }
+                        Map<String, String> map = new HashMap<>();
+                        map.put("code", touristBuyer.checkState.getCode().toString());
+                        map.put("value", touristBuyer.checkState.getValue().toString());
+                        return map;
+                    }
+                }
+                , new Selection<TouristBuyer, Map>() {
+                    @Override
+                    public String getName() {
+                        return "payState";
+                    }
+
+                    @Override
+                    public Map apply(TouristBuyer touristBuyer) {
+                        if (touristBuyer.getPayState() == null) {
+                            return null;
+                        }
+                        Map<String, String> map = new HashMap<>();
+                        map.put("code", touristBuyer.payState.getCode().toString());
+                        map.put("value", touristBuyer.payState.getValue().toString());
+                        return map;
+                    }
+                }
+        );
+    }
 
     /**
      * 检查一个采购商是否已得到认可

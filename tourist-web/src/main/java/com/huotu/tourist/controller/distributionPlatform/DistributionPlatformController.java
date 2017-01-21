@@ -209,7 +209,7 @@ public class DistributionPlatformController extends BaseController {
             , Pageable pageable, HttpServletRequest request) {
         Page<TouristBuyer> page = touristBuyerService.buyerList(buyerName, buyerDirector, telPhone, buyerCheckState
                 , pageable);
-        return new PageAndSelection<>(page, TouristBuyer.selections);
+        return new PageAndSelection<>(page, TouristBuyer.getSelections(resourceService));
     }
 
     /**
