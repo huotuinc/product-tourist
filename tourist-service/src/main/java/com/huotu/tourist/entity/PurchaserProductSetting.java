@@ -9,14 +9,20 @@
 
 package com.huotu.tourist.entity;
 
+import com.huotu.tourist.model.Selection;
+import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.lib.resource.service.ResourceService;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 采购商支付开通
@@ -33,31 +39,52 @@ public class PurchaserProductSetting extends BaseModel {
      */
     @Column(length = 100)
     private String name;
-
     /**
      * banner图
      */
     @Column(length = 200)
     private String bannerUri;
-
     /**
      * 价格
      */
     @Column(precision = 10, scale = 2)
     private BigDecimal price;
-
     /**
      * 说明文字
      */
     @Column(length = 200)
     private String explainStr;
-
     /**
      * 协议
      */
     @Column
     @Lob
     private String agreement;
+
+    public static final List<Selection<PurchaserProductSetting, ?>> getDefaultSelections(ResourceService resourceService) {
+        return Arrays.asList(
+                new SimpleSelection<PurchaserProductSetting, Long>("id", "id")
+                , new SimpleSelection<PurchaserProductSetting, String>("name", "name")
+                , new SimpleSelection<PurchaserProductSetting, String>("price", "price")
+                , new SimpleSelection<PurchaserProductSetting, String>("explainStr", "explainStr")
+                , new SimpleSelection<PurchaserProductSetting, String>("explainStr", "explainStr")
+                , new Selection<PurchaserProductSetting, String>() {
+                    @Override
+                    public String apply(PurchaserProductSetting setting) {
+                        try {
+                            return resourceService.getResource(setting.getBannerUri()).httpUrl().toString();
+                        } catch (IOException e) {
+                            throw new RuntimeException("" + e);
+                        }
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "bannerImgUri";
+                    }
+                }
+        );
+    }
 
 
 }

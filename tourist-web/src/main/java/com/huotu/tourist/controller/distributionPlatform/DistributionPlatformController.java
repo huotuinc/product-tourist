@@ -262,16 +262,11 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "purchaserProductSettingList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> purchaserProductSettingList(String name, Pageable pageable
+    public PageAndSelection purchaserProductSettingList(String name, Pageable pageable
             , HttpServletRequest request) throws JsonProcessingException {
         Page<PurchaserProductSetting> page = purchaserProductSettingService.purchaserProductSettingList(name
                 , pageable);
-        Map<String, Object> map = new HashMap<>();
-        map.put(TOTAL, page.getTotalPages());
-        map.put(ROWS, page.getContent());
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValueAsString(map);
-        return ResponseEntity.ok(objectMapper.writeValueAsString(map));
+        return new PageAndSelection<>(page, PurchaserProductSetting.getDefaultSelections(resourceService));
     }
 
     /**

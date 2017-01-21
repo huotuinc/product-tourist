@@ -37,7 +37,6 @@
     </div>
     <div class="weui_panel_bd">
         <div class="weui_media_box weui_media_text  fwmoney">
-
             <h4 class="weui_media_title" th:text="${setting.name}">线路服务商采购费</h4>
             <h4 class="weui_media_title" style="color: #b81212;font-size:14px;font-weight: bold;" th:text="'￥'+${setting.price==null?0:setting.price}+'元/人'">￥300元/人</h4>
         </div>
@@ -80,7 +79,6 @@
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
     var buyerOrderPayUrl = /*[[@{/wap/buyerOrderPay}]]*/ "my.html";
-
     var ua = window.navigator.userAgent.toLowerCase();
     if (ua.match(/MicroMessenger/i) == 'micromessenger') {
         $("#weixin").show();
