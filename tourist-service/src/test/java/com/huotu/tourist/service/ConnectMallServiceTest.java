@@ -97,7 +97,6 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         System.out.println(connectMallService.getServiceDays());
         assertThat(connectMallService.getServiceDays())
                 .isGreaterThanOrEqualTo(0);
-//        22660L
         TouristGood good = createRandomTouristGood(22662L);
         try {
             //小伙伴id

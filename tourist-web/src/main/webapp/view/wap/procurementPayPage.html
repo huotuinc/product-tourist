@@ -204,7 +204,8 @@
                 layer.close(load);
                 if (result.code == 200) {
                     //前台跳转到
-                    utils.GetPaymentUrl($("#customerId").val(), $("#orderId").val(), data.payType, returnUrl)
+                    utils.GetPaymentUrl($("#customerId").val(), $("#orderId").val(), data.payType
+                            , "http://test.xl.51flashmall.com/wap/")
                 } else {
                     layer.alert(result.msg);
                 }
