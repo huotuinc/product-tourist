@@ -13,13 +13,38 @@ import com.huotu.tourist.common.CollectionAccountTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.CollectionAccount;
+import com.huotu.tourist.entity.PresentRecord;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.TouristRouteModel;
-import com.huotu.tourist.repository.*;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.CollectionAccountRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.service.CollectionAccountService;
+import com.huotu.tourist.service.LoginService;
+import com.huotu.tourist.service.PresentRecordService;
+import com.huotu.tourist.service.SettlementSheetService;
+import com.huotu.tourist.service.SupplierOperatorService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
+import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TouristSupplierService;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,63 +76,46 @@ import java.util.List;
 public class SupplierManageController {
 
     @Autowired
+    ResourceService resourceService;
+    @Autowired
     private TouristOrderService touristOrderService;
-
     @Autowired
     private TouristOrderRepository touristOrderRepository;
-
     @Autowired
     private TouristRouteRepository touristRouteRepository;
-
     @Autowired
     private TouristRouteService touristRouteService;
-
     @Autowired
     private TravelerRepository travelerRepository;
-
     @Autowired
     private TouristGoodService touristGoodService;
-
     @Autowired
     private TouristGoodRepository touristGoodRepository;
-
     @Autowired
     private TouristTypeRepository touristTypeRepository;
-
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
-
     @Autowired
     private TouristSupplierService touristSupplierService;
-
     @Autowired
     private CollectionAccountRepository collectionAccountRepository;
 
-    @Autowired
-    private CollectionAccountService collectionAccountService;
-
 //    @Autowired
 //    private SupplierOperatorRepository supplierOperatorRepository;
-
+    @Autowired
+    private CollectionAccountService collectionAccountService;
     @Autowired
     private LoginService loginService;
-
     @Autowired
     private SettlementSheetService settlementSheetService;
-
     @Autowired
     private PresentRecordService presentRecordService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private SupplierOperatorService supplierOperatorService;
     private String viewSupplierPath="/view/manage/supplier/";
-
     private String viewCommonPath="/view/manage/common/";
-
-
 
     /**
      * 打开供应商后台页面
@@ -618,7 +626,7 @@ public class SupplierManageController {
         selections.add(buyTotal);
         selections.add(moneyTotal);
         selections.add(commissionTotal);
-        selections.addAll(TouristGood.selections);
+        selections.addAll(TouristGood.getSelections(resourceService));
 
         return new PageAndSelection<>(touristGoods,selections);
 

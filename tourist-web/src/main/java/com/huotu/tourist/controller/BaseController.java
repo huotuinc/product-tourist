@@ -309,7 +309,7 @@ public class BaseController {
             }
         };
         List<Selection<TouristGood, ?>> selects = new ArrayList<>();
-        selects.addAll(TouristGood.selections);
+        selects.addAll(TouristGood.getSelections(resourceService));
         selects.add(select);
         return new PageAndSelection<>(page, selects);
     }

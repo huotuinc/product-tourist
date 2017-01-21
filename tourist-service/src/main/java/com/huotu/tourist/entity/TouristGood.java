@@ -14,6 +14,8 @@ import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import me.jiangcai.lib.resource.service.ResourceService;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -27,6 +29,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,77 +46,11 @@ import java.util.Map;
 @Getter
 @Setter
 public class TouristGood extends BaseModel {
-    public static final List<Selection<TouristGood, ?>> selections = Arrays.asList(
-            new SimpleSelection<TouristGood, String>("id", "id"),
-            new SimpleSelection<TouristGood, String>("touristName", "touristName")
-            , new SimpleSelection<TouristGood, String>("price", "price")
-            , new SimpleSelection<TouristGood, String>("rebate", "rebate")
-            , new SimpleSelection<TouristGood, String>("touristImgUri", "touristImgUri")
-            , new SimpleSelection<TouristGood, Boolean>("recommend", "recommend")
-            , new Selection<TouristGood, String>() {
-                @Override
-                public String apply(TouristGood touristGood) {
-                    if (touristGood.destination == null)
-                        return null;
-                    return touristGood.destination.toString();
-                }
-
-                @Override
-                public String getName() {
-                    return "destination";
-                }
-            }
-            , new Selection<TouristGood, String>() {
-                @Override
-                public String apply(TouristGood touristGood) {
-                    return touristGood.getTouristSupplier().getSupplierName();
-                }
-
-                @Override
-                public String getName() {
-                    return "supplierName";
-                }
-            }
-            , new Selection<TouristGood, String>() {
-                @Override
-                public String apply(TouristGood touristGood) {
-                    return touristGood.getActivityType()==null?null:touristGood.getActivityType().getActivityName();
-                }
-
-                @Override
-                public String getName() {
-                    return "activityType";
-                }
-            }
-            , new Selection<TouristGood, String>() {
-                @Override
-                public String apply(TouristGood touristGood) {
-                    return touristGood.getTouristType()==null?null:touristGood.getTouristType().getTypeName();
-                }
-
-                @Override
-                public String getName() {
-                    return "touristType";
-                }
-            }
-            , new Selection<TouristGood, Map>() {
-                @Override
-                public Map apply(TouristGood touristGood) {
-                    if (touristGood.getTouristCheckState() == null)
-                        return null;
-                    Map map = new HashMap();
-                    map.put("code", touristGood.getTouristCheckState().getCode().toString());
-                    map.put("value", touristGood.getTouristCheckState().getValue().toString());
-                    return map;
-                }
-
-                @Override
-                public String getName() {
-                    return "touristCheckState";
-                }
-            }
-
-    );
+    /**
+     * 线路行程表
+     */
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "good")
+    List<TouristRoute> touristRoutes;
 //
 //    //**剩余库存计算
 //    public static final Selection select = new Selection<TouristGood, Long>() {
@@ -145,12 +82,6 @@ public class TouristGood extends BaseModel {
 //            return "surplus";
 //        }
 //    };
-    /**
-     * 线路行程表
-     */
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "good")
-    List<TouristRoute> touristRoutes;
-
     /**
      * 线路名称
      */
@@ -272,17 +203,101 @@ public class TouristGood extends BaseModel {
      */
     @Column
     private boolean recommend;
-
     /**
      * 商城商品id
      */
     @Column
     private Long mallProductId;
-
     /**
      * 商品组图,保存的是图片path
      */
     @ElementCollection
     private List<String> images;
+
+    public static final List<Selection<TouristGood, ?>> getSelections(ResourceService resourceService) {
+        return Arrays.asList(
+                new SimpleSelection<TouristGood, String>("id", "id"),
+                new SimpleSelection<TouristGood, String>("touristName", "touristName")
+                , new SimpleSelection<TouristGood, String>("price", "price")
+                , new SimpleSelection<TouristGood, String>("rebate", "rebate")
+                , new SimpleSelection<TouristGood, String>("touristImgUri", "touristImgUri")
+                , new Selection<TouristGood, String>() {
+                    @Override
+                    @SneakyThrows(IOException.class)
+                    public String apply(TouristGood touristGood) {
+                        return resourceService.getResource(touristGood.getTouristImgUri()).httpUrl().toString();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "touristImgUri";
+                    }
+                }
+                , new SimpleSelection<TouristGood, Boolean>("recommend", "recommend")
+                , new Selection<TouristGood, String>() {
+                    @Override
+                    public String apply(TouristGood touristGood) {
+                        if (touristGood.destination == null)
+                            return null;
+                        return touristGood.destination.toString();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "destination";
+                    }
+                }
+                , new Selection<TouristGood, String>() {
+                    @Override
+                    public String apply(TouristGood touristGood) {
+                        return touristGood.getTouristSupplier().getSupplierName();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "supplierName";
+                    }
+                }
+                , new Selection<TouristGood, String>() {
+                    @Override
+                    public String apply(TouristGood touristGood) {
+                        return touristGood.getActivityType() == null ? null : touristGood.getActivityType().getActivityName();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "activityType";
+                    }
+                }
+                , new Selection<TouristGood, String>() {
+                    @Override
+                    public String apply(TouristGood touristGood) {
+                        return touristGood.getTouristType() == null ? null : touristGood.getTouristType().getTypeName();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "touristType";
+                    }
+                }
+                , new Selection<TouristGood, Map>() {
+                    @Override
+                    public Map apply(TouristGood touristGood) {
+                        if (touristGood.getTouristCheckState() == null)
+                            return null;
+                        Map map = new HashMap();
+                        map.put("code", touristGood.getTouristCheckState().getCode().toString());
+                        map.put("value", touristGood.getTouristCheckState().getValue().toString());
+                        return map;
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "touristCheckState";
+                    }
+                }
+
+        );
+    }
 
 }
