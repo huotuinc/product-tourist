@@ -19,6 +19,7 @@ import com.huotu.tourist.exception.NotLoginYetException;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -54,6 +55,26 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
     @Autowired
     private ProductRestRepository productRestRepository;
 
+    @Test
+    public void newCookie() throws NotLoginYetException {
+        assertCookie("FT2UE1TgbNAKuZNu1M0nkA==", 9527);
+        assertCookie("iccr3VoVgMJfYuFNl6XPWA==", 1057597);
+    }
+
+    private void assertCookie(String encryptCode, long userId) throws NotLoginYetException {
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.setCookies(new Cookie("mem_authcode", encryptCode));
+
+//        http://www.cnblogs.com/lzrabbit/p/3639503.html
+//        就用这个吧，取出来，先URLDecoder.decode，再解密
+//        cookie的名字叫 mem_authcode
+
+        assertThat(connectMallService.currentUserId(mockHttpServletRequest))
+                .isEqualTo(userId);
+    }
+
+    //已放弃
+    @Ignore
     @Test
     @Repeat(5)
     public void cookie() throws NoSuchAlgorithmException, DecoderException, InvalidKeyException
