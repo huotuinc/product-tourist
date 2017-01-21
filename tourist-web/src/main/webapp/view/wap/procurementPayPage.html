@@ -170,52 +170,14 @@
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
-<script src="http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1" type="text/javascript"></script>
+<script src="http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1"
+        th:src="${@environment.getProperty('mall.payUtil.url','http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1')}"
+        type="text/javascript"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
-    var orderPayUrl = /*[[@{/wap/orderPay}]]*/ "paySuccess.html";
-    var returnUrl = /*[[@{/wap/orderPayCallback(orderType=0)}]]*/ "";
-    var ua = window.navigator.userAgent.toLowerCase();
-    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-        $("#weixin").show();
-        $("#alipay").hide();
-    } else {
-        $("#weixin").hide();
-        $("#alipay").show();
-    }
-    $(function () {
-
-        $("#weixin").click(function () {
-            var data = {orderId: $("#orderId").val(), payType: 1};
-            orderPay(data);
-        });
-        $("#alipay").click(function () {
-            var data = {orderId: $("#orderId").val(), payType: 0};
-            orderPay(data);
-        });
-    });
-    function orderPay(data) {
-        var load = layer.load();
-        $.ajax({
-            url: orderPayUrl,
-            method: "post",
-            data: data,
-            success: function (result) {
-                layer.close(load);
-                if (result.code == 200) {
-                    //前台跳转到
-                    utils.GetPaymentUrl($("#customerId").val(), $("#orderId").val(), data.payType
-                            , "http://test.xl.51flashmall.com/wap/")
-                } else {
-                    layer.alert(result.msg);
-                }
-            },
-            error: function (error) {
-                layer.close(load);
-                layer.alert(error);
-            }
-        })
-    }
+    $.orderPayUrl = /*[[@{/wap/orderPay}]]*/ "../../mock/createTrade.json";
+    $.touristUrl = /*[[${@environment.getProperty('tourist.url','http://test.xl.51flashmall.com')}]]*/ 'http://FUCK ME';
 </script>
+<script src="../../assets/js/wap/orderPay.js" th:src="@{/assets/js/wap/orderPay.js}"></script>
 </body>
 </html>

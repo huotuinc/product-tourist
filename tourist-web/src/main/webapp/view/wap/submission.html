@@ -74,51 +74,16 @@
     <button id="weixin" class="weui_btn weui_btn_primary anniu ">微信支付开通</button>
     <button id="alipay" class="weui_btn weui_btn_warn anniu">支付宝支付开通</button>
 </div>
-<script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
-<script src="http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1" type="text/javascript"></script>
+<script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1"
+        th:src="${@environment.getProperty('mall.payUtil.url','http://cosytest.51flashmall.com/js/jquery.utils-1.0.js?v=3.0.1')}"
+        type="text/javascript"></script>
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
-    var buyerOrderPayUrl = /*[[@{/wap/buyerOrderPay}]]*/ "my.html";
-    var ua = window.navigator.userAgent.toLowerCase();
-    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-        $("#weixin").show();
-        $("#alipay").hide();
-    } else {
-        $("#weixin").hide();
-        $("#alipay").show();
-    }
-    $(function () {
-        $("#weixin").click(function () {
-            var data = {payType: 1}
-            orderPay(data);
-        });
-        $("#alipay").click(function () {
-            var data = {payType: 0}
-            orderPay(data);
-        });
-    });
-    function orderPay(data) {
-        var load = layer.load();
-        $.ajax({
-            url: buyerOrderPayUrl,
-            method: "post",
-            data: data,
-            success: function (result) {
-                layer.close(load);
-                if (result.code == 200) {
-                    //前台跳转到商城支付
-                    utils.GetPaymentUrl(result.customerId, result.orderId, data.payType, "http://test.xl.51flashmall.com/wap/");
-                } else {
-                    layer.alert(result.msg);
-                }
-            },
-            error: function (error) {
-                layer.close(load);
-                layer.alert(error);
-            }
-        });
-    }
+    $.touristUrl = /*[[${@environment.getProperty('tourist.url','http://test.xl.51flashmall.com')}]]*/ 'http://FUCK ME';
+    $.buyerOrderPayUrl = /*[[@{/wap/buyerOrderPay}]]*/ "../../mock/createTrade.json";
 </script>
+<script src="../../assets/js/wap/buyerPay.js" th:src="@{/assets/js/wap/buyerPay.js}"></script>
 </body>
 
 </html>
