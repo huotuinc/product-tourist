@@ -10,7 +10,9 @@
 package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.common.CollectionAccountTypeEnum;
+import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -154,7 +157,7 @@ public class SupplierManageController {
             }
             TouristRouteModel model = new TouristRouteModel();
             model.setId(route.getId());
-            model.setFromDate(route.getFromDate());
+            model.setFromDate(LocalDateTimeFormatter.toStr(route.getFromDate()));
             model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
             touristRouteModels.add(model);
         }
@@ -229,7 +232,7 @@ public class SupplierManageController {
         routes.forEach(route->{
             TouristRouteModel routeModel=new TouristRouteModel();
             routeModel.setId(route.getId());
-            routeModel.setFromDate(route.getFromDate());
+            routeModel.setFromDate(LocalDateTimeFormatter.toStr(route.getFromDate()));
             routeModel.setSold(touristRouteService.judgeRouteIsSold(route));
             touristRouteModels.add(routeModel);
         });
@@ -388,9 +391,6 @@ public class SupplierManageController {
 //        return new PageAndSelection<>(page, selections);
 //    }
 
-
-
-
     /**
      * 提现列表
      * @param userInfo
@@ -431,6 +431,43 @@ public class SupplierManageController {
 
         return new PageAndSelection<>(records,selections);
 //        presentRecordService.presentRecordList()
+    }
+
+
+    /**
+     * 创建提现流水
+     * @param userInfo      当前用户
+     * @param money         提现的金额
+     * @throws IOException
+     */
+    @RequestMapping(value = "/createWithdrawal",method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createWithdrawal(@AuthenticationPrincipal SystemUser userInfo,BigDecimal money) throws IOException{
+        ModelMap modelMap=new ModelMap();
+        TouristSupplier supplier=(TouristSupplier)userInfo;
+
+        BigDecimal balance=settlementSheetService.countBalance(supplier,null);
+        if(money.compareTo(new BigDecimal(0))<1){
+            modelMap.addAttribute("data",500);
+            modelMap.addAttribute("msg","提现金额不符合");
+            return modelMap;
+        }
+        if(money.compareTo(balance)==1){
+            modelMap.addAttribute("data",500);
+            modelMap.addAttribute("msg","提现金额超过余额");
+            return modelMap;
+        }
+
+        PresentRecord presentRecord=new PresentRecord();
+        presentRecord.setTouristSupplier(supplier);
+        presentRecord.setAmountOfMoney(money);
+        presentRecord.setCreateTime(LocalDateTime.now());
+        presentRecord.setPresentState(PresentStateEnum.NotChecking);
+        String localDateStr= LocalDate.now().toString().replace("-","");
+        presentRecord.setRecordNo(localDateStr+System.currentTimeMillis());
+        presentRecordService.save(presentRecord);
+        modelMap.addAttribute("data",200);
+        return modelMap;
     }
 
 
@@ -533,7 +570,9 @@ public class SupplierManageController {
             ,@RequestParam(required = false) LocalDateTime endOrderDate)
             throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
-        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
+        Page<TouristGood> touristGoods=touristGoodService.touristGoodList(supplier,null,null,null,null,null,pageable
+                , null);
+//        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 
         //购买次数处理
         Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {

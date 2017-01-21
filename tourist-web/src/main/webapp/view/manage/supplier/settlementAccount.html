@@ -40,9 +40,9 @@
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-md-3"><h2>账户余额：
-                            <span class="text-danger" th:text="${balance}">4568753.00</span>元</h2></div>
+                            <span id="balance" class="text-danger" th:text="${balance}">4568753.00</span>元</h2></div>
                         <div class="col-md-1">
-                            <button style="width: 120px" class="btn btn-success">提现</button>
+                            <button onclick="withdrawals()" style="width: 120px" class="btn btn-success">提现</button>
                         </div>
                         <div class="col-md-2">
                             <button onclick="setPaymentAccount()" class="btn btn-link">设置收款账户</button>
@@ -149,8 +149,7 @@
                                             data-sortable="true">提现日期</th>
                                         <th data-field="amountOfMoney" data-align="center"
                                             data-sortable="true">提现金额</th>
-                                        <th data-field="currentAccountBalance" data-align="center"
-                                            data-sortable="true">当前账户金额</th>
+                                        <th data-field="currentAccountBalance" data-align="center">当前账户金额</th>
                                         <th data-field="presentState" data-align="center"
                                             data-formatter="presentStateFormatter">提现状态</th>
                                     </tr>
@@ -178,6 +177,7 @@
     var auditUrl=/*[[@{/base/modifySettlementState}]]*/'settlementDetailsList.html';
     var detailsUrl=/*[[@{/base/showSettlementDetails}]]*/'settlementDetailsList.html';
     var collectionAccountUrl=/*[[@{/supplier/showCollectionAccount}]]*/'payeeAccountDetails.html';
+    var withdrawalUrl=/*[[@{/supplier/createWithdrawal}]]*/'settlementDetailsList.html';
     /*]]>*/
 
 </script>

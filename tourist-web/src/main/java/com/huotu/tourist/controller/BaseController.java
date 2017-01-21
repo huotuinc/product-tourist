@@ -9,6 +9,9 @@
 
 package com.huotu.tourist.controller;
 
+import com.huotu.tourist.common.*;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
+import com.huotu.tourist.entity.*;
 import com.huotu.huobanplus.common.entity.Product;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.common.OrderStateEnum;
@@ -26,22 +29,8 @@ import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.SettlementSheetRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
-import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.ActivityTypeService;
-import com.huotu.tourist.service.ConnectMallService;
-import com.huotu.tourist.service.PurchaserPaymentRecordService;
-import com.huotu.tourist.service.SettlementSheetService;
-import com.huotu.tourist.service.TouristGoodService;
-import com.huotu.tourist.service.TouristOrderService;
-import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TouristTypeService;
+import com.huotu.tourist.repository.*;
+import com.huotu.tourist.service.*;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -98,21 +87,25 @@ public class BaseController {
     @Autowired
     public TouristTypeService touristTypeService;
     @Autowired
-    ProductRestRepository productRestRepository;
-    @Autowired
     private TouristTypeRepository touristTypeRepository;
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
     @Autowired(required = false)
     private ConnectMallService connectMallService;
+
     @Autowired
     private SettlementSheetRepository settlementSheetRepository;
+
     @Autowired
     private SettlementSheetService settlementSheetService;
+
     @Autowired
     private ResourceService resourceService;
-    private String viewSupplierPath = "/view/manage/supplier/";
-    private String viewCommonPath = "/view/manage/common/";
+
+    private String viewSupplierPath="/view/manage/supplier/";
+
+    private String viewCommonPath="/view/manage/common/";
+
 
     /**
      * 打开线路商品页面
@@ -129,8 +122,9 @@ public class BaseController {
         model.addAttribute("activityTypes", activityTypes);
         model.addAttribute("checkStates", checkStates);
 
-        return viewSupplierPath + "goodsList.html";
+        return viewSupplierPath+"goodsList.html";
     }
+
 
     /**
      * 跳转到订单列表页面
@@ -139,7 +133,7 @@ public class BaseController {
      */
     @RequestMapping(value = "toSupplierOrders", method = RequestMethod.GET)
     public String toSupplierOrders(HttpServletRequest request, Model model) {
-        return viewCommonPath + "orderList.html";
+        return viewCommonPath+"orderList.html";
     }
 
     /**
@@ -186,19 +180,19 @@ public class BaseController {
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
         //出行时间特殊处理
-        Selection<TouristOrder, LocalDateTime> touristDateSelection = new Selection<TouristOrder, LocalDateTime>() {
+        Selection<TouristOrder, String> touristDateSelection = new Selection<TouristOrder, String>() {
             @Override
             public String getName() {
                 return "touristDate";
             }
 
             @Override
-            public LocalDateTime apply(TouristOrder order) {
+            public String apply(TouristOrder order) {
                 try {
-                    Traveler traveler = travelerRepository.findByOrder_Id(order.getId()).get(0);
-                    return traveler.getRoute().getFromDate();
+                    Traveler traveler = order.getTravelers().get(0);
+                    return LocalDateTimeFormatter.toStr(traveler.getRoute().getFromDate());
                 } catch (Exception e) {
-                    return null;
+                    return "";
                 }
             }
         };
@@ -226,7 +220,7 @@ public class BaseController {
             @Override
             public Long apply(TouristOrder order) {
                 try {
-                    return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
+                    return order.getTravelers().get(0).getRoute().getId();
                 } catch (Exception e) {
                     return null;
                 }
@@ -379,8 +373,16 @@ public class BaseController {
     @RequestMapping(value = "/modifyOrderTouristDate", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId) throws IOException {
-        travelerRepository.modifyRouteIdByRouteId(touristRouteRepository.getOne(laterId), touristRouteRepository.getOne(formerId));
+    public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId
+            ,@RequestParam Long orderId) throws IOException {
+        TouristOrder order=touristOrderRepository.getOne(orderId);
+        TouristRoute laterRoute=touristRouteRepository.getOne(laterId);
+        List<Traveler> formers=travelerRepository.findByRoute_Id(formerId);
+        for(Traveler t:formers){
+            t.setRoute(laterRoute);
+        }
+        order.setTravelers(formers);
+//        travelerRepository.modifyRouteIdByRouteId(touristRouteRepository.getOne(laterId), touristRouteRepository.getOne(formerId));
     }
 
     /**

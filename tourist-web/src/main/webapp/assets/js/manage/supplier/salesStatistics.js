@@ -6,6 +6,7 @@ $(function(){
     exportEdit();
     dateSearch();
     datecancelEdit();
+    checkwithdrawals();
     //dateapplyEdit();
 
 });
@@ -155,6 +156,53 @@ var dateRangeFormat = function (text) {
     return array;
 };
 
+/**
+ * 校验提现余额
+ */
+var checkwithdrawals=function(){
+    $(document).on("keyup",".layui-layer-input",function(){
+        var balance=parseFloat($("#balance").text());
+        var withdrawalsMoney=parseFloat($(this).val());
+        if(withdrawalsMoney>balance){
+            $(this).val(balance);
+        }
+    });
+};
+
+/**
+ * 提现
+ */
+var withdrawals=function(){
+    //var balance=parseFloat($("#balance").val());
+
+    layer.prompt({title: '请输入提现数额', formType: 3}, function(text, index){
+        var money=parseFloat(text);
+        if(money<=0){
+            return;
+        }
+        //ajax
+
+        $.ajax({
+            type:'POST',
+            url: withdrawalUrl,
+            dataType: 'json',
+            data: {money:money},
+            success:function(result){
+                if(result.data==200){
+                    layer.msg("保存成功！");
+                    window.setTimeout("window.location=location.href",1000);
+                }else {
+                    layer.msg(result.msg);
+                }
+            },
+            error:function(e){
+                layer.msg("提现出错！");
+            }
+        });
+        layer.close(index);
+    });
+};
+
 
 
 /**
@@ -162,9 +210,9 @@ var dateRangeFormat = function (text) {
  * @param params
  */
 var getParams= function(params) {
-    var isNotSettledList=$("#tab-2").hasClass("active");
+    //var isNotSettledList=$("#tab-2").hasClass("active");
     var orderDates=dateRangeFormat($("input[name='createDate']").val());
-    var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
+    var sort=params.sort!=undefined?params.sort+","+params.order:"id,desc";
     var temp = {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
@@ -173,7 +221,7 @@ var getParams= function(params) {
         endCreateDate:orderDates[1]!=""?orderDates[1]:undefined,
         orderDate:orderDates[0]!=""?orderDates[0]:undefined,
         endOrderDate:orderDates[1]!=""?orderDates[1]:undefined,
-        settlement:isNotSettledList? false:undefined
+        settlement:false
     };
     return temp;
 };

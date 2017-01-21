@@ -26,7 +26,6 @@ import com.huotu.tourist.service.mall.ResultContent;
 import com.huotu.tourist.service.mall.ResultContentResponseHandler;
 import com.huotu.tourist.util.SignBuilder;
 import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -44,11 +43,8 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
@@ -57,6 +53,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,8 +116,8 @@ public class ConnectMallServiceImpl implements ConnectMallService {
                                           systemStringRepository, GoodsRestRepository goodsRestRepository,
                                   ProductRestRepository productRestRepository) throws
             IOException, NoSuchAlgorithmException, DecoderException, InvalidKeyException, InvalidKeySpecException {
-        String keyCode = environment.getProperty("tourist.mall.des.key", "0102030405060708");
-        key = SecretKeyFactory.getInstance("DES").generateSecret(new DESKeySpec(Hex.decodeHex(keyCode.toCharArray())));
+        String keyCode = environment.getProperty("tourist.mall.des.key", "XjvDhKLvCsm9y7G7");
+        key = new SecretKeySpec(keyCode.getBytes("ASCII"), "AES");
         merchant = merchantRestRepository.getOneByPK(
                 environment.getProperty("tourist.customerId", environment.acceptsProfiles("test") ? "3447" : "4886")
         );
@@ -270,16 +268,16 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     public long currentUserId(HttpServletRequest request) throws NotLoginYetException {
         try {
             String cookieValue = Stream.of(request.getCookies())
-                    .filter(cookie -> cookie.getName().equalsIgnoreCase("UserID_HTS1"))
+                    .filter(cookie -> cookie.getName().equalsIgnoreCase("mem_authcode"))
                     .findAny()
                     .orElseThrow(NotLoginYetException::new).getValue();
-            byte[] encryptData = Hex.decodeHex(cookieValue.toCharArray());
+            byte[] encryptData = Base64.getDecoder().decode(cookieValue);
 
-            Cipher cipher = Cipher.getInstance("DES");
+            Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
 
             byte[] data = cipher.doFinal(encryptData);
-            return new DataInputStream(new ByteArrayInputStream(data)).readLong();
+            return Long.parseLong(new String(data));
         } catch (Exception ex) {
             throw new NotLoginYetException(ex);
         }

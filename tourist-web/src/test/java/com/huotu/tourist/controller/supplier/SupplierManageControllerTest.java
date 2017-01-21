@@ -220,7 +220,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
             }
             TouristRouteModel model=new TouristRouteModel();
             model.setId(route.getId());
-            model.setFromDate(route.getFromDate());
+            model.setFromDate(LocalDateTimeFormatter.toStr(route.getFromDate()));
             model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
             touristRouteModelsExpect.add(model);
         }

@@ -56,7 +56,8 @@ public class TouristGoodServiceImpl implements TouristGoodService {
 
     @Override
     public Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName
-            , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable, Long lastId) {
+            , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState
+            , Pageable pageable, Long lastId) {
         return touristGoodRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
 

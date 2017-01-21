@@ -173,10 +173,10 @@ var touristDateEvents={
                 }else {
                     //ajax
                     $.ajax({
-                        type:'GET',
-                        url: modifyTouristDateurl,
-                        dataType: 'json',
-                        data: {formerId:row.touristRouteId,laterId:laterId},
+                        type:'POST',
+                        url: modifyTouristDateUrl,
+                        dataType: 'text',
+                        data: {formerId:row.touristRouteId,laterId:laterId,orderId:id},
                         success:function(result){
                             layer.msg("修改成功！");
                             $("#table").bootstrapTable('refresh');
@@ -194,25 +194,25 @@ var touristDateEvents={
     }
 };
 
-/**
- * 修改该订单所有游客的出行时间
- * @param formerId  之前的线路ID
- * @param laterId   修改之后的线路ID
- */
-var modifyOrderTouristDate=function(formerId,laterId){
-    $.ajax({
-        type:'POST',
-        url: '',
-        dataType: 'json',
-        data: {formerId:formerId,laterId:laterId},
-        success:function(result){
-            layer.msg("保存成功！");
-        },
-        error:function(e){
-            layer.msg("保存出错！");
-        }
-    });
-};
+///**
+// * 修改该订单所有游客的出行时间
+// * @param formerId  之前的线路ID
+// * @param laterId   修改之后的线路ID
+// */
+//var modifyOrderTouristDate=function(formerId,laterId){
+//    $.ajax({
+//        type:'POST',
+//        url: modifyTouristDateUrl,
+//        dataType: 'json',
+//        data: {formerId:formerId,laterId:laterId},
+//        success:function(result){
+//            layer.msg("保存成功！");
+//        },
+//        error:function(e){
+//            layer.msg("保存出错！");
+//        }
+//    });
+//};
 
 /**
  * 获取所有该订单商品的其他的线路信息
@@ -366,7 +366,7 @@ var getParams= function(params) {
     var buyer=$("input[name='buyer']").val();
     var tel=$("input[name='tel']").val();
     var settlement=$("#settlement option:checked").val();
-    var sort=params.sort!=undefined?params.sort+","+params.order:undefined;
+    var sort=params.sort!=undefined?params.sort+","+params.order:"id,desc";
     var temp = {
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码

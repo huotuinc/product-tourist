@@ -86,7 +86,7 @@
                 <div class="ibox-title">
                     <div class="form-group">
                     <div class="form-inline">
-                        <input size="50" name="orderDate" placeholder="时间" class="form-control" type="text">
+                        <input size="50" name="createDate" placeholder="时间" class="form-control" type="text">
                         <button id="dateSearch" type="button" class="btn  btn-success ">查询</button>
                         <!--<button type="button" class="btn  btn-success ">导出明细</button>-->
                     </div>
@@ -120,8 +120,7 @@
                                     <tr>
                                         <th data-field="state" data-checkbox="true"></th>
                                         <th data-field="orderNo" data-align="center">订单号</th>
-                                        <th data-field="touristName" data-align="center"
-                                            data-formatter="touristNameFormatter">商品名称</th>
+                                        <th data-field="touristName" data-align="center">商品名称</th>
                                         <th data-field="orderMoney" data-align="center"
                                             data-sortable="true">订单金额</th>
                                         <th data-field="commission" data-align="center"
@@ -153,8 +152,7 @@
                                     <thead>
                                     <tr>
                                         <th data-field="state" data-checkbox="true"></th>
-                                        <th data-field="touristName" data-align="center"
-                                            data-formatter="touristNameFormatter">商品名称</th>
+                                        <th data-field="touristName" data-align="center">商品名称</th>
                                         <th data-field="price" data-align="center">单价</th>
                                         <th data-field="rebate" data-align="center">佣金比例</th>
                                         <th data-field="buyTotal" data-align="center">购买次数</th>
@@ -186,7 +184,9 @@
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>-->
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>
-<script src="../../../assets/js/manage/supplier/salesStatistics.js" th:inline="javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+</script>
+<script src="../../../assets/js/manage/supplier/statistics.js"></script>
 </body>
 
 </html>

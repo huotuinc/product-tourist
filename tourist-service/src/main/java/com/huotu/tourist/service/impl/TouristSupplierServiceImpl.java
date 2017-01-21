@@ -2,6 +2,7 @@ package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.repository.LoginRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.service.TouristSupplierService;
 import me.jiangcai.lib.resource.service.ResourceService;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
-import java.io.IOException;
 
 /**
  * Created by lhx on 2017/1/3.
@@ -23,6 +23,8 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
     TouristSupplierRepository touristSupplierRepository;
     @Autowired
     ResourceService resourceService;
+    @Autowired
+    LoginRepository loginRepository;
 
     @Override
     public TouristSupplier save(TouristSupplier data) {
@@ -59,13 +61,14 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
         touristSupplier.setContactNumber(contactNumber);
         try {
             resourceService.deleteResource(touristSupplier.getBusinessLicenseUri());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+//            e.printStackTrace();
         }
         touristSupplier.setBusinessLicenseUri(businessLicenseUri);
 
         touristSupplier.setDetailedAddress(detailedAddress);
         touristSupplier.setRemarks(remarks);
+
     }
 
     @Override
