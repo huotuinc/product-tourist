@@ -109,7 +109,7 @@
                 layer.close(load);
                 if (result.code == 200) {
                     //前台跳转到商城支付
-                    utils.GetPaymentUrl(result.customerId, result.orderId, data.payType, returnUrl);
+                    utils.GetPaymentUrl(result.customerId, result.orderId, data.payType, notifyUrl, returnUrl);
                 } else {
                     layer.alert(result.msg);
                 }

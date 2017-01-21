@@ -12,6 +12,7 @@ package com.huotu.tourist.service;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.exception.NotLoginYetException;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.codec.DecoderException;
@@ -51,6 +52,7 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
     private ProductRestRepository productRestRepository;
     @Autowired
     private Environment environment;
+
 
     @Test
     @Repeat(5)
@@ -96,18 +98,20 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         assertThat(connectMallService.getServiceDays())
                 .isGreaterThanOrEqualTo(0);
 //        22660L
-        TouristGood good = createRandomTouristGood(22660L);
+        TouristGood good = createRandomTouristGood(22662L);
         try {
             //小伙伴id
             TouristBuyer buyer = createRandomTouristBuyer(256421L);
-            Map map = null;//connectMallService.getUserDetailByUserId(buyer.getId());
-//            assertThat(map).isNotEmpty();
-//            TouristOrder touristOrder = createRandomTouristOrder(good, buyer);
-//            String mallOrderId = connectMallService.pushOrderToMall(touristOrder);
-//            map = connectMallService.orderDetail(mallOrderId);
-//            assertThat(map).isNotEmpty();
+            Map map = connectMallService.getUserDetailByUserId(buyer.getId());
+            assertThat(map).isNotEmpty();
+            TouristOrder touristOrder = createRandomTouristOrder(good, buyer);
+            String mallOrderId = connectMallService.pushOrderToMall(touristOrder);
+            map = connectMallService.orderDetail(mallOrderId);
+            assertThat(map).isNotEmpty();
 
-//            touristOrder.setMallOrderNo(mallOrderId);
+            touristOrder.setMallOrderNo(mallOrderId);
+            productRestRepository.findByGoodsPK(21097L);
+
             String buyerOrder = connectMallService.pushBuyerOrderToMall(buyer);
             map = connectMallService.orderDetail(buyerOrder);
             assertThat(map).isNotEmpty();

@@ -92,12 +92,14 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     private final String token;
     //商城域名
     private final String mallDomain;
-//    appid：tcxe6l3447
-//    token：8662452542f243fc8c26ebea86aeb4
-//    secretKey：1j68kk79
-//    mallapiv2.51flashmall.com/MallApi/Order/Create
-
+//    tourist.appId=tcxe6l3447
+//    tourist.token=8662452542f243fc8c26ebea86aeb4
+//    tourist.secretKey=1j68kk79
+//    tourist.mallDomain = mallapiv2.51flashmall.com/MallApi/Order/Create
+//    tourist.qualificationsProductId=22659
 //    小伙伴：256421
+//    线路货品id:22662
+
     /**
      * 用于解密HTS1
      */
