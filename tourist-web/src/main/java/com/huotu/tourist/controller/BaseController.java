@@ -10,6 +10,7 @@
 package com.huotu.tourist.controller;
 
 import com.huotu.tourist.common.*;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
@@ -165,19 +166,19 @@ public class BaseController {
         List<Selection<TouristOrder, ?>> selections = new ArrayList<>();
 
         //出行时间特殊处理
-        Selection<TouristOrder, LocalDateTime> touristDateSelection = new Selection<TouristOrder, LocalDateTime>() {
+        Selection<TouristOrder, String> touristDateSelection = new Selection<TouristOrder, String>() {
             @Override
             public String getName() {
                 return "touristDate";
             }
 
             @Override
-            public LocalDateTime apply(TouristOrder order) {
+            public String apply(TouristOrder order) {
                 try {
-                    Traveler traveler = travelerRepository.findByOrder_Id(order.getId()).get(0);
-                    return traveler.getRoute().getFromDate();
+                    Traveler traveler = order.getTravelers().get(0);
+                    return LocalDateTimeFormatter.toStr(traveler.getRoute().getFromDate());
                 } catch (Exception e) {
-                    return null;
+                    return "";
                 }
             }
         };
@@ -205,7 +206,7 @@ public class BaseController {
             @Override
             public Long apply(TouristOrder order) {
                 try {
-                    return travelerRepository.findByOrder_Id(order.getId()).get(0).getId();
+                    return order.getTravelers().get(0).getRoute().getId();
                 } catch (Exception e) {
                     return null;
                 }
@@ -360,8 +361,16 @@ public class BaseController {
     @RequestMapping(value = "/modifyOrderTouristDate", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId) throws IOException {
-        travelerRepository.modifyRouteIdByRouteId(touristRouteRepository.getOne(laterId), touristRouteRepository.getOne(formerId));
+    public void modifyOrderTouristDate(@RequestParam Long formerId, @RequestParam Long laterId
+            ,@RequestParam Long orderId) throws IOException {
+        TouristOrder order=touristOrderRepository.getOne(orderId);
+        TouristRoute laterRoute=touristRouteRepository.getOne(laterId);
+        List<Traveler> formers=travelerRepository.findByRoute_Id(formerId);
+        for(Traveler t:formers){
+            t.setRoute(laterRoute);
+        }
+        order.setTravelers(formers);
+//        travelerRepository.modifyRouteIdByRouteId(touristRouteRepository.getOne(laterId), touristRouteRepository.getOne(formerId));
     }
 
 

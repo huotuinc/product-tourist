@@ -52,7 +52,7 @@ public class TouristOrder extends BaseModel {
             , new Selection<TouristOrder, BigDecimal>() {
                 @Override
                 public BigDecimal apply(TouristOrder touristOrder) {
-                    if(touristOrder.getTouristGood().getRebate()==null){
+                    if (touristOrder.getTouristGood().getRebate() == null) {
                         return new BigDecimal(0);
                     }
 
@@ -96,6 +96,9 @@ public class TouristOrder extends BaseModel {
 
                 @Override
                 public String apply(TouristOrder touristOrder) {
+                    if (touristOrder.getPayTime() == null) {
+                        return "";
+                    }
                     return LocalDateTimeFormatter.toStr(touristOrder.getPayTime());
                 }
             }
@@ -107,6 +110,9 @@ public class TouristOrder extends BaseModel {
 
                 @Override
                 public String apply(TouristOrder touristOrder) {
+                    if (touristOrder.getCreateTime() == null) {
+                        return "";
+                    }
                     return LocalDateTimeFormatter.toStr(touristOrder.getCreateTime());
                 }
             }

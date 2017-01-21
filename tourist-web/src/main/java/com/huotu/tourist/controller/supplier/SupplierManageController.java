@@ -12,6 +12,7 @@ package com.huotu.tourist.controller.supplier;
 import com.huotu.tourist.common.CollectionAccountTypeEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.PageAndSelection;
@@ -156,7 +157,7 @@ public class SupplierManageController {
             }
             TouristRouteModel model = new TouristRouteModel();
             model.setId(route.getId());
-            model.setFromDate(route.getFromDate());
+            model.setFromDate(LocalDateTimeFormatter.toStr(route.getFromDate()));
             model.setRemainPeople(touristRouteService.getRemainPeopleByRoute(route));
             touristRouteModels.add(model);
         }
@@ -231,7 +232,7 @@ public class SupplierManageController {
         routes.forEach(route->{
             TouristRouteModel routeModel=new TouristRouteModel();
             routeModel.setId(route.getId());
-            routeModel.setFromDate(route.getFromDate());
+            routeModel.setFromDate(LocalDateTimeFormatter.toStr(route.getFromDate()));
             routeModel.setSold(touristRouteService.judgeRouteIsSold(route));
             touristRouteModels.add(routeModel);
         });
@@ -569,7 +570,9 @@ public class SupplierManageController {
             ,@RequestParam(required = false) LocalDateTime endOrderDate)
             throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
-        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
+        Page<TouristGood> touristGoods=touristGoodService.touristGoodList(supplier,null,null,null,null,null,pageable
+                , null);
+//        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 
         //购买次数处理
         Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {
