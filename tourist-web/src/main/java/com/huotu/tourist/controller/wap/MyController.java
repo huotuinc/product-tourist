@@ -54,6 +54,9 @@ public class MyController {
     public TouristTypeService touristTypeService;
 
     @Autowired
+    private TouristBuyerRepository touristBuyerRepository;
+
+    @Autowired
     private PurchaserProductSettingRepository purchaserProductSettingRepository;
 
     @Autowired
@@ -70,7 +73,9 @@ public class MyController {
      */
     @RequestMapping("/showMyInfo")
     public String showMyInfo(@AuthenticationPrincipal SystemUser user, Model model) throws IOException{
-        TouristBuyer touristBuyer=(TouristBuyer)user;
+        TouristBuyer authTouristBuyer=(TouristBuyer)user;
+        TouristBuyer touristBuyer=touristBuyerRepository.getOne(authTouristBuyer.getId());
+
         //账户是否被冻结
         if(BuyerCheckStateEnum.Frozen.equals(touristBuyer.getCheckState())){
             return viewWapPath+"frozen.html";
