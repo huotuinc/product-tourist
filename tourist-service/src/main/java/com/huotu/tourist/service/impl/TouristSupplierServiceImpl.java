@@ -54,8 +54,9 @@ public class TouristSupplierServiceImpl implements TouristSupplierService {
 
     @Override
     public void modifySupplier(Long id, Address address, String contacts, String contactNumber
-            , String businessLicenseUri, String remarks, String detailedAddress) {
+            , String businessLicenseUri, String remarks, String detailedAddress, String supplierName) {
         TouristSupplier touristSupplier = getOne(id);
+        touristSupplier.setSupplierName(supplierName);
         touristSupplier.setAddress(address);
         touristSupplier.setContacts(contacts);
         touristSupplier.setContactNumber(contactNumber);

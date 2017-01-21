@@ -634,7 +634,8 @@ public class SupplierManageController {
      */
     @RequestMapping("/showSupplierInfo")
     public String showSupplierInfo(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
-        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
+        TouristSupplier authSupplier=((TouristSupplier)userInfo).getAuthSupplier();
+        TouristSupplier supplier=touristSupplierService.getOne(authSupplier.getId());
         model.addAttribute("supplier",supplier);
         return viewSupplierPath+"supplierDetailsH+.html";
     }
@@ -647,15 +648,16 @@ public class SupplierManageController {
      * @param contactNumber         联系电话
      * @param businessLicenseUri    营业执照uri
      * @param remarks               备注
+     * @param supplierName
      * @return                      视图
      * @throws Exception
      */
     @RequestMapping("/modifySupplierInfo")
     @ResponseBody
-    public void modifySupplierInfo(@RequestParam Long id,Address address,String detailedAddress
-            ,String contacts,String contactNumber,String businessLicenseUri,String remarks)throws Exception{
+    public void modifySupplierInfo(@RequestParam Long id, Address address, String detailedAddress
+            , String contacts, String contactNumber, String businessLicenseUri, String remarks, String supplierName)throws Exception{
         touristSupplierService.modifySupplier(id,address,contacts,contactNumber,businessLicenseUri
-                ,remarks, detailedAddress);
+                ,remarks, detailedAddress, supplierName);
     }
 
 
