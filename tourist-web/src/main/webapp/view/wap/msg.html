@@ -1,5 +1,14 @@
 <!doctype html>
-<html>
+<!--
+  ~ 版权所有:杭州火图科技有限公司
+  ~ 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+  ~
+  ~ (c) Copyright Hangzhou Hot Technology Co., Ltd.
+  ~ Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+  ~ 2013-2016. All rights reserved.
+  -->
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta name="viewport"
           content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1"/>
@@ -11,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/weui.min.css">
     <link rel="stylesheet" type="text/css"
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
-    <link rel="stylesheet" type="text/css" href="css/weui.min-xzlx-diy.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
     <title>提交完成</title>
 </head>
 
@@ -26,7 +35,26 @@
             </div>
         </div>
     </div>
+
+    <!--底部高度-->
+    <p style="height: 80px; clear: both"></p>
+    <!--底部导航-->
+    <div class="weui_navbar daohangs">
+        <a th:href="@{/wap/}" href="index.html" class="weui_navbar_item">
+            <p class="kimg dhshouyeicon"></p>
+            <p>首页</p>
+        </a>
+        <a th:href="@{/wap/showSearchView}" href="search.html" class="weui_navbar_item">
+            <p class="kimg dhsousuoicon"></p>
+            <p>搜索</p>
+        </a>
+        <a th:href="@{/wap/showMyInfo}" href="my.html" class="weui_navbar_item weui_bar_item_on">
+            <p class="kimg dhwodeicon"></p>
+            <p>我的</p>
+        </a>
+    </div>
 </div>
+
 </body>
 </html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>

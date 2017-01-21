@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/weui.min.css">
     <link rel="stylesheet" type="text/css"
           href="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.css">
-    <link rel="stylesheet" type="text/css" href="css/weui.min-xzlx-diy.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/css/weui.min-xzlx-diy.css">
     <title>error</title>
 </head>
 
@@ -25,6 +25,25 @@
             </div>
         </div>
     </div>
+
+    <!--底部高度-->
+    <p style="height: 80px; clear: both"></p>
+    <!--底部导航-->
+    <div class="weui_navbar daohangs">
+        <a th:href="@{/wap/}" href="index.html" class="weui_navbar_item">
+            <p class="kimg dhshouyeicon"></p>
+            <p>首页</p>
+        </a>
+        <a th:href="@{/wap/showSearchView}" href="search.html" class="weui_navbar_item">
+            <p class="kimg dhsousuoicon"></p>
+            <p>搜索</p>
+        </a>
+        <a th:href="@{/wap/showMyInfo}" href="my.html" class="weui_navbar_item weui_bar_item_on">
+            <p class="kimg dhwodeicon"></p>
+            <p>我的</p>
+        </a>
+    </div>
+
 </div>
 </body>
 </html>
