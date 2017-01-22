@@ -29,7 +29,7 @@ function orderPay(requestData) {
         success: function (apiResult) {
             if (apiResult.code == 200) {
                 //前台跳转到商城支付
-                utils.GetPaymentUrl(apiResult.customerId, apiResult.orderId, requestData.payType,
+                var payUrl = utils.GetPaymentUrl(apiResult.customerId, apiResult.orderId, requestData.payType,
                     $.touristUrl + "/wap/");
                 if ($.makePaySuccess) {
                     $.ajax({
@@ -45,6 +45,8 @@ function orderPay(requestData) {
                             location.href = $.touristUrl + "/wap/";
                         }
                     });
+                } else {
+                    window.location.href = $.mallUrl + payUrl;
                 }
             } else {
                 layer.alert(apiResult.msg);

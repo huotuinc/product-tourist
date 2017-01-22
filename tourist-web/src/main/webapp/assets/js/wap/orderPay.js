@@ -31,7 +31,7 @@ function orderPay(data) {
         success: function (apiResult) {
             if (apiResult.code == 200) {
                 //前台跳转到
-                utils.GetPaymentUrl($("#customerId").val(), apiResult.mallOrderNo, data.payType
+                var payUrl = utils.GetPaymentUrl($("#customerId").val(), apiResult.mallOrderNo, data.payType
                     , $.touristUrl + "/wap/");
                 if ($.makePaySuccess) {
                     $.ajax({
@@ -47,6 +47,8 @@ function orderPay(data) {
                             location.href = $.touristUrl + "/wap/";
                         }
                     });
+                } else {
+                    window.location.href = $.mallUrl + payUrl;
                 }
             } else {
                 layer.alert(apiResult.msg);

@@ -69,11 +69,11 @@ public class TouristGoodServiceImpl implements TouristGoodService {
             }
             if (!StringUtils.isEmpty(supplierName)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristSupplier").get("supplierName").as(String.class),
-                        supplierName));
+                        "%" + supplierName + "%"));
             }
             if (!StringUtils.isEmpty(touristName)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristName").as(String.class),
-                        touristName));
+                        "%" + touristName + "%"));
             }
             if (touristType != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("touristType").as(TouristType.class),

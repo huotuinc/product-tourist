@@ -89,23 +89,23 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             if (!StringUtils.isEmpty(supplierName)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristGood").get("touristSupplier").get("supplierName").as(String
                                 .class),
-                        supplierName));
+                        "%" + supplierName + "%"));
             }
             if (!StringUtils.isEmpty(orderNo)) {
                 predicate = cb.and(predicate, cb.like(root.get("orderNo").as(String.class),
-                        orderNo));
+                        "%" + orderNo + "%"));
             }
             if (!StringUtils.isEmpty(touristName)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristGood").get("touristName").as(String.class),
-                        touristName));
+                        "%" + touristName + "%"));
             }
             if (!StringUtils.isEmpty(buyerName)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristBuyer").get("buyerName").as(String.class),
-                        buyerName));
+                        "%" + buyerName + "%"));
             }
             if (!StringUtils.isEmpty(tel)) {
                 predicate = cb.and(predicate, cb.like(root.get("touristBuyer").get("telPhone").as(String.class),
-                        tel));
+                        "%" + tel + "%"));
             }
             if (!StringUtils.isEmpty(payTypeEnum)) {
                 predicate = cb.and(predicate, cb.equal(root.get("payType").as(PayTypeEnum.class),

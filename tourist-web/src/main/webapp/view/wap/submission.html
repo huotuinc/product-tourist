@@ -81,6 +81,7 @@
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script th:inline="javascript">
     $.touristUrl = /*[[${@environment.getProperty('tourist.url','http://test.xl.51flashmall.com')}]]*/ 'http://FUCK ME';
+    $.mallUrl = /*[[${@environment.getProperty('mall.url','http://cosytest.51flashmall.com')}]]*/ 'http://FUCK ME';
     $.buyerOrderPayUrl = /*[[@{/wap/buyerOrderPay}]]*/ "../../mock/createTrade.json";
     /**
      * 此处为true则通过前端调用通知

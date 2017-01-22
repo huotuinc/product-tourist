@@ -149,7 +149,7 @@ public class OrderController {
     public void orderPayCallback(@RequestParam String mallOrderNo,
                                  @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType,
                                  HttpServletRequest request, Model model) {
-        log.debug("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
+        log.info("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
                 "orderType:" + orderType + " ========");
         //线路订单
         if (orderType == 0) {
@@ -164,7 +164,7 @@ public class OrderController {
         } else {
             if (pay) {
                 TouristBuyer buyer = touristBuyerRepository.findByMallOrderNo(mallOrderNo);
-                log.debug("======== buyerId:" + buyer.getId() + "========");
+                log.info("======== buyerId:" + buyer.getId() + "========");
                 buyer.setPayState(BuyerPayStateEnum.PayFinish);
                 PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
                 purchaserPaymentRecord.setPayDate(LocalDateTime.now());

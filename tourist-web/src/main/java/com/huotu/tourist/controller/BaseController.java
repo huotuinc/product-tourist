@@ -169,9 +169,8 @@ public class BaseController {
      * @param model          @return
      */
     @RequestMapping(value = "touristOrders", method = RequestMethod.GET)
-    public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo,
-                                          String supplierName, String touristName
-            , String buyerName, String tel, PayTypeEnum payType
+    public PageAndSelection touristOrders(@AuthenticationPrincipal SystemUser user, String orderNo
+            , String supplierName, String touristName, String buyerName, String tel, PayTypeEnum payType
             , @RequestParam(required = false) LocalDateTime orderDate
             , @RequestParam(required = false) LocalDateTime endOrderDate
             , @RequestParam(required = false) LocalDateTime payDate

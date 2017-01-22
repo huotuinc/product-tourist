@@ -361,9 +361,10 @@ var getParams= function(params) {
     var orderDates=dateRangeFormat($("input[name='orderDate']").val());
     var payDate=dateRangeFormat($("input[name='payDate']").val());
     var touristDate=dateRangeFormat($("input[name='touristDate']").val());
+    var supplierName = $("input[name='supplierName']").val();
     var orderId=$("input[name='orderId']").val();
-    var name=$("input[name='name']").val();
-    var buyer=$("input[name='buyer']").val();
+    var touristName = $("input[name='name']").val();
+    var buyerName = $("input[name='buyer']").val();
     var tel=$("input[name='tel']").val();
     var settlement=$("#settlement option:checked").val();
     var sort=params.sort!=undefined?params.sort+","+params.order:"id,desc";
@@ -372,9 +373,9 @@ var getParams= function(params) {
         pageNo: params.offset/params.limit, //页码
         sort: sort,   //排序
         orderNo:orderId!=""?orderId:undefined,
-        name:name!=""?name:undefined,
-        buyer:buyer!=""?buyer:undefined,
-        tel:buyer!=""?buyer:undefined,
+        touristName: touristName != "" ? touristName : undefined,
+        buyerName: buyerName != "" ? buyerName : undefined,
+        tel: tel != "" ? tel : undefined,
         orderState:orderStateEnum>0?orderStateEnum-1:undefined,
         orderDate:orderDates[0]!=""?orderDates[0]:undefined,
         endOrderDate:orderDates[1]!=""?orderDates[1]:undefined,
