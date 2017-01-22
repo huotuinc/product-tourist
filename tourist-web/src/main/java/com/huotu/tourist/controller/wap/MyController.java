@@ -10,6 +10,7 @@ import com.huotu.tourist.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,6 +62,9 @@ public class MyController {
 
     @Autowired
     private ConnectMallService connectMallService;
+
+    @Autowired
+    private Environment environment;
 
     private String viewWapPath="/view/wap/";
 
@@ -114,12 +118,18 @@ public class MyController {
                 touristBuyer,OrderStateEnum.Invalid);
         BigDecimal commission=touristOrderRepository.sumCommissionByBuyer(touristBuyer);
 
+        String mallUrl = environment.getProperty("mall.url") + "/UserCenter/Securitycenter/MyWallet.aspx?customerid=" +
+                connectMallService.getMerchant().getId();
+
+
+
         model.addAttribute("headUrl",headUrl);
         model.addAttribute("buyer",touristBuyer);
         model.addAttribute("allNotFinish",allNotFinish);
         model.addAttribute("allFinish",allFinish);
         model.addAttribute("allInvalid",allInvalid);
         model.addAttribute("commission",commission);
+        model.addAttribute("mallUrl", mallUrl);
         return viewWapPath+"my.html";
     }
 

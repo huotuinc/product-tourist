@@ -86,7 +86,7 @@
             <!--<p class="hui">可提现总金额/元</p>-->
         </div>
         <div style="margin: 10px">
-            <a href="javascript:;" class="weui_btn weui_btn_primary">提现</a>
+            <a th:href="@{${mallUrl}}" href="javascript:;" class="weui_btn weui_btn_primary">提现</a>
             <p class="txtxtx" onclick="showDepositInfo()">查看提现明细</p>
             <div class="txtxsm" style="display: none">
                 <p>提现说明</p>
@@ -115,12 +115,20 @@
     </div>
 
 </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var mallUrl = /*[[${mallUrl}]]*/ "";
+
+    /*]]>*/
+
+</script>
 </body>
 </html>
 <script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/jquery-weui.min.js"></script>
 <script type="text/javascript" src="js/w/swiper.animate1.0.2.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/jquery-weui/0.8.2/swiper.min.js"></script>
+
 <script>
     var showDepositInfo=function(){
         $(".txtxsm").toggle("normal");
