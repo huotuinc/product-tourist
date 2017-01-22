@@ -70,7 +70,7 @@
                 </h4>
                 <p class="weui_media_desc ztdx" th:text="'年龄:'+${t.age}">年龄:23</p>
                 <p class="weui_media_desc ztdx" th:text="'联系电话:'+${t.telPhone}">联系电话:1563232323</p>
-                <p class="weui_media_desc ztdx" th:text="'身份证号:'+${t.IDNo}">身份证号:332325******256569</p>
+                <p class="weui_media_desc ztdx" th:text="'身份证号:'+${t.number}">身份证号:332325******256569</p>
 
             </div>
             <!--<div class="weui_media_box weui_media_text massgea">-->
@@ -113,7 +113,9 @@
             <div class="weui_cell_bd weui_cell_primary">
                 <p>积分</p>
             </div>
-            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallIntegral==null?0:order.mallIntegral}">-￥20.0</div>
+            <div class="weui_cell_ft twossw" th:text="'-￥'+${order.mallIntegral==null?0:order.mallIntegral/100}">
+                -￥20.0
+            </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
@@ -131,7 +133,9 @@
             <div class="weui_cell_bd weui_cell_primary">
                 <p>已支付</p>
             </div>
-            <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;" th:text="'￥'+${order.orderMoney==null?0:order.orderMoney}">￥200.0</div>
+            <div class="weui_cell_ft twossw" style="font-weight: bold; font-size: 16px;"
+                 th:text="'-￥'+${order.mallIntegral/100+order.mallBalance+order.mallCoffers}">￥200.0
+            </div>
         </div>
     </div>
     <div style=" margin: 10px;">
@@ -177,7 +181,7 @@
             <p class="kimg dhsousuoicon"></p>
             <p>搜索</p>
         </a>
-        <a href="my.html" class="weui_navbar_item" th:href="@{/wap/showMyInfo}">
+        <a href="my.html" class="weui_navbar_item weui_bar_item_on" th:href="@{/wap/showMyInfo}">
             <p class="kimg dhwodeicon"></p>
             <p> 我的</p>
         </a>
