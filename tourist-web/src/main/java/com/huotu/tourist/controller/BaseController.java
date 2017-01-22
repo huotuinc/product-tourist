@@ -342,12 +342,14 @@ public class BaseController {
             OrderStateEnum orderState) throws IOException {
         ModelMap modelMap = new ModelMap();
         TouristOrder order = touristOrderRepository.getOne(id);
-        if (touristOrderService.checkOrderStatusCanBeModified(user, order.getOrderState(), orderState)) {
-            order.setOrderState(orderState);
-            modelMap.addAttribute("data", 200);
-        } else {
-            modelMap.addAttribute("data", 500);
-        }
+        order.setOrderState(orderState);
+        modelMap.addAttribute("data", 200);
+//        if (touristOrderService.checkOrderStatusCanBeModified(user, order.getOrderState(), orderState)) {
+//            order.setOrderState(orderState);
+//            modelMap.addAttribute("data", 200);
+//        } else {
+//            modelMap.addAttribute("data", 500);
+//        }
         return modelMap;
     }
 

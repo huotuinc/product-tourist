@@ -517,13 +517,12 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/orderDetailsList")
-    @ResponseBody
-    public PageAndSelection<TouristOrder> orderDetailsList(@AuthenticationPrincipal SystemUser userInfo
+    public PageAndSelection orderDetailsList(@AuthenticationPrincipal SystemUser userInfo
             , Pageable pageable
-            ,@RequestParam(required = false) LocalDateTime orderDate
-            ,@RequestParam(required = false) LocalDateTime endOrderDate
-            ,@RequestParam(required = false) LocalDateTime payDate
-            ,@RequestParam(required = false) LocalDateTime endPayDate) throws IOException {
+            , @RequestParam(required = false) LocalDateTime orderDate
+            , @RequestParam(required = false) LocalDateTime endOrderDate
+            , @RequestParam(required = false) LocalDateTime payDate
+            , @RequestParam(required = false) LocalDateTime endPayDate) throws IOException {
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
 
         Page<TouristOrder> orders = touristOrderService.touristOrders(supplier, null, null, null, null, null, null,
@@ -571,11 +570,10 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/goodsSalesRanking")
-    @ResponseBody
-    public PageAndSelection<TouristGood> goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo
-            ,Pageable pageable
-            ,@RequestParam(required = false)LocalDateTime orderDate
-            ,@RequestParam(required = false) LocalDateTime endOrderDate)
+    public PageAndSelection goodsSalesRanking(@AuthenticationPrincipal SystemUser userInfo
+            , Pageable pageable
+            , @RequestParam(required = false)LocalDateTime orderDate
+            , @RequestParam(required = false) LocalDateTime endOrderDate)
             throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
         Page<TouristGood> touristGoods=touristGoodService.touristGoodList(supplier,null,null,null,null,null,pageable
@@ -617,7 +615,11 @@ public class SupplierManageController {
 
             @Override
             public BigDecimal apply(TouristGood good) {
-                return touristOrderRepository.countOrderMoney(good).multiply(good.getRebate());
+                BigDecimal orderGoodsTotalMoneys = touristOrderRepository.countOrderMoney(good);
+                if (orderGoodsTotalMoneys == null) {
+                    return new BigDecimal(0);
+                }
+                return orderGoodsTotalMoneys.multiply(good.getRebate());
             }
         };
 

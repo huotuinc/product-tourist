@@ -59,17 +59,17 @@ var modifyTravelerInfo=function(obj){
 
 };
 
-var modifyOrderStatus=function(id,obj){
+var modifyOrderStatus=function(id){
     layer.confirm('确定修改吗？', {
         btn: ['确定', '取消']
     }, function (index) {
-        var orderState=parseInt($(".orderState",obj).text());
+        //var orderState=parseInt($(".orderState",obj).text());
         //修改订单状态
         $.ajax({
             type:'POST',
             url: modifyOrderStateUrl,
             dataType: 'json',
-            data: {id:id,orderState:orderState},
+            data: {id:orderId,orderState:id},
             success:function(result){
                 if(result.data==200){
                     layer.msg("修改成功！");
@@ -77,7 +77,7 @@ var modifyOrderStatus=function(id,obj){
                     layer.msg("修改失败！");
                 }
 
-                //window.setTimeout("window.location=location.href",1000);
+                window.setTimeout("window.location=location.href",1000);
             },
             error:function(e){
                 layer.msg("修改出错！");
