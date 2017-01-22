@@ -229,6 +229,10 @@ public class TouristBuyer implements SystemUser, UserDetails {
         );
     }
 
+    public boolean isNullResource() {
+        return this.getBusinessLicencesUri() == null || getIDElevationsUri() == null || getIDInverseUri() == null;
+    }
+
     @Override
     public boolean isSupplier() {
         return false;

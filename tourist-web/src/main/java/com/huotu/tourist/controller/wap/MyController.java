@@ -86,7 +86,7 @@ public class MyController {
         }
 
         //申请采购商
-        if(touristBuyer.getCheckState()==null){
+        if (touristBuyer.getCheckState() == null || touristBuyer.isNullResource()) {
             return "redirect:/wap/toSubmission";
         }
 
