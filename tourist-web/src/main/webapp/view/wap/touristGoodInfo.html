@@ -49,7 +49,7 @@
                     </li>
                     <li class="weui_media_info_meta" style="margin-top: 3px;"
                         sec:authorize="hasRole('ROLE_BUYER')"
-                        th:text="${good.price*good.rebate}">佣金：200 元
+                        th:text="${'￥'+good.price*good.rebate}">佣金：200 元
                     </li>
                 </ul>
                 <ul class="weui_media_info">
