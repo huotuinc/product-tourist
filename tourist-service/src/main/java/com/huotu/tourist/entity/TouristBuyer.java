@@ -146,7 +146,8 @@ public class TouristBuyer implements SystemUser, UserDetails {
                     @Override
                     @SneakyThrows(IOException.class)
                     public String apply(TouristBuyer buyer) {
-                        return resourceService.getResource(buyer.getBusinessLicencesUri()).httpUrl().toString();
+                        return buyer.getBusinessLicencesUri() == null ? resourceService.getResource(buyer
+                                .getBusinessLicencesUri()).httpUrl().toString() : "";
                     }
                 }
                 , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
@@ -156,9 +157,12 @@ public class TouristBuyer implements SystemUser, UserDetails {
                     @SneakyThrows(IOException.class)
                     public Map apply(TouristBuyer touristBuyer) {
                         Map<String, String> map = new HashMap<>();
-                        map.put("IDElevationsUri", resourceService.getResource(touristBuyer.getIDElevationsUri())
+                        map.put("IDElevationsUri", touristBuyer.getIDElevationsUri() == null ? "" : resourceService
+                                .getResource
+                                        (touristBuyer
+                                                .getIDElevationsUri())
                                 .httpUrl().toString());
-                        map.put("IDInverseUri", resourceService.getResource(touristBuyer.getIDInverseUri())
+                        map.put("IDInverseUri", touristBuyer.getIDInverseUri() == null ? "" : resourceService.getResource(touristBuyer.getIDInverseUri())
                                 .httpUrl().toString());
                         return map;
                     }
