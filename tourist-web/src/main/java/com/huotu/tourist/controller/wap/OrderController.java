@@ -75,6 +75,7 @@ public class OrderController {
                 //采购商资格支付订单
                 TouristBuyer buyer = (TouristBuyer) user;
                 buyer.setPayType(payType);
+                buyer.setPayState(BuyerPayStateEnum.PayFinish); //todo 假装已经支付成功了
                 String mallOrderId = connectMallService.pushBuyerOrderToMall(buyer);
                 buyer.setMallOrderNo(mallOrderId);
                 touristBuyerRepository.saveAndFlush(buyer);
@@ -115,6 +116,7 @@ public class OrderController {
                 TouristOrder order = touristOrderRepository.getOne(orderId);
                 String mallOrderNo;
                 order.setPayType(payType);
+                order.setOrderState(OrderStateEnum.PayFinish); //todo 假装已经支付成功了
                 mallOrderNo = connectMallService.pushOrderToMall(order);
                 order.setMallOrderNo(mallOrderNo);
                 map.put("code", 200);

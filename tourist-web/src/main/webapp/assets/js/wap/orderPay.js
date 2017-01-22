@@ -10,21 +10,21 @@ $(function () {
 
     $("#weixin").click(function () {
         var data = {orderId: $("#orderId").val(), payType: 9};
-        orderPay(data);
+        orderPay(data,1);
     });
     $("#alipay").click(function () {
         var data = {orderId: $("#orderId").val(), payType: 1};
-        orderPay(data);
+        orderPay(data,0);
     });
 });
 
-function orderPay(data) {
+function orderPay(data,payType) {
     var load = layer.load();
     $.ajax({
         url: $.orderPayUrl,
         method: "post",
         dataType: "json",
-        data: data,
+        data: {orderId: $("#orderId").val(), payType: payType},
         complete: function () {
             layer.close(load);
         },
