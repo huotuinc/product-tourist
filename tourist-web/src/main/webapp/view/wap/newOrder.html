@@ -17,7 +17,7 @@
     </div>
     <div class="ts">
         <div class="dx">
-            <a href="orderInfo.html">
+            <a th:href="@{/wap/showOrderInfo(orderId=${order.id})}" href="orderInfo.html">
                 <div class="pic"><img res:src="${order.touristGood.touristImgUri}" src="images/imgsss.png"></div>
                 <div class="con">
                     <p style="color:#000; margin-bottom:2px" th:text="${order.touristGood.touristName}">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
