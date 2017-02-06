@@ -1,12 +1,14 @@
 package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -73,6 +75,10 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
     @Test
     public void settlementSheetListTest() throws Exception {
 
+        TouristSupplier sltSupplier = createTouristSupplier("slt");
+
+        TouristSupplier wySupplier = createTouristSupplier("wy");
+
         List<SettlementSheet> supplierNameSheets = new ArrayList<>();
         List<SettlementSheet> touristSupplierSheets = new ArrayList<>();
         List<SettlementSheet> platformCheckingSheets = new ArrayList<>();
@@ -84,13 +90,43 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
             SettlementSheet sheet = new SettlementSheet();
             int supplierNameRan = random.nextInt(2);
             int platformCheckingRan = random.nextInt(2);
-            int touristSupplierRan = random.nextInt(2);
             int dateRan = random.nextInt(2);
+
+            if (supplierNameRan == 1) {
+                sheet.setTouristSupplier(sltSupplier);
+            } else {
+                sheet.setTouristSupplier(wySupplier);
+            }
+
+            if (platformCheckingRan == 1) {
+                sheet.setPlatformChecking(SettlementStateEnum.CheckFinish);
+            } else {
+                sheet.setPlatformChecking(SettlementStateEnum.NotChecking);
+            }
+
+            if (dateRan == 1) {
+                sheet.setCreateTime(LocalDateTime.of(2016, 9, 1, 0, 0, 0));
+            }
 
 
             SettlementSheet sheetAct = createSettlementSheet(sheet.getSettlementNo(), sheet.getTouristSupplier()
                     , sheet.getReceivableAccount(), sheet.getSelfChecking(), sheet.getPlatformChecking()
                     , sheet.getCreateTime());
+
+
+            if (supplierNameRan == 1) {
+                supplierNameSheets.add(sheetAct);
+            } else {
+                touristSupplierSheets.add(sheetAct);
+            }
+
+            if (platformCheckingRan == 1) {
+                platformCheckingSheets.add(sheetAct);
+            }
+
+            if (dateRan == 1) {
+                dateSheets.add(sheetAct);
+            }
 
 
             if (i > 9) {
@@ -99,8 +135,30 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
 
         }
 
+        List<SettlementSheet> sheetsAct = settlementSheetService.settlementSheetList(wySupplier, null, null, null, null, null)
+                .getContent();
 
-        settlementSheetService.settlementSheetList(null, null, null, null, null, null);
+        Assert.isTrue(sheetsAct.equals(touristSupplierSheets));
+        sheetsAct = settlementSheetService.settlementSheetList(null, "slt", null, null, null, null)
+                .getContent();
+        Assert.isTrue(sheetsAct.equals(supplierNameSheets));
+
+        sheetsAct = settlementSheetService.settlementSheetList(null, null, SettlementStateEnum.CheckFinish, null, null, null)
+                .getContent();
+
+        Assert.isTrue(sheetsAct.equals(platformCheckingSheets));
+
+        sheetsAct = settlementSheetService.settlementSheetList(null, null, null, LocalDateTime.of(2016, 8, 1, 0, 0, 0),
+                LocalDateTime.of(2016, 10, 1, 0, 0, 0), null)
+                .getContent();
+
+        Assert.isTrue(sheetsAct.equals(dateSheets));
+
+        sheetsAct = settlementSheetService.settlementSheetList(null, null, null, null, null, new PageRequest(1, 10))
+                .getContent();
+
+        Assert.isTrue(sheetsAct.equals(pageSheets));
+
 
     }
 }
