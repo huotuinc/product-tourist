@@ -133,7 +133,7 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
 //    int setOrderSettlement(SettlementSheet settlementSheet, OrderStateEnum orderState,LocalDateTime dateTime);
 
 
-    @Query("select o from TouristOrder as o where o.orderState=?1 and o.createTime<?2")
+    @Query("select o from TouristOrder as o where o.orderState=?1 and o.createTime<?2 and o.settlement is null")
     List<TouristOrder> getsatisfactorySettlementOrders(OrderStateEnum orderState,LocalDateTime localDateTime);
 
     @Query("select o from TouristOrder as o where o.settlement is not null")

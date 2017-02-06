@@ -12,10 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 结算单
@@ -102,4 +99,22 @@ public class SettlementSheet extends BaseModel {
      */
     @Column
     private SettlementStateEnum platformChecking;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SettlementSheet sheet = (SettlementSheet) o;
+        return super.equals(o) &&
+                Objects.equals(settlementNo, sheet.settlementNo) &&
+                Objects.equals(touristSupplier, sheet.touristSupplier) &&
+                Objects.equals(receivableAccount, sheet.receivableAccount) &&
+                Objects.equals(selfChecking, sheet.selfChecking) &&
+                Objects.equals(platformChecking, sheet.platformChecking);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(settlementNo, touristSupplier, receivableAccount, selfChecking, platformChecking);
+    }
 }

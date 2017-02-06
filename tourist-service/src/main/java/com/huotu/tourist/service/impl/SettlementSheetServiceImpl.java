@@ -40,10 +40,9 @@ import java.util.Map;
 public class SettlementSheetServiceImpl implements SettlementSheetService {
 
     @Autowired
-    private EntityManager entityManager;
-    @Autowired
     SettlementSheetRepository settlementSheetRepository;
-
+    @Autowired
+    private EntityManager entityManager;
     @Autowired
     private TouristOrderRepository touristOrderRepository;
 
@@ -81,9 +80,10 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
         //订单的下单时间需要小于的时间
         LocalDateTime endTime= LocalDate.now().atStartOfDay().plusDays(-(days+1));
 
-        //符合要求的订单列表
+        //获取符合要求的订单列表
         List<TouristOrder> orders=touristOrderRepository.getsatisfactorySettlementOrders(OrderStateEnum.Finish,endTime);
 
+        //根据供应商分组，key：供应商ID，val:结算单
         Map<Long,SettlementSheet> sheetMap=new HashMap<>();
         String localDateStr= LocalDate.now().toString().replace("-","");
         for(int i=0,size=orders.size();i<size;i++){
@@ -96,8 +96,8 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
             if(settlementSheet==null){
                 settlementSheet=new SettlementSheet();
                 settlementSheet.setSelfChecking(SettlementStateEnum.NotChecking);
-                settlementSheet.setTouristSupplier(supplier);
                 settlementSheet.setPlatformChecking(SettlementStateEnum.NotChecking);
+                settlementSheet.setTouristSupplier(supplier);
                 settlementSheet.setReceivableAccount(order.getOrderMoney());
                 String str = String.format("%04d", i);
                 //todo 结算单号生成规则前面八位日期后面四位是当天第几张结算单，
@@ -116,11 +116,6 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
 
         touristOrderRepository.save(orders);
 
-    }
-
-    @Override
-    public SettlementSheet createSettlement(TouristSupplier supplier, BigDecimal receivableAccount) throws IOException {
-        return null;
     }
 
     @Override

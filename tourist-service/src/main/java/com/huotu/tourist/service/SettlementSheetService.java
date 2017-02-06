@@ -33,15 +33,6 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
     void settleOrder() throws IOException;
 
     /**
-     * 创建一个结算单
-     * @param supplier              供应商
-     * @param receivableAccount     应收款
-     * @return                      创建完成的结算单
-     * @throws IOException
-     */
-    SettlementSheet createSettlement(TouristSupplier supplier,BigDecimal receivableAccount) throws IOException;
-
-    /**
      * 结算列表
      *
      *
@@ -52,7 +43,9 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
      * @param endCreateTime     小于的创建时间
      *@param pageable  @return  结算列表
      */
-    Page<SettlementSheet> settlementSheetList(TouristSupplier touristSupplier, String supplierName, SettlementStateEnum platformChecking, LocalDateTime createTime, LocalDateTime endCreateTime, Pageable pageable);
+    Page<SettlementSheet> settlementSheetList(TouristSupplier touristSupplier, String supplierName
+            , SettlementStateEnum platformChecking, LocalDateTime createTime, LocalDateTime endCreateTime
+            , Pageable pageable);
 
 
     /**

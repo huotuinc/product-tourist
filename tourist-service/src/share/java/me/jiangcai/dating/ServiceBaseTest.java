@@ -13,6 +13,8 @@ import com.huotu.tourist.common.*;
 import com.huotu.tourist.core.ServiceConfig;
 import com.huotu.tourist.entity.*;
 import com.huotu.tourist.repository.*;
+import com.huotu.tourist.service.ConnectMallService;
+import com.huotu.tourist.service.SettlementSheetService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -46,23 +48,33 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     @Autowired
     protected ApplicationContext applicationContext;
     @Autowired
-    TouristBuyerRepository touristBuyerRepository;
+    protected ConnectMallService connectMallService;
     @Autowired
-    TouristRouteRepository touristRouteRepository;
+    protected TouristBuyerRepository touristBuyerRepository;
     @Autowired
-    TravelerRepository travelerRepository;
+    protected TouristRouteRepository touristRouteRepository;
     @Autowired
-    TouristOrderRepository touristOrderRepository;
+    protected TravelerRepository travelerRepository;
     @Autowired
-    PresentRecordRepository presentRecordRepository;
+    protected TouristOrderRepository touristOrderRepository;
     @Autowired
-    private TouristTypeRepository touristTypeRepository;
+    protected PresentRecordRepository presentRecordRepository;
     @Autowired
-    private TouristSupplierRepository touristSupplierRepository;
+    protected TouristTypeRepository touristTypeRepository;
     @Autowired
-    private TouristGoodRepository touristGoodRepository;
+    protected TouristSupplierRepository touristSupplierRepository;
     @Autowired
-    private ActivityTypeRepository activityTypeRepository;
+    protected TouristGoodRepository touristGoodRepository;
+    @Autowired
+    protected ActivityTypeRepository activityTypeRepository;
+
+
+    @Autowired
+    protected SettlementSheetService settlementSheetService;
+
+    @Autowired
+    protected SettlementSheetRepository settlementSheetRepository;
+
 
     public String randomBankCard() {
         return RandomStringUtils.randomNumeric(16);

@@ -9,14 +9,14 @@
 
 package com.huotu.tourist.service;
 
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.entity.*;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -30,26 +30,6 @@ import java.util.*;
 public class OrderServiceTest extends ServiceBaseTest {
 
     private static final Log log = LogFactory.getLog(OrderServiceTest.class);
-    @Autowired
-    TouristOrderRepository touristOrderRepository;
-
-    @Autowired
-    ActivityTypeRepository activityTypeRepository;
-
-    @Autowired
-    TouristGoodRepository touristGoodRepository;
-
-    @Autowired
-    TouristSupplierRepository touristSupplierRepository;
-
-    @Autowired
-    SettlementSheetService settlementSheetService;
-
-    @Autowired
-    SettlementSheetRepository settlementSheetRepository;
-
-    @Autowired
-    ConnectMallService connectMallService;
 
 
     @Test
@@ -127,63 +107,5 @@ public class OrderServiceTest extends ServiceBaseTest {
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
         BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
     }
-
-    @Test
-    public void settleOrderTest() throws Exception{
-        long days=connectMallService.getServiceDays();
-
-        TouristSupplier supplier=createTouristSupplier("slt");
-        TouristSupplier wy=createTouristSupplier("wy");
-
-
-        TouristGood good=createTouristGood("sltGoods",null,null,null,supplier,null,null,null,null,null,null,null,null
-                ,null,null,null,null,11,null,null);
-        TouristGood wyGoods=createTouristGood("sltGoods",null,null,null,wy,null,null,null,null,null,null,null,null
-                ,null,null,null,null,11,null,null);
-        List<TouristGood> goods=new ArrayList<>(Arrays.asList(good,wyGoods));
-        List<TouristOrder> orders=new ArrayList<>();
-        List<TouristOrder> wyOrders=new ArrayList<>();
-        Random random=new Random();
-        for(int i=0;i<20;i++){
-            TouristOrder order=new TouristOrder();
-            order.setOrderState(OrderStateEnum.Finish);
-            int goodsnumber=random.nextInt(2);
-            order.setTouristGood(goods.get(goodsnumber));
-            order.setOrderMoney(new BigDecimal(100));
-            int day=random.nextInt(20)+1;
-            LocalDateTime now=LocalDateTime.now();
-            Calendar calendar=Calendar.getInstance();
-            int nowDay=calendar.get(Calendar.DAY_OF_MONTH);
-            order.setCreateTime(LocalDateTime.of(now.getYear(),now.getMonthValue(),day,0,0));
-            order=touristOrderRepository.saveAndFlush(order);
-            if(day<nowDay-days-1){
-                if(goodsnumber==0){
-                    orders.add(order);
-                }
-                if(goodsnumber==1){
-                    wyOrders.add(order);
-                }
-            }
-        }
-
-        BigDecimal sltMoney=new BigDecimal(0);
-        for(TouristOrder order:orders){
-            sltMoney=sltMoney.add(order.getOrderMoney());
-        }
-        BigDecimal wyMoney=new BigDecimal(0);
-        for(TouristOrder order:wyOrders){
-            wyMoney=wyMoney.add(order.getOrderMoney());
-        }
-
-        settlementSheetService.settleOrder();
-        List<SettlementSheet> sheets=settlementSheetRepository.findByTouristSupplier(supplier);
-        List<SettlementSheet> wysheets=settlementSheetRepository.findByTouristSupplier(wy);
-        List<TouristOrder> ordersAct=touristOrderRepository.findBySettlement();
-        Assert.isTrue(sltMoney.compareTo(sheets.get(0).getReceivableAccount())==0);
-        Assert.isTrue(wyMoney.compareTo(wysheets.get(0).getReceivableAccount())==0);
-    }
-
-
-
 
 }
