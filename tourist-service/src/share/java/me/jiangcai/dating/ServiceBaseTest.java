@@ -357,6 +357,36 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         return presentRecordRepository.saveAndFlush(presentRecord);
     }
 
+
+    /**
+     * 创建结算单
+     *
+     * @param settlementNo      结算单
+     * @param touristSupplier   供应商
+     * @param receivableAccount 应收款
+     * @param selfChecking      自审状态
+     * @param platformChecking  平台审核状态
+     * @param createDateTime    创建时间
+     * @return
+     */
+    protected SettlementSheet createSettlementSheet(String settlementNo, TouristSupplier touristSupplier
+            , BigDecimal receivableAccount, SettlementStateEnum selfChecking, SettlementStateEnum platformChecking
+            , LocalDateTime createDateTime) {
+
+        SettlementSheet settlementSheet = new SettlementSheet();
+        settlementSheet.setSettlementNo(settlementNo != null ? settlementNo : RandomStringUtils.randomNumeric(20));
+        settlementSheet.setTouristSupplier(touristSupplier);
+        settlementSheet.setReceivableAccount(receivableAccount != null ? receivableAccount : randomPrice());
+        settlementSheet.setSelfChecking(selfChecking != null ? selfChecking : SettlementStateEnum.NotChecking);
+        settlementSheet.setPlatformChecking(platformChecking != null ? platformChecking : SettlementStateEnum.NotChecking);
+        settlementSheet.setCreateTime(createDateTime != null ? createDateTime : LocalDateTime.now());
+
+        return settlementSheetRepository.saveAndFlush(settlementSheet);
+
+
+    }
+
+
     public static class RandomComparator implements Comparator<Object> {
         static Random random = new Random();
 

@@ -69,4 +69,38 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
         }
 
     }
+
+    @Test
+    public void settlementSheetListTest() throws Exception {
+
+        List<SettlementSheet> supplierNameSheets = new ArrayList<>();
+        List<SettlementSheet> touristSupplierSheets = new ArrayList<>();
+        List<SettlementSheet> platformCheckingSheets = new ArrayList<>();
+        List<SettlementSheet> dateSheets = new ArrayList<>();
+        List<SettlementSheet> pageSheets = new ArrayList<>();
+
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            SettlementSheet sheet = new SettlementSheet();
+            int supplierNameRan = random.nextInt(2);
+            int platformCheckingRan = random.nextInt(2);
+            int touristSupplierRan = random.nextInt(2);
+            int dateRan = random.nextInt(2);
+
+
+            SettlementSheet sheetAct = createSettlementSheet(sheet.getSettlementNo(), sheet.getTouristSupplier()
+                    , sheet.getReceivableAccount(), sheet.getSelfChecking(), sheet.getPlatformChecking()
+                    , sheet.getCreateTime());
+
+
+            if (i > 9) {
+                pageSheets.add(sheetAct);
+            }
+
+        }
+
+
+        settlementSheetService.settlementSheetList(null, null, null, null, null, null);
+
+    }
 }
