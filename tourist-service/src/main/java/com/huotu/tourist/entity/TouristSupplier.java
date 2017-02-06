@@ -152,6 +152,10 @@ public class TouristSupplier extends Login implements SystemUser {
     @Column(length = 50)
     private Set<String> authorityList=new HashSet<>();
 
+    private static Set<SimpleGrantedAuthority> String2GrantedAuthoritySet(Stream<String> input) {
+        return input.map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+    }
+
     /**
      * 获取操作员，如果为null,则代表自己是供应商
      * @return
@@ -170,10 +174,6 @@ public class TouristSupplier extends Login implements SystemUser {
         return false;
     }
 
-    private static Set<SimpleGrantedAuthority> String2GrantedAuthoritySet(Stream<String> input) {
-        return input.map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
-    }
-
     /**
      * 作为默认权限 ROLE_OPERATOR 都将被加入。
      *
@@ -188,5 +188,33 @@ public class TouristSupplier extends Login implements SystemUser {
         if (!authorityList.contains("ROLE_SUPPLIER"))
             authorityList.add("ROLE_SUPPLIER");
         return String2GrantedAuthoritySet(authorityList.stream());
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TouristSupplier supplier = (TouristSupplier) o;
+        return super.equals(o) &&
+                Objects.equals(authSupplier, supplier.authSupplier) &&
+                Objects.equals(supplierName, supplier.supplierName) &&
+                Objects.equals(address, supplier.address) &&
+                Objects.equals(detailedAddress, supplier.detailedAddress) &&
+                Objects.equals(contacts, supplier.contacts) &&
+                Objects.equals(contactNumber, supplier.contactNumber) &&
+                Objects.equals(businessLicenseUri, supplier.businessLicenseUri) &&
+                Objects.equals(remarks, supplier.remarks) &&
+                Objects.equals(settlementBalance, supplier.settlementBalance) &&
+                Objects.equals(frozen, supplier.frozen) &&
+                Objects.equals(operatorName, supplier.operatorName) &&
+                Objects.equals(operatorTel, supplier.operatorTel) &&
+                Objects.equals(authorityList, supplier.authorityList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authSupplier, supplierName, address, detailedAddress, contacts, contactNumber, businessLicenseUri
+                , remarks, settlementBalance, frozen, operatorName, operatorTel, authorityList);
     }
 }

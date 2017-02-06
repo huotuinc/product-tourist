@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @author CJ
@@ -68,5 +69,24 @@ public abstract class Login implements UserDetails, SystemUser {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Login login = (Login) o;
+        return Objects.equals(id, login.id) &&
+                Objects.equals(createTime, login.createTime) &&
+                Objects.equals(updateTime, login.updateTime) &&
+                Objects.equals(deleted, login.deleted) &&
+                Objects.equals(loginName, login.loginName) &&
+                Objects.equals(password, login.password) &&
+                Objects.equals(enabled, login.enabled);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createTime, updateTime, deleted, loginName, password, enabled);
     }
 }

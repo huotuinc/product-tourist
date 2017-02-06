@@ -14,6 +14,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Created by lhx on 2016/12/16.
@@ -43,5 +44,26 @@ public abstract class BaseModel {
      */
     @Column(insertable = false)
     private boolean deleted;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseModel model = (BaseModel) o;
+//        if (getId() != null)
+//            return Objects.equals(getId(), model.getId());
+        return Objects.equals(id, model.id) &&
+                Objects.equals(createTime, model.createTime) &&
+                Objects.equals(updateTime, model.updateTime) &&
+                Objects.equals(deleted, model.deleted);
+    }
+
+    @Override
+    public int hashCode() {
+//        if (getId() != null)
+//            return Objects.hash(getId());
+        return Objects.hash(id, createTime, updateTime, deleted);
+    }
 
 }

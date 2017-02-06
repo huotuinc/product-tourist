@@ -12,10 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 提现记录（提现流水）
@@ -80,15 +77,29 @@ public class PresentRecord extends BaseModel{
     @Column(precision = 10, scale = 2)
     private BigDecimal amountOfMoney;
 
-//    /**
-//     * 账户余额
-//     */
-//    @Column(precision = 10, scale = 2)
-//    private BigDecimal accountBalance;
-
     /**
      * 提现状态
      */
     @Column
     private PresentStateEnum presentState;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PresentRecord record = (PresentRecord) o;
+        return super.equals(o) &&
+                Objects.equals(recordNo, record.recordNo) &&
+                Objects.equals(touristSupplier, record.touristSupplier) &&
+                Objects.equals(amountOfMoney, record.amountOfMoney) &&
+                Objects.equals(presentState, record.presentState);
+    }
+
+    @Override
+    public int hashCode() {
+//        if (getId() != null)
+//            return Objects.hash(getId());
+        return Objects.hash(recordNo, touristSupplier, amountOfMoney, presentState);
+    }
 }

@@ -44,9 +44,8 @@ public class PresentRecordServiceImpl implements PresentRecordService {
         return presentRecordRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
             if (!StringUtils.isEmpty(supplierName)) {
-                predicate = cb.and(null, cb.like(root.get("settlementSheet").get("touristOrder").get("touristGood")
-                                .get("touristSupplier").get("supplierName").as(String.class),
-                        supplierName));
+                predicate = cb.and(predicate, cb.like(root.get("touristSupplier").get("supplierName").as(String.class),
+                        "%" + supplierName + "%"));
             }
             if(touristSupplier!=null){
                 predicate=cb.and(predicate,cb.equal(root.get("touristSupplier").as(TouristSupplier.class),touristSupplier));

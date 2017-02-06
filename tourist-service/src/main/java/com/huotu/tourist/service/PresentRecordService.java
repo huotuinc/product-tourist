@@ -25,7 +25,8 @@ public interface PresentRecordService extends BaseService<PresentRecord, Long> {
      * @param endCreateTime     小于的创建时间
      * @param pageable  @return 提现列表
      */
-    Page<PresentRecord> presentRecordList(String supplierName, TouristSupplier touristSupplier, PresentStateEnum presentState, LocalDateTime createTime, LocalDateTime endCreateTime, Pageable pageable);
+    Page<PresentRecord> presentRecordList(String supplierName, TouristSupplier touristSupplier
+            , PresentStateEnum presentState, LocalDateTime createTime, LocalDateTime endCreateTime, Pageable pageable);
 
 
 }

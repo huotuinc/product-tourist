@@ -7,6 +7,8 @@ import com.huotu.tourist.service.CollectionAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by lhx on 2017/1/4.
  */
@@ -21,8 +23,10 @@ public class CollectionAccountServiceImpl implements CollectionAccountService {
         CollectionAccount collectionAccount;
         if (id == null) {
             collectionAccount = new CollectionAccount();
+            collectionAccount.setCreateTime(LocalDateTime.now());
         } else {
             collectionAccount = collectionAccountRepository.getOne(id);
+            collectionAccount.setUpdateTime(LocalDateTime.now());
         }
         collectionAccount.setAccountType(accountType);
         collectionAccount.setIDCard(IDCard);

@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Objects;
 
 /**
  * 收款账户
@@ -66,5 +67,29 @@ public class CollectionAccount extends BaseModel {
      */
     @Column(length = 20)
     private String bankCard;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CollectionAccount account = (CollectionAccount) o;
+        return super.equals(o) &&
+                Objects.equals(isDeleted(), account.isDeleted()) &&
+                Objects.equals(accountType, account.accountType) &&
+                Objects.equals(IDCard, account.IDCard) &&
+                Objects.equals(aliPayName, account.aliPayName) &&
+                Objects.equals(aliPayAccount, account.aliPayAccount) &&
+                Objects.equals(accountName, account.accountName) &&
+                Objects.equals(bank, account.bank) &&
+                Objects.equals(bankBranch, account.bankBranch) &&
+                Objects.equals(bankCard, account.bankCard);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountType, IDCard, aliPayName, aliPayAccount, accountName, bank, bankBranch, bankCard);
+    }
+
 
 }

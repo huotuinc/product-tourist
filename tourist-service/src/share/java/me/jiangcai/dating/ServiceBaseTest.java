@@ -9,30 +9,10 @@
 
 package me.jiangcai.dating;
 
-import com.huotu.tourist.common.BuyerPayStateEnum;
-import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.common.PayTypeEnum;
-import com.huotu.tourist.common.SexEnum;
-import com.huotu.tourist.common.TouristCheckStateEnum;
-import com.huotu.tourist.common.TravelerTypeEnum;
+import com.huotu.tourist.common.*;
 import com.huotu.tourist.core.ServiceConfig;
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.Address;
-import com.huotu.tourist.entity.TouristBuyer;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristRoute;
-import com.huotu.tourist.entity.TouristSupplier;
-import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
-import com.huotu.tourist.repository.ActivityTypeRepository;
-import com.huotu.tourist.repository.TouristBuyerRepository;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TouristSupplierRepository;
-import com.huotu.tourist.repository.TouristTypeRepository;
-import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.entity.*;
+import com.huotu.tourist.repository.*;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -73,6 +53,8 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     TravelerRepository travelerRepository;
     @Autowired
     TouristOrderRepository touristOrderRepository;
+    @Autowired
+    PresentRecordRepository presentRecordRepository;
     @Autowired
     private TouristTypeRepository touristTypeRepository;
     @Autowired
@@ -342,6 +324,27 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         return createTouristType(null);
     }
 
+    /**
+     * 创建一个体现记录
+     *
+     * @param recordNo       体现号
+     * @param supplier       供应商
+     * @param amountOfMoney  钱
+     * @param presentState   状态
+     * @param createDateTime 创建时间
+     * @return
+     */
+    protected PresentRecord createPresentRecord(String recordNo, TouristSupplier supplier, BigDecimal amountOfMoney
+            , PresentStateEnum presentState, LocalDateTime createDateTime) {
+        PresentRecord presentRecord = new PresentRecord();
+        presentRecord.setCreateTime(createDateTime != null ? createDateTime : LocalDateTime.now());
+        presentRecord.setRecordNo(recordNo != null ? recordNo : RandomStringUtils.randomNumeric(20));
+        presentRecord.setTouristSupplier(supplier);
+        presentRecord.setAmountOfMoney(amountOfMoney != null ? amountOfMoney : randomPrice());
+        presentRecord.setPresentState(presentState);
+        return presentRecordRepository.saveAndFlush(presentRecord);
+    }
+
     public static class RandomComparator implements Comparator<Object> {
         static Random random = new Random();
 
@@ -350,4 +353,9 @@ public abstract class ServiceBaseTest extends SpringWebTest {
             return random.nextInt();
         }
     }
+
+//    protected boolean ListEqualsNotSort(List listExp,List listAct){
+//
+//    }
+
 }
