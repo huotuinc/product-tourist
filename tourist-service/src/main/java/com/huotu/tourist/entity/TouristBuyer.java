@@ -146,8 +146,8 @@ public class TouristBuyer implements SystemUser, UserDetails {
                     @Override
                     @SneakyThrows(IOException.class)
                     public String apply(TouristBuyer buyer) {
-                        return buyer.getBusinessLicencesUri() == null ? resourceService.getResource(buyer
-                                .getBusinessLicencesUri()).httpUrl().toString() : "";
+                        return buyer.getBusinessLicencesUri() == null ?"" : resourceService.getResource(buyer
+                                .getBusinessLicencesUri()).httpUrl().toString() ;
                     }
                 }
                 , new SimpleSelection<TouristBuyer, String>("nickname", "nickname")
@@ -179,12 +179,14 @@ public class TouristBuyer implements SystemUser, UserDetails {
 
                     @Override
                     public Map apply(TouristBuyer touristBuyer) {
-                        if (touristBuyer.getCheckState() == null) {
-                            return null;
-                        }
                         Map<String, String> map = new HashMap<>();
-                        map.put("code", touristBuyer.checkState.getCode().toString());
-                        map.put("value", touristBuyer.checkState.getValue().toString());
+                        if (touristBuyer.getCheckState() == null) {
+                            map.put("code", null);
+                            map.put("value", null);
+                        }else {
+                            map.put("code", touristBuyer.checkState.getCode().toString());
+                            map.put("value", touristBuyer.checkState.getValue().toString());
+                        }
                         return map;
                     }
                 }
@@ -196,12 +198,14 @@ public class TouristBuyer implements SystemUser, UserDetails {
 
                     @Override
                     public Map apply(TouristBuyer touristBuyer) {
-                        if (touristBuyer.getPayState() == null) {
-                            return null;
-                        }
                         Map<String, String> map = new HashMap<>();
-                        map.put("code", touristBuyer.payState.getCode().toString());
-                        map.put("value", touristBuyer.payState.getValue().toString());
+                        if (touristBuyer.getPayState() == null) {
+                            map.put("code", null);
+                            map.put("value", null);
+                        }else {
+                            map.put("code", touristBuyer.payState.getCode().toString());
+                            map.put("value", touristBuyer.payState.getValue().toString());
+                        }
                         return map;
                     }
                 }

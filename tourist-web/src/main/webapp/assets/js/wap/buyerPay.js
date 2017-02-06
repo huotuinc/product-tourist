@@ -9,20 +9,20 @@ if (ua.match(/MicroMessenger/i) == 'micromessenger') {
 $(function () {
     $("#weixin").click(function () {
         var data = {payType: 9};
-        orderPay(data);
+        orderPay(data,1);
     });
     $("#alipay").click(function () {
         var data = {payType: 1};
-        orderPay(data);
+        orderPay(data,0);
     });
 });
-function orderPay(requestData) {
+function orderPay(requestData,payType) {
     var load = layer.load();
     $.ajax({
         url: $.buyerOrderPayUrl,
         method: "post",
         dataType: "json",
-        data: requestData,
+        data: {payType: payType},
         complete: function () {
             layer.close(load);
         },
