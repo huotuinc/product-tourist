@@ -576,7 +576,7 @@ public class SupplierManageController {
             , @RequestParam(required = false) LocalDateTime endOrderDate)
             throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
-        Page<TouristGood> touristGoods=touristGoodService.touristGoodList(supplier,null,null,null,null,null,pageable
+        Page<TouristGood> touristGoods = touristGoodService.touristGoodList(supplier, null, null, null, null, null, null, pageable
                 , null);
 //        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 

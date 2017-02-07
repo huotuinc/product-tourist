@@ -83,7 +83,7 @@ public class SearchController {
 
         ActivityType activityType=aTypeId==null?null:activityTypeRepository.findOne(aTypeId);
         List<TouristGood> goods=touristGoodService.touristGoodList(null,name,null,null,activityType,
-                TouristCheckStateEnum.CheckFinish,new PageRequest(0,20,new Sort(Sort.Direction.DESC,"id")),lastId)
+                TouristCheckStateEnum.CheckFinish, null, new PageRequest(0, 20, new Sort(Sort.Direction.DESC, "id")), lastId)
                 .getContent();
         model.addAttribute("list",goods);
         model.addAttribute("name",name);

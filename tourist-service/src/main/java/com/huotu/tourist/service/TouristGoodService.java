@@ -44,12 +44,14 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param touristType       路线类型
      * @param activityType      活动类型
      * @param touristCheckState 线路审核状态
-     * @param pageable
-     * @param lastId
+     * @param recommend         是否是推荐商品
+     * @param pageable          分页
+     * @param lastId            小于的ID号(用于前端的分页)
      * @return
      */
-    Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName, TouristType touristType
-            , ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable, Long lastId);
+    Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName
+            , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState
+            , Boolean recommend, Pageable pageable, Long lastId);
 
     /**
      * 获取推荐商品列表

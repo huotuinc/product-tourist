@@ -57,10 +57,13 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     @Override
     public Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName
             , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState
-            , Pageable pageable, Long lastId) {
+            , Boolean recommend, Pageable pageable, Long lastId) {
         return touristGoodRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
-
+            if (recommend != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("recommend").as(Boolean.class),
+                        recommend));
+            }
             if(lastId!=null){
                 predicate=cb.and(predicate,cb.lessThan(root.get("id").as(Long.class),lastId));
             }
@@ -155,11 +158,12 @@ public class TouristGoodServiceImpl implements TouristGoodService {
         TouristGood touristGood = null;
         if (id != null) {
             touristGood = touristGoodRepository.getOne(id);
+            touristGood.setCreateTime(LocalDateTime.now());
         } else {
             touristGood = new TouristGood();
+            touristGood.setUpdateTime(LocalDateTime.now());
         }
         touristGood.setTouristSupplier(touristSupplier);
-        touristGood.setCreateTime(LocalDateTime.now());
         touristGood.setMallProductId(mallProductId);
         touristGood.setTouristName(touristName);
         touristGood.setActivityType(activityType);

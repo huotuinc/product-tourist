@@ -384,7 +384,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
         List<String> images=new ArrayList<>(Arrays.asList(new String[]{"11","22"}));
         TouristGood touristGood=createTouristGood(name,activityType,touristType, checkState,supplier
                 ,touristFeatures,destination,placeOfDeparture,travelledAddress,price,childrenDiscount,rebate
-                , receptionPerson, receptionTelephone, eventDetails, beCareful, touristImgUri, maxPeople, 0L, images);
+                , receptionPerson, receptionTelephone, eventDetails, beCareful, touristImgUri, maxPeople, 0L, images, null);
 
         TouristRoute[] touristRoutes=new TouristRoute[2];
 
@@ -430,7 +430,7 @@ public class SupplierManageControllerTest extends AbstractSupplierTest {
     @Test
     public void showTouristGoodsList() throws Exception{
         TouristGood touristGood=createTouristGood("slt",null,null,TouristCheckStateEnum.CheckFinish,supplier
-                ,null,null,null,null,null,null,null,null,null,null,null,null,20,10L,null);
+                , null, null, null, null, null, null, null, null, null, null, null, null, 20, 10L, null, null);
         TouristOrder touristOrder=createTouristOrder(touristGood,null,null, OrderStateEnum.Finish,LocalDateTime.now()
                 , LocalDateTime.now(), PayTypeEnum.Alipay, "", null, null);
 

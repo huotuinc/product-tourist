@@ -89,9 +89,9 @@ public class OrderServiceTest extends ServiceBaseTest {
         TouristSupplier supplier = createTouristSupplier("slt");
         SettlementSheet sheet = createSettlementSheet(null, supplier, null, null, null, null);
         TouristGood supplierGood = createTouristGood(null, null, null, null, supplier, null, null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null, null, null);
         TouristGood good = createTouristGood(null, null, null, null, null, null, null, null, null, null, null, null, null, null
-                , null, null, null, null, null, null);
+                , null, null, null, null, null, null, null);
         TouristBuyer buyer = createRandomTouristBuyer(100L);
 
         BigDecimal supplierMoney = new BigDecimal(0);

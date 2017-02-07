@@ -33,7 +33,7 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
         List<TouristGood> goods = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             goods.add(createTouristGood("goods" + i, null, null, null, suppliers.get(i), null, null, null, null
-                    , null, null, null, null, null, null, null, null, 11, null, null));
+                    , null, null, null, null, null, null, null, null, 11, null, null, null));
         }
 
         //key:供应商ID，val:该供应商的结算单的应收款
@@ -165,7 +165,7 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
     public void countBalanceTest() throws Exception{
         TouristSupplier supplier = createTouristSupplier("slt");
         TouristGood good = createTouristGood("goods", null, null, null, supplier, null, null, null, null, null, null
-                , null, null, null, null, null, null, 11, null, null);
+                , null, null, null, null, null, null, 11, null, null, null);
         SettlementSheet sheet = createSettlementSheet(null, supplier, new BigDecimal(500), null, null, null);
         TouristOrder order = createTouristOrder(good, null, null, OrderStateEnum.Finish, LocalDateTime.of(2016, 12, 12, 0, 0)
                 , null, null, null, sheet, new BigDecimal(10000));

@@ -278,11 +278,13 @@ public class BaseController {
         Page<TouristGood> page;
 
         if (recommend != null && recommend) {
-            page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
-                    , touristCheckState, true, pageable);
+//            page = touristGoodService.recommendTouristGoodList(touristName, supplierName, touristType, activityType
+//                    , touristCheckState, true, pageable);
+            page = touristGoodService.touristGoodList(null, touristName, supplierName, touristType, activityType
+                    , touristCheckState, true, pageable, null);
         } else {
             page = touristGoodService.touristGoodList(supplier, touristName, supplierName, touristType,
-                    activityType, touristCheckState, pageable, null);
+                    activityType, touristCheckState, null, pageable, null);
 
         }
         Selection<TouristGood, Long> select = new Selection<TouristGood, Long>() {
