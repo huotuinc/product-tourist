@@ -73,7 +73,8 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
      * @param supplierId
      * @return
      */
-    @Query("select sum(t.orderMoney*t.touristGood.rebate/100) as om from TouristOrder as t where t.touristGood.touristSupplier.id=?1 ")
+    @Query("select sum(t.orderMoney*t.touristGood.rebate/100) as om from TouristOrder as t " +
+            "where t.touristGood.touristSupplier.id=?1 ")
     BigDecimal sumCommissionTotal(Long supplierId);
 
     /**

@@ -255,7 +255,9 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         if (supplierId == null) {
             throw new IOException();
         }
-        return touristOrderRepository.sumRefundTotal(supplierId, OrderStateEnum.RefundsFinish);
+        TouristSupplier supplier = touristSupplierRepository.findOne(supplierId);
+        return countOrderTotalMoney(supplier, OrderStateEnum.RefundsFinish, null, null, null, null, null);
+//        return touristOrderRepository.sumRefundTotal(supplierId, OrderStateEnum.RefundsFinish);
     }
 
     @Override

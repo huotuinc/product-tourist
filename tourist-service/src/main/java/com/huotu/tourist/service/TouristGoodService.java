@@ -98,11 +98,12 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param goodsCheckState
      * @return 新增或修改的线路商品
      */
-    TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType, TouristType touristType
-            , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
-            , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
-            , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, Long mallProductId, List<String> photos, TouristCheckStateEnum goodsCheckState);
+    TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType
+            , TouristType touristType, String touristFeatures, Address destination, Address placeOfDeparture
+            , Address travelledAddress, BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate
+            , String receptionPerson, String receptionTelephone, String eventDetails, String beCareful
+            , String touristImgUri, int maxPeople, Long mallProductId, List<String> photos
+            , TouristCheckStateEnum goodsCheckState);
 
     /**
      * 获取最新线路列表

@@ -46,7 +46,7 @@ public interface TouristOrderService {
 
 
     /**
-     * 订单列表，
+     * 订单列表
      * @param supplier
      * @param supplierName   当supplier为null时该参数有效，反之无效
      * @param orderNo        订单ID
@@ -62,7 +62,8 @@ public interface TouristOrderService {
      * @param endTouristDate 结束出行时间
      * @param orderStateEnum 订单状态
      * @param settlement     是否结算
-     * @param pageable       分页信息(必须)   @return 返回带分页信息的订单列表
+     * @param pageable       分页信息(必须)
+     * @return 返回带分页信息的订单列表
      * @param settlementId
      * @throws IOException 获取订单列表发生错误
      */
