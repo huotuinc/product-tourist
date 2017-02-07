@@ -21,14 +21,14 @@
     <div class="weui_cells weui_cells_form">
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" name="buyerName" placeholder="请输入俱乐部名称或者姓名">
+                <input class="weui_input" type="text" name="buyerName" maxlength="50" placeholder="请输入俱乐部名称或者姓名">
             </div>
         </div>
     </div>
     <div class="weui_cells weui_cells_form">
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" name="buyerDirector" placeholder="负责人姓名">
+                <input class="weui_input" type="text" maxlength="50" name="buyerDirector" placeholder="负责人姓名">
             </div>
         </div>
         <div class="weui_cell">
@@ -41,12 +41,12 @@
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" name="code" placeholder="请输入验证码">
+                <input class="weui_input" type="text" maxlength="7" name="code" placeholder="请输入验证码">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" name="IDNo" placeholder="身份证">
+                <input class="weui_input" type="text" maxlength="18" name="IDNo" placeholder="身份证">
             </div>
         </div>
     </div>
@@ -193,6 +193,47 @@
         $("#addBuyer").click(function () {
             var phone = $("input[name='telPhone']").val();
             var code = $("input[name='code']").val();
+            var buyerName = $("input[name='buyerName']").val();
+            var buyerDirector = $("input[name='buyerDirector']").val();
+            var IDNo = $("input[name='IDNo']").val();
+            var businessLicencesUriLi = $(".businessLicencesUri li").length;
+            var IDElevationsUriLi = $(".IDElevationsUri li").length;
+            var IDInverseUriLi = $(".IDInverseUri li").length;
+            var check = $("input[name='checkbox1']").is(':checked');
+            if (!check) {
+                $.alert("未同意《条款》");
+                return;
+            }
+
+            if (buyerName == '') {
+                $.alert("俱乐部名称不能为空");
+                return;
+            }
+            if (buyerDirector == '') {
+                $.alert("负责人名称不能为空");
+                return;
+            }
+            if (phone == '') {
+                $.alert("电话不能为空");
+                return;
+            }
+            if (IDNo == '') {
+                $.alert("负责人身份证不能为空");
+                return;
+            }
+            if (businessLicencesUriLi <= 0) {
+                $.alert("请上传营业执照");
+                return;
+            }
+            if (IDElevationsUriLi <= 0) {
+                $.alert("请上传身份证正面");
+                return;
+            }
+            if (IDInverseUriLi <= 0) {
+                $.alert("请上传身份证反面");
+                return;
+            }
+
             if (code != '') {
                 $.ajax({
                     url: vilaMsgUrl,
@@ -205,6 +246,8 @@
                         $.alert("无效的验证码！请填写正确验证码")
                     }
                 });
+            } else {
+                $.alert("请填写验证码");
             }
         });
 
