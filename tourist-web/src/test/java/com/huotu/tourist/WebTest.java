@@ -299,6 +299,7 @@ public abstract class WebTest extends ServiceBaseTest {
     protected TouristBuyer createTouristBuyer(String buyerName, String buyerDirector, String telPhone
             , BuyerCheckStateEnum buyerCheckState) {
         TouristBuyer touristBuyer = new TouristBuyer();
+        touristBuyer.setId(256421L);
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
         touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);

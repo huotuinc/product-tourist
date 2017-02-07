@@ -28,6 +28,7 @@ public class SettlementSheet extends BaseModel {
             new SimpleSelection<SettlementSheet, String>("id", "id")
             , new SimpleSelection<SettlementSheet, String>("settlementNo", "settlementNo")
             , new SimpleSelection<SettlementSheet, String>("receivableAccount", "receivableAccount")
+            , new SimpleSelection<SettlementSheet, String>("selfChecking.code", "selfCheckingCode")
             , new SimpleSelection<SettlementSheet, String>("selfChecking.value", "selfChecking")
             , new Selection<SettlementSheet, String>() {
                 @Override
@@ -42,7 +43,6 @@ public class SettlementSheet extends BaseModel {
                     return "supplierName";
                 }
             }
-            , new SimpleSelection<SettlementSheet, String>("selfChecking.code", "selfCheckingCode")
             , new Selection<SettlementSheet, Map>() {
                 @Override
                 public Map apply(SettlementSheet settlementSheet) {
@@ -51,7 +51,6 @@ public class SettlementSheet extends BaseModel {
                     map.put("value", settlementSheet.getPlatformChecking().getValue());
                     return map;
                 }
-
                 @Override
                 public String getName() {
                     return "platformChecking";
@@ -62,7 +61,6 @@ public class SettlementSheet extends BaseModel {
                 public String apply(SettlementSheet settlementSheet) {
                     return LocalDateTimeFormatter.toStr(settlementSheet.getCreateTime());
                 }
-
                 @Override
                 public String getName() {
                     return "createTime";

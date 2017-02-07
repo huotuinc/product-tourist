@@ -225,6 +225,9 @@ public class TouristGood extends BaseModel {
                     @Override
                     @SneakyThrows(IOException.class)
                     public String apply(TouristGood touristGood) {
+                        if (touristGood.getTouristImgUri()==null){
+                            return null;
+                        }
                         return resourceService.getResource(touristGood.getTouristImgUri()).httpUrl().toString();
                     }
 

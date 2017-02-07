@@ -25,7 +25,9 @@ import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -861,12 +863,13 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("createTime", "" + LocalDate.now()).session(session)
         ).andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(json, Map.class);
+//        Map map = objectMapper.readValue(json, Map.class);
         // TODO: 2017/1/5 提现
         assertThat(false).isEqualTo(true);
     }
 
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     //    --------------------------------------------------------
     @Test
     public void addTouristSupplierAndUpdateSupplier() throws Exception {
@@ -891,7 +894,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         TouristSupplier touristSupplier = touristSupplierRepository.findByLoginName(loginName);
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
-        assertThat(touristSupplier.getPassword()).isEqualTo(password);
+        assertThat(touristSupplier.getPassword()).isEqualTo(passwordEncoder.encode(password));
         assertThat(touristSupplier.getContacts()).isEqualTo(contacts);
         assertThat(touristSupplier.getContactNumber()).isEqualTo(contactNumber);
         assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
@@ -912,7 +915,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
-        assertThat(touristSupplier.getPassword()).isEqualTo(password);
+        assertThat(touristSupplier.getPassword()).isEqualTo(passwordEncoder.encode(password));
         assertThat(touristSupplier.getContacts()).isEqualTo(contacts);
         assertThat(touristSupplier.getContactNumber()).isEqualTo(contactNumber);
         assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);

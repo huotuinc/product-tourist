@@ -67,11 +67,13 @@ public class PurchaserProductSetting extends BaseModel {
                 , new SimpleSelection<PurchaserProductSetting, String>("name", "name")
                 , new SimpleSelection<PurchaserProductSetting, String>("price", "price")
                 , new SimpleSelection<PurchaserProductSetting, String>("explainStr", "explainStr")
-                , new SimpleSelection<PurchaserProductSetting, String>("explainStr", "explainStr")
                 , new Selection<PurchaserProductSetting, String>() {
                     @Override
                     public String apply(PurchaserProductSetting setting) {
                         try {
+                            if (setting.getBannerUri() == null) {
+                                return null;
+                            }
                             return resourceService.getResource(setting.getBannerUri()).httpUrl().toString();
                         } catch (IOException e) {
                             throw new RuntimeException("" + e);
