@@ -330,7 +330,7 @@ public class SupplierManageController {
         BigDecimal balance=settlementSheetService.countBalance(supplier, null);
         BigDecimal Settled=settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
-        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
+        BigDecimal withdrawal = settlementSheetService.countWithdrawal(supplier, null, null, PresentStateEnum.AlreadyPaid);
         model.addAttribute("settled",Settled);
         model.addAttribute("notSettled",notSettled);
         model.addAttribute("withdrawal",withdrawal);

@@ -48,6 +48,7 @@ import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.SettlementSheetService;
 import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -117,6 +118,9 @@ public abstract class ServiceBaseTest extends SpringWebTest {
 
     @Autowired
     protected TouristGoodService touristGoodService;
+
+    @Autowired
+    protected TouristOrderService touristOrderService;
     /**
      * 第几页字符串名称
      */
@@ -288,7 +292,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         touristGood.setEventDetails(eventDetails);
         touristGood.setBeCareful(beCareful);
         touristGood.setTouristImgUri(touristImgUri);
-        touristGood.setMaxPeople(maxPeople);
+        touristGood.setMaxPeople(maxPeople == null ? 10 : maxPeople);
         touristGood.setCreateTime(LocalDateTime.now());
         touristGood.setImages(images);
         return touristGoodRepository.saveAndFlush(touristGood);
@@ -534,7 +538,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
      */
     protected TouristOrder createTouristOrder(TouristGood good, TouristBuyer buyer, String orderNo
             , OrderStateEnum orderState, LocalDateTime createTime, LocalDateTime payTime
-            , PayTypeEnum payType, String remark, SettlementSheet settlement) {
+            , PayTypeEnum payType, String remark, SettlementSheet settlement, BigDecimal orderMoney) {
         TouristOrder order = new TouristOrder();
         order.setTouristGood(good == null ? createTouristGood(null, null, null, null, null) : good);
         order.setTouristBuyer(buyer == null ? createTouristBuyer(null, null, null, null) : buyer);
@@ -544,6 +548,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         order.setPayTime(payTime == null ? LocalDateTime.now() : payTime);
         order.setPayType(payType == null ? randomPayTypeEnum() : payType);
         order.setRemarks(remark);
+        order.setOrderMoney(orderMoney == null ? randomPrice() : orderMoney);
         order.setSettlement(settlement);
 
         return touristOrderRepository.saveAndFlush(order);

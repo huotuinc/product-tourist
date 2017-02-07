@@ -85,7 +85,7 @@ public class OrderServiceTest extends ServiceBaseTest {
     }
 
     @Test
-    public void countOrderTotalMoneyTest() {
+    public void countOrderTotalMoneyTest() throws Exception {
         TouristSupplier supplier = createTouristSupplier("slt");
         SettlementSheet sheet = createSettlementSheet(null, supplier, null, null, null, null);
         TouristGood supplierGood = createTouristGood(null, null, null, null, supplier, null, null, null, null, null, null, null,
@@ -99,7 +99,7 @@ public class OrderServiceTest extends ServiceBaseTest {
         BigDecimal dateMoney = new BigDecimal(0);
         BigDecimal settlementMoney = new BigDecimal(0);
         BigDecimal touristGoodMoney = new BigDecimal(0);
-        BigDecimal touristBuyer = new BigDecimal(0);
+        BigDecimal touristBuyerMoney = new BigDecimal(0);
 
         Random random = new Random();
 
@@ -112,29 +112,59 @@ public class OrderServiceTest extends ServiceBaseTest {
             boolean buyerRan = random.nextBoolean();
 
             TouristOrder order = new TouristOrder();
+            order.setOrderMoney(randomPrice());
             if (supplierRan) {
                 order.setTouristGood(supplierGood);
+                supplierMoney = supplierMoney.add(order.getOrderMoney());
+            } else {
+                if (goodsRan) {
+                    order.setTouristGood(good);
+                    touristGoodMoney = touristGoodMoney.add(order.getOrderMoney());
+                }
             }
             if (orderStateRan) {
                 order.setOrderState(OrderStateEnum.Finish);
+                orderStateMoney = orderStateMoney.add(order.getOrderMoney());
+            } else {
+                order.setOrderState(OrderStateEnum.NotFinish);
             }
             if (dateRan) {
                 order.setCreateTime(LocalDateTime.of(2016, 5, 5, 0, 0, 0));
+                dateMoney = dateMoney.add(order.getOrderMoney());
             }
             if (settlementRan) {
                 order.setSettlement(sheet);
-            }
-            if (goodsRan) {
-                order.setTouristGood(good);
+                settlementMoney = settlementMoney.add(order.getOrderMoney());
             }
             if (buyerRan) {
                 order.setTouristBuyer(buyer);
+                touristBuyerMoney = touristBuyerMoney.add(order.getOrderMoney());
             }
-
             TouristOrder orderAct = createTouristOrder(order.getTouristGood(), order.getTouristBuyer(), null
-                    , order.getOrderState(), order.getCreateTime(), null, null, null, order.getSettlement());
-
+                    , order.getOrderState(), order.getCreateTime(), null, null, null, order.getSettlement()
+                    , order.getOrderMoney());
         }
+
+        BigDecimal moneyAct = touristOrderService.countOrderTotalMoney(supplier, null, null, null, null, null, null);
+        Assert.isTrue(moneyAct.compareTo(supplierMoney) == 0);
+
+        moneyAct = touristOrderService.countOrderTotalMoney(null, OrderStateEnum.Finish, null, null, null, null, null);
+        Assert.isTrue(moneyAct.compareTo(orderStateMoney) == 0);
+
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, LocalDateTime.of(2016, 4, 1, 0, 0, 0)
+                , LocalDateTime.of(2016, 6, 1, 0, 0, 0), null, null, null);
+        Assert.isTrue(moneyAct.compareTo(dateMoney) == 0);
+
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, true, null, null);
+        Assert.isTrue(moneyAct.compareTo(settlementMoney) == 0);
+
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, good, null);
+        Assert.isTrue(moneyAct.compareTo(touristGoodMoney) == 0);
+
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, null, buyer);
+        Assert.isTrue(moneyAct.compareTo(touristBuyerMoney) == 0);
+
+
     }
 
 

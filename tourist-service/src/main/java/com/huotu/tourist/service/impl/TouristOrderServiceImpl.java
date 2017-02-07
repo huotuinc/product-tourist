@@ -13,10 +13,7 @@ import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.OrderStateQuery;
-import com.huotu.tourist.repository.TouristGoodRepository;
-import com.huotu.tourist.repository.TouristOrderRepository;
-import com.huotu.tourist.repository.TouristRouteRepository;
-import com.huotu.tourist.repository.TravelerRepository;
+import com.huotu.tourist.repository.*;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +57,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     ConnectMallService connectMallService;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private TouristSupplierRepository touristSupplierRepository;
 
     @Override
     public URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed) {
@@ -147,7 +146,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         if (supplierId == null) {
             throw new IOException();
         }
-        return touristOrderRepository.sumMoneyTotal(supplierId);
+        TouristSupplier supplier=touristSupplierRepository.findOne(supplierId);
+        return countOrderTotalMoney(supplier,null,null,null,null,null,null);
     }
 
     @Override
@@ -160,30 +160,30 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         Predicate predicate=cb.isTrue(cb.literal(true));
 
         if(supplier!=null){
-            cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
+            predicate=cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
         }
 
         if(orderState!=null){
-            cb.and(predicate,cb.equal(root.get("orderState"),orderState));
+            predicate=cb.and(predicate,cb.equal(root.get("orderState"),orderState));
         }
 
         if(createDate!=null){
-            cb.and(predicate,cb.greaterThanOrEqualTo(root.get("createTime"),createDate));
+            predicate=cb.and(predicate,cb.greaterThanOrEqualTo(root.get("createTime"),createDate));
         }
         if(endCreateDate!=null){
-            cb.and(predicate,cb.lessThanOrEqualTo(root.get("createTime"),endCreateDate));
+            predicate=cb.and(predicate,cb.lessThanOrEqualTo(root.get("createTime"),endCreateDate));
         }
 
         if(settlement!=null){
-            cb.and(predicate,cb.isNotNull(root.get("settlement")));
+            predicate=cb.and(predicate,cb.isNotNull(root.get("settlement")));
         }
 
         if(touristGood!=null){
-            cb.and(predicate,cb.equal(root.get("touristGood"),touristGood));
+            predicate=cb.and(predicate,cb.equal(root.get("touristGood"),touristGood));
         }
 
         if(touristBuyer!=null){
-            cb.and(predicate,cb.equal(root.get("touristBuyer"),touristBuyer));
+            predicate=cb.and(predicate,cb.equal(root.get("touristBuyer"),touristBuyer));
         }
 
         criteriaQuery=criteriaQuery.where(predicate);
@@ -193,8 +193,9 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         );
 
         TypedQuery<Number> query = entityManager.createQuery(criteriaQuery);
-        BigDecimal orderTotalMoney=BigDecimal.valueOf(query.getSingleResult()==null?0:query.getSingleResult()
-                .doubleValue());
+        Number number=query.getSingleResult();
+
+        BigDecimal orderTotalMoney=BigDecimal.valueOf(number==null?0:number.doubleValue());
         return orderTotalMoney;
     }
 
@@ -206,30 +207,30 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         Predicate predicate=cb.isTrue(cb.literal(true));
 
         if(supplier!=null){
-            cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
+            predicate=cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
         }
 
         if(orderState!=null){
-            cb.and(predicate,cb.equal(root.get("orderState"),orderState));
+            predicate=cb.and(predicate,cb.equal(root.get("orderState"),orderState));
         }
 
         if(createDate!=null){
-            cb.and(predicate,cb.greaterThanOrEqualTo(root.get("createTime"),createDate));
+            predicate=cb.and(predicate,cb.greaterThanOrEqualTo(root.get("createTime"),createDate));
         }
         if(endCreateDate!=null){
-            cb.and(predicate,cb.lessThanOrEqualTo(root.get("createTime"),endCreateDate));
+            predicate=cb.and(predicate,cb.lessThanOrEqualTo(root.get("createTime"),endCreateDate));
         }
 
         if(settlement!=null){
-            cb.and(predicate,cb.isNotNull(root.get("settlement")));
+            predicate=cb.and(predicate,cb.isNotNull(root.get("settlement")));
         }
 
         if(touristGood!=null){
-            cb.and(predicate,cb.equal(root.get("touristGood"),touristGood));
+            predicate=cb.and(predicate,cb.equal(root.get("touristGood"),touristGood));
         }
 
         if(touristBuyer!=null){
-            cb.and(predicate,cb.equal(root.get("touristBuyer"),touristBuyer));
+            predicate=cb.and(predicate,cb.equal(root.get("touristBuyer"),touristBuyer));
         }
 
         criteriaQuery=criteriaQuery.where(predicate);

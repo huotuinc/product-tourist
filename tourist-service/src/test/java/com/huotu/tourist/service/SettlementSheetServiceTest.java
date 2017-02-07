@@ -1,11 +1,9 @@
 package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
-import com.huotu.tourist.entity.SettlementSheet;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.*;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
@@ -165,14 +163,16 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
 
     @Test
     public void countBalanceTest() throws Exception{
-        TouristSupplier supplier=new TouristSupplier();
-        supplier.setSupplierName("slt");
-        supplier=touristSupplierRepository.saveAndFlush(supplier);
-        TouristGood touristGood=new TouristGood();
-        touristGood.setTouristSupplier(supplier);
-        touristGood=touristGoodRepository.saveAndFlush(touristGood);
-
-        settlementSheetService.countBalance(supplier,LocalDateTime.now());
+        TouristSupplier supplier = createTouristSupplier("slt");
+        TouristGood good = createTouristGood("goods", null, null, null, supplier, null, null, null, null, null, null
+                , null, null, null, null, null, null, 11, null, null);
+        SettlementSheet sheet = createSettlementSheet(null, supplier, new BigDecimal(500), null, null, null);
+        TouristOrder order = createTouristOrder(good, null, null, OrderStateEnum.Finish, LocalDateTime.of(2016, 12, 12, 0, 0)
+                , null, null, null, sheet, new BigDecimal(10000));
+        PresentRecord presentRecord = createPresentRecord(null, supplier, new BigDecimal(3000), PresentStateEnum.AlreadyPaid
+                , null);
+        BigDecimal moneyAct = settlementSheetService.countBalance(supplier, LocalDateTime.now());
+        Assert.isTrue(moneyAct.compareTo(new BigDecimal(7000)) == 0);
     }
 
     @Test
@@ -182,6 +182,55 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
         supplier=touristSupplierRepository.saveAndFlush(supplier);
         BigDecimal settled= settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
-        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
+        BigDecimal withdrawal = settlementSheetService.countWithdrawal(supplier, null, null, null);
+    }
+
+    @Test
+    public void countWithdrawalTest() throws Exception {
+        TouristSupplier supplier = createTouristSupplier("slt");
+
+        BigDecimal supplierMoney = new BigDecimal(0);
+
+        BigDecimal stateMoney = new BigDecimal(0);
+
+        BigDecimal dateMoney = new BigDecimal(0);
+
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            boolean supplierRan = random.nextBoolean();
+            boolean dateRan = random.nextBoolean();
+            boolean stateRan = random.nextBoolean();
+
+            PresentRecord record = new PresentRecord();
+            record.setAmountOfMoney(randomPrice());
+            if (supplierRan) {
+                record.setTouristSupplier(supplier);
+                supplierMoney = supplierMoney.add(record.getAmountOfMoney());
+            }
+            if (dateRan) {
+                record.setCreateTime(LocalDateTime.of(2016, 10, 1, 0, 0, 0));
+                dateMoney = dateMoney.add(record.getAmountOfMoney());
+            }
+            if (stateRan) {
+                record.setPresentState(PresentStateEnum.AlreadyPaid);
+                stateMoney = stateMoney.add(record.getAmountOfMoney());
+            } else {
+                record.setPresentState(PresentStateEnum.CheckFinish);
+            }
+
+            PresentRecord recordAct = createPresentRecord(null, record.getTouristSupplier(), record.getAmountOfMoney()
+                    , record.getPresentState(), record.getCreateTime());
+        }
+
+        BigDecimal moneyAct = settlementSheetService.countWithdrawal(supplier, null, null, null);
+        Assert.isTrue(moneyAct.compareTo(supplierMoney) == 0);
+
+        moneyAct = settlementSheetService.countWithdrawal(null, LocalDateTime.of(2016, 9, 1, 0, 0, 0)
+                , LocalDateTime.of(2016, 12, 1, 0, 0, 0), null);
+        Assert.isTrue(moneyAct.compareTo(dateMoney) == 0);
+
+        moneyAct = settlementSheetService.countWithdrawal(null, null, null, PresentStateEnum.AlreadyPaid);
+        Assert.isTrue(moneyAct.compareTo(stateMoney) == 0);
+
     }
 }
