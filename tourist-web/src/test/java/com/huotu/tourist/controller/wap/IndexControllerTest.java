@@ -12,6 +12,111 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class IndexControllerTest extends AbstractPlatformTest {
     @Test
+    public void index() throws Exception {
+
+    }
+
+    @Test
+    public void goodInfo() throws Exception {
+
+    }
+
+    @Test
+    public void procurementGood() throws Exception {
+
+    }
+
+    @Test
+    public void addOrderInfo1() throws Exception {
+
+    }
+
+    @Test
+    public void cancelOrder() throws Exception {
+
+    }
+
+    @Test
+    public void toProcurementPayPage() throws Exception {
+
+    }
+
+    @Test
+    public void newTouristList() throws Exception {
+
+    }
+
+    @Test
+    public void activityTypeList() throws Exception {
+
+    }
+
+    @Test
+    public void activityTypeGoods() throws Exception {
+
+    }
+
+    @Test
+    public void activityTourist() throws Exception {
+
+    }
+
+    @Test
+    public void supplierGoods() throws Exception {
+
+    }
+
+    @Test
+    public void supplierTourist() throws Exception {
+
+    }
+
+    @Test
+    public void destinationList() throws Exception {
+
+    }
+
+    @Test
+    public void destinationGoods() throws Exception {
+
+    }
+
+    @Test
+    public void destinationTourist() throws Exception {
+
+    }
+
+    @Test
+    public void recommendGoods() throws Exception {
+
+    }
+
+    @Test
+    public void recommendTourist() throws Exception {
+
+    }
+
+    @Test
+    public void buyerApply() throws Exception {
+
+    }
+
+    @Test
+    public void addTouristBuyer() throws Exception {
+
+    }
+
+    @Test
+    public void sendCode() throws Exception {
+
+    }
+
+    @Test
+    public void verifyCode() throws Exception {
+
+    }
+
+    @Test
     public void addOrderInfo() throws Exception {
         mockMvc.perform(post("/wap/addOrderInfo")
                 .session(session)
