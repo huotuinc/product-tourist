@@ -563,6 +563,9 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         settlementSheet.setCreateTime(createTime == null ? LocalDateTime.now() : createTime);
         settlementSheet.setPlatformChecking(platformChecking == null ? randomSettlementStateEnum() : platformChecking);
         settlementSheet.setTouristSupplier(createTouristSupplier(supplierName));
+        settlementSheet.setSelfChecking(SettlementStateEnum.NotChecking);
+        settlementSheet.setPlatformChecking(platformChecking != null ? platformChecking : SettlementStateEnum.NotChecking);
+        settlementSheet.setCreateTime(LocalDateTime.now());
         return settlementSheetRepository.saveAndFlush(settlementSheet);
     }
 
