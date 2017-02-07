@@ -12,7 +12,11 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 结算单
@@ -28,8 +32,8 @@ public class SettlementSheet extends BaseModel {
             new SimpleSelection<SettlementSheet, String>("id", "id")
             , new SimpleSelection<SettlementSheet, String>("settlementNo", "settlementNo")
             , new SimpleSelection<SettlementSheet, String>("receivableAccount", "receivableAccount")
-            , new SimpleSelection<SettlementSheet, String>("selfChecking.code", "selfCheckingCode")
-            , new SimpleSelection<SettlementSheet, String>("selfChecking.value", "selfChecking")
+//            , new SimpleSelection<SettlementSheet, String>("selfChecking.code", "selfCheckingCode")
+//            , new SimpleSelection<SettlementSheet, String>("selfChecking.value", "selfChecking")
             , new Selection<SettlementSheet, String>() {
                 @Override
                 public String apply(SettlementSheet settlementSheet) {
@@ -41,6 +45,28 @@ public class SettlementSheet extends BaseModel {
                 @Override
                 public String getName() {
                     return "supplierName";
+                }
+            }
+            , new Selection<SettlementSheet, String>() {
+                @Override
+                public String apply(SettlementSheet settlementSheet) {
+                    return (String) settlementSheet.getPlatformChecking().getValue();
+                }
+
+                @Override
+                public String getName() {
+                    return "selfChecking";
+                }
+            }
+            , new Selection<SettlementSheet, Integer>() {
+                @Override
+                public Integer apply(SettlementSheet settlementSheet) {
+                    return (Integer) settlementSheet.getPlatformChecking().getCode();
+                }
+
+                @Override
+                public String getName() {
+                    return "selfCheckingCode";
                 }
             }
             , new Selection<SettlementSheet, Map>() {

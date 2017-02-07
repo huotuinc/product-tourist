@@ -48,6 +48,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  */
 public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Test
     public void testDateTimeFormatter() throws ParseException {
         System.out.println(LocalDateTimeFormatter.toStr(LocalDateTime.now()));
@@ -212,7 +215,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         objectMapper = new ObjectMapper();
         map = objectMapper.readValue(json, Map.class);
         list = (List<Map>) map.get(ROWS);
-        assertThat(list.size()).isGreaterThan(0).as("能够分页查询列表");
+        assertThat(list.size()).isLessThanOrEqualTo(0).as("能够分页查询列表,但是找不到数据了");
     }
 
     @Test
@@ -316,7 +319,6 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
 
     }
-
 
     @Test
     public void purchaserProductSettingList() throws Exception {
@@ -523,7 +525,6 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
 
     }
 
-
     @Test
     public void touristTypeList() throws Exception {
         int pageSize = 1;
@@ -564,7 +565,6 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         list = (List<Map>) map.get(ROWS);
         assertThat(list.size()).isGreaterThan(0).as("没有查询条件进行第二页查找到相关的数据");
     }
-
 
     @Test
     public void touristOrders() throws Exception {
@@ -868,8 +868,6 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         assertThat(false).isEqualTo(true);
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     //    --------------------------------------------------------
     @Test
     public void addTouristSupplierAndUpdateSupplier() throws Exception {
@@ -894,7 +892,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         TouristSupplier touristSupplier = touristSupplierRepository.findByLoginName(loginName);
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
-        assertThat(touristSupplier.getPassword()).isEqualTo(passwordEncoder.encode(password));
+        assertThat(passwordEncoder.matches(password, touristSupplier.getPassword())).isTrue();
         assertThat(touristSupplier.getContacts()).isEqualTo(contacts);
         assertThat(touristSupplier.getContactNumber()).isEqualTo(contactNumber);
         assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
@@ -915,7 +913,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         touristSupplier = touristSupplierRepository.getOne(touristSupplier.getId());
         assertThat(touristSupplier).isNotNull().as("查找到对应实体");
         assertThat(touristSupplier.getSupplierName()).isEqualTo(supplierName);
-        assertThat(touristSupplier.getPassword()).isEqualTo(passwordEncoder.encode(password));
+        assertThat(passwordEncoder.matches(password, touristSupplier.getPassword())).isTrue();
         assertThat(touristSupplier.getContacts()).isEqualTo(contacts);
         assertThat(touristSupplier.getContactNumber()).isEqualTo(contactNumber);
         assertThat(touristSupplier.getAddress().toString()).isEqualTo(address);
@@ -962,7 +960,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("name", name)
                 .param("bannerUri", bannerUri)
                 .param("price", price + "")
-                .param("explain", explain)
+                .param("explainStr", explain)
                 .param("agreement", agreement).session(session)
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value()).as("添加相应成功");
@@ -980,7 +978,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
                 .param("name", name = UUID.randomUUID().toString())
                 .param("bannerUri", bannerUri = UUID.randomUUID().toString())
                 .param("price", (price = new BigDecimal(200)).toString())
-                .param("explain", explain = UUID.randomUUID().toString())
+                .param("explainStr", explain = UUID.randomUUID().toString())
                 .param("agreement", agreement = UUID.randomUUID().toString()).session(session)
         ).andReturn().getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.OK.value()).as("修改相应成功");

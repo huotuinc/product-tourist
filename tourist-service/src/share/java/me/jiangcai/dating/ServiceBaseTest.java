@@ -9,10 +9,42 @@
 
 package me.jiangcai.dating;
 
-import com.huotu.tourist.common.*;
+import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.BuyerPayStateEnum;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.common.PresentStateEnum;
+import com.huotu.tourist.common.SettlementStateEnum;
+import com.huotu.tourist.common.SexEnum;
+import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.common.TravelerTypeEnum;
 import com.huotu.tourist.core.ServiceConfig;
-import com.huotu.tourist.entity.*;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
+import com.huotu.tourist.entity.PresentRecord;
+import com.huotu.tourist.entity.PurchaserPaymentRecord;
+import com.huotu.tourist.entity.PurchaserProductSetting;
+import com.huotu.tourist.entity.SettlementSheet;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.entity.TouristType;
+import com.huotu.tourist.entity.Traveler;
+import com.huotu.tourist.repository.ActivityTypeRepository;
+import com.huotu.tourist.repository.BannerRepository;
+import com.huotu.tourist.repository.PresentRecordRepository;
+import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
+import com.huotu.tourist.repository.PurchaserProductSettingRepository;
+import com.huotu.tourist.repository.SettlementSheetRepository;
+import com.huotu.tourist.repository.TouristBuyerRepository;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.SettlementSheetService;
 import com.huotu.tourist.service.TouristGoodService;
@@ -530,6 +562,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         SettlementSheet settlementSheet = new SettlementSheet();
         settlementSheet.setCreateTime(createTime == null ? LocalDateTime.now() : createTime);
         settlementSheet.setPlatformChecking(platformChecking == null ? randomSettlementStateEnum() : platformChecking);
+        settlementSheet.setTouristSupplier(createTouristSupplier(supplierName));
         return settlementSheetRepository.saveAndFlush(settlementSheet);
     }
 
@@ -602,6 +635,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     protected TouristBuyer createTouristBuyer(String buyerName, String buyerDirector, String telPhone
             , BuyerCheckStateEnum buyerCheckState) {
         TouristBuyer touristBuyer = new TouristBuyer();
+        touristBuyer.setId(256421L);
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
         touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);
