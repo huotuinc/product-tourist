@@ -161,4 +161,27 @@ public class SettlementSheetServiceTest extends ServiceBaseTest {
 
 
     }
+
+
+    @Test
+    public void countBalanceTest() throws Exception{
+        TouristSupplier supplier=new TouristSupplier();
+        supplier.setSupplierName("slt");
+        supplier=touristSupplierRepository.saveAndFlush(supplier);
+        TouristGood touristGood=new TouristGood();
+        touristGood.setTouristSupplier(supplier);
+        touristGood=touristGoodRepository.saveAndFlush(touristGood);
+
+        settlementSheetService.countBalance(supplier,LocalDateTime.now());
+    }
+
+    @Test
+    public void countSettledTest() throws Exception{
+        TouristSupplier supplier=new TouristSupplier();
+        supplier.setSupplierName("slt");
+        supplier=touristSupplierRepository.saveAndFlush(supplier);
+        BigDecimal settled= settlementSheetService.countSettled(supplier);
+        BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
+        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
+    }
 }

@@ -9,10 +9,8 @@
 
 package com.huotu.tourist.service;
 
-import com.huotu.tourist.entity.ActivityType;
-import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
-import com.huotu.tourist.entity.TouristSupplier;
+import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.entity.*;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -87,25 +85,57 @@ public class OrderServiceTest extends ServiceBaseTest {
     }
 
     @Test
-    public void countBalanceTest() throws Exception{
-        TouristSupplier supplier=new TouristSupplier();
-        supplier.setSupplierName("slt");
-        supplier=touristSupplierRepository.saveAndFlush(supplier);
-        TouristGood touristGood=new TouristGood();
-        touristGood.setTouristSupplier(supplier);
-        touristGood=touristGoodRepository.saveAndFlush(touristGood);
+    public void countOrderTotalMoneyTest() {
+        TouristSupplier supplier = createTouristSupplier("slt");
+        SettlementSheet sheet = createSettlementSheet(null, supplier, null, null, null, null);
+        TouristGood supplierGood = createTouristGood(null, null, null, null, supplier, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null);
+        TouristGood good = createTouristGood(null, null, null, null, null, null, null, null, null, null, null, null, null, null
+                , null, null, null, null, null, null);
+        TouristBuyer buyer = createRandomTouristBuyer(100L);
 
-        settlementSheetService.countBalance(supplier,LocalDateTime.now());
+        BigDecimal supplierMoney = new BigDecimal(0);
+        BigDecimal orderStateMoney = new BigDecimal(0);
+        BigDecimal dateMoney = new BigDecimal(0);
+        BigDecimal settlementMoney = new BigDecimal(0);
+        BigDecimal touristGoodMoney = new BigDecimal(0);
+        BigDecimal touristBuyer = new BigDecimal(0);
+
+        Random random = new Random();
+
+        for (int i = 0; i < 30; i++) {
+            boolean supplierRan = random.nextBoolean();
+            boolean orderStateRan = random.nextBoolean();
+            boolean dateRan = random.nextBoolean();
+            boolean settlementRan = random.nextBoolean();
+            boolean goodsRan = random.nextBoolean();
+            boolean buyerRan = random.nextBoolean();
+
+            TouristOrder order = new TouristOrder();
+            if (supplierRan) {
+                order.setTouristGood(supplierGood);
+            }
+            if (orderStateRan) {
+                order.setOrderState(OrderStateEnum.Finish);
+            }
+            if (dateRan) {
+                order.setCreateTime(LocalDateTime.of(2016, 5, 5, 0, 0, 0));
+            }
+            if (settlementRan) {
+                order.setSettlement(sheet);
+            }
+            if (goodsRan) {
+                order.setTouristGood(good);
+            }
+            if (buyerRan) {
+                order.setTouristBuyer(buyer);
+            }
+
+            TouristOrder orderAct = createTouristOrder(order.getTouristGood(), order.getTouristBuyer(), null
+                    , order.getOrderState(), order.getCreateTime(), null, null, null, order.getSettlement());
+
+        }
     }
 
-    @Test
-    public void countSettledTest() throws Exception{
-        TouristSupplier supplier=new TouristSupplier();
-        supplier.setSupplierName("slt");
-        supplier=touristSupplierRepository.saveAndFlush(supplier);
-        BigDecimal settled= settlementSheetService.countSettled(supplier);
-        BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
-        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
-    }
 
 }
