@@ -8,7 +8,7 @@
   ~ 2013-2016. All rights reserved.
   -->
 
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
 
@@ -113,19 +113,19 @@
                                                value="ROLE_STATISTICS" style="position: absolute; opacity: 0;" type="checkbox"/>
                                     </div>销售统计管理
                                 </label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk"
-                                               th:checked="${operator.getAuthorityList().contains('ROLE_SUPPLIERINFO')}"
-                                               value="ROLE_SUPPLIERINFO" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>供应商信息管理</label>
+                                <!--<label class="checkbox-inline i-checks">-->
+                                <!--<div class="icheckbox_square-green" style="position: relative;">-->
+                                <!--<input name="permissionChk"-->
+                                <!--th:checked="${operator.getAuthorityList().contains('ROLE_SUPPLIERINFO')}"-->
+                                <!--value="ROLE_SUPPLIERINFO" style="position: absolute; opacity: 0;" type="checkbox"/>-->
+                                <!--</div>供应商信息管理</label>-->
 
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input name="permissionChk"
-                                               th:checked="${operator.getAuthorityList().contains('ROLE_ACCOUNT')}"
-                                               value="ROLE_ACCOUNT" style="position: absolute; opacity: 0;" type="checkbox"/>
-                                    </div>收款账户管理</label>
+                                <!--<label class="checkbox-inline i-checks">-->
+                                <!--<div class="icheckbox_square-green" style="position: relative;">-->
+                                <!--<input name="permissionChk"-->
+                                <!--th:checked="${operator.getAuthorityList().contains('ROLE_ACCOUNT')}"-->
+                                <!--value="ROLE_ACCOUNT" style="position: absolute; opacity: 0;" type="checkbox"/>-->
+                                <!--</div>收款账户管理</label>-->
                             </div>
 
                         </div>

@@ -196,7 +196,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showTouristGood")
-//    @PreAuthorize("hasRole('Goods')")
+    @PreAuthorize("hasAnyRole({'ROLE_GOODS','ROLE_SUPPLIER'})")
     public String showTouristGood(Long id, Model model) throws IOException {
         TouristGood touristGood;
         if(id==null){
@@ -301,6 +301,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSettlement")
+    @PreAuthorize("hasAnyRole({'ROLE_SETTLEMENT','ROLE_SUPPLIER'})")
     public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
 
@@ -471,7 +472,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSaleStatistics")
-//    @PreAuthorize("hasRole('SaleStatistics')")
+    @PreAuthorize("hasAnyRole({'ROLE_STATISTICS','ROLE_SUPPLIER'})")
     public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
         TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
@@ -620,6 +621,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSupplierInfo")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public String showSupplierInfo(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier authSupplier=((TouristSupplier)userInfo).getAuthSupplier();
         TouristSupplier supplier=touristSupplierService.getOne(authSupplier.getId());
@@ -655,7 +657,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showCollectionAccount")
-//    @PreAuthorize("hasRole('CollectionAccount')")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo ,Model model) throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
         CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
@@ -695,6 +697,7 @@ public class SupplierManageController {
      * @return
      */
     @RequestMapping("/showJurisdiction")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public String showJurisdiction(){
         return viewSupplierPath+"jurisdictionList.html";
     }

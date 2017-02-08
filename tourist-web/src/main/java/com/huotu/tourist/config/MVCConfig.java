@@ -32,11 +32,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -95,6 +91,13 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         registry.addFormatterForFieldType(LocalDateTime.class, localDateTimeFormatter);
         commonEnumConverterSet.forEach(registry::addConverter);
     }
+
+//    //错误处理
+//    @Override
+//    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+//        super.configureHandlerExceptionResolvers(exceptionResolvers);
+//
+//    }
 
 
     @Override
