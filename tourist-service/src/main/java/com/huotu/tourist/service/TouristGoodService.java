@@ -93,9 +93,9 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param beCareful          注意事项(必须)
      * @param touristImgUri      商品图片(必须)
      * @param maxPeople          最大人数(必须)
-     * @param mallProductId
+     * @param mallProductId      对应商城的商品ID
      * @param photos             商品组图
-     * @param goodsCheckState
+     * @param goodsCheckState    商品状态
      * @return 新增或修改的线路商品
      */
     TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType
