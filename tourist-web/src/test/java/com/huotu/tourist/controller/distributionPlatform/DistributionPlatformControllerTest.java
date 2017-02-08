@@ -572,7 +572,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         int pageNo = 0;
         TouristOrder order = createTouristOrder(null, null, null, null, LocalDateTimeFormatter.toLocalDateTime
                 ("2016-12-12 01:00:00"), LocalDateTimeFormatter.toLocalDateTime("2016-12-12 05:00:00"),null, null,
-                null);
+                null, null);
         String json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + pageNo).session(session)
@@ -720,7 +720,7 @@ public class DistributionPlatformControllerTest extends AbstractPlatformTest {
         }
         assertThat(flag).isTrue().as("查询条件全部指定查询到相应数据列表");
 
-        createTouristOrder(null, null, null, null, null, null, null,null, null);
+        createTouristOrder(null, null, null, null, null, null, null, null, null, null);
         json = mockMvc.perform(get("/distributionPlatform/touristOrders")
                 .param("pageSize", "" + pageSize)
                 .param("pageNo", "" + (pageNo + 1)).session(session)

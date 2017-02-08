@@ -330,7 +330,7 @@ public class SupplierManageController {
         BigDecimal balance=settlementSheetService.countBalance(supplier, null);
         BigDecimal Settled=settlementSheetService.countSettled(supplier);
         BigDecimal notSettled=settlementSheetService.countNotSettled(supplier);
-        BigDecimal withdrawal=settlementSheetService.countWithdrawal(supplier, null);
+        BigDecimal withdrawal = settlementSheetService.countWithdrawal(supplier, null, null, PresentStateEnum.AlreadyPaid);
         model.addAttribute("settled",Settled);
         model.addAttribute("notSettled",notSettled);
         model.addAttribute("withdrawal",withdrawal);
@@ -576,7 +576,7 @@ public class SupplierManageController {
             , @RequestParam(required = false) LocalDateTime endOrderDate)
             throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
-        Page<TouristGood> touristGoods=touristGoodService.touristGoodList(supplier,null,null,null,null,null,pageable
+        Page<TouristGood> touristGoods = touristGoodService.touristGoodList(supplier, null, null, null, null, null, null, pageable
                 , null);
 //        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 

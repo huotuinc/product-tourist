@@ -1,5 +1,6 @@
 package com.huotu.tourist.service;
 
+import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.SettlementStateEnum;
 import com.huotu.tourist.entity.SettlementSheet;
 import com.huotu.tourist.entity.TouristSupplier;
@@ -65,14 +66,17 @@ public interface SettlementSheetService extends BaseService<SettlementSheet, Lon
     BigDecimal countNotSettled(TouristSupplier supplier) throws IOException;
 
     /**
-     * 计算已提现的钱
-     * @param supplier      供应商
-     * @param endCountDate    小于该结算日期的余额
+     * 计算提现记录的钱
+     * @param supplier          供应商
+     * @param createCountDate   大于的结算日期的余额
+     * @param endCountDate      小于该结算日期的余额
+     * @param state             体现状态
      * @return
      * @throws IOException
      */
     @Transactional(readOnly = true)
-    BigDecimal countWithdrawal(TouristSupplier supplier, LocalDateTime endCountDate) throws IOException;
+    BigDecimal countWithdrawal(TouristSupplier supplier, LocalDateTime createCountDate, LocalDateTime endCountDate
+            , PresentStateEnum state) throws IOException;
 
     /**
      * 计算余额

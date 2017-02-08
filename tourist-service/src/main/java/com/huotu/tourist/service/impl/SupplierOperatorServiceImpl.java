@@ -31,6 +31,7 @@ public class SupplierOperatorServiceImpl implements SupplierOperatorService {
             operator.setCreateTime(LocalDateTime.now());
         }else {
             operator=supplierRepository.getOne(id);
+            operator.setUpdateTime(LocalDateTime.now());
         }
         operator.setUpdateTime(LocalDateTime.now());
         operator.setAuthSupplier(supplier);

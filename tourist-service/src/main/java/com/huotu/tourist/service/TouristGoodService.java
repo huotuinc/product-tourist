@@ -44,12 +44,14 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param touristType       路线类型
      * @param activityType      活动类型
      * @param touristCheckState 线路审核状态
-     * @param pageable
-     * @param lastId
+     * @param recommend         是否是推荐商品
+     * @param pageable          分页
+     * @param lastId            小于的ID号(用于前端的分页)
      * @return
      */
-    Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName, TouristType touristType
-            , ActivityType activityType, TouristCheckStateEnum touristCheckState, Pageable pageable, Long lastId);
+    Page<TouristGood> touristGoodList(TouristSupplier supplier, String touristName, String supplierName
+            , TouristType touristType, ActivityType activityType, TouristCheckStateEnum touristCheckState
+            , Boolean recommend, Pageable pageable, Long lastId);
 
     /**
      * 获取推荐商品列表
@@ -96,11 +98,12 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      * @param goodsCheckState
      * @return 新增或修改的线路商品
      */
-    TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType, TouristType touristType
-            , String touristFeatures, Address destination, Address placeOfDeparture, Address travelledAddress
-            , BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate, String receptionPerson
-            , String receptionTelephone, String eventDetails, String beCareful, String touristImgUri
-            , int maxPeople, Long mallProductId, List<String> photos, TouristCheckStateEnum goodsCheckState);
+    TouristGood saveTouristGood(TouristSupplier touristSupplier, Long id, String touristName, ActivityType activityType
+            , TouristType touristType, String touristFeatures, Address destination, Address placeOfDeparture
+            , Address travelledAddress, BigDecimal price, BigDecimal childrenDiscount, BigDecimal rebate
+            , String receptionPerson, String receptionTelephone, String eventDetails, String beCareful
+            , String touristImgUri, int maxPeople, Long mallProductId, List<String> photos
+            , TouristCheckStateEnum goodsCheckState);
 
     /**
      * 获取最新线路列表
