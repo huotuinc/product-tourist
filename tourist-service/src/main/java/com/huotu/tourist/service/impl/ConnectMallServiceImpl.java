@@ -16,6 +16,7 @@ import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantConfigRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.MerchantRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.exception.NotLoginYetException;
@@ -217,7 +218,12 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         NameValuePair shipName = new BasicNameValuePair("shipName", buyer.getBuyerName());
         NameValuePair shipMobile = new BasicNameValuePair("shipMobile", buyer.getTelPhone());
         NameValuePair memberId = new BasicNameValuePair("memberId", buyer.getId() + "");
-        NameValuePair payType = new BasicNameValuePair("payType", buyer.getPayType().getCode() + "");
+        NameValuePair payType = null;
+        if (buyer.getPayType() == PayTypeEnum.Alipay) {
+            payType = new BasicNameValuePair("payType", 1 + "");
+        } else if (buyer.getPayType() == PayTypeEnum.WeixinPay) {
+            payType = new BasicNameValuePair("payType", 9 + "");
+        }
         Product product = productRestRepository.getOneByPK(qualificationsProductId);
         String orderItem = product.getGoods().getId() + "_" + qualificationsProductId + "_" + 1;
 
@@ -237,7 +243,12 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         NameValuePair shipName = new BasicNameValuePair("shipName", order.getTravelers().get(0).getName());
         NameValuePair shipMobile = new BasicNameValuePair("shipMobile", order.getTravelers().get(0).getTelPhone());
         NameValuePair memberId = new BasicNameValuePair("memberId", order.getTouristBuyer().getId() + "");
-        NameValuePair payType = new BasicNameValuePair("payType", order.getPayType().getCode() + "");
+        NameValuePair payType = null;
+        if (order.getPayType() == PayTypeEnum.Alipay) {
+            payType = new BasicNameValuePair("payType", 1 + "");
+        } else if (order.getPayType() == PayTypeEnum.WeixinPay) {
+            payType = new BasicNameValuePair("payType", 9 + "");
+        }
         Product product = productRestRepository.getOneByPK(order.getTouristGood().getMallProductId());
         String item = product.getGoods().getId() + "_" + order.getTouristGood().getMallProductId() + "_" + order.getTravelers()
                 .size();

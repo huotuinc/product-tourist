@@ -45,7 +45,7 @@
                     </div>
                     <div style="font-size:12px; padding:6px 10px;">
                         <p style="float:right">共<span th:text="${order.travelers.size()}">3</span>人,总计：￥<span
-                                th:text="${order.orderMoney+order.mallIntegral+order.mallBalance+order.mallCoffers}">199
+                                th:text="${order.orderMoney}">199
                             .00</span></p>
                         <p style="float:left;color:#999" th:text="${order.travelers.get(0).route.fromDate}">2015-10-10
                             16:15</p>
