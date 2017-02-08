@@ -149,8 +149,11 @@ public class OrderController {
     public void orderPayCallback(@RequestParam String mallOrderNo,
                                  @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType,
                                  HttpServletRequest request, Model model) {
-        log.info("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
+
+        System.out.println("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
                 "orderType:" + orderType + " ========");
+        System.out.println("====request.mallOrderNo=" + request.getParameter("mallOrderNo"));
+        mallOrderNo = request.getParameter("mallOrderNo");
         //线路订单
         if (orderType == 0) {
             TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);

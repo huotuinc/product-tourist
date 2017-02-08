@@ -74,6 +74,9 @@ public class TouristSupplier extends Login implements SystemUser {
             }
     );
 
+    /**
+     * 所属的真正的供应商，如果自己就是真正的供应商则此值为空
+     */
     @ManyToOne
     private TouristSupplier authSupplier;
 
@@ -175,7 +178,7 @@ public class TouristSupplier extends Login implements SystemUser {
     }
 
     /**
-     * 作为默认权限 ROLE_OPERATOR 都将被加入。
+     * 操作员默认权限 ROLE_OPERATOR，供应商默认权限 ROLE_SUPPLIER
      *
      * @return 权限表
      */
@@ -183,10 +186,11 @@ public class TouristSupplier extends Login implements SystemUser {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        String role = authSupplier == null ? "ROLE_SUPPLIER" : "ROLE_OPERATOR";
         if (authorityList == null || authorityList.isEmpty())
-            return String2GrantedAuthoritySet(Stream.of("ROLE_SUPPLIER"));
-        if (!authorityList.contains("ROLE_SUPPLIER"))
-            authorityList.add("ROLE_SUPPLIER");
+            return String2GrantedAuthoritySet(Stream.of(role));
+        if (!authorityList.contains(role))
+            authorityList.add(role);
         return String2GrantedAuthoritySet(authorityList.stream());
     }
 
