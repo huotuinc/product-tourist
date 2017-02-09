@@ -26,7 +26,7 @@
     <link href="http://resali.huobanplus.com/cdn/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 
     <link href="http://resali.huobanplus.com/cdn/hotui/css/animate.min.css" rel="stylesheet"/>
-    <link href="../../../assets/css/style.min.css?v=4.0.0" rel="stylesheet"/>
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/style.min-1.0.2.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"/>
 
@@ -114,14 +114,23 @@
                                 </table>
                             </div>
                             <div id="tab-2" class="tab-pane">
+                                <div id="toolbar" class="btn-group">
+                                    <select class="form-control">
+                                        <option value="basic">导出本页</option>
+                                        <option value="all">导出全部</option>
+                                        <option value="selected">选择导出</option>
+                                    </select>
+                                </div>
                                 <table class="table table-hover" data-toggle="table"
                                        data-url="../../../mock/supplier/noSettlement.json"
                                        th:attr="data-url=@{/base/touristOrders}"
                                        data-method="get" data-side-pagination="server" data-pagination="true"
                                        data-striped="true" data-page-number="1" data-page-size="10"
-                                       data-query-params="getParams">
+                                       data-query-params="getParams" data-toolbar="#toolbar"
+                                       data-show-export="true" data-click-to-select="true">
                                     <thead>
                                     <tr>
+                                        <th data-field="state" data-checkbox="true"></th>
                                         <th data-field="orderNo" data-align="center">订单号</th>
                                         <th data-field="touristName" data-align="center">商品名称</th>
                                         <th data-field="orderMoney" data-align="center" data-sortable="true">订单金额</th>
@@ -167,8 +176,12 @@
 </div>
 <script src="http://resali.huobanplus.com/cdn/jquery/3.1.1/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../assets/libs/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../../../assets/libs/bootstrap-table/tableExport.js"></script>
+
 <script src="http://resali.huobanplus.com/cdn/layer/3.0.1/layer.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/moment.js"></script>
 <script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/datetimepick/daterangepicker.js"></script>

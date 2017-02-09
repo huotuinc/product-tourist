@@ -119,6 +119,7 @@ public class BaseController {
     private ResourceService resourceService;
     private String viewSupplierPath = "/view/manage/supplier/";
     private String viewCommonPath = "/view/manage/common/";
+    private List<Selection<TouristOrder, ?>> selections;
 
     /**
      * 打开线路商品页面

@@ -40,8 +40,10 @@ public class TouristRouteServiceImpl implements TouristRouteService {
         TouristRoute touristRoute;
         if (id == null) {
             touristRoute = new TouristRoute();
+            touristRoute.setCreateTime(LocalDateTime.now());
         } else {
             touristRoute = touristRouteRepository.getOne(id);
+            touristRoute.setUpdateTime(LocalDateTime.now());
         }
         touristRoute.setRouteNo(routeNo);
         touristRoute.setGood(good);

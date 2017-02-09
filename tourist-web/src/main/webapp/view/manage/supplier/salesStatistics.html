@@ -100,15 +100,17 @@
                             <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">销售统计</a>
                             </li>
                         </ul>
+
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane active">
-                                <div id="toolbar1" class="btn-group">
+                                <div id="toolbar1" class="btn-group toolbar">
                                     <select class="form-control">
                                         <option value="basic">导出本页</option>
                                         <option value="all">导出全部</option>
                                         <option value="selected">选择导出</option>
                                     </select>
                                 </div>
+
                                 <table class="table table-hover" data-toggle="table"
                                        th:attr="data-url=@{/supplier/orderDetailsList}"
                                        data-url="../../../mock/supplier/orderDetailsList.json"
@@ -134,7 +136,7 @@
                                 </table>
                             </div>
                             <div id="tab-2" class="tab-pane">
-                                <div id="toolbar2" class="btn-group">
+                                <div id="toolbar2" class="btn-group toolbar">
                                     <select class="form-control">
                                         <option value="basic">导出本页</option>
                                         <option value="all">导出全部</option>

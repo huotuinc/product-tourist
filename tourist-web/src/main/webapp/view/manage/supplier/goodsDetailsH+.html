@@ -267,10 +267,11 @@
 
                                             <div th:each="r:${routes}" class="col-sm-2">
                                                 <span>出行时间：</span>
-                                                <input name="toursitDate" th:value="${r.fromDate}" type="text"
-                                                       class="form-control"/>
+                                                <input th:disabled="${r.sold}" name="toursitDate"
+                                                       th:value="${r.fromDate}" type="text" class="form-control"/>
                                                 <span th:if="${r.sold}">已售出</span>
-                                                <span th:text="${r.id}" style="display: none">1</span>
+                                                <input name="trouteId" th:value="${r.id}" type="hidden"/>
+                                                <!--<span th:text="${r.id}" style="display: none">1</span>-->
                                             </div>
 
                                         </div>
@@ -356,6 +357,7 @@
 
     var submitUrl=/*[[@{/supplier/saveTouristGood}]]*/'../../../mock/supplier/httpJson.json';
     var touristImgUri=/*[[${good.touristImgUri}]]*/'';
+    var delRoutesUrl = /*[[@{/supplier/delRoutes}]]*/'../../../mock/supplier/httpJson.json';
     /*]]>*/
 
 </script>

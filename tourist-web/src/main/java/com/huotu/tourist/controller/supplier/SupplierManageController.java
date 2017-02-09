@@ -290,6 +290,19 @@ public class SupplierManageController {
 
     }
 
+    /**
+     * 删除行程
+     * @param userInfo  当前用户
+     * @param id        删除行程的ID
+     * @throws IOException
+     */
+    @RequestMapping(value = "/delRoutes",method = RequestMethod.POST)
+    @ResponseBody
+    public void delRoutes(@AuthenticationPrincipal SystemUser userInfo,@RequestParam Long id) throws IOException{
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
+        touristRouteRepository.delete(id);
+    }
+
 
     //=============================================结算账户
 
@@ -336,6 +349,30 @@ public class SupplierManageController {
 
         return new PageAndSelection<>(sheets,SettlementSheet.selections);
     }
+
+    /**
+     * 未结算的订单列表
+     *
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/notSettledList")
+    public PageAndSelection<SettlementSheet> notSettledList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
+
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
+        Page<SettlementSheet> sheets=settlementSheetService.settlementSheetList(supplier,null,null,createDate
+                , endCreateDate,pageable);
+
+        return new PageAndSelection<>(sheets,SettlementSheet.selections);
+    }
+
+
+
+
 
 
 //    /**

@@ -14,8 +14,9 @@ $(function(){
  * 导出表格配置
  */
 var exportEdit=function(){
-    var $table = $('table');
-    $('#toolbar').find('select').change(function () {
+
+    $('.btn-group.toolbar').find('select').change(function () {
+        var $table = $(".tab-pane.active").find("table");
         var pageSize = $table.bootstrapTable("getOptions").totalRows;
         if ($(this).val() === 'all') {
             pageSize = $table.bootstrapTable("getOptions").totalRows;
