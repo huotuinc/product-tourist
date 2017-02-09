@@ -9,7 +9,6 @@ import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.service.TouristGoodService;
-import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,9 +35,6 @@ public class TouristGoodServiceImpl implements TouristGoodService {
 
     @Autowired
     TouristOrderRepository touristOrderRepository;
-
-    @Autowired
-    private ResourceService resourceService;
 
     @Override
     public TouristGood save(TouristGood data) {
@@ -223,6 +219,8 @@ public class TouristGoodServiceImpl implements TouristGoodService {
             List list = Arrays.asList(sorts);
             if (list.contains(1) && list.contains(0)) {
                 sort = new Sort(Sort.Direction.DESC, "updateTime", "rebate");
+            } else if (list.contains(1)) {
+                sort = new Sort(Sort.Direction.DESC, "rebate");
             } else {
                 sort = new Sort(Sort.Direction.DESC, "updateTime");
             }
