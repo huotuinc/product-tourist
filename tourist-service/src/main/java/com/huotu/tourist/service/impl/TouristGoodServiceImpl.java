@@ -23,6 +23,7 @@ import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -217,19 +218,16 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     public List<TouristGood> findByMddxlTourist(String[] cityNames, Integer[] sorts, Long[] activityIds
             , Long[] touristTypeIds, int offset) {
         int pageNo = (int) Math.ceil(offset / 10F);
+        Sort sort = null;
         if (sorts != null) {
-            for (int sort : sorts) {
-                switch (sort) {
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 0:
-                        break;
-                }
+            List list = Arrays.asList(sorts);
+            if (list.contains(1) && list.contains(0)) {
+                sort = new Sort(Sort.Direction.DESC, "updateTime", "rebate");
+            } else {
+                sort = new Sort(Sort.Direction.DESC, "updateTime");
             }
         }
-        Pageable pageable = new PageRequest(pageNo, 10, new Sort(Sort.Direction.DESC, "updateTime"));
+        Pageable pageable = new PageRequest(pageNo, 10, sort);
         Page<TouristGood> page = touristGoodRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
             predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),

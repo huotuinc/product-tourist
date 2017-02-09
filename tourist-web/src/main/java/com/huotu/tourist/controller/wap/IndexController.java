@@ -57,6 +57,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -489,8 +490,8 @@ public class IndexController {
         List<String> cityNameList = new ArrayList<>();
         if (cityNames != null && cityNames.length > 0) {
             String cityNameStr = "";
+            cityNameList = Arrays.asList(cityNames);
             for (String cityName : cityNames) {
-                cityNameList.add(cityName);
                 cityNameStr += cityName + ",";
             }
             model.addAttribute("cityNames", cityNameStr.substring(0, cityNameStr.length() - 1));
@@ -499,8 +500,8 @@ public class IndexController {
         List<Integer> sortsList = new ArrayList<>();
         if (sorts != null && sorts.length > 0) {
             String sortStr = "";
+            sortsList = Arrays.asList(sorts);
             for (Integer sort : sorts) {
-                sortsList.add(sort);
                 sortStr += sort + ",";
             }
             model.addAttribute("sorts", sortStr.substring(0, sortStr.length() - 1));
@@ -509,8 +510,8 @@ public class IndexController {
         List<Long> activityIdList = new ArrayList<>();
         if (activityIds != null && activityIds.length > 0) {
             String activityIdStr = "";
+            activityIdList = Arrays.asList(activityIds);
             for (Long id : activityIds) {
-                activityIdList.add(id);
                 activityIdStr += id + ",";
             }
             model.addAttribute("activityIds", activityIdStr.substring(0, activityIdStr.length() - 1));
@@ -519,8 +520,8 @@ public class IndexController {
         List<Long> touristTypeIdList = new ArrayList<>();
         if (touristTypeIds != null && touristTypeIds.length > 0) {
             String touristTypeIdStr = "";
+            touristTypeIdList = Arrays.asList(touristTypeIds);
             for (Long id : touristTypeIds) {
-                touristTypeIdList.add(id);
                 touristTypeIdStr += id + ",";
             }
             model.addAttribute("touristTypeIds", touristTypeIdStr.substring(0, touristTypeIdStr.length() - 1));

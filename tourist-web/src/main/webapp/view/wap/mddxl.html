@@ -112,21 +112,26 @@
                                  style="overflow:hidden;padding-bottom:10px; padding-top: 10px">
                                 <ul class="ulxy">
                                     <li class="ulli">
-                                        <div class="ullidiv">
+                                        <div class="ullidiv"
+                                             th:class="${sortsList.contains(1)?'ullidiv on':'ullidiv'}">
                                             <a href="javascript: void(0);"
                                                class="link js-goods clearfix">
-                                                <div class="ullidd" data-value="1"> 佣金最高</div>
+                                                <div class="ullidd" data-value="1"> 佣金比例最高</div>
                                             </a>
                                         </div>
                                     </li>
+                                    <!--<li class="ulli">-->
+                                    <!--<div class="ullidiv"-->
+                                    <!--th:class="${sortsList.contains(2)?'ullidiv on':'ullidiv'}"><a-->
+                                    <!--href="javascript: void(0);"-->
+                                    <!--class="link js-goods clearfix">-->
+                                    <!--<div class="ullidd" data-value="2"> 采购最多</div>-->
+                                    <!--</a></div>-->
+                                    <!--</li>-->
                                     <li class="ulli">
-                                        <div class="ullidiv"><a href="javascript: void(0);"
-                                                                class="link js-goods clearfix">
-                                            <div class="ullidd" data-value="2"> 采购最多</div>
-                                        </a></div>
-                                    </li>
-                                    <li class="ulli">
-                                        <div class="ullidiv"><a href="javascript: void(0);"
+                                        <div class="ullidiv"
+                                             th:class="${sortsList.contains(0)?'ullidiv on':'ullidiv'}"><a
+                                                href="javascript: void(0);"
                                                                 class="link js-goods clearfix">
                                             <div class="ullidd" data-value="0"> 最新发布</div>
                                         </a></div>
