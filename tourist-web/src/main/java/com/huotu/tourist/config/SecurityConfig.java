@@ -102,7 +102,7 @@ class SecurityConfig {
                         String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
                         if (roles.contains("ROLE_MA")) {
                             response.sendRedirect(basePath + "distributionPlatform/");
-                        } else if (roles.contains("ROLE_SUPPLIER")) {
+                        } else if (roles.contains("ROLE_SUPPLIER") || roles.contains("ROLE_OPERATOR")) {
                             response.sendRedirect(basePath + "supplier/");
                         }
                     })

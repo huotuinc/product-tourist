@@ -75,11 +75,15 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         return touristOrderRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
             if(settlement!=null){
-                predicate=cb.and(predicate,cb.isNotNull(root.get("settlement").as(SettlementSheet.class)));
-                if(settlementId!=null){
-                    predicate = cb.and(predicate,cb.equal(root.get("settlement").get("id").as(Long.class),
-                            settlementId));
+                if(settlement){
+                    predicate=cb.and(predicate,cb.isNotNull(root.get("settlement").as(SettlementSheet.class)));
+                }else {
+                    predicate=cb.and(predicate,cb.isNull(root.get("settlement").as(SettlementSheet.class)));
                 }
+            }
+            if(settlementId!=null){
+                predicate = cb.and(predicate,cb.equal(root.get("settlement").get("id").as(Long.class),
+                        settlementId));
             }
             if (supplier != null) {
                 predicate = cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier").as(TouristSupplier.class),

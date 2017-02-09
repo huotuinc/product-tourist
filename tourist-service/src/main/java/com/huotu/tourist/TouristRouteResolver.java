@@ -9,7 +9,6 @@
 
 package com.huotu.tourist;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.TouristRoute;
@@ -50,12 +49,14 @@ public class TouristRouteResolver implements HandlerMethodArgumentResolver {
 
         for(LinkedHashMap<String, Object> l:list){
             TouristRoute touristRoute=new TouristRoute();
+            Long routeId=l.get("id")==null?null:Long.parseLong(l.get("id").toString());
             String routeNo=l.get("routeNo")==null?null:l.get("routeNo").toString();
             LocalDateTime formDate= LocalDateTimeFormatter.toLocalDateTime(
                     l.get("fromDate")==null?null:l.get("fromDate").toString());
             LocalDateTime toDate= LocalDateTimeFormatter.toLocalDateTime(
                     l.get("toDate")==null?null:l.get("toDate").toString());
             int maxPeople= StringUtils.isEmpty(l.get("maxPeople"))?0:Integer.valueOf(l.get("maxPeople").toString());
+            touristRoute.setId(routeId);
             touristRoute.setMaxPeople(maxPeople);
             touristRoute.setRouteNo(routeNo);
             touristRoute.setFromDate(formDate);

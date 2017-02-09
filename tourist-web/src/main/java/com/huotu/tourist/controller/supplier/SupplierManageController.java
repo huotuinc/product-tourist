@@ -196,7 +196,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showTouristGood")
-//    @PreAuthorize("hasRole('Goods')")
+    @PreAuthorize("hasAnyRole({'ROLE_GOODS','ROLE_SUPPLIER'})")
     public String showTouristGood(Long id, Model model) throws IOException {
         TouristGood touristGood;
         if(id==null){
@@ -290,6 +290,19 @@ public class SupplierManageController {
 
     }
 
+    /**
+     * 删除行程
+     * @param userInfo  当前用户
+     * @param id        删除行程的ID
+     * @throws IOException
+     */
+    @RequestMapping(value = "/delRoutes",method = RequestMethod.POST)
+    @ResponseBody
+    public void delRoutes(@AuthenticationPrincipal SystemUser userInfo,@RequestParam Long id) throws IOException{
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
+        touristRouteRepository.delete(id);
+    }
+
 
     //=============================================结算账户
 
@@ -301,6 +314,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSettlement")
+    @PreAuthorize("hasAnyRole({'ROLE_SETTLEMENT','ROLE_SUPPLIER'})")
     public String showSettlement(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
 
@@ -335,6 +349,30 @@ public class SupplierManageController {
 
         return new PageAndSelection<>(sheets,SettlementSheet.selections);
     }
+
+    /**
+     * 未结算的订单列表
+     *
+     * @param pageable
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/notSettledList")
+    public PageAndSelection<SettlementSheet> notSettledList(@AuthenticationPrincipal SystemUser userInfo
+            ,@RequestParam(required = false)LocalDateTime createDate
+            ,@RequestParam(required = false)LocalDateTime endCreateDate
+            , Pageable pageable) throws IOException {
+
+        TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
+        Page<SettlementSheet> sheets=settlementSheetService.settlementSheetList(supplier,null,null,createDate
+                , endCreateDate,pageable);
+
+        return new PageAndSelection<>(sheets,SettlementSheet.selections);
+    }
+
+
+
+
 
 
 //    /**
@@ -471,7 +509,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSaleStatistics")
-//    @PreAuthorize("hasRole('SaleStatistics')")
+    @PreAuthorize("hasAnyRole({'ROLE_STATISTICS','ROLE_SUPPLIER'})")
     public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
         TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
         model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
@@ -620,6 +658,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showSupplierInfo")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public String showSupplierInfo(@AuthenticationPrincipal SystemUser userInfo,Model model) throws IOException{
         TouristSupplier authSupplier=((TouristSupplier)userInfo).getAuthSupplier();
         TouristSupplier supplier=touristSupplierService.getOne(authSupplier.getId());
@@ -655,7 +694,7 @@ public class SupplierManageController {
      * @throws IOException
      */
     @RequestMapping("/showCollectionAccount")
-//    @PreAuthorize("hasRole('CollectionAccount')")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public String showCollectionAccount(@AuthenticationPrincipal SystemUser userInfo ,Model model) throws IOException{
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
         CollectionAccount collectionAccount=collectionAccountRepository.findOne(supplier.getId());
@@ -695,6 +734,7 @@ public class SupplierManageController {
      * @return
      */
     @RequestMapping("/showJurisdiction")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public String showJurisdiction(){
         return viewSupplierPath+"jurisdictionList.html";
     }

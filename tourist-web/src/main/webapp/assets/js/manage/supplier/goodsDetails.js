@@ -62,15 +62,24 @@ var bindTouristDateDel=function(){
             return;
         }
         var that=this;
+        var routeId = $("input[name='trouteId']", $(that).parent()).val();
         layer.confirm('确定删除吗?', function(index){
-            if(false){
+            if (routeId == "") {
+                layer.msg("删除成功！");
+                $(that).parent().remove();
+            } else {
+                var ld = layer.load(5, {shade: false});
                 $.ajax({
                     type:'POST',
-                    url: '',
-                    dataType: 'json',
-                    data: {id:id},
+                    url: delRoutesUrl,
+                    dataType: 'text',
+                    data: {id: routeId},
+                    complete: function () {
+                        layer.close(ld);
+                    },
                     success:function(result){
                         layer.msg("删除成功！");
+                        $(that).parent().remove();
                     },
                     error:function(e){
                         layer.msg("删除出错！");
@@ -78,8 +87,6 @@ var bindTouristDateDel=function(){
                 });
             }
 
-            $(that).parent().remove();
-            layer.close(index);
         });
     });
 };
@@ -90,7 +97,7 @@ var bindTouristDateDel=function(){
 var addTouristDate=function(){
     $("#goodsTouristDates").append('<div class="col-sm-2"> <span>出行时间：</span>' +
         '<input name="toursitDate" ' +
-        'type="text"class="form-control"/><span style="display: none">1</span></div>');
+        'type="text"class="form-control"/><input name="trouteId" type="hidden"/></div>');
     dateRangeEdit();
     bindTouristDateDel();
 };
@@ -156,9 +163,11 @@ var uploadImage=function(isMoreImg,obj){
         url: '/upload/image',
         fileElementId: 'upload',
         dataType: 'json',
+        complete: function () {
+            layer.close(loadPic);
+        },
         success: function(resultModel) {
             if(resultModel.success){
-                layer.close(loadPic);
                 layer.msg("上传成功");
                 var imgTemp=getImgTemp(resultModel.fileName,resultModel.url);
                 var imgTempDiv;
@@ -171,7 +180,6 @@ var uploadImage=function(isMoreImg,obj){
             }
         },
         error: function(data, status, e) {
-            layer.close(loadPic);
             layer.msg("上传失败，请检查网络后重试"+e);
         }
     });
@@ -241,7 +249,7 @@ var submitForm=function(checkStates,obj) {
             fromDate=fromDate.replace("T"," ");
             fromDate=fromDate+":00";
         }
-        var id=$("span",this).eq(1).text();
+        var id = parseInt($("input[name='trouteId']", this).val());
         if(fromDate!=""){
             touristRoutes.push({id:id,fromDate:fromDate});
         }
@@ -274,6 +282,9 @@ var submitForm=function(checkStates,obj) {
             travelledAddress:travelledAddress,price:price,childrenDiscount:childrenDiscount,rebate:rebate,
             receptionPerson:receptionPerson,receptionTelephone:receptionTelephone,maxPeople:maxPeople,
             eventDetails:eventDetails,beCareful:beCareful,routes:JSON.stringify(touristRoutes),checkState:checkStates
+        },
+        complete: function () {
+            layer.close(ld);
         },
         success:function(){
             layer.close(ld);

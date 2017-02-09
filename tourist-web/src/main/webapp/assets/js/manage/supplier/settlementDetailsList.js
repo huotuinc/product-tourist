@@ -1,7 +1,26 @@
 /**
  * Created by slt  2016/12/26.
  */
+$(function () {
+    exportEdit();
+});
 
+/**
+ * 导出表格配置
+ */
+var exportEdit = function () {
+    $('#toolbar').find('select').change(function () {
+        var $table = $("table");
+        var pageSize = $table.bootstrapTable("getOptions").totalRows;
+        if ($(this).val() === 'all') {
+            pageSize = $table.bootstrapTable("getOptions").totalRows;
+        }
+        var a = {
+            exportDataType: $(this).val(), pageSize: pageSize
+        }
+        $table.bootstrapTable('destroy').bootstrapTable(a);
+    });
+};
 
 
 var modifySettlementState=function(){
@@ -31,8 +50,7 @@ var getParams= function(params) {
         settlementId:settlementId,
         pageSize: params.limit, //页面大小
         pageNo: params.offset/params.limit, //页码
-        sort:sort,
-        settlement:true
+        sort: sort
     };
     return temp;
 };
