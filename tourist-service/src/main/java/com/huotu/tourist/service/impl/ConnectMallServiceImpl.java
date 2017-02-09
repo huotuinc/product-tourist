@@ -228,7 +228,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         String orderItem = product.getGoods().getId() + "_" + qualificationsProductId + "_" + 1;
 
         NameValuePair orderItems = new BasicNameValuePair("orderItems", orderItem);
-        return (String) executeMallAPI("Order", "Create", content -> content.getData().get("orderId")
+        return (String) executeMallAPI("Order", "Create", content -> content.getData().get("unionOrderId")
                 , payed, vault, cashScore, memo, remark, identityCard, shipName, shipMobile, memberId, payType, orderItems);
     }
 
@@ -253,7 +253,7 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         String item = product.getGoods().getId() + "_" + order.getTouristGood().getMallProductId() + "_" + order.getTravelers()
                 .size();
         NameValuePair orderItems = new BasicNameValuePair("orderItems", item);
-        return (String) executeMallAPI("Order", "Create", content -> content.getData().get("orderId")
+        return (String) executeMallAPI("Order", "Create", content -> content.getData().get("unionOrderId")
                 , payed, vault, cashScore, memo, remark, identityCard, shipName, shipMobile, memberId, payType, orderItems);
     }
 

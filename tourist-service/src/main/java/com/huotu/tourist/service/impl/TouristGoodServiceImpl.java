@@ -64,8 +64,8 @@ public class TouristGoodServiceImpl implements TouristGoodService {
                 predicate = cb.and(predicate, cb.equal(root.get("recommend").as(Boolean.class),
                         recommend));
             }
-            if(lastId!=null){
-                predicate=cb.and(predicate,cb.lessThan(root.get("id").as(Long.class),lastId));
+            if (lastId != null) {
+                predicate = cb.and(predicate, cb.lessThan(root.get("id").as(Long.class), lastId));
             }
             if (supplier != null) {
                 predicate = cb.and(cb.equal(root.get("touristSupplier").as(TouristSupplier.class), supplier));
@@ -129,24 +129,24 @@ public class TouristGoodServiceImpl implements TouristGoodService {
 
     @Override
     public Page<TouristGood> salesRanking(Long supplierId, Pageable pageable, LocalDateTime orderDate, LocalDateTime endOrderDate) {
-        Page<Object> page=null;
-        if(orderDate!=null&&endOrderDate!=null){
-            touristOrderRepository.goodsSalesRankingByDate(supplierId,orderDate,endOrderDate,pageable);
-        }else {
-            touristOrderRepository.goodsSalesRanking(supplierId,pageable);
+        Page<Object> page = null;
+        if (orderDate != null && endOrderDate != null) {
+            touristOrderRepository.goodsSalesRankingByDate(supplierId, orderDate, endOrderDate, pageable);
+        } else {
+            touristOrderRepository.goodsSalesRanking(supplierId, pageable);
         }
-        List<TouristGood> touristGoods=new ArrayList<>();
-        for(Object o:page){
-            if(o==null){
+        List<TouristGood> touristGoods = new ArrayList<>();
+        for (Object o : page) {
+            if (o == null) {
                 continue;
             }
-            Object[] objects=(Object[])o;
-            if(objects[0]==null){
+            Object[] objects = (Object[]) o;
+            if (objects[0] == null) {
                 continue;
             }
-            touristGoods.add((TouristGood)objects[0]);
+            touristGoods.add((TouristGood) objects[0]);
         }
-        return new PageImpl<>(touristGoods,pageable,page.getTotalElements());
+        return new PageImpl<>(touristGoods, pageable, page.getTotalElements());
     }
 
     @Override
@@ -206,9 +206,43 @@ public class TouristGoodServiceImpl implements TouristGoodService {
             Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
             predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
                     TouristCheckStateEnum.CheckFinish));
-            query = query.groupBy(root.get("destination").get("town"));
+            query.where(predicate);
+            query = query.groupBy(root.get("destination").get("town"), cb.countDistinct(root.get("destination").get
+                    ("town")));
             return query.getGroupRestriction();
         });
+    }
+
+    @Override
+    public List<TouristGood> findByMddxlTourist(String[] cityNames, Integer[] sorts, Long[] activityIds
+            , Long[] touristTypeIds, int offset) {
+        int pageNo = (int) Math.ceil(offset / 10F);
+        if (sorts != null) {
+            for (int sort : sorts) {
+                switch (sort) {
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 0:
+                        break;
+                }
+            }
+        }
+        Pageable pageable = new PageRequest(pageNo, 10, new Sort(Sort.Direction.DESC, "updateTime"));
+        Page<TouristGood> page = touristGoodRepository.findAll((root, query, cb) -> {
+            Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
+            predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
+                    TouristCheckStateEnum.CheckFinish));
+            if (activityIds != null && activityIds.length > 0)
+                predicate = cb.and(predicate, root.get("activityType").get("id").in(activityIds));
+            if (touristTypeIds != null && touristTypeIds.length > 0)
+                predicate = cb.and(predicate, root.get("touristType").get("id").in(touristTypeIds));
+            if (cityNames != null && cityNames.length > 0)
+                predicate = cb.and(predicate, root.get("destination").get("town").in(cityNames));
+            return predicate;
+        }, pageable);
+        return page.getContent();
     }
 
 

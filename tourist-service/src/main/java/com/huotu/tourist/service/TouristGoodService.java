@@ -121,4 +121,16 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      */
     List<TouristGood> findByDestinationTown();
 
+    /**
+     * 下拉列表组合查询商品列表
+     *
+     * @param cityNames      城市名称可以有多个，
+     * @param sorts          排序可以有多个， 0最新发布，1佣金最多，2购买最多
+     * @param activityIds    活动类型id可以有多个
+     * @param touristTypeIds 线路类型id可以有多个
+     * @param offset
+     * @return
+     */
+    List<TouristGood> findByMddxlTourist(String[] cityNames, Integer[] sorts, Long[] activityIds
+            , Long[] touristTypeIds, int offset);
 }

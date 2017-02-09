@@ -19,6 +19,7 @@ import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
+import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.VerificationType;
 import com.huotu.tourist.repository.ActivityTypeRepository;
@@ -29,6 +30,7 @@ import com.huotu.tourist.repository.TouristGoodRepository;
 import com.huotu.tourist.repository.TouristOrderRepository;
 import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ActivityTypeService;
 import com.huotu.tourist.service.ConnectMallService;
@@ -54,6 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +102,8 @@ public class IndexController {
     PurchaserProductSettingRepository purchaserProductSettingRepository;
     @Autowired
     VerificationCodeService verificationCodeService;
+    @Autowired
+    TouristTypeRepository touristTypeRepository;
     @Autowired
     private ActivityTypeRepository activityTypeRepository;
     @Autowired
@@ -237,8 +242,6 @@ public class IndexController {
         model.addAttribute("customerId", connectMallService.getMerchant().getId());
         return "view/wap/procurementPayPage.html";
     }
-
-
 
 
     /**
@@ -460,6 +463,108 @@ public class IndexController {
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyerRepository.saveAndFlush(touristBuyer);
         return "view/wap/msg.html";
+    }
+
+
+    /**
+     * 长途游短途游下拉列表界面
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/mddxl"})
+    public String mddxl(Integer offset, String[] cityNames, Integer[] sorts, Long[] activityIds
+            , Long[] touristTypeIds, Model model) {
+        List<TouristGood> towns = touristGoodService.findByDestinationTown();
+        Map<String, List<TouristGood>> maps = towns.stream().collect(Collectors.groupingBy(g ->
+                g.getDestination().getProvince()));
+
+        model.addAttribute("destinationMaps", maps);
+        List<ActivityType> activityTypes = activityTypeRepository.findAll();
+        model.addAttribute("activityTypes", activityTypes);
+        List<TouristType> touristTypes = touristTypeRepository.findAll();
+        model.addAttribute("touristTypes", touristTypes);
+
+        model.addAttribute("offset", offset);
+        List<String> cityNameList = new ArrayList<>();
+        if (cityNames != null && cityNames.length > 0) {
+            String cityNameStr = "";
+            for (String cityName : cityNames) {
+                cityNameList.add(cityName);
+                cityNameStr += cityName + ",";
+            }
+            model.addAttribute("cityNames", cityNameStr.substring(0, cityNameStr.length() - 1));
+        }
+        model.addAttribute("cityNameList", cityNameList);
+        List<Integer> sortsList = new ArrayList<>();
+        if (sorts != null && sorts.length > 0) {
+            String sortStr = "";
+            for (Integer sort : sorts) {
+                sortsList.add(sort);
+                sortStr += sort + ",";
+            }
+            model.addAttribute("sorts", sortStr.substring(0, sortStr.length() - 1));
+        }
+        model.addAttribute("sortsList", sortsList);
+        List<Long> activityIdList = new ArrayList<>();
+        if (activityIds != null && activityIds.length > 0) {
+            String activityIdStr = "";
+            for (Long id : activityIds) {
+                activityIdList.add(id);
+                activityIdStr += id + ",";
+            }
+            model.addAttribute("activityIds", activityIdStr.substring(0, activityIdStr.length() - 1));
+        }
+        model.addAttribute("activityIdList", activityIdList);
+        List<Long> touristTypeIdList = new ArrayList<>();
+        if (touristTypeIds != null && touristTypeIds.length > 0) {
+            String touristTypeIdStr = "";
+            for (Long id : touristTypeIds) {
+                touristTypeIdList.add(id);
+                touristTypeIdStr += id + ",";
+            }
+            model.addAttribute("touristTypeIds", touristTypeIdStr.substring(0, touristTypeIdStr.length() - 1));
+        }
+        model.addAttribute("touristTypeIdList", touristTypeIdList);
+        return "view/wap/mddxl.html";
+    }
+
+    @RequestMapping(value = {"/mddxlTourist"})
+    public String mddxlTourist(@RequestParam int offset, String[] cityNames, Integer[] sorts, Long[] activityIds
+            , Long[] touristTypeIds, Model model) {
+        List<TouristGood> mddxlGoods = touristGoodService.findByMddxlTourist(cityNames, sorts, activityIds,
+                touristTypeIds, offset);
+        model.addAttribute("mddxlGoods", mddxlGoods);
+        model.addAttribute("offset", offset);
+        if (cityNames != null && cityNames.length > 0) {
+            String cityNameStr = "";
+            for (String cityName : cityNames) {
+                cityNameStr += cityName + ",";
+            }
+            model.addAttribute("cityNames", cityNameStr.substring(0, cityNameStr.length() - 1));
+        }
+        if (sorts != null && sorts.length > 0) {
+            String sortStr = "";
+            for (Integer sort : sorts) {
+                sortStr += sort + ",";
+            }
+            model.addAttribute("sorts", sortStr.substring(0, sortStr.length() - 1));
+        }
+        if (activityIds != null && activityIds.length > 0) {
+            String activityIdStr = "";
+            for (Long id : activityIds) {
+                activityIdStr += id + ",";
+            }
+            model.addAttribute("activityIds", activityIdStr.substring(0, activityIdStr.length() - 1));
+        }
+        if (touristTypeIds != null && touristTypeIds.length > 0) {
+            String touristTypeIdStr = "";
+            for (Long id : touristTypeIds) {
+                touristTypeIdStr += id + ",";
+            }
+            model.addAttribute("touristTypeIds", touristTypeIdStr.substring(0, touristTypeIdStr.length() - 1));
+        }
+        return "view/wap/mddxlTourist.html";
     }
 
 
