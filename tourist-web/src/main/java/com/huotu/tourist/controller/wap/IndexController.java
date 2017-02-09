@@ -138,7 +138,7 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = {"/goodInfo"})
-    public String goodInfo(@RequestParam Long id, Model model) {
+    public String goodInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long id, Model model) {
         TouristGood good = touristGoodRepository.getOne(id);
         Map<String, Integer> routeCount = new HashMap<>();
         for (TouristRoute touristRoute : good.getTouristRoutes()) {
@@ -149,6 +149,8 @@ public class IndexController {
         model.addAttribute("routeCount", routeCount);
         int count = touristGoodRepository.countByTouristSupplier_IdAndDeletedFalseAndTouristCheckState(
                 good.getTouristSupplier().getId(), TouristCheckStateEnum.CheckFinish);
+        user = touristBuyerRepository.findOne(user.getId());
+        model.addAttribute("user", user);
         model.addAttribute("count", count);
         return "/view/wap/touristGoodInfo.html";
     }
@@ -223,11 +225,11 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = {"/cancelOrder"}, method = RequestMethod.GET)
-    public String cancelOrder(@RequestParam Long orderId, Model model) {
+    public String cancelOrder(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long orderId, Model model) {
         TouristOrder order = touristOrderRepository.getOne(orderId);
         TouristGood touristGood = order.getTouristGood();
         touristOrderRepository.delete(order);
-        return goodInfo(touristGood.getId(), model);
+        return goodInfo(user, touristGood.getId(), model);
     }
 
 

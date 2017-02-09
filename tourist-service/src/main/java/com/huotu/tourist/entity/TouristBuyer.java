@@ -215,17 +215,6 @@ public class TouristBuyer implements SystemUser, UserDetails {
     /**
      * 检查一个采购商是否已得到认可
      *
-     * @param buyer 采购商
-     * @return XX
-     */
-    public static boolean isRealBuyer(TouristBuyer buyer) {
-        return buyer.getCheckState() == BuyerCheckStateEnum.CheckFinish
-                && buyer.getPayState() == BuyerPayStateEnum.PayFinish;
-    }
-
-    /**
-     * 检查一个采购商是否已得到认可
-     *
      * @param buyerPath 采购商的查询路径
      * @param builder   cb
      * @return 一个JPA谓语
@@ -235,6 +224,16 @@ public class TouristBuyer implements SystemUser, UserDetails {
                 builder.equal(buyerPath.get("checkState"), BuyerCheckStateEnum.CheckFinish)
                 , builder.equal(buyerPath.get("payState"), BuyerPayStateEnum.PayFinish)
         );
+    }
+
+    /**
+     * 检查一个采购商是否已得到认可
+     *
+     * @return XX
+     */
+    public boolean isRealBuyer() {
+        return this.getCheckState() == BuyerCheckStateEnum.CheckFinish
+                && this.getPayState() == BuyerPayStateEnum.PayFinish;
     }
 
     public boolean isNullResource() {
