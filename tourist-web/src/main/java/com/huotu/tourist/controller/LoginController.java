@@ -76,24 +76,4 @@ public class LoginController {
 
         return "view/manage/login.html";
     }
-
-
-    /**
-     * 错误处理
-     *
-     * @param code        错误代码
-     * @param message     错误消息
-     * @param description 错误描述
-     * @param model
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/error")
-    public String error(Integer code, String message, String description, Model model) throws Exception {
-        model.addAttribute("code", code);
-        model.addAttribute("message", message);
-        model.addAttribute("description", description);
-        return "view/manage/error.html";
-    }
-
 }
