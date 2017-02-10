@@ -138,15 +138,17 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                 predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("payTime").as(LocalDateTime.class), endPayDate));
             }
             if (touristDate != null) {
-                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.joinList("travelers").get("route").get
-                        ("fromDate")
-                        .as(LocalDateTime.class), touristDate));
+                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("travelers").get("route")
+                        .get("fromDate").as(LocalDateTime.class), touristDate));
             }
             if(endTouristDate!=null){
-                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.joinList("travelers").get("route").get("fromDate")
-                        .as(LocalDateTime.class), endTouristDate));
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("travelers").get
+                        ("route").get("fromDate").as(LocalDateTime.class), endTouristDate));
             }
-            return predicate;
+            query.where(predicate);
+            query.groupBy(root.get("id"));
+            query.distinct(true);
+            return query.getRestriction();
         }, pageable);
     }
 

@@ -506,7 +506,6 @@ public class IndexController {
 
     /**
      * 发送短信验证码
-     *
      * @param model
      * @return
      */
@@ -518,7 +517,6 @@ public class IndexController {
 
     /**
      * 验证短信验证码
-     *
      * @param model
      * @return
      */
