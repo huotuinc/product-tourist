@@ -72,8 +72,9 @@ public class OrderController {
         Map map = new HashMap();
         if (user.isBuyer()) {
             try {
+                TouristBuyer tb = (TouristBuyer) user;
                 //采购商资格支付订单
-                TouristBuyer buyer = (TouristBuyer) user;
+                TouristBuyer buyer = touristBuyerRepository.findOne(tb.getId());
                 buyer.setPayType(payType);
                 String mallOrderId = connectMallService.pushBuyerOrderToMall(buyer);
                 buyer.setMallOrderNo(mallOrderId);
@@ -152,11 +153,14 @@ public class OrderController {
 
         System.out.println("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
                 "orderType:" + orderType + " ========");
-        System.out.println("====request.mallOrderNo=" + request.getParameter("mallOrderNo"));
         mallOrderNo = request.getParameter("mallOrderNo");
+        System.out.println("====request.mallOrderNo=" + mallOrderNo);
+
         //线路订单
         if (orderType == 0) {
             TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
+            System.out.println("====touristOrder=" + touristOrder);
+            System.out.println("====touristOrder.state=" + touristOrder.getOrderState());
             if (pay && touristOrder.getOrderState() == OrderStateEnum.NotPay) {
                 touristOrder.setPayType(payType);
                 touristOrder.setPayTime(LocalDateTime.now());

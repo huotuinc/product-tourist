@@ -47,7 +47,7 @@ public class Advice {
     @ExceptionHandler(Throwable.class)
     public String noHandlerFoundException(HttpServletRequest request, Exception ex, Model model) {
 //        log.info(ex.getMessage());
-//        log.error("web request error", ex);
+        log.error("web request error", ex);
         String path = request.getRequestURI();
         model.addAttribute("path", path);
         model.addAttribute("code", 500);
