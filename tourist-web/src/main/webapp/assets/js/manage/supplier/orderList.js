@@ -65,7 +65,7 @@ var dateRangeFormat=function(text){
  * @constructor
  */
 var datecancelEdit=function(){
-    $('input[name="orderDate"]').on('cancel.daterangepicker', function (ev, picker) {
+    $('input[class="form-control Date"]').on('cancel.daterangepicker', function (ev, picker) {
         $(this).val("");
     });
 };
