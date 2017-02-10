@@ -146,7 +146,6 @@ public class TouristOrderServiceImpl implements TouristOrderService {
                         ("route").get("fromDate").as(LocalDateTime.class), endTouristDate));
             }
             query.where(predicate);
-            query.groupBy(root.get("id"));
             query.distinct(true);
             return query.getRestriction();
         }, pageable);
