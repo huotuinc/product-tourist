@@ -17,7 +17,15 @@ import com.huotu.tourist.model.SimpleSelection;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -43,12 +51,12 @@ public class TouristOrder extends BaseModel {
             , new SimpleSelection<TouristOrder, BigDecimal>("orderMoney", "orderMoney")
             , new SimpleSelection<TouristOrder, String>("touristBuyer.buyerName", "buyerName")
             , new SimpleSelection<TouristOrder, String>("orderNo", "orderNo")
-            , new SimpleSelection<TouristOrder, String>("payType.value", "payType")
             , new SimpleSelection<TouristOrder, String>("remarks", "remarks")
             , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
             , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
             , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
+            , new SimpleSelection<TouristOrder, String>("payType.value", "payType")
             , new Selection<TouristOrder, BigDecimal>() {
                 @Override
                 public BigDecimal apply(TouristOrder touristOrder) {

@@ -26,6 +26,7 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
 
 
     static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    static final DateTimeFormatter dateTimeFormatter2 = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 
     /**
      * 字符串转换成LocalDateTime
@@ -49,6 +50,16 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
      */
     public static String toStr(LocalDateTime dateTime) {
         return dateTimeFormatter.format(dateTime);
+    }
+
+    /**
+     * 日期转换为字符串
+     *
+     * @param dateTime
+     * @return yyyyMMddhhmmssSSS 格式字符
+     */
+    public static String toStr2(LocalDateTime dateTime) {
+        return dateTimeFormatter2.format(dateTime);
     }
 
     @Override

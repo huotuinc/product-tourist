@@ -13,7 +13,11 @@ import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.login.SystemUser;
 import com.huotu.tourist.model.OrderStateQuery;
-import com.huotu.tourist.repository.*;
+import com.huotu.tourist.repository.TouristGoodRepository;
+import com.huotu.tourist.repository.TouristOrderRepository;
+import com.huotu.tourist.repository.TouristRouteRepository;
+import com.huotu.tourist.repository.TouristSupplierRepository;
+import com.huotu.tourist.repository.TravelerRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.TouristOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -313,13 +317,12 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             int num = travelerRepository.countByRoute(route);
             if (good.getMaxPeople() - num >= travelers.size()) {
                 //todo 锁定线路不允许被其他游客同时添加
-
-                Random random = new Random(10000);
+                Random random = new Random();
                 TouristOrder order = new TouristOrder();
                 order.setTouristGood(good);
                 order.setOrderState(OrderStateEnum.NotPay);
                 order.setSettlement(null);
-                order.setOrderNo(random.nextInt() + LocalDateTimeFormatter.toStr(LocalDateTime.now()) + random.nextInt());
+                order.setOrderNo(LocalDateTimeFormatter.toStr2(LocalDateTime.now()) + "" + (random.nextInt(99999) + 10000));
                 order.setCreateTime(LocalDateTime.now());
                 order.setRemarks(remark);
                 BigDecimal adult = good.getPrice().multiply(new BigDecimal(travelers.stream().filter(traveler ->

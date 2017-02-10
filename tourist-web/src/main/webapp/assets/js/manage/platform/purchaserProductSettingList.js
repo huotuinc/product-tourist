@@ -17,7 +17,7 @@ getParams = function (params) {
 
 bannerUriFormatter = function (value, row, index) {
     return [
-        '<img src="' + row.bannerUri + '" width="50" height="50" style="vertical-align:bottom"/>'
+        '<img src="' + row.bannerImgUri + '" width="50" height="50" style="vertical-align:bottom"/>'
     ].join('');
 };
 updateFormatter = function (value, row, index) {

@@ -9,7 +9,6 @@
 
 package com.huotu.tourist.controller.wap;
 
-import com.huotu.tourist.TravelerList;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
@@ -18,10 +17,8 @@ import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.Banner;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
-import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.TouristType;
-import com.huotu.tourist.entity.Traveler;
 import com.huotu.tourist.model.VerificationType;
 import com.huotu.tourist.repository.ActivityTypeRepository;
 import com.huotu.tourist.repository.BannerRepository;
@@ -183,70 +180,6 @@ public class IndexController {
         }
         return "view/wap/procurement.html";
     }
-
-    /**
-     * 添加采购信息
-     *
-     * @param travelers    游客信息
-     * @param goodId       商品id
-     * @param routeId      行程ID
-     * @param buyerMoney   订单总金额
-     * @param mallIntegral 商城积分 null代表未使用积分
-     * @param mallBalance  商城余额 null代表未使用余额
-     * @param mallCoffers  商城小金库 null代表未使用小金库
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = {"/addOrderInfo"}, method = RequestMethod.POST)
-    @ResponseBody
-    public Map addOrderInfo(@AuthenticationPrincipal TouristBuyer user, @TravelerList
-            List<Traveler> travelers, @RequestParam Long goodId, @RequestParam Long routeId, Float buyerMoney
-            , Float mallIntegral, Float mallBalance, Float mallCoffers, String remark, Model model) {
-        Map map = new HashMap();
-        try {
-            TouristOrder order = touristOrderService.addOrderInfo(user, travelers, goodId, routeId, mallIntegral,
-                    mallBalance, mallCoffers, remark);
-            if (order != null) {
-                map.put("orderId", order.getId().toString());
-            } else {
-                map.put("msg", "行程游客人数不足");
-            }
-        } catch (IOException e) {
-            map.put("msg", "游客不能为空，请填添加游客");
-        } catch (IllegalStateException e) {
-            map.put("msg", "积分同步失败，请重试");
-        }
-        return map;
-    }
-
-    /**
-     * 取消采购单
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = {"/cancelOrder"}, method = RequestMethod.GET)
-    public String cancelOrder(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long orderId, Model model) {
-        TouristOrder order = touristOrderRepository.getOne(orderId);
-        TouristGood touristGood = order.getTouristGood();
-        touristOrderRepository.delete(order);
-        return goodInfo(user, touristGood.getId(), model);
-    }
-
-
-    /**
-     * 跳转至订单支付页
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = {"/toProcurementPayPage"})
-    public String toProcurementPayPage(@RequestParam Long orderId, Model model) {
-        model.addAttribute("order", touristOrderRepository.getOne(orderId));
-        model.addAttribute("customerId", connectMallService.getMerchant().getId());
-        return "view/wap/procurementPayPage.html";
-    }
-
 
     /**
      * 最新线路列表
