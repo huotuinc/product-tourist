@@ -119,7 +119,7 @@ public interface TouristGoodService extends BaseService<TouristGood, Long> {
      *
      * @return
      */
-    List<TouristGood> findByDestinationTown();
+    List<Address> findByDestinationTown();
 
     /**
      * 下拉列表组合查询商品列表

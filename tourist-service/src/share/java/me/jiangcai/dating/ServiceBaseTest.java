@@ -45,7 +45,12 @@ import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.service.ConnectMallService;
+import com.huotu.tourist.service.LoginService;
+import com.huotu.tourist.service.SettlementSheetService;
+import com.huotu.tourist.service.SupplierOperatorService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -131,7 +136,6 @@ public abstract class ServiceBaseTest extends SpringWebTest {
      * 每页几条字符串名称
      */
     protected String sizeParameterName = "pageSize";
-
 
 
     public String randomBankCard() {
@@ -595,7 +599,23 @@ public abstract class ServiceBaseTest extends SpringWebTest {
         touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
         touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
         touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
+
         touristGood.setRecommend(false);
+        return touristGoodRepository.saveAndFlush(touristGood);
+    }
+
+    protected TouristGood createTouristGood(String name, ActivityType activityType, TouristType touristType
+            , TouristCheckStateEnum checkState, TouristSupplier touristSupplier, Address address) {
+        TouristGood touristGood = new TouristGood();
+        touristGood.setTouristName(name == null ? UUID.randomUUID().toString() : name);
+        touristGood.setActivityType(activityType == null ? createActivityType(null) : activityType);
+        touristGood.setTouristType(touristType == null ? createTouristType(null) : touristType);
+        touristGood.setTouristCheckState(checkState == null ? randomTouristCheckStateEnum() : checkState);
+        touristGood.setTouristSupplier(touristSupplier == null ? createTouristSupplier(null) : touristSupplier);
+        touristGood.setDestination(address);
+        touristGood.setRecommend(false);
+        touristGood.setDeleted(false);
+        touristGood.setTouristCheckState(TouristCheckStateEnum.CheckFinish);
         return touristGoodRepository.saveAndFlush(touristGood);
     }
 

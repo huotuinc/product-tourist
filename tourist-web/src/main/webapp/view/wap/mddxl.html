@@ -44,8 +44,8 @@
                 </div>
             </div>
             <!--/*@thymesVar id="destinationMaps" type="java.util.Map"*/-->
-            <!--/*@thymesVar id="entry" type="java.util.Map.Entry<String,List<com.huotu.tourist.entity.TouristGood>>"*/-->
-            <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
+            <!--/*@thymesVar id="entry" type="java.util.Map.Entry<String,List<com.huotu.tourist.entity.Address>>"*/-->
+            <!--/*@thymesVar id="address" type="com.huotu.tourist.entity.Address"*/-->
             <!--/*@thymesVar id="cityNameList" type="java.util.List<java.lang.String>"*/-->
             <!--/*@thymesVar id="activityIdList" type="java.util.List<java.lang.Integer>"*/-->
             <!--/*@thymesVar id="touristTypeIdList" type="java.util.List<java.lang.Long>"*/-->
@@ -73,14 +73,14 @@
                                  style="overflow:hidden;padding-bottom:10px; padding-top: 10px">
                                 <ul class="ulxy" th:each="entry : ${destinationMaps.entrySet()}" data-province="浙江"
                                     th:attr="data-province=${entry.key}">
-                                    <li class="ulli" th:each="good : ${entry.value}">
+                                    <li class="ulli" th:each="address : ${entry.value}">
                                         <div class="ullidiv"
-                                             th:class="${cityNameList.contains(good.destination.town)?'ullidiv on':'ullidiv'}">
+                                             th:class="${cityNameList.contains(address.town)?'ullidiv on':'ullidiv'}">
                                             <a
                                                     class="link js-goods clearfix">
                                                 <div class="ullidd" data-value="西安"
-                                                     th:attr="data-value=${good.destination.town}"
-                                                     th:text="${good.destination.town}">
+                                                     th:attr="data-value=${address.town}"
+                                                     th:text="${address.town}">
                                                     西安
                                                 </div>
                                             </a>

@@ -14,6 +14,7 @@ import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.entity.ActivityType;
+import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.Banner;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
@@ -342,10 +343,9 @@ public class IndexController {
      */
     @RequestMapping(value = {"/destinationList"})
     public String destinationList(Model model) {
-        List<TouristGood> towns = touristGoodService.findByDestinationTown();
-        Map<String, List<TouristGood>> maps = towns.stream().collect(Collectors.groupingBy(g ->
-                g.getDestination().getProvince()));
-
+        List<Address> towns = touristGoodService.findByDestinationTown();
+        Map<String, List<Address>> maps = towns.stream().collect(Collectors.groupingBy(address ->
+                address.getProvince()));
         model.addAttribute("destinationMaps", maps);
         return "view/wap/destination.html";
     }
@@ -478,9 +478,9 @@ public class IndexController {
     @RequestMapping(value = {"/mddxl"})
     public String mddxl(Integer offset, String[] cityNames, Integer[] sorts, Long[] activityIds
             , Long[] touristTypeIds, Model model) {
-        List<TouristGood> towns = touristGoodService.findByDestinationTown();
-        Map<String, List<TouristGood>> maps = towns.stream().collect(Collectors.groupingBy(g ->
-                g.getDestination().getProvince()));
+        List<Address> towns = touristGoodService.findByDestinationTown();
+        Map<String, List<Address>> maps = towns.stream().collect(Collectors.groupingBy(address ->
+                address.getProvince()));
 
         model.addAttribute("destinationMaps", maps);
         List<ActivityType> activityTypes = activityTypeRepository.findAll();

@@ -20,8 +20,8 @@
     <div class="app-edit swiper-container">
         <div class="superli clearfix editing">
             <!--/*@thymesVar id="destinationMaps" type="java.util.Map"*/-->
-            <!--/*@thymesVar id="entry" type="java.util.Map.Entry<String,List<com.huotu.tourist.entity.TouristGood>>"*/-->
-            <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
+            <!--/*@thymesVar id="entry" type="java.util.Map.Entry<String,List<com.huotu.tourist.entity.Address>>"*/-->
+            <!--/*@thymesVar id="address" type="com.huotu.tourist.entity.Address"*/-->
             <div class="control-group">
                 <div class="custom-tag-list clearfix">
                     <div class="custom-tag-list-menu-block js-collection-region">
@@ -43,12 +43,12 @@
                     <div class="custom-tag-list-goods" style="overflow:hidden;padding-bottom:10px;">
                         <ul class="ulxy" th:each="entry : ${destinationMaps.entrySet()}" data-province="浙江"
                             th:attr="data-province=${entry.key}">
-                            <li class="ulli" th:each="good : ${entry.value}">
+                            <li class="ulli" th:each="address : ${entry.value}">
                                 <div class="ullidiv">
                                     <a href="destinationGoods.html"
-                                       th:href="@{/wap/destinationGoods(type=1,value=${good.destination.town})}"
+                                       th:href="@{/wap/destinationGoods(type=1,value=${address.town})}"
                                        class="link js-goods clearfix">
-                                        <div class="ullidd" th:text="${good.destination.town}"> 西安</div>
+                                        <div class="ullidd" th:text="${address.town}"> 西安</div>
                                     </a>
                                 </div>
                             </li>

@@ -1,12 +1,16 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.common.TouristCheckStateEnum;
+import com.huotu.tourist.entity.Address;
 import com.huotu.tourist.entity.TouristGood;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 线路商品持久层
@@ -77,4 +81,7 @@ public interface TouristGoodRepository extends JpaRepository<TouristGood, Long>,
     Page<TouristGood> findByDestination_TownAndDeletedFalseAndTouristCheckState(String value, Pageable pageRequest,
                                                                                 TouristCheckStateEnum checkFinish);
 
+    @Query("select tg.destination from TouristGood as tg where tg.deleted=?1 and tg.touristCheckState=?2 " +
+            "group by tg.destination.town")
+    List<Address> findByDestinationTown(boolean b, TouristCheckStateEnum checkFinish);
 }

@@ -197,17 +197,19 @@ public class TouristGoodServiceImpl implements TouristGoodService {
     }
 
 
+
     @Override
-    public List<TouristGood> findByDestinationTown() {
-        return touristGoodRepository.findAll((root, query, cb) -> {
-            Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
-            predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
-                    TouristCheckStateEnum.CheckFinish));
-            query.where(predicate);
-            query = query.groupBy(root.get("destination").get("town"), cb.countDistinct(root.get("destination").get
-                    ("town")));
-            return query.getGroupRestriction();
-        });
+    public List<Address> findByDestinationTown() {
+        List<Address> list = touristGoodRepository.findByDestinationTown(false, TouristCheckStateEnum.CheckFinish);
+        return list;
+//        return touristGoodRepository.findAll((root, query, cb) -> {
+//            Predicate predicate = cb.equal(root.get("deleted").as(Boolean.class), false);
+//            predicate = cb.and(predicate, cb.equal(root.get("touristCheckState").as(TouristCheckStateEnum.class),
+//                    TouristCheckStateEnum.CheckFinish));
+//            query = query.where(predicate);
+//            query = query.groupBy(root.get("destination").get("town"));
+//            return query.getRestriction();
+//        });
     }
 
     @Override
