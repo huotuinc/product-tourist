@@ -10,11 +10,14 @@
 package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.OrderStateEnum;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.*;
 import me.jiangcai.dating.ServiceBaseTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -165,6 +168,274 @@ public class OrderServiceTest extends ServiceBaseTest {
         Assert.isTrue(moneyAct.compareTo(touristBuyerMoney) == 0);
 
 
+    }
+
+
+    @Test
+    public void touristOrdersTest() throws Exception {
+        String sltSuplierName = "slt";
+        String wySupplierName = "wy";
+        String queryOrderNo = "123456789";
+        PayTypeEnum queryPayType = PayTypeEnum.Alipay;
+        LocalDateTime queryOrderDate = LocalDateTime.of(2016, 5, 1, 0, 0, 0);
+        LocalDateTime queryPayDate = LocalDateTime.of(2016, 7, 1, 0, 0, 0);
+        LocalDateTime queryTouristDate = LocalDateTime.of(2016, 3, 1, 0, 0, 0);
+        OrderStateEnum queryOrderState = OrderStateEnum.Finish;
+        TouristSupplier sltSupplier = createTouristSupplier(sltSuplierName);
+        TouristSupplier wySupplier = createTouristSupplier(wySupplierName);
+        TouristGood sltGoods = createTouristGood("sltGoods", null, null, null, sltSupplier, null, null, null, null
+                , null, null, null, null, null, null, null, null, 11, null, null, null);
+        TouristGood wyGoods = createTouristGood("wyGoods", null, null, null, wySupplier, null, null, null, null
+                , null, null, null, null, null, null, null, null, 11, null, null, null);
+        String GoodsNameStr = "sltNameGoods";
+        TouristGood nameGoods = createTouristGood(GoodsNameStr, null, null, null, null, null, null, null, null
+                , null, null, null, null, null, null, null, null, 11, null, null, null);
+        String queryBuyerName = "sltBuyer";
+        TouristBuyer buyer = createTouristBuyer(queryBuyerName, null, "12345678955", null);
+        String buyerTel = "13012345678";
+        TouristBuyer telBuyer = createTouristBuyer("wyBuyer", null, buyerTel, null);
+
+        TouristBuyer otherBuyer = createTouristBuyer("otherBuyer", null, "13065489787", null);
+
+        SettlementSheet sheet = createSettlementSheet(null, sltSupplier, new BigDecimal(200), null, null, null);
+
+        SettlementSheet querySheetId = createSettlementSheet(null, wySupplier, new BigDecimal(400), null, null, null);
+
+        List<TouristOrder> supplierList = new ArrayList<>();
+        List<TouristOrder> supplierNameList = new ArrayList<>();
+        List<TouristOrder> orderNoList = new ArrayList<>();
+        List<TouristOrder> touristNameList = new ArrayList<>();
+        List<TouristOrder> buyerNameList = new ArrayList<>();
+        List<TouristOrder> telList = new ArrayList<>();
+        List<TouristOrder> payTypeEnumList = new ArrayList<>();
+        List<TouristOrder> orderDateList = new ArrayList<>();
+        List<TouristOrder> payDateList = new ArrayList<>();
+        List<TouristOrder> touristDateList = new ArrayList<>();
+        List<TouristOrder> orderStateEnumList = new ArrayList<>();
+        List<TouristOrder> settlementList = new ArrayList<>();
+        List<TouristOrder> pageableList = new ArrayList<>();
+        List<TouristOrder> settlementIdList = new ArrayList<>();
+
+        Random random = new Random();
+        List<TouristBuyer> allBuyers = touristBuyerRepository.findAll();
+        int n = 0;
+        for (int i = 0; i < 40; i++) {
+            boolean supplierRan = random.nextBoolean();
+            boolean supplierNameRan = random.nextBoolean();
+            boolean orderNoLRan = i == 0;
+            boolean touristNameRan = random.nextBoolean();
+            boolean buyerNameRan = random.nextBoolean();
+            boolean telRan = random.nextBoolean();
+            boolean payTypeEnumRan = random.nextBoolean();
+            boolean orderDateRan = random.nextBoolean();
+            boolean payDateRan = random.nextBoolean();
+            boolean touristDateRan = random.nextBoolean();
+            boolean orderStateEnumRan = random.nextBoolean();
+            boolean settlementRan = random.nextBoolean();
+            boolean pageableRan = i > 9 && i < 20;
+            boolean settlementIdRan = random.nextBoolean();
+
+            TouristOrder order = new TouristOrder();
+            if (supplierRan) {
+                order.setTouristGood(sltGoods);
+            } else {
+                if (supplierNameRan) {
+                    order.setTouristGood(wyGoods);
+                } else {
+                    if (touristNameRan) {
+                        order.setTouristGood(nameGoods);
+                    }
+                }
+            }
+
+
+            if (orderNoLRan) {
+                order.setOrderNo(queryOrderNo);
+            }
+
+            if (buyerNameRan) {
+                order.setTouristBuyer(buyer);
+            } else {
+                if (telRan) {
+                    order.setTouristBuyer(telBuyer);
+                } else {
+                    order.setTouristBuyer(otherBuyer);
+                }
+            }
+
+
+            if (payTypeEnumRan) {
+                order.setPayType(queryPayType);
+            } else {
+                order.setPayType(PayTypeEnum.WeixinPay);
+            }
+
+
+            if (orderDateRan) {
+                order.setCreateTime(queryOrderDate);
+            }
+
+
+            if (payDateRan) {
+                order.setPayTime(queryPayDate);
+            }
+
+
+            if (orderStateEnumRan) {
+                order.setOrderState(queryOrderState);
+            } else {
+                order.setOrderState(OrderStateEnum.NotFinish);
+            }
+
+            if (settlementRan && settlementIdRan) {
+                order.setSettlement(querySheetId);
+
+            }
+
+            TouristOrder orderAct = createTouristOrder(order.getTouristGood(), order.getTouristBuyer(), order.getOrderNo()
+                    , order.getOrderState(), order.getCreateTime(), order.getPayTime(), order.getPayType(), null
+                    , order.getSettlement(), order.getOrderMoney());
+
+
+            if (supplierRan) {
+                supplierList.add(orderAct);
+            } else {
+                if (supplierNameRan) {
+                    supplierNameList.add(orderAct);
+                } else {
+                    if (touristNameRan) {
+                        touristNameList.add(orderAct);
+                    }
+                }
+            }
+
+            if (orderNoLRan) {
+                orderNoList.add(orderAct);
+            }
+
+            if (buyerNameRan) {
+                buyerNameList.add(orderAct);
+            } else {
+                if (telRan) {
+                    telList.add(orderAct);
+                }
+            }
+
+            if (payTypeEnumRan) {
+                payTypeEnumList.add(orderAct);
+            }
+
+            if (orderDateRan) {
+                orderDateList.add(orderAct);
+            }
+
+            if (payDateRan) {
+                payDateList.add(orderAct);
+            }
+
+            if (orderStateEnumRan) {
+                orderStateEnumList.add(orderAct);
+            }
+
+            if (settlementRan && settlementIdRan) {
+                settlementList.add(orderAct);
+                settlementIdList.add(orderAct);
+
+            }
+
+            if (pageableRan) {
+                pageableList.add(orderAct);
+            }
+
+
+        }
+
+        List<TouristOrder> orderListAct = touristOrderService.touristOrders(sltSupplier, null, null, null, null, null, null
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(supplierList));
+
+        orderListAct = touristOrderService.touristOrders(null, wySupplierName, null, null, null, null, null
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(supplierNameList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, queryOrderNo, null, null, null, null
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(orderNoList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, GoodsNameStr, null, null, null
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(touristNameList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, queryBuyerName, null, null
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(buyerNameList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, buyerTel, null
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(telList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, queryPayType
+                , null, null, null, null, null, null, null, null, null, null).getContent();
+        Assert.isTrue(orderListAct.equals(payTypeEnumList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , queryOrderDate.plusDays(-10), queryOrderDate.plusDays(20), null, null, null, null, null, null, null, null)
+                .getContent();
+        Assert.isTrue(orderListAct.equals(orderDateList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, queryPayDate.plusDays(-10), queryPayDate.plusDays(10), null, null, null, null, null, null)
+                .getContent();
+        Assert.isTrue(orderListAct.equals(payDateList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, null, null, null, null, queryOrderState, null, null, null)
+                .getContent();
+        Assert.isTrue(orderListAct.equals(orderStateEnumList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, null, null, null, null, queryOrderState, null, null, null)
+                .getContent();
+        Assert.isTrue(orderListAct.equals(orderStateEnumList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, null, null, null, null, null, true, null, null)
+                .getContent();
+        Assert.isTrue(orderListAct.equals(settlementList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, null, null, null, null, null, null, new PageRequest(1, 10), null)
+                .getContent();
+        Assert.isTrue(orderListAct.equals(pageableList));
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, null, null, null, null, null, null, null, querySheetId.getId())
+                .getContent();
+        Assert.isTrue(orderListAct.equals(settlementIdList));
+
+
+        for (int i = 0; i < 10; i++) {
+            addRouteAndTravelers(sltGoods, queryTouristDate);
+        }
+
+
+        orderListAct = touristOrderService.touristOrders(null, null, null, null, null, null, null
+                , null, null, null, null, queryTouristDate.plusDays(-10), queryTouristDate.plusDays(20), null, null, null, null)
+                .getContent();
+//        Assert.isTrue(orderListAct.equals(touristDateList));
+
+
+    }
+
+    @Transactional
+    private void addRouteAndTravelers(TouristGood good, LocalDateTime touristDate) {
+        TouristOrder order = createTouristOrder(good, null, null, null, null, null, null, null, null, null);
+        TouristRoute route = createTouristRoute(randomString(), good, touristDate, null, 10);
+        List<Traveler> travelers = new ArrayList<>();
+        for (int j = 0; j < 5; j++) {
+            travelers.add(createTraveler(route, order));
+        }
+        order.setTravelers(travelers);
     }
 
 

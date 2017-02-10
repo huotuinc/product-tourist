@@ -51,12 +51,34 @@ public class TouristOrder extends BaseModel {
             , new SimpleSelection<TouristOrder, BigDecimal>("orderMoney", "orderMoney")
             , new SimpleSelection<TouristOrder, String>("touristBuyer.buyerName", "buyerName")
             , new SimpleSelection<TouristOrder, String>("orderNo", "orderNo")
+//            , new SimpleSelection<TouristOrder, String>("payType.value", "payType")
             , new SimpleSelection<TouristOrder, String>("remarks", "remarks")
             , new SimpleSelection<TouristOrder, String>("orderState.value", "orderStateValue")
             , new SimpleSelection<TouristOrder, String>("orderState.code", "orderStateCode")
-            , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
-            , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
-            , new SimpleSelection<TouristOrder, String>("payType.value", "payType")
+//            , new SimpleSelection<TouristOrder, String>("payType.value", "payTypeValue")
+//            , new SimpleSelection<TouristOrder, String>("payType.code", "payTypeCode")
+            , new Selection<TouristOrder, Object>() {
+                @Override
+                public Object apply(TouristOrder touristOrder) {
+                    return touristOrder.getPayType() == null ? null : touristOrder.getPayType().getValue();
+                }
+
+                @Override
+                public String getName() {
+                    return "payTypeValue";
+                }
+            }
+            , new Selection<TouristOrder, Object>() {
+                @Override
+                public Object apply(TouristOrder touristOrder) {
+                    return touristOrder.getPayType() == null ? null : touristOrder.getPayType().getCode();
+                }
+
+                @Override
+                public String getName() {
+                    return "payTypeCode";
+                }
+            }
             , new Selection<TouristOrder, BigDecimal>() {
                 @Override
                 public BigDecimal apply(TouristOrder touristOrder) {

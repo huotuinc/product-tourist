@@ -548,7 +548,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
             , PayTypeEnum payType, String remark, SettlementSheet settlement, BigDecimal orderMoney) {
         TouristOrder order = new TouristOrder();
         order.setTouristGood(good == null ? createTouristGood(null, null, null, null, null) : good);
-        order.setTouristBuyer(buyer == null ? createTouristBuyer(null, null, null, null) : buyer);
+        order.setTouristBuyer(buyer);
         order.setOrderNo(orderNo == null ? UUID.randomUUID().toString() : orderNo);
         order.setCreateTime(createTime == null ? LocalDateTime.now() : createTime);
         order.setOrderState(orderState == null ? randomOrderStateEnum() : orderState);
@@ -666,7 +666,7 @@ public abstract class ServiceBaseTest extends SpringWebTest {
     protected TouristBuyer createTouristBuyer(String buyerName, String buyerDirector, String telPhone
             , BuyerCheckStateEnum buyerCheckState) {
         TouristBuyer touristBuyer = new TouristBuyer();
-        touristBuyer.setId(256421L);
+        touristBuyer.setId(random.nextLong());
         touristBuyer.setCreateTime(LocalDateTime.now());
         touristBuyer.setBuyerName(buyerName == null ? UUID.randomUUID().toString() : buyerName);
         touristBuyer.setBuyerDirector(buyerDirector == null ? UUID.randomUUID().toString() : buyerDirector);
