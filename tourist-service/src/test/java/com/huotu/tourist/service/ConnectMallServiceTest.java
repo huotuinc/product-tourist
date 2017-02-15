@@ -141,7 +141,15 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
             if (environment.acceptsProfiles(TouristGoodService.Mall_Resource_Create_Profile))
                 productRestRepository.deleteByPK(good.getMallProductId().toString());
         }
+    }
 
+    @Test
+    public void testCreateOrder() throws IOException {
+        TouristGood good = createRandomTouristGood(22662L);
+        TouristBuyer buyer = createRandomTouristBuyer(256421L);
+        TouristOrder touristOrder = createRandomTouristOrder(good, buyer);
+        String mallOrderId = connectMallService.pushOrderToMall(touristOrder);
+        System.out.println(mallOrderId);
     }
 
 

@@ -149,10 +149,10 @@ public class ConnectMallServiceImpl implements ConnectMallService {
         Map<String, Object> logicParameters = new HashMap<>();
         for (NameValuePair pair : parameters) {
             if (!StringUtils.isEmpty(pair.getValue())) {
-                logicParameters.put(pair.getName(), pair.getValue());
+                logicParameters.put(pair.getName().toLowerCase(), pair.getValue());
             }
         }
-        logicParameters.put("appId", appId);
+        logicParameters.put("appId".toLowerCase(), appId);
         logicParameters.put("token", token);
         logicParameters.put("timestamp", timestamp);
         String sign = SignBuilder.buildSign(new TreeMap<>(logicParameters), null, secretKey);
