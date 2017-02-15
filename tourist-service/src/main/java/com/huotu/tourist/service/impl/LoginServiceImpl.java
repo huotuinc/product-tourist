@@ -9,9 +9,11 @@
 
 package com.huotu.tourist.service.impl;
 
+import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.login.Login;
 import com.huotu.tourist.login.PlatformManager;
 import com.huotu.tourist.repository.LoginRepository;
+import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author CJ
@@ -33,6 +37,8 @@ public class LoginServiceImpl implements LoginService {
     private LoginRepository loginRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TouristTypeRepository touristTypeRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -73,5 +79,21 @@ public class LoginServiceImpl implements LoginService {
             manager.setAuthorityList(Collections.singleton("ROOT"));
             updatePassword(manager, DefaultRootPassword);
         }
+        List<TouristType> touristTypes = touristTypeRepository.findByTypeName("长途游");
+        if (touristTypes == null || touristTypes.size() == 0) {
+            TouristType touristType = new TouristType();
+            touristType.setTypeName("长途游");
+            touristType.setCreateTime(LocalDateTime.now());
+            touristTypeRepository.saveAndFlush(touristType);
+        }
+        touristTypes = touristTypeRepository.findByTypeName("短途游");
+        if (touristTypes == null || touristTypes.size() == 0) {
+            TouristType touristType = new TouristType();
+            touristType.setTypeName("短途游");
+            touristType.setCreateTime(LocalDateTime.now());
+            touristTypeRepository.saveAndFlush(touristType);
+        }
+
+
     }
 }

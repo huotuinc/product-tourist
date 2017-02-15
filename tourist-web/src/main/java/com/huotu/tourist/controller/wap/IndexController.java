@@ -126,6 +126,10 @@ public class IndexController {
         model.addAttribute("recommendGoods", recommendGoods);
         List<ActivityType> activityTypes = activityTypeRepository.findByDeletedFalse(new PageRequest(0, 9)).getContent();
         model.addAttribute("activityTypes", activityTypes);
+        List<TouristType> cty = touristTypeRepository.findByTypeName("长途游");
+        List<TouristType> dty = touristTypeRepository.findByTypeName("短途游");
+        model.addAttribute("cty", cty.get(0).getId());
+        model.addAttribute("dty", dty.get(0).getId());
         return "view/wap/index.html";
     }
 
