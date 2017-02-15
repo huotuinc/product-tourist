@@ -10,6 +10,7 @@
 package com.huotu.tourist.service;
 
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
+import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristOrder;
@@ -150,6 +151,11 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         TouristOrder touristOrder = createRandomTouristOrder(good, buyer);
         String mallOrderId = connectMallService.pushOrderToMall(touristOrder);
         System.out.println(mallOrderId);
+    }
+
+    @Test
+    public void ss() {
+        PayTypeEnum payType = Enum.valueOf(PayTypeEnum.class, 0);
     }
 
 

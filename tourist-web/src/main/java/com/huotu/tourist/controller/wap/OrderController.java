@@ -216,7 +216,7 @@ public class OrderController {
     @Transactional
     @ResponseBody
     public void orderPayCallback(@RequestParam String mallOrderNo,
-                                 @RequestParam PayTypeEnum payType, @RequestParam boolean pay, int orderType,
+                                 @RequestParam Integer payType, @RequestParam boolean pay, int orderType,
                                  HttpServletRequest request, Model model) {
 
         System.out.println("======== pay:" + pay + " == mallOrderNo:" + mallOrderNo + " == payType:" + payType + " == " +
@@ -224,13 +224,21 @@ public class OrderController {
         mallOrderNo = request.getParameter("mallOrderNo");
         System.out.println("====request.mallOrderNo=" + mallOrderNo);
 
+        PayTypeEnum payTypeEnum;
+        if (payType == 1) {
+            payTypeEnum = PayTypeEnum.Alipay;
+        } else if (payType == 9) {
+            payTypeEnum = PayTypeEnum.WeixinPay;
+        } else {
+            payTypeEnum = PayTypeEnum.Alipay;
+        }
         //线路订单
         if (orderType == 0) {
             TouristOrder touristOrder = touristOrderRepository.findByMallOrderNo(mallOrderNo);
             System.out.println("====touristOrder=" + touristOrder);
             System.out.println("====touristOrder.state=" + touristOrder.getOrderState());
             if (pay && touristOrder.getOrderState() == OrderStateEnum.NotPay) {
-                touristOrder.setPayType(payType);
+                touristOrder.setPayType(payTypeEnum);
                 touristOrder.setPayTime(LocalDateTime.now());
                 touristOrder.setOrderState(OrderStateEnum.PayFinish);
                 model.addAttribute("mallOrderNo", mallOrderNo);
