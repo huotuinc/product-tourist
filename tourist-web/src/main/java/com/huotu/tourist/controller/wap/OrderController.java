@@ -226,11 +226,11 @@ public class OrderController {
 
         PayTypeEnum payTypeEnum;
         if (payType == 1) {
-            payTypeEnum = PayTypeEnum.Alipay;
+            payTypeEnum = PayTypeEnum.valueOf("Alipay");
         } else if (payType == 9) {
-            payTypeEnum = PayTypeEnum.WeixinPay;
+            payTypeEnum = PayTypeEnum.valueOf("WeixinPay");
         } else {
-            payTypeEnum = PayTypeEnum.Alipay;
+            payTypeEnum = PayTypeEnum.valueOf("Alipay");
         }
         //线路订单
         if (orderType == 0) {

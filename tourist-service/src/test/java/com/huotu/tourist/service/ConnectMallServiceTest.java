@@ -155,7 +155,8 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
 
     @Test
     public void ss() {
-        PayTypeEnum payType = Enum.valueOf(PayTypeEnum.class, 0);
+        PayTypeEnum payType = PayTypeEnum.valueOf("Alipay");
+        PayTypeEnum payType2 = PayTypeEnum.valueOf("0");
     }
 
 
