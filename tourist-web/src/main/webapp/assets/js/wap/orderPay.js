@@ -48,7 +48,11 @@ function orderPay(data,payType) {
                         }
                     });
                 } else {
-                    window.location.href = $.mallUrl + payUrl;
+                    if (payUrl.indexOf("http://") == 0) {
+                        window.location.href = payUrl;
+                    } else {
+                        window.location.href = $.mallUrl + payUrl;
+                    }
                 }
             } else {
                 layer.alert(apiResult.msg);

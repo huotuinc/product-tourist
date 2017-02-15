@@ -31,6 +31,7 @@ function orderPay(requestData,payType) {
                 //前台跳转到商城支付
                 var payUrl = utils.GetPaymentUrl(apiResult.customerId, apiResult.orderId, requestData.payType,
                     $.touristUrl + "/wap/");
+
                 if ($.makePaySuccess) {
                     $.ajax({
                         url: $.buyerOrderNotifyUrl,
@@ -46,7 +47,11 @@ function orderPay(requestData,payType) {
                         }
                     });
                 } else {
-                    window.location.href = $.mallUrl + payUrl;
+                    if (payUrl.indexOf("http://") == 0) {
+                        window.location.href = payUrl;
+                    } else {
+                        window.location.href = $.mallUrl + payUrl;
+                    }
                 }
             } else {
                 layer.alert(apiResult.msg);
