@@ -243,11 +243,11 @@ public class OrderController {
                 touristOrder.setOrderState(OrderStateEnum.PayFinish);
                 model.addAttribute("mallOrderNo", mallOrderNo);
             }
-            log.error("当前采购商与订单采购商不匹配或订单状态异常");
+            System.out.println("当前采购商与订单采购商不匹配或订单状态异常");
         } else {
             if (pay) {
                 TouristBuyer buyer = touristBuyerRepository.findByMallOrderNo(mallOrderNo);
-                log.info("======== buyerId:" + buyer.getId() + "========");
+                System.out.println("======== buyerId:" + buyer.getId() + "========");
                 buyer.setPayState(BuyerPayStateEnum.PayFinish);
                 PurchaserPaymentRecord purchaserPaymentRecord = new PurchaserPaymentRecord();
                 purchaserPaymentRecord.setPayDate(LocalDateTime.now());
@@ -257,7 +257,7 @@ public class OrderController {
                 purchaserPaymentRecordRepository.saveAndFlush(purchaserPaymentRecord);
                 touristBuyerRepository.saveAndFlush(buyer);
             }
-            log.error(pay ? "支付成功，订单号与当前采购商单号不一致或当前采购商以支付" : "商城支付失败，请重试");
+            System.out.println(pay ? "支付成功，订单号与当前采购商单号不一致或当前采购商以支付" : "商城支付失败，请重试");
         }
 
     }
