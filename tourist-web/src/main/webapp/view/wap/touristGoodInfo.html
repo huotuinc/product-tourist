@@ -143,8 +143,9 @@
     <div class="item-action">
         <div class="toggle-home"><a href="index.html" th:href="@{/wap/}"><span class="icon"></span>首页</a></div>
         <div class="buy-now yuanjiaoo">
-            <a id="procurement" th:if="${user.isRealBuyer()}" sec:authorize="hasRole('ROLE_BUYER')"> 立即采购 </a>
-            <a href="buyerApply.html" sec:authorize="!hasRole('ROLE_BUYER')"> 申请成为采购商 </a>
+            <a id="procurement" th:if="${user.isRealBuyer()}"> 立即采购 </a>
+            <a href="buyerApply.html" th:href="@{/wap/showMyInfo}" th:if="${!user.isRealBuyer()}">
+                完善信息/支付申请 </a>
         </div>
     </div>
 </div>

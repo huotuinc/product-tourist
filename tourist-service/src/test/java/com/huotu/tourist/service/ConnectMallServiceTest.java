@@ -159,5 +159,12 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         PayTypeEnum payType2 = PayTypeEnum.valueOf("0");
     }
 
+    @Test
+    public void sss() {
+        //小伙伴id
+        TouristBuyer buyer = createRandomTouristBuyer(256421L);
+        String url = connectMallService.getTouristBuyerHeadUrl(buyer);
+        System.out.println(url);
+    }
 
 }
