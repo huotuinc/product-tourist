@@ -1,7 +1,13 @@
 
 
 actionFormatter = function (value, row, index) {
-    return '<button class="btn btn-primary update" data-toggle="modal" data-target="#myModal">修改</button> ';
+    if (row.typeName != '长途游' && row.typeName != '短途游') {
+        return '<button class="btn btn-primary update" data-toggle="modal"' +
+            ' data-target="#myModal">修改</button> ';
+    } else {
+        return '系统数据不允许更改';
+    }
+
 };
 
 window.actionEvents = {
