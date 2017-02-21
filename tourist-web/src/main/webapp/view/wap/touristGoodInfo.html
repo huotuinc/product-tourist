@@ -28,8 +28,8 @@
                 <!-- Slides -->
                 <div class="swiper-slide"
                      th:each="img:${good.images}"><img res:src="${img}" src="../../assets/img/swiper-1.jpg"/></div>
-                <div class="swiper-slide"><img src="../../assets/img/swiper-2.jpg"/></div>
-                <div class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
+                <div th:remove="all" class="swiper-slide"><img src="../../assets/img/swiper-2.jpg"/></div>
+                <div th:remove="all" class="swiper-slide"><img src="../../assets/img/swiper-1.jpg"/></div>
             </div>
             <!-- If we need pagination -->
             <div class="swiper-pagination"></div>
