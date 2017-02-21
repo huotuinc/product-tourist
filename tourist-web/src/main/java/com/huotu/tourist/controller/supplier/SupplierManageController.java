@@ -10,6 +10,7 @@
 package com.huotu.tourist.controller.supplier;
 
 import com.huotu.tourist.common.CollectionAccountTypeEnum;
+import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
 import com.huotu.tourist.common.TouristCheckStateEnum;
 import com.huotu.tourist.converter.LocalDateTimeFormatter;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -512,8 +514,8 @@ public class SupplierManageController {
     @PreAuthorize("hasAnyRole({'ROLE_STATISTICS','ROLE_SUPPLIER'})")
     public String showSaleStatistics(@AuthenticationPrincipal SystemUser userInfo, Model model) throws IOException {
         TouristSupplier supplier=((TouristSupplier)userInfo).getAuthSupplier();
-        model.addAttribute("moneyTotal", touristOrderService.countMoneyTotal(supplier.getId()));
-        model.addAttribute("commissionTotal", touristOrderService.countCommissionTotal(supplier.getId()));
+        model.addAttribute("moneyTotal", touristOrderService.countMoneyPayFinish(supplier.getId()));
+        model.addAttribute("commissionTotal", touristOrderService.countCommissionPayFinish(supplier.getId()));
         model.addAttribute("refundTotal", touristOrderService.countRefundTotal(supplier.getId()));
         model.addAttribute("orderTotal", touristOrderService.countOrderTotal(supplier.getId()));
         return viewSupplierPath+"salesStatistics.html";
@@ -568,7 +570,7 @@ public class SupplierManageController {
             @Override
             public BigDecimal apply(TouristOrder order) {
                 BigDecimal commission = order.getTouristGood().getRebate().multiply(
-                        order.getTouristGood().getPrice());
+                        order.getTouristGood().getPrice().multiply(BigDecimal.valueOf(100)));
                 return commission;
             }
         };
@@ -593,7 +595,6 @@ public class SupplierManageController {
         TouristSupplier supplier =((TouristSupplier)userInfo).getAuthSupplier();
         Page<TouristGood> touristGoods = touristGoodService.touristGoodList(supplier, null, null, null, null, null, null, pageable
                 , null);
-//        Page<TouristGood> touristGoods=touristGoodService.salesRanking(supplier.getId(),pageable, orderDate, endOrderDate);
 
         //购买次数处理
         Selection<TouristGood,Long> buyTotal=new Selection<TouristGood, Long>() {
@@ -617,7 +618,14 @@ public class SupplierManageController {
 
             @Override
             public BigDecimal apply(TouristGood good) {
-                return touristOrderRepository.countOrderMoney(good);
+                List<OrderStateEnum> states = Arrays.asList(OrderStateEnum.Finish, OrderStateEnum.PayFinish,
+                        OrderStateEnum.NotFinish, OrderStateEnum.Refunds);
+                try {
+                    BigDecimal money = touristOrderService.countOrderTotalMoney(null, null, null, null, null, good, null, states);
+                    return money.setScale(2, RoundingMode.HALF_UP);
+                } catch (IOException e) {
+                    return BigDecimal.valueOf(0);
+                }
             }
         };
 
@@ -630,11 +638,14 @@ public class SupplierManageController {
 
             @Override
             public BigDecimal apply(TouristGood good) {
-                BigDecimal orderGoodsTotalMoneys = touristOrderRepository.countOrderMoney(good);
-                if (orderGoodsTotalMoneys == null) {
-                    return new BigDecimal(0);
+                List<OrderStateEnum> states = Arrays.asList(OrderStateEnum.Finish, OrderStateEnum.PayFinish,
+                        OrderStateEnum.NotFinish, OrderStateEnum.Refunds);
+                try {
+                    BigDecimal money = touristOrderService.countOrderTotalcommission(null, null, null, null, null, good, null, states);
+                    return money.setScale(2, RoundingMode.HALF_UP);
+                } catch (IOException e) {
+                    return BigDecimal.valueOf(0);
                 }
-                return orderGoodsTotalMoneys.multiply(good.getRebate());
             }
         };
 

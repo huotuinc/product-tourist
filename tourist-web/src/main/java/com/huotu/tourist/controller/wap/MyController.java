@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 
@@ -116,7 +117,9 @@ public class MyController {
                 touristBuyer, Arrays.asList(OrderStateEnum.Finish,OrderStateEnum.RefundsFinish));
         long allInvalid=touristOrderRepository.countByTouristBuyerAndOrderState(
                 touristBuyer,OrderStateEnum.Invalid);
-        BigDecimal commission=touristOrderRepository.sumCommissionByBuyer(touristBuyer);
+//        BigDecimal commission=touristOrderRepository.sumCommissionByBuyer(touristBuyer);
+        BigDecimal commission = touristOrderService.countOrderTotalcommission(null, null, null, null, null, null
+                , touristBuyer, null).setScale(2, RoundingMode.HALF_UP);
 
         String mallUrl = environment.getProperty("mall.url") + "/UserCenter/Securitycenter/MyWallet.aspx?customerid=" +
                 connectMallService.getMerchant().getId();

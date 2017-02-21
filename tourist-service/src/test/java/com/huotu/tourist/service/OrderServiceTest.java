@@ -126,7 +126,14 @@ public class OrderServiceTest extends ServiceBaseTest {
                 }
             }
             if (orderStateRan) {
-                order.setOrderState(OrderStateEnum.Finish);
+
+                if (random.nextBoolean()) {
+                    order.setOrderState(OrderStateEnum.Finish);
+                } else {
+                    order.setOrderState(OrderStateEnum.PayFinish);
+                }
+
+
                 orderStateMoney = orderStateMoney.add(order.getOrderMoney());
             } else {
                 order.setOrderState(OrderStateEnum.NotFinish);
@@ -148,23 +155,24 @@ public class OrderServiceTest extends ServiceBaseTest {
                     , order.getOrderMoney());
         }
 
-        BigDecimal moneyAct = touristOrderService.countOrderTotalMoney(supplier, null, null, null, null, null, null);
+        BigDecimal moneyAct = touristOrderService.countOrderTotalMoney(supplier, null, null, null, null, null, null, null);
         Assert.isTrue(moneyAct.compareTo(supplierMoney) == 0);
 
-        moneyAct = touristOrderService.countOrderTotalMoney(null, OrderStateEnum.Finish, null, null, null, null, null);
+        List<OrderStateEnum> states = Arrays.asList(new OrderStateEnum[]{OrderStateEnum.Finish, OrderStateEnum.PayFinish});
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, null, null, states);
         Assert.isTrue(moneyAct.compareTo(orderStateMoney) == 0);
 
         moneyAct = touristOrderService.countOrderTotalMoney(null, null, LocalDateTime.of(2016, 4, 1, 0, 0, 0)
-                , LocalDateTime.of(2016, 6, 1, 0, 0, 0), null, null, null);
+                , LocalDateTime.of(2016, 6, 1, 0, 0, 0), null, null, null, null);
         Assert.isTrue(moneyAct.compareTo(dateMoney) == 0);
 
-        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, true, null, null);
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, true, null, null, null);
         Assert.isTrue(moneyAct.compareTo(settlementMoney) == 0);
 
-        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, good, null);
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, good, null, null);
         Assert.isTrue(moneyAct.compareTo(touristGoodMoney) == 0);
 
-        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, null, buyer);
+        moneyAct = touristOrderService.countOrderTotalMoney(null, null, null, null, null, null, buyer, null);
         Assert.isTrue(moneyAct.compareTo(touristBuyerMoney) == 0);
 
 

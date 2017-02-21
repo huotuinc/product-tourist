@@ -107,4 +107,24 @@ public interface ConnectMallService {
 
     Merchant getMerchant();
 
+    /**
+     * 保存采购商余额
+     *
+     * @param buyerId 采购商ID(会员ID)
+     * @param money   增加的钱
+     * @throws IOException
+     */
+    void changeUserBalance(Long buyerId, BigDecimal money) throws IOException;
+
+
+    /**
+     * 插入采购商佣金流水
+     *
+     * @param buyerId 采购商ID(会员ID)
+     * @param money   金额
+     * @param orderId 贡献订单ID
+     * @return 保存了的流水记录
+     * @throws Exception
+     */
+    MallAdvanceLogs saveBuyerMallAdvanceLogs(Long buyerId, Double money, String orderId) throws IOException;
 }

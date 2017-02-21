@@ -33,6 +33,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -154,17 +155,32 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             throw new IOException();
         }
         TouristSupplier supplier=touristSupplierRepository.findOne(supplierId);
-        return countOrderTotalMoney(supplier,null,null,null,null,null,null);
+        return countOrderTotalMoney(supplier, null, null, null, null, null, null, null);
+    }
+
+    @Override
+    public BigDecimal countMoneyPayFinish(Long supplierId) throws IOException {
+        if (supplierId == null) {
+            throw new IOException();
+        }
+        TouristSupplier supplier = touristSupplierRepository.findOne(supplierId);
+        List<OrderStateEnum> states = Arrays.asList(OrderStateEnum.Finish, OrderStateEnum.PayFinish,
+                OrderStateEnum.NotFinish, OrderStateEnum.Refunds);
+        return countOrderTotalMoney(supplier, null, null, null, null, null, null, states);
     }
 
     @Override
     public BigDecimal countOrderTotalMoney(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
-            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer)
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer, List<OrderStateEnum> orderStates)
             throws IOException {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Number> criteriaQuery = cb.createQuery(Number.class);
         Root<TouristOrder> root  = criteriaQuery.from(TouristOrder.class);
         Predicate predicate=cb.isTrue(cb.literal(true));
+
+        if (orderStates != null) {
+            predicate = cb.and(predicate, root.get("orderState").in(orderStates));
+        }
 
         if(supplier!=null){
             predicate=cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));
@@ -207,7 +223,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     }
 
     @Override
-    public BigDecimal countOrderTotalcommission(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate, LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer) throws IOException {
+    public BigDecimal countOrderTotalcommission(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate, LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer, List<OrderStateEnum> orderStates) throws IOException {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Number> criteriaQuery = cb.createQuery(Number.class);
         Root<TouristOrder> root  = criteriaQuery.from(TouristOrder.class);
@@ -241,11 +257,20 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         }
 
         criteriaQuery=criteriaQuery.where(predicate);
+//        criteriaQuery  = criteriaQuery.select(
+//                cb.sum(root.get("orderMoney"))
+//        );
+
+        criteriaQuery = criteriaQuery.select(
+                cb.sum(
+                        cb.quot(
+                                cb.prod(root.get("orderMoney"), root.get("touristGood").get("rebate")), 100))
+        );
 
 
         TypedQuery<Number> query = entityManager.createQuery(criteriaQuery);
-        BigDecimal orderTotalMoney=BigDecimal.valueOf(query.getSingleResult()==null?0:query.getSingleResult()
-                .doubleValue());
+        Number number = query.getSingleResult();
+        BigDecimal orderTotalMoney = BigDecimal.valueOf(number == null ? 0 : number.doubleValue());
         return orderTotalMoney;
     }
 
@@ -254,7 +279,21 @@ public class TouristOrderServiceImpl implements TouristOrderService {
         if (supplierId == null) {
             throw new IOException();
         }
-        return touristOrderRepository.sumCommissionTotal(supplierId);
+        TouristSupplier supplier = touristSupplierRepository.findOne(supplierId);
+        BigDecimal commission = countOrderTotalcommission(supplier, null, null, null, null, null, null, null);
+        return commission.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public BigDecimal countCommissionPayFinish(Long supplierId) throws IOException {
+        if (supplierId == null) {
+            throw new IOException();
+        }
+        TouristSupplier supplier = touristSupplierRepository.findOne(supplierId);
+        List<OrderStateEnum> states = Arrays.asList(OrderStateEnum.Finish, OrderStateEnum.PayFinish,
+                OrderStateEnum.NotFinish, OrderStateEnum.Refunds);
+        BigDecimal commission = countOrderTotalcommission(supplier, null, null, null, null, null, null, states);
+        return commission.setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
@@ -263,7 +302,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             throw new IOException();
         }
         TouristSupplier supplier = touristSupplierRepository.findOne(supplierId);
-        return countOrderTotalMoney(supplier, OrderStateEnum.RefundsFinish, null, null, null, null, null);
+        return countOrderTotalMoney(supplier, OrderStateEnum.RefundsFinish, null, null, null, null, null, null);
 //        return touristOrderRepository.sumRefundTotal(supplierId, OrderStateEnum.RefundsFinish);
     }
 

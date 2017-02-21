@@ -57,10 +57,10 @@ import java.util.Set;
 public class MVCConfig extends WebMvcConfigurerAdapter {
 
     private static final String UTF8 = "UTF-8";
+    private static final String PAGE_PARAMETER_NAME = "pageNo";
+    private static final String SIZE_PARAMETER_NAME = "pageSize";
     @Autowired
     PageAndSelectionResolver pageAndSelectionResolver;
-    private String pageParameterName = "pageNo";
-    private String sizeParameterName = "pageSize";
     @Autowired
     private ThymeleafViewResolver htmlViewResolver;
     @Autowired
@@ -111,8 +111,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         super.addArgumentResolvers(argumentResolvers);
         PageableHandlerMethodArgumentResolver resolver=
                 new PageableHandlerMethodArgumentResolver(new SortHandlerMethodArgumentResolver());
-        resolver.setPageParameterName(pageParameterName);
-        resolver.setSizeParameterName(sizeParameterName);
+        resolver.setPageParameterName(PAGE_PARAMETER_NAME);
+        resolver.setSizeParameterName(SIZE_PARAMETER_NAME);
         argumentResolvers.add(resolver);
         argumentResolvers.add(new TouristRouteResolver());
         argumentResolvers.add(0, new TravelerListResolver());
