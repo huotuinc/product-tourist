@@ -106,4 +106,5 @@ public interface ConnectMallService {
     long currentUserId(HttpServletRequest request) throws NotLoginYetException;
 
     Merchant getMerchant();
+
 }

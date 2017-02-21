@@ -11,6 +11,9 @@ package com.huotu.tourist.controller.distributionPlatform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huotu.huobanplus.common.entity.Goods;
+import com.huotu.huobanplus.common.entity.Merchant;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.PresentStateEnum;
@@ -30,6 +33,7 @@ import com.huotu.tourist.entity.TouristSupplier;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.login.PlatformManager;
 import com.huotu.tourist.login.SystemUser;
+import com.huotu.tourist.model.MallGoodsModel;
 import com.huotu.tourist.model.PageAndSelection;
 import com.huotu.tourist.model.Selection;
 import com.huotu.tourist.repository.ActivityTypeRepository;
@@ -38,6 +42,7 @@ import com.huotu.tourist.repository.PresentRecordRepository;
 import com.huotu.tourist.repository.PurchaserPaymentRecordRepository;
 import com.huotu.tourist.repository.SettlementSheetRepository;
 import com.huotu.tourist.repository.SystemStringRepository;
+import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.LoginService;
 import com.huotu.tourist.service.PresentRecordService;
 import com.huotu.tourist.service.PurchaserProductSettingService;
@@ -49,6 +54,7 @@ import com.huotu.tourist.service.TouristSupplierService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -112,6 +118,10 @@ public class DistributionPlatformController extends BaseController {
     ResourceService resourceService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ConnectMallService connectMallService;
+    @Autowired
+    private GoodsRestRepository goodsRestRepository;
 
     /**
      * 打开订单列表页面
@@ -275,7 +285,11 @@ public class DistributionPlatformController extends BaseController {
      * @return
      */
     @RequestMapping(value = "toTouristGoodList", method = RequestMethod.GET)
-    public String toTouristGoodList(HttpServletRequest request, Model model) {
+    public String toTouristGoodList(HttpServletRequest request, Model model) throws IOException {
+        Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+        Merchant merchant = connectMallService.getMerchant();
+        Page<Goods> goodsPage = goodsRestRepository.searchMarketableByMerchantAndScenes(merchant, 7, pageable);
+        model.addAttribute("goodsList", MallGoodsModel.toMallGoodsModels(goodsPage.getContent()));
         return "view/manage/platform/touristGood/touristGoodList.html";
     }
 

@@ -12,10 +12,10 @@
      th:each="good:${list}">
     <!--/*@thymesVar id="good" type="com.huotu.tourist.entity.TouristGood"*/-->
     <!--/*@thymesVar id="user" type="com.huotu.tourist.entity.TouristBuyer"*/-->
-    <div class="cont-zhbox" style="margin: 0px">
+    <div class="cont-zhbox" style="margin: 0px ;">
         <div class="cont-zhbox-t" style="border-radius: 0px; padding: 0px">
             <a href="touristGoodInfo.html" th:href="@{/wap/goodInfo(id=${good.id})}" class="bz">
-                <p class="cont-zhbox-img" style="margin: 0px"><img src="../../assets/img/a1.jpg"
+                <p class="cont-zhbox-img" style="margin: 0px"><img width="50%" src="../../assets/img/a1.jpg"
                                                                    res:src="${good.touristImgUri}"></p>
                 <p class="cont-zhbox-nav"></p>
             </a>

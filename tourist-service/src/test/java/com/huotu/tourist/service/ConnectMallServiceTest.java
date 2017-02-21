@@ -9,6 +9,9 @@
 
 package com.huotu.tourist.service;
 
+import com.huotu.huobanplus.common.entity.Goods;
+import com.huotu.huobanplus.common.entity.Merchant;
+import com.huotu.huobanplus.sdk.common.repository.GoodsRestRepository;
 import com.huotu.huobanplus.sdk.common.repository.ProductRestRepository;
 import com.huotu.tourist.common.PayTypeEnum;
 import com.huotu.tourist.entity.TouristBuyer;
@@ -22,6 +25,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.Repeat;
 
@@ -56,6 +62,8 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
     private ProductRestRepository productRestRepository;
     @Autowired
     private Environment environment;
+    @Autowired
+    private GoodsRestRepository goodsRestRepository;
 
 
     @Test
@@ -166,5 +174,13 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         String url = connectMallService.getTouristBuyerHeadUrl(buyer);
         System.out.println(url);
     }
+
+    @Test
+    public void ssss() throws IOException {
+        Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+        Merchant merchant = connectMallService.getMerchant();
+        Page<Goods> goodsPage = goodsRestRepository.searchMarketableByMerchantAndScenes(merchant, 7, pageable);
+    }
+
 
 }

@@ -12,6 +12,16 @@ $(function () {
         $table.bootstrapTable('refresh');
     });
 
+    $("#goods").change(function () {
+        var products = JSON.parse($(this).find("option:selected").attr("data-products"));
+        var optionsHtml = '';
+        $.each(products, function () {
+            optionsHtml += '<option value="' + this.id + '" >' + this.code + '</option>';
+        });
+        $("#mallProductId").empty();
+        $("#mallProductId").append(optionsHtml);
+    });
+
     $('.doUpdateMallGoodsID').click(function () {
         if ($("#mallProductId").val() == null || $("#mallProductId").val().length == 0) {
             layer.alert("商城货品id不能为空");
@@ -22,9 +32,11 @@ $(function () {
             method: "post",
             data: {id: $.currentGoodsId, checkState: 2, mallProductId: $("#mallProductId").val()},
             success: function () {
+                $('#productModal').modal('hide')
                 $table.bootstrapTable('refresh');
             },
             error: function (rep) {
+                $('#productModal').modal('hide')
                 layer.alert(rep.responseText);
             }
         });
