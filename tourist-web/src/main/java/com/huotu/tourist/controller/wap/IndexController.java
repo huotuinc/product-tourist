@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -140,8 +141,13 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = {"/goodInfo"})
+    @Transactional(readOnly = true)
     public String goodInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long id, Model model) {
         TouristGood good = touristGoodRepository.getOne(id);
+        //过滤出有效的行程
+        good.setTouristRoutes(good.getTouristRoutes().stream().filter(route ->
+                route.getFromDate().isAfter(LocalDateTime.now())).collect(Collectors.toList()));
+
         Map<String, Integer> routeCount = new HashMap<>();
         for (TouristRoute touristRoute : good.getTouristRoutes()) {
             int num = travelerRepository.countByRoute(touristRoute);
@@ -510,6 +516,7 @@ public class IndexController {
 
     /**
      * 发送短信验证码
+     *
      * @param model
      * @return
      */
@@ -521,6 +528,7 @@ public class IndexController {
 
     /**
      * 验证短信验证码
+     *
      * @param model
      * @return
      */
