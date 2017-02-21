@@ -75,56 +75,77 @@ public interface TouristOrderService {
 
 
     /**
-     * 计算订单总金额
+     * 计算某供应商订单总金额
      * @param supplierId  供应商ID(必须)
      * @return            总金额
      * @throws IOException
      */
     BigDecimal countMoneyTotal(Long supplierId) throws IOException;
 
+    /**
+     * 计算某供应商已支付的订单总额(订单状态包括：已支付，已确认，已完成，退款中)
+     *
+     * @param supplierId
+     * @return
+     * @throws IOException
+     */
+    BigDecimal countMoneyPayFinish(Long supplierId) throws IOException;
+
 
     /**
      * 计算订单金额
      * @param supplier          供应商
-     * @param orderState        订单状态
+     * @param orderState        单个订单状态
      * @param createDate        大于的创建时间
      * @param endCreateDate     小于的创建时间
      * @param settlement        是否结算
      * @param touristGood       线路商品
      * @param touristBuyer       购买人
+     * @param orderStates       订单状态集合(与orderState参数最好不要同时使用)
      * @return
      * @throws IOException
      */
     @Transactional(readOnly = true)
     BigDecimal countOrderTotalMoney(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
-            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer)
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer, List<OrderStateEnum> orderStates)
             throws IOException;
 
 
     /**
      * 计算订单的总佣金
      * @param supplier          供应商
-     * @param orderState        订单状态
+     * @param orderState        单个订单状态
      * @param createDate        大于的创建时间
      * @param endCreateDate     小于的创建时间
      * @param settlement        是否已经结算
      * @param touristGood       线路商品
      * @param touristBuyer      采购商
+     * @param orderStates       订单状态集合(避免和orderState同时使用)
      * @return
      * @throws IOException
      */
     @Transactional(readOnly = true)
-    BigDecimal countOrderTotalcommission(TouristSupplier supplier,OrderStateEnum orderState,LocalDateTime createDate
-            ,LocalDateTime endCreateDate,Boolean settlement,TouristGood touristGood,TouristBuyer touristBuyer)
+    BigDecimal countOrderTotalcommission(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer
+            , List<OrderStateEnum> orderStates)
             throws IOException;
 
     /**
-     * 计算总佣金
+     * 计算某供应商总佣金
      * @param supplierId    供应商ID(必须)
      * @return              总佣金
      * @throws IOException
      */
     BigDecimal countCommissionTotal(Long supplierId) throws IOException;
+
+    /**
+     * 计算某供应商已经付款的订单的总佣金(订单状态包括：已支付，已确认，已完成，退款中)
+     *
+     * @param supplierId
+     * @return
+     * @throws IOException
+     */
+    BigDecimal countCommissionPayFinish(Long supplierId) throws IOException;
 
     /**
      * 计算总退款

@@ -3,7 +3,9 @@ package com.huotu.tourist.service.impl;
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.repository.TouristBuyerRepository;
+import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.TouristBuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
+import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * Created by lhx on 2017/1/3.
@@ -20,6 +24,9 @@ import javax.persistence.criteria.Predicate;
 public class TouristBuyerServiceImpl implements TouristBuyerService {
     @Autowired
     TouristBuyerRepository touristBuyerRepository;
+
+    @Autowired
+    ConnectMallService connectMallService;
 
     @Override
     public TouristBuyer save(TouristBuyer data) {
@@ -61,5 +68,19 @@ public class TouristBuyerServiceImpl implements TouristBuyerService {
             }
             return predicate;
         }, pageable);
+    }
+
+    @Override
+    public void chargeMoney(TouristOrder order) throws IOException {
+        BigDecimal commission = order.getOrderMoney().multiply(order.getTouristGood().getRebate())
+                .divide(BigDecimal.valueOf(100));
+
+
+//        connectMallService.changeUserBalance(order.getTouristBuyer().getId(),commission);
+//
+//        connectMallService.saveBuyerMallAdvanceLogs()
+
+
+
     }
 }

@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.service.impl;
 
+import com.huotu.huobanplus.common.entity.MallAdvanceLogs;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.huobanplus.common.entity.MerchantConfig;
 import com.huotu.huobanplus.common.entity.Product;
@@ -47,19 +48,14 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -297,5 +293,38 @@ public class ConnectMallServiceImpl implements ConnectMallService {
     @Override
     public Merchant getMerchant() {
         return this.merchant;
+    }
+
+    @Override
+    public void changeUserBalance(Long buyerId, BigDecimal money) throws IOException {
+
+    }
+
+    @Override
+    public MallAdvanceLogs saveBuyerMallAdvanceLogs(Long buyerId, Double money, String orderId) throws IOException {
+        MallAdvanceLogs mallAdvanceLogs = new MallAdvanceLogs();
+        if (money == 0) {
+            return mallAdvanceLogs;
+        }
+        mallAdvanceLogs.setMemberId(buyerId);
+        mallAdvanceLogs.setMoney(money);
+        mallAdvanceLogs.setMessage("");
+        mallAdvanceLogs.setMTime(new Date());
+        mallAdvanceLogs.setPaymentId("");
+        mallAdvanceLogs.setOrderId(orderId);
+        mallAdvanceLogs.setPayMethod("线路佣金");
+//        String memo="开店获得";
+//        if(srcType!=0){
+//            memo=srcType+"级会员"+contributeUser.getLoginName()+"("+contributeUser.getWxNickName()+")贡献了开店奖";
+//        }
+//        mallAdvanceLogs.setMemo(memo);//例:三级会员登录名(昵称)贡献了开店奖
+//        mallAdvanceLogs.setImportMoney(money);
+//        mallAdvanceLogs.setShopAdvance(0.0);
+//        mallAdvanceLogs.setExplodeMoney(0.0);
+//        mallAdvanceLogs.setMemberAdvance(0.0);
+//        mallAdvanceLogs.setDisabled(0);
+//        mallAdvanceLogs.setCustomerId(earningsUser.getMerchant().getId());
+//        mallAdvanceLogs=mallAdvanceLogsRepository.save(mallAdvanceLogs);
+        return mallAdvanceLogs;
     }
 }

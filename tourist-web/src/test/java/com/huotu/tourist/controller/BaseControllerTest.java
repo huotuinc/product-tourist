@@ -49,7 +49,7 @@ public class BaseControllerTest extends WebTest {
     }
 
     @Test
-    public void modifyOrderState() throws Exception {
+    public void modifyOrderStateTest() throws Exception {
 
     }
 

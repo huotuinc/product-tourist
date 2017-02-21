@@ -2,8 +2,11 @@ package com.huotu.tourist.service;
 
 import com.huotu.tourist.common.BuyerCheckStateEnum;
 import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.io.IOException;
 
 /**
  * 线路采购商相关服务
@@ -23,6 +26,17 @@ public interface TouristBuyerService extends BaseService<TouristBuyer, Long> {
      */
     Page<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum checkState
             , Pageable pageable);
+
+
+    /**
+     * 根据订单给采购商充钱充钱 todo
+     *
+     * @param order
+     * @throws IOException
+     */
+    void chargeMoney(TouristOrder order) throws IOException;
+
+
 
 
 

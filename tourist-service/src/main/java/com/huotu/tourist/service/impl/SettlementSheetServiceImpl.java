@@ -152,7 +152,7 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     @Override
     public BigDecimal countSettled(TouristSupplier supplier) throws IOException {
         BigDecimal settled = touristOrderService.countOrderTotalMoney(supplier, OrderStateEnum.Finish, null, null, true
-                , null, null);
+                , null, null, null);
 //        BigDecimal settled=touristOrderRepository.countSupplierSettled(supplier, OrderStateEnum.Finish);
         return settled.setScale(2, RoundingMode.HALF_UP);
     }
@@ -160,7 +160,7 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     @Override
     public BigDecimal countNotSettled(TouristSupplier supplier) throws IOException {
         BigDecimal notSettled = touristOrderService.countOrderTotalMoney(supplier, OrderStateEnum.Finish, null, null, false
-                , null, null);
+                , null, null, null);
 //        BigDecimal notSettled=touristOrderRepository.countSupplierNotSettled(supplier, OrderStateEnum.Finish);
         return notSettled.setScale(2, RoundingMode.HALF_UP);
     }
@@ -203,7 +203,7 @@ public class SettlementSheetServiceImpl implements SettlementSheetService {
     public BigDecimal countBalance(TouristSupplier supplier, LocalDateTime endCountDate) throws IOException {
 
         BigDecimal orderTotal = touristOrderService.countOrderTotalMoney(supplier, OrderStateEnum.Finish, null, endCountDate
-                , true, null, null);
+                , true, null, null, null);
         BigDecimal countWithdrawalTotal = countWithdrawal(supplier, null, endCountDate, PresentStateEnum.AlreadyPaid);
 
         return orderTotal.subtract(countWithdrawalTotal).setScale(2,RoundingMode.HALF_UP);

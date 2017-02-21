@@ -36,14 +36,7 @@ import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.ActivityTypeService;
-import com.huotu.tourist.service.ConnectMallService;
-import com.huotu.tourist.service.PurchaserPaymentRecordService;
-import com.huotu.tourist.service.SettlementSheetService;
-import com.huotu.tourist.service.TouristGoodService;
-import com.huotu.tourist.service.TouristOrderService;
-import com.huotu.tourist.service.TouristRouteService;
-import com.huotu.tourist.service.TouristTypeService;
+import com.huotu.tourist.service.*;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,6 +63,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -117,6 +111,8 @@ public class BaseController {
     private SettlementSheetService settlementSheetService;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private TouristBuyerService touristBuyerService;
     private String viewSupplierPath = "/view/manage/supplier/";
     private String viewCommonPath = "/view/manage/common/";
     private List<Selection<TouristOrder, ?>> selections;
@@ -346,7 +342,19 @@ public class BaseController {
             OrderStateEnum orderState) throws IOException {
         ModelMap modelMap = new ModelMap();
         TouristOrder order = touristOrderRepository.getOne(id);
+        //某些订单状态无法改变
+        List<OrderStateEnum> notModifyStates = Arrays.asList(OrderStateEnum.Finish, OrderStateEnum.Invalid
+                , OrderStateEnum.RefundsFinish);
+        if (notModifyStates.contains(order.getOrderState())) {
+            modelMap.addAttribute("data", 500);
+            return modelMap;
+        }
         order.setOrderState(orderState);
+
+        if (orderState == OrderStateEnum.Finish) {
+            //订单改为已完成，说明该给采购商佣金了
+            touristBuyerService.chargeMoney(order);
+        }
         modelMap.addAttribute("data", 200);
 //        if (touristOrderService.checkOrderStatusCanBeModified(user, order.getOrderState(), orderState)) {
 //            order.setOrderState(orderState);
@@ -472,7 +480,7 @@ public class BaseController {
     public String showSettlementDetails(@RequestParam Long id, Model model) throws IOException {
         SettlementSheet settlementSheet = settlementSheetService.getOne(id);
         BigDecimal orderTotalAmount = touristOrderService.countOrderTotalMoney(settlementSheet.getTouristSupplier()
-                , OrderStateEnum.Finish, null, null, true, null, null).setScale(2, RoundingMode.HALF_UP);
+                , OrderStateEnum.Finish, null, null, true, null, null, null).setScale(2, RoundingMode.HALF_UP);
         model.addAttribute("settlement", settlementSheet);
         model.addAttribute("orderTotalAmount", orderTotalAmount);
         model.addAttribute("totalCommission", "");
