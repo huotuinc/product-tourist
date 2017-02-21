@@ -1,6 +1,7 @@
 package com.huotu.tourist.service.impl;
 
 import com.huotu.tourist.common.BuyerCheckStateEnum;
+import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.service.TouristBuyerService;
@@ -39,6 +40,8 @@ public class TouristBuyerServiceImpl implements TouristBuyerService {
     public Page<TouristBuyer> buyerList(String buyerName, String buyerDirector, String telPhone, BuyerCheckStateEnum checkState, Pageable pageable) {
         return touristBuyerRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.isTrue(cb.literal(true));
+            predicate = cb.and(predicate, cb.equal(root.get("payState").as(BuyerPayStateEnum.class), BuyerPayStateEnum
+                    .PayFinish));
 
             if (!StringUtils.isEmpty(buyerName)) {
                 predicate = cb.and(predicate, cb.like(root.get("buyerName").as(String.class),
