@@ -214,6 +214,14 @@ public class TouristGood extends BaseModel {
     @ElementCollection
     private List<String> images;
 
+    /**
+     * 审核未通过原因
+     *
+     * @since 1.1
+     */
+    @Column(length = 200)
+    private String notAuditedDetail;
+
     public static final List<Selection<TouristGood, ?>> getSelections(ResourceService resourceService) {
         return Arrays.asList(
                 new SimpleSelection<TouristGood, String>("id", "id"),

@@ -191,6 +191,34 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="notAuditedModal" tabindex="-1" role="dialog" aria-labelledby="notAuditedModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="notAuditedModalLabel">不通过描述</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="linkUrl" class="col-sm-2 control-label">描述</label>
+                        <div class="col-sm-10">
+                            <input type="text" maxlength="200" name="notAuditedDetail" id="notAuditedDetail"
+                                   class="form-control"
+                                   placeholder="描述">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnSearch notAudited" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 

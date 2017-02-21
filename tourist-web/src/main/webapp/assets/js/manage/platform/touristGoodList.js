@@ -29,6 +29,23 @@ $(function () {
             }
         });
     });
+    $('.notAudited').click(function () {
+        if ($("#notAuditedDetail").val() == null || $("#notAuditedDetail").val().length == 0) {
+            layer.alert("描述不能为空");
+            return;
+        }
+        $.ajax({
+            url: modifyTouristGoodState,
+            method: "post",
+            data: {id: $.currentGoodsId, checkState: 4, notAuditedDetail: $("#notAuditedDetail").val()},
+            success: function () {
+                $table.bootstrapTable('refresh');
+            },
+            error: function (rep) {
+                layer.alert(rep.responseText);
+            }
+        });
+    });
 
     getParams = function (params) {
         var sort = params.sortName != undefined ? params.sortName + "," + params.sortOrder : undefined;
@@ -60,6 +77,11 @@ $(function () {
             arr.push('<button class="btn btn-primary modifyCheckState" data-toggle="modal"' +
                 ' data-target="#productModal" >审核通过</button> ');
         }
+        if (row.touristCheckState.code < 2) {
+            arr.push('<button class="btn btn-primary notAuditedModelBtn" data-toggle="modal"' +
+                ' data-target="#notAuditedModal" >不予通过</button> ');
+        }
+
         if (!row.recommend) {
             arr.push('<button class="btn btn-primary recommendTouristGood" >推荐</button> ');
         }
@@ -111,6 +133,9 @@ $(function () {
             });
         },
         'click .modifyCheckState': function (e, value, row) {
+            $.currentGoodsId = row.id;
+        },
+        'click .notAuditedModelBtn': function (e, value, row) {
             $.currentGoodsId = row.id;
         },
         'click .updateLinkUrl': function (e, value, row, index) {

@@ -417,29 +417,36 @@ public class BaseController {
     @ResponseBody
     @Transactional
     public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,
-                                                 @RequestParam TouristCheckStateEnum checkState, Long mallProductId)
+                                                 @RequestParam TouristCheckStateEnum checkState, Long mallProductId,
+                                                 String notAuditedDetail)
             throws IOException {
         TouristGood touristGood = touristGoodRepository.getOne(id);
         if (user.isPlatformUser()) {
+            //不予通过
             if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
-                    checkState.equals(TouristCheckStateEnum.CheckFinish)&&mallProductId!=null) {
-                try {
-                    Product product = productRestRepository.getOneByPK(mallProductId);
-                    if (product != null) {
-                        touristGood.setTouristCheckState(checkState);
-                        touristGood.setMallProductId(mallProductId);
+                    checkState == TouristCheckStateEnum.NotAudited && notAuditedDetail != null) {
+                touristGood.setTouristCheckState(checkState);
+                touristGood.setNotAuditedDetail(notAuditedDetail);
+            } else //审核通过
+                if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
+                        checkState.equals(TouristCheckStateEnum.CheckFinish) && mallProductId != null) {
+                    try {
+                        Product product = productRestRepository.getOneByPK(mallProductId);
+                        if (product != null) {
+                            touristGood.setTouristCheckState(checkState);
+                            touristGood.setMallProductId(mallProductId);
+                        }
+                    } catch (IOException ex) {
+                        log.debug("IO on huobanplus", ex);
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType
+                                .parseMediaType("text/plain;charset=UTF-8"))
+                                .body("你输入的编号有问题");
                     }
-                } catch (IOException ex) {
-                    log.debug("IO on huobanplus", ex);
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType
                             .parseMediaType("text/plain;charset=UTF-8"))
-                            .body("你输入的编号有问题");
+                            .body("当前状态不能进行审核通过");
                 }
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType
-                        .parseMediaType("text/plain;charset=UTF-8"))
-                        .body("当前状态不能进行审核通过");
-            }
             return ResponseEntity.ok().build();
         }
         if (user.isSupplier() && !checkState.equals(TouristCheckStateEnum.CheckFinish)) {
