@@ -55,16 +55,16 @@
             </a>
         </div>
         <div class="weui_navbar">
-            <a th:href="@{/wap/newBuyerOrderList(states='going')}" href="javascript:;" class="weui_tabbar_item">
+            <a th:href="@{/wap/showAllOrders(states='going')}" href="javascript:;" class="weui_tabbar_item">
 
                 <p class="weui_tabbar_label" style="font-size: 20px;color: #ff9935;" th:text="${allNotFinish}">120</p>
                 <p class="weui_tabbar_label">进行中</p>
             </a>
-            <a th:href="@{/wap/newBuyerOrderList(states='finish')}" href="javascript:;" class="weui_tabbar_item">
+            <a th:href="@{/wap/showAllOrders(states='finish')}" href="javascript:;" class="weui_tabbar_item">
                 <p class="weui_tabbar_label" style="font-size: 20px;color: #ff9935;" th:text="${allFinish}">120</p>
                 <p class="weui_tabbar_label">已完成</p>
             </a>
-            <a th:href="@{/wap/newBuyerOrderList(states='cancel')}" href="javascript:;" class="weui_tabbar_item">
+            <a th:href="@{/wap/showAllOrders(states='cancel')}" href="javascript:;" class="weui_tabbar_item">
                 <p class="weui_tabbar_label" style="font-size: 20px;color: #ff9935;" th:text="${allInvalid}">120</p>
                 <p class="weui_tabbar_label">已取消</p>
             </a>

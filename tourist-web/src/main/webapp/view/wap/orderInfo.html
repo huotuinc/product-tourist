@@ -37,6 +37,9 @@
                 <li class="t">
                     <div class="DDH">
                         <span th:text="'订单编号：'+${order.orderNo}">订单编号：201604943218493</span>
+
+                        <span style="color:#ff2222" th:if="${order.orderState.getCode()==0}"
+                              th:text="'请尽快支付，'+${order.createTime.plusMinutes(20)}+'后自动取消'">最晚</span>
                         <p style="clear:both"></p>
                     </div>
                     <div class="ts">

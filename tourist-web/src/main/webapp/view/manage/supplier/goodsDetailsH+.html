@@ -45,6 +45,8 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <h2>编辑商品</h2>
+                    <h3 th:if="${good.touristCheckState.getCode()==4}"
+                        th:text="'该商品审核未通过，原因是：'+${good.notAuditedDetail}">编辑商品</h3>
                     <div class="text-right">
                         <button onclick="history.go(-1)" class="btn btn-success" type="button">返回</button>
                     </div>
