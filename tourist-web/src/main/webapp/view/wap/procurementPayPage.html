@@ -25,7 +25,12 @@
                 <li class="t">
                     <input type="hidden" id="orderId" th:value="${order.id}">
                     <input type="hidden" id="customerId" th:value="${customerId}">
-                    <div class="DDH">订单编号：<span th:text="${order.orderNo}">201604943218493</span>
+                    <div class="DDH">
+                        订单编号：<span th:text="${order.orderNo}">201604943218493</span>
+                        <span style="color:red;"
+                              th:if="${order.orderState==0}" th:text="'请与 '+${failureTime}+' 前支付，逾期自动取消'">
+                            <br> 请与 2017-02-22 10:12:50 前支付，逾期自动取消
+                        </span>
                         <p style="clear:both"></p>
                     </div>
                     <div class="ts">
@@ -183,7 +188,6 @@
      */
     $.makePaySuccess = /*[[${@environment.acceptsProfiles('mockMakePaySuccess')}]]*/ true;
     $.buyerOrderNotifyUrl = /*[[@{/wap/orderPayCallback}]]*/ "submission.html";
-
 </script>
 <script src="../../assets/js/wap/orderPay.js" th:src="@{/assets/js/wap/orderPay.js}"></script>
 </body>

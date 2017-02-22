@@ -5,6 +5,7 @@ import com.huotu.tourist.TravelerList;
 import com.huotu.tourist.common.BuyerPayStateEnum;
 import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.common.PayTypeEnum;
+import com.huotu.tourist.converter.LocalDateTimeFormatter;
 import com.huotu.tourist.entity.PurchaserPaymentRecord;
 import com.huotu.tourist.entity.PurchaserProductSetting;
 import com.huotu.tourist.entity.TouristBuyer;
@@ -120,7 +121,13 @@ public class OrderController {
      */
     @RequestMapping(value = {"/toProcurementPayPage"})
     public String toProcurementPayPage(@RequestParam Long orderId, Model model) {
-        model.addAttribute("order", touristOrderRepository.getOne(orderId));
+        TouristOrder order = touristOrderRepository.getOne(orderId);
+        LocalDateTime dataTime = null;
+        if (order.getOrderState() == OrderStateEnum.NotPay) {
+            dataTime = order.getCreateTime().plusMinutes(20);
+            model.addAttribute("failureTime", LocalDateTimeFormatter.toStr(dataTime));
+        }
+        model.addAttribute("order", order);
         model.addAttribute("customerId", connectMallService.getMerchant().getId());
         return "view/wap/procurementPayPage.html";
     }

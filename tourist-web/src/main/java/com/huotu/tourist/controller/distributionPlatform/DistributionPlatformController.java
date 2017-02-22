@@ -295,7 +295,6 @@ public class DistributionPlatformController extends BaseController {
 
     /**
      * 跳转到活动类型列表页面
-     *
      * @return
      */
     @RequestMapping(value = "toActivityTypeList", method = RequestMethod.GET)
@@ -303,9 +302,9 @@ public class DistributionPlatformController extends BaseController {
         return "view/manage/platform/activityType/activityTypeList.html";
     }
 
+
     /**
      * 活动类型列表
-     *
      * @param name    活动名称
      * @param request
      * @param model

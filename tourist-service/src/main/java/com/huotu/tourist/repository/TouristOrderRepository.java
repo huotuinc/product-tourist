@@ -1,7 +1,10 @@
 package com.huotu.tourist.repository;
 
 import com.huotu.tourist.common.OrderStateEnum;
-import com.huotu.tourist.entity.*;
+import com.huotu.tourist.entity.TouristBuyer;
+import com.huotu.tourist.entity.TouristGood;
+import com.huotu.tourist.entity.TouristOrder;
+import com.huotu.tourist.entity.TouristSupplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -143,10 +146,10 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
     @Query("select o from TouristOrder as o where o.settlement is not null")
     List<TouristOrder> findBySettlement();
 
-
-//    @Query("select sum(o.orderMoney) from TouristOrder as o where o.touristGood.touristSupplier=?1" +
-//            "and o.settlement is not  null")
-//    BigDecimal countSettledMoney(TouristSupplier supplier,LocalDateTime endCountDate);
+    @Query("delete from  TouristOrder as o where o.orderState = 0 and o.createTime<?2")
+    @Modifying
+    @Transactional
+    int scheduledCancelOrder(LocalDateTime now);
 
 
 }

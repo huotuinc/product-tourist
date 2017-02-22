@@ -44,9 +44,9 @@ public interface TouristOrderService {
     URL startOrder(TouristGood good, Consumer<TouristOrder> success, Consumer<String> failed);
 
 
-
     /**
      * 订单列表
+     *
      * @param supplier
      * @param supplierName   当supplier为null时该参数有效，反之无效
      * @param orderNo        订单ID
@@ -63,8 +63,8 @@ public interface TouristOrderService {
      * @param orderStateEnum 订单状态
      * @param settlement     是否结算
      * @param pageable       分页信息(必须)
-     * @return 返回带分页信息的订单列表
      * @param settlementId
+     * @return 返回带分页信息的订单列表
      * @throws IOException 获取订单列表发生错误
      */
     Page<TouristOrder> touristOrders(TouristSupplier supplier, String supplierName, String orderNo, String touristName
@@ -76,8 +76,9 @@ public interface TouristOrderService {
 
     /**
      * 计算某供应商订单总金额
-     * @param supplierId  供应商ID(必须)
-     * @return            总金额
+     *
+     * @param supplierId 供应商ID(必须)
+     * @return 总金额
      * @throws IOException
      */
     BigDecimal countMoneyTotal(Long supplierId) throws IOException;
@@ -94,14 +95,15 @@ public interface TouristOrderService {
 
     /**
      * 计算订单金额
-     * @param supplier          供应商
-     * @param orderState        单个订单状态
-     * @param createDate        大于的创建时间
-     * @param endCreateDate     小于的创建时间
-     * @param settlement        是否结算
-     * @param touristGood       线路商品
-     * @param touristBuyer       购买人
-     * @param orderStates       订单状态集合(与orderState参数最好不要同时使用)
+     *
+     * @param supplier      供应商
+     * @param orderState    单个订单状态
+     * @param createDate    大于的创建时间
+     * @param endCreateDate 小于的创建时间
+     * @param settlement    是否结算
+     * @param touristGood   线路商品
+     * @param touristBuyer  购买人
+     * @param orderStates   订单状态集合(与orderState参数最好不要同时使用)
      * @return
      * @throws IOException
      */
@@ -113,14 +115,15 @@ public interface TouristOrderService {
 
     /**
      * 计算订单的总佣金
-     * @param supplier          供应商
-     * @param orderState        单个订单状态
-     * @param createDate        大于的创建时间
-     * @param endCreateDate     小于的创建时间
-     * @param settlement        是否已经结算
-     * @param touristGood       线路商品
-     * @param touristBuyer      采购商
-     * @param orderStates       订单状态集合(避免和orderState同时使用)
+     *
+     * @param supplier      供应商
+     * @param orderState    单个订单状态
+     * @param createDate    大于的创建时间
+     * @param endCreateDate 小于的创建时间
+     * @param settlement    是否已经结算
+     * @param touristGood   线路商品
+     * @param touristBuyer  采购商
+     * @param orderStates   订单状态集合(避免和orderState同时使用)
      * @return
      * @throws IOException
      */
@@ -132,8 +135,9 @@ public interface TouristOrderService {
 
     /**
      * 计算某供应商总佣金
-     * @param supplierId    供应商ID(必须)
-     * @return              总佣金
+     *
+     * @param supplierId 供应商ID(必须)
+     * @return 总佣金
      * @throws IOException
      */
     BigDecimal countCommissionTotal(Long supplierId) throws IOException;
@@ -149,36 +153,40 @@ public interface TouristOrderService {
 
     /**
      * 计算总退款
-     * @param supplierId    供应商ID(必须)
-     * @return              总退款
+     *
+     * @param supplierId 供应商ID(必须)
+     * @return 总退款
      * @throws IOException
      */
     BigDecimal countRefundTotal(Long supplierId) throws IOException;
 
     /**
      * 计算总订单数
-     * @param supplierId    供应商ID(必须)
-     * @return              总订单数
+     *
+     * @param supplierId 供应商ID(必须)
+     * @return 总订单数
      * @throws IOException
      */
     long countOrderTotal(Long supplierId) throws IOException;
 
     /**
      * 判断订单的状态是否可以被修改,详情请看讨论组共享文件 “行装.doc”
-     * @param user          当前用户权限，如果是null，则看作系统
-     * @param formerStatus  先前的订单状态
-     * @param laterStatus   修改的订单状态
-     * @return              是否可以被修改
+     *
+     * @param user         当前用户权限，如果是null，则看作系统
+     * @param formerStatus 先前的订单状态
+     * @param laterStatus  修改的订单状态
+     * @return 是否可以被修改
      */
-    boolean checkOrderStatusCanBeModified(SystemUser user,OrderStateEnum formerStatus,OrderStateEnum laterStatus);
+    boolean checkOrderStatusCanBeModified(SystemUser user, OrderStateEnum formerStatus, OrderStateEnum laterStatus);
 
     /**
      * 获取所给订单能够修改的状态
-     * @param user          当前用户权限，如果是null，则看作系统
-     * @param touristOrder  订单
+     *
+     * @param user         当前用户权限，如果是null，则看作系统
+     * @param touristOrder 订单
      * @return
      */
-    List<OrderStateEnum> getModifyState(SystemUser user,TouristOrder touristOrder);
+    List<OrderStateEnum> getModifyState(SystemUser user, TouristOrder touristOrder);
 
     /**
      * 添加订单，添加游客，商城积分同步，商城订单同步
@@ -201,11 +209,17 @@ public interface TouristOrderService {
 
     /**
      * 获取采购商的订单列表
-     * @param buyerId      采购商
-     * @param lastId            最后一条订单的ID，用于查询条件
-     * @param states            订单状态：all:全部，going:进行中，finish：已完成，cancel:已取消
+     *
+     * @param buyerId 采购商
+     * @param lastId  最后一条订单的ID，用于查询条件
+     * @param states  订单状态：all:全部，going:进行中，finish：已完成，cancel:已取消
      * @return
      * @throws IOException
      */
     List<TouristOrder> getBuyerOrders(Long buyerId, Long lastId, String states) throws IOException;
+
+    /**
+     * 定时调度取消未支付的订单
+     */
+    void scheduledCancelOrder();
 }

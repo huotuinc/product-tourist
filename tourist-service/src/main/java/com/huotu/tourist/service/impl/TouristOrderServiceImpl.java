@@ -25,12 +25,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -419,4 +423,12 @@ public class TouristOrderServiceImpl implements TouristOrderService {
             return predicate;
         }, new PageRequest(0,20,new Sort(Sort.Direction.DESC,"id"))).getContent();
     }
+
+    @Override
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void scheduledCancelOrder() {
+        LocalDateTime datatime = LocalDateTime.now().minusMinutes(20);
+        touristOrderRepository.scheduledCancelOrder(datatime);
+    }
+
 }

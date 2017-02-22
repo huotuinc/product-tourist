@@ -136,7 +136,6 @@ public class IndexController {
 
     /**
      * 打开商品详细信息
-     *
      * @param model
      * @return
      */

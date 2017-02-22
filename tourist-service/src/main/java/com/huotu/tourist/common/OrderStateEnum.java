@@ -5,14 +5,14 @@ package com.huotu.tourist.common;
  * Created by lhx on 2016/12/16.
  */
 
-public enum OrderStateEnum implements CommonEnum  {
+public enum OrderStateEnum implements CommonEnum {
     NotPay(0, "未支付", "未支付"),
     PayFinish(1, "已支付", "已支付"),
     NotFinish(2, "已确认", "已确认(未完成)"),
     Finish(3, "已完成", "已完成"),
     Refunds(4, "退款中", "退款中"),
     RefundsFinish(5, "已退款", "已退款"),
-    Invalid (6, "已取消", "已取消(作废)");
+    Invalid(6, "已取消", "已取消(作废)");
 
 
     private final int code;
@@ -25,7 +25,7 @@ public enum OrderStateEnum implements CommonEnum  {
         this.description = getDescription;
     }
 
-    public static OrderStateEnum getOrderStateByCode(int code){
+    public static OrderStateEnum getOrderStateByCode(int code) {
         switch (code) {
             case 0:
                 return OrderStateEnum.NotPay;

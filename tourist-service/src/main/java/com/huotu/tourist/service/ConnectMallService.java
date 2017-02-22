@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.service;
 
+import com.huotu.huobanplus.common.entity.MallAdvanceLogs;
 import com.huotu.huobanplus.common.entity.Merchant;
 import com.huotu.tourist.entity.TouristBuyer;
 import com.huotu.tourist.entity.TouristOrder;
@@ -16,6 +17,7 @@ import com.huotu.tourist.exception.NotLoginYetException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
