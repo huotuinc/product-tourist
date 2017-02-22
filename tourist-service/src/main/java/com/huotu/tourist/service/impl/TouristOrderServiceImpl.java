@@ -428,7 +428,7 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     @Scheduled(cron = "0 0/1 * * * ?")
     public void scheduledCancelOrder() {
         LocalDateTime datatime = LocalDateTime.now().minusMinutes(20);
-        touristOrderRepository.scheduledCancelOrder(datatime);
+        touristOrderRepository.scheduledCancelOrder(OrderStateEnum.NotPay, datatime);
     }
 
 }
