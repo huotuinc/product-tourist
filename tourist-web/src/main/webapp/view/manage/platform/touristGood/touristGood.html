@@ -58,18 +58,12 @@
                                     </td>
                                 </tr>
                                 <tr th:if="${touristGood.touristCheckState==4}">
-                                    <th class="control-label">不通过原因：</th>
+                                    <th class="control-label">未通过原因：</th>
                                     <td>
                                         <input type="text"
                                                th:value="${touristGood.notAuditedDetail}"
                                                readonly
-                                               class="form-control">
-
-                                        <!--<select readonly name="activityTypeId" class="form-control"-->
-                                        <!--th:value="${touristGood!=null?touristGood.activityType.activityName:''}"-->
-                                        <!--placeholder="活动类型">-->
-
-                                        <!--</select>-->
+                                               class="form-control"/>
                                     </td>
                                 </tr>
                                 <tr>

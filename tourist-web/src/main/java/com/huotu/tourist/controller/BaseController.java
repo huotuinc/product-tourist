@@ -431,7 +431,6 @@ public class BaseController {
      */
     @RequestMapping(value = "/modifyTouristGoodState", method = RequestMethod.POST)
     @ResponseBody
-    @Transactional
     public ResponseEntity modifyTouristGoodState(@AuthenticationPrincipal SystemUser user, @RequestParam Long id,
                                                  @RequestParam TouristCheckStateEnum checkState, Long mallProductId,
                                                  String notAuditedDetail)
