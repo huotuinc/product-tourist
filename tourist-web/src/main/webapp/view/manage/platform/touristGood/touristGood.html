@@ -57,6 +57,21 @@
                                              src="http://placehold.it/100x100?text=照片"/>
                                     </td>
                                 </tr>
+                                <tr th:if="${touristGood.touristCheckState==4}">
+                                    <th class="control-label">不通过原因：</th>
+                                    <td>
+                                        <input type="text"
+                                               th:value="${touristGood.notAuditedDetail}"
+                                               readonly
+                                               class="form-control">
+
+                                        <!--<select readonly name="activityTypeId" class="form-control"-->
+                                        <!--th:value="${touristGood!=null?touristGood.activityType.activityName:''}"-->
+                                        <!--placeholder="活动类型">-->
+
+                                        <!--</select>-->
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th class="control-label">活动类型：</th>
                                     <td>

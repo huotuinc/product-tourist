@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -426,8 +427,10 @@ public class TouristOrderServiceImpl implements TouristOrderService {
 
     @Override
     @Scheduled(cron = "0 0/1 * * * ?")
+    @Transactional
     public void scheduledCancelOrder() {
         LocalDateTime datatime = LocalDateTime.now().minusMinutes(20);
+        travelerRepository.scheduledCancelOrder(OrderStateEnum.NotPay, datatime);
         touristOrderRepository.scheduledCancelOrder(OrderStateEnum.NotPay, datatime);
     }
 

@@ -6,6 +6,7 @@ $(function () {
     });
     $(".recommend").click(function () {
         $table = $('#recommendTable');
+        $table.bootstrapTable('refresh');
     });
 
     $('.btnSearch').click(function () {
@@ -94,7 +95,7 @@ $(function () {
                 ' data-target="#notAuditedModal" >不予通过</button> ');
         }
 
-        if (!row.recommend) {
+        if (!row.recommend && row.touristCheckState.code == 2) {
             arr.push('<button class="btn btn-primary recommendTouristGood" >推荐</button> ');
         }
         return arr.join('');

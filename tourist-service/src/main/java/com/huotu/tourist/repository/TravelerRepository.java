@@ -1,5 +1,6 @@
 package com.huotu.tourist.repository;
 
+import com.huotu.tourist.common.OrderStateEnum;
 import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristRoute;
 import com.huotu.tourist.entity.Traveler;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -34,4 +36,8 @@ public interface TravelerRepository extends JpaRepository<Traveler, Long>, JpaSp
     Long countByOrder_TouristGood(TouristGood touristGood);
 
     int countByRoute(TouristRoute route);
+
+    @Query("delete from Traveler as t where t.order.orderState = ?1 and t.order.createTime<?2 ")
+    @Modifying
+    int scheduledCancelOrder(OrderStateEnum orderState, LocalDateTime now);
 }

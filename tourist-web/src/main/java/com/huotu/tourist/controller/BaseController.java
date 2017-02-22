@@ -36,7 +36,15 @@ import com.huotu.tourist.repository.TouristRouteRepository;
 import com.huotu.tourist.repository.TouristSupplierRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.repository.TravelerRepository;
-import com.huotu.tourist.service.*;
+import com.huotu.tourist.service.ActivityTypeService;
+import com.huotu.tourist.service.ConnectMallService;
+import com.huotu.tourist.service.PurchaserPaymentRecordService;
+import com.huotu.tourist.service.SettlementSheetService;
+import com.huotu.tourist.service.TouristBuyerService;
+import com.huotu.tourist.service.TouristGoodService;
+import com.huotu.tourist.service.TouristOrderService;
+import com.huotu.tourist.service.TouristRouteService;
+import com.huotu.tourist.service.TouristTypeService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -435,6 +443,7 @@ public class BaseController {
                     checkState == TouristCheckStateEnum.NotAudited && notAuditedDetail != null) {
                 touristGood.setTouristCheckState(checkState);
                 touristGood.setNotAuditedDetail(notAuditedDetail);
+                touristGoodRepository.saveAndFlush(touristGood);
             } else //审核通过
                 if (touristGood.getTouristCheckState().equals(TouristCheckStateEnum.NotChecking) &&
                         checkState.equals(TouristCheckStateEnum.CheckFinish) && mallProductId != null) {
@@ -444,6 +453,7 @@ public class BaseController {
                             touristGood.setTouristCheckState(checkState);
                             touristGood.setMallProductId(mallProductId);
                         }
+                        touristGoodRepository.saveAndFlush(touristGood);
                     } catch (IOException ex) {
                         log.debug("IO on huobanplus", ex);
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType
@@ -459,6 +469,7 @@ public class BaseController {
         }
         if (user.isSupplier() && !checkState.equals(TouristCheckStateEnum.CheckFinish)) {
             touristGood.setTouristCheckState(checkState);
+            touristGoodRepository.saveAndFlush(touristGood);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType

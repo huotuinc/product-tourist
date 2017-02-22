@@ -146,10 +146,9 @@ public interface TouristOrderRepository extends JpaRepository<TouristOrder, Long
     @Query("select o from TouristOrder as o where o.settlement is not null")
     List<TouristOrder> findBySettlement();
 
-    @Query("delete from  TouristOrder as o where o.orderState = ?1 and o.createTime<?2")
-    @Modifying
-    @Transactional
-    int scheduledCancelOrder(OrderStateEnum orderState, LocalDateTime now);
 
+    @Query("delete from TouristOrder as t where t.orderState = ?1 and t.createTime<?2 ")
+    @Modifying
+    int scheduledCancelOrder(OrderStateEnum orderState, LocalDateTime now);
 
 }
