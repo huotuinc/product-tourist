@@ -233,14 +233,34 @@ var submitForm=function(checkStates,obj) {
     var destination=$("input[name='destination']").val();
     var placeOfDeparture=$("input[name='placeOfDeparture']").val();
     var travelledAddress=$("input[name='travelledAddress']").val();
-    var price=$("input[name='price']").val();
+    var price = parseFloat($("input[name='price']").val());
     var childrenDiscount=$("input[name='childrenDiscount']").val();
-    var rebate=$("input[name='rebate']").val();
+    var rebate = parseFloat($("input[name='rebate']").val());
     var receptionPerson=$("input[name='receptionPerson']").val();
     var receptionTelephone=$("input[name='receptionTelephone']").val();
-    var maxPeople=$("input[name='maxPeople']").val();
+    var maxPeople = parseInt($("input[name='maxPeople']").val());
     var eventDetails=$("#eventDetails").code();
     var beCareful=$("#beCareful").code();
+
+    if (isNaN(price) || price == 0) {
+        layer.msg("请填写价格");
+        return;
+    }
+    if (isNaN(rebate) || rebate == 0) {
+        layer.msg("请填写佣金比例");
+        return;
+    }
+    if (rebate > 100) {
+        layer.msg("佣金大于100");
+        return;
+    }
+    if (isNaN(maxPeople) || maxPeople == 0) {
+        layer.msg("请填写线路人数");
+        return;
+    }
+
+
+
     var touristRoutes=[];
     $("#goodsTouristDates").children("div").each(function(){
         var fromDate=$("input[name='toursitDate']",this).val();

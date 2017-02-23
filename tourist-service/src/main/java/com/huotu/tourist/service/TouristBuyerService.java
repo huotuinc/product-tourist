@@ -29,9 +29,9 @@ public interface TouristBuyerService extends BaseService<TouristBuyer, Long> {
 
 
     /**
-     * 根据订单给采购商充钱充钱 todo
+     * 根据订单给采购商充钱充钱
      *
-     * @param order
+     * @param order         订单
      * @throws IOException
      */
     void chargeMoney(TouristOrder order) throws IOException;

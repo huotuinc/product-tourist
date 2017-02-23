@@ -93,6 +93,11 @@
             <artifactId>common-client</artifactId>
             <version>1.7.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.huotu.huobanplus</groupId>
+            <artifactId>mall-sdk</artifactId>
+            <version>1.7.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

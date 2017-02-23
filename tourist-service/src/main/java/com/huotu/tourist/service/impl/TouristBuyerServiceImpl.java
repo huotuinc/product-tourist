@@ -6,6 +6,8 @@ import com.huotu.tourist.entity.TouristOrder;
 import com.huotu.tourist.repository.TouristBuyerRepository;
 import com.huotu.tourist.service.ConnectMallService;
 import com.huotu.tourist.service.TouristBuyerService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +17,15 @@ import org.springframework.util.StringUtils;
 import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Created by lhx on 2017/1/3.
  */
 @Service
 public class TouristBuyerServiceImpl implements TouristBuyerService {
+    private static final Log log = LogFactory.getLog(TouristBuyerServiceImpl.class);
+
     @Autowired
     TouristBuyerRepository touristBuyerRepository;
 
@@ -73,14 +78,11 @@ public class TouristBuyerServiceImpl implements TouristBuyerService {
     @Override
     public void chargeMoney(TouristOrder order) throws IOException {
         BigDecimal commission = order.getOrderMoney().multiply(order.getTouristGood().getRebate())
-                .divide(BigDecimal.valueOf(100));
-
-
-//        connectMallService.changeUserBalance(order.getTouristBuyer().getId(),commission);
-//
-//        connectMallService.saveBuyerMallAdvanceLogs()
-
-
+                .divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+        log.info("buyerId:" + order.getTouristBuyer().getId() + ",orderId:" + order.getOrderNo() + ",mallOrderId:"
+                + order.getMallOrderNo() + ",money:" + commission.doubleValue());
+        connectMallService.saveBuyerCommission(order.getTouristBuyer().getId(), commission.doubleValue()
+                , order.getMallOrderNo());
 
     }
 }
