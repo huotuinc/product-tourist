@@ -14,4 +14,8 @@ package com.huotu.tourist;
  */
 public enum Version {
     init,
+    /**
+     * 修改bug，修改线路表结构
+     */
+    version1
 }

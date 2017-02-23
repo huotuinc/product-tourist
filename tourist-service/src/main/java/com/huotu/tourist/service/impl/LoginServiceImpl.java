@@ -9,12 +9,20 @@
 
 package com.huotu.tourist.service.impl;
 
+import com.huotu.tourist.Version;
+import com.huotu.tourist.entity.TouristGood;
 import com.huotu.tourist.entity.TouristType;
 import com.huotu.tourist.login.Login;
 import com.huotu.tourist.login.PlatformManager;
 import com.huotu.tourist.repository.LoginRepository;
 import com.huotu.tourist.repository.TouristTypeRepository;
 import com.huotu.tourist.service.LoginService;
+import me.jiangcai.lib.jdbc.JdbcService;
+import me.jiangcai.lib.upgrade.VersionInfoService;
+import me.jiangcai.lib.upgrade.VersionUpgrade;
+import me.jiangcai.lib.upgrade.service.UpgradeService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +40,13 @@ import java.util.List;
  */
 @Service("loginService")
 public class LoginServiceImpl implements LoginService {
-
+    private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
+    @Autowired
+    VersionInfoService versionInfoService;
+    @Autowired
+    UpgradeService upgradeService;
+    @Autowired
+    JdbcService jdbcService;
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
@@ -66,8 +80,8 @@ public class LoginServiceImpl implements LoginService {
         login.setDeleted(true);
     }
 
-    @PostConstruct
     @Transactional
+    @PostConstruct
     public void init() {
         // 建立默认管理员 该帐号只向运维人员开放
         try {
@@ -93,7 +107,20 @@ public class LoginServiceImpl implements LoginService {
             touristType.setCreateTime(LocalDateTime.now());
             touristTypeRepository.saveAndFlush(touristType);
         }
-
-
+        // 系统升级
+        //noinspection Convert2Lambda
+        upgradeService.systemUpgrade(new VersionUpgrade<Version>() {
+            @Override
+            public void upgradeToVersion(Version version) throws Exception {
+                log.debug("to version:" + version);
+                switch (version) {
+                    case init:
+                        break;
+                    case version1:
+                        jdbcService.tableAlterAddColumn(TouristGood.class, "notAuditedDetail", null);
+                        break;
+                }
+            }
+        });
     }
 }
