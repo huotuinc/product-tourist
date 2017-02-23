@@ -182,5 +182,10 @@ public class ConnectMallServiceTest extends ServiceBaseTest {
         Page<Goods> goodsPage = goodsRestRepository.searchMarketableByMerchantAndScenes(merchant, 7, pageable);
     }
 
+    @Test
+    public void saveBuyerCommissionTest() throws IOException{
+        connectMallService.saveBuyerCommission(16012L,100.0,"12346");
+    }
+
 
 }

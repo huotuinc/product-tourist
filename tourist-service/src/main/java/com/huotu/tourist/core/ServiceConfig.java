@@ -9,6 +9,7 @@
 
 package com.huotu.tourist.core;
 
+import com.huotu.huobanplus.sdk.mall.MallSDKConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -22,7 +23,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 @EnableJpaRepositories("com.huotu.tourist.repository")
 @EnableScheduling
-@Import({CommonConfig.class, DataSupportConfig.class})
+@Import({CommonConfig.class, DataSupportConfig.class, MallSDKConfig.class})
 public class ServiceConfig {
 
 }
