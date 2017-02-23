@@ -45,7 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -140,7 +139,6 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = {"/goodInfo"})
-    @Transactional(readOnly = true)
     public String goodInfo(@AuthenticationPrincipal TouristBuyer user, @RequestParam Long id, Model model) {
         TouristGood good = touristGoodRepository.getOne(id);
         //过滤出有效的行程

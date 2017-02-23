@@ -71,6 +71,7 @@
                 <div class="inner">
                     <div class="switch-container">
                         <div id="wrapperPanel" class="swiper-wrapper" style="height: auto;">
+                            <span th:if="${good.touristRoutes.size()<1}" style="color: red">暂无行程，看看其他线路吧</span>
                             <div class="swiper-slide routeDiv " data-routeId="0" data-count="1" style="width: auto;"
                                  th:each="route : ${good.touristRoutes}"
                                  th:attr="data-routeId=''+${route.id},data-count=''+${routeCount[''+route.id]}">
@@ -143,7 +144,7 @@
     <div class="item-action">
         <div class="toggle-home"><a href="index.html" th:href="@{/wap/}"><span class="icon"></span>首页</a></div>
         <div class="buy-now yuanjiaoo">
-            <a id="procurement" th:if="${user.isRealBuyer()}"> 立即采购 </a>
+            <a id="procurement" th:if="${user.isRealBuyer()} "> 立即采购 </a>
             <a href="buyerApply.html" th:href="@{/wap/showMyInfo}" th:if="${!user.isRealBuyer()}">
                 完善信息/支付申请 </a>
         </div>

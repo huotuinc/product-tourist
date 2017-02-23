@@ -24,7 +24,6 @@
     <description>
         包括实体,JPA仓库,和服务
     </description>
-
     <dependencies>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>

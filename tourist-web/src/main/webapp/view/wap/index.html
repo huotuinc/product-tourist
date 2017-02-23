@@ -114,7 +114,8 @@
                                 <p class="zh-wz-name" th:text="${good.touristName}">【朝圣之旅】西藏云南8日轻装游，赶快报名！</p>
                             </div>
                             <div class="zh-wz-time" style="padding-top: 10px">
-                                <span style="float:left" th:text="${good.touristRoutes.get(0).getFromDate()+'出发'}">12月08
+                                <span style="float:left" th:if="${good.touristRoutes.size()>0}"
+                                      th:text="${good.touristRoutes.get(0).getFromDate()+'出发'}">12月08
                                     号出发</span>
                                 <span style="float:right; margin-right:10px;color:#FF5558; font-size: 16px;"
                                       sec:authorize="hasRole('ROLE_BUYER')"
@@ -241,5 +242,6 @@
         debug: true,
         loadingHtml: '<div class="weui-infinite-scroll"><div class="infinite-preloader"></div>滑动加载更多</div>'
     });
+
 </script>
 </html>
