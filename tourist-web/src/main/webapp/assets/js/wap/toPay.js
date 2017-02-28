@@ -134,7 +134,7 @@ $(function () {
             var IDNo = $(this).find("input[name='IDNo']").val();
             var age = parseInt($(this).find("input[name='age']").val());
             var sex = parseInt($(this).find("select[name='sex']").val());
-            if (name == '' || telPhone == '' || telPhone.length != 11 || IDNo == '' || IDNo != 18 || age <= 0) {
+            if (name == '' || telPhone == '' || telPhone.length != 11 || IDNo == '' || IDNo.length != 18 || age <= 0) {
                 flag = true;
                 return;
             }
@@ -149,7 +149,7 @@ $(function () {
             travelers.push(traveler);
         });
         if (flag) {
-            $.alert("请完善游客信息，姓名、电话、身份证号，年龄必填,且数据长度要符合时间");
+            $.alert("请完善游客信息，姓名、电话、身份证号，年龄必填,且数据长度要符合");
             return;
         }
         var data = {goodId: goodId, routeId: routeId, travelers: JSON.stringify(travelers)};
