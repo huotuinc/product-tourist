@@ -176,7 +176,8 @@ public class TouristOrderServiceImpl implements TouristOrderService {
 
     @Override
     public BigDecimal countOrderTotalMoney(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
-            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer, List<OrderStateEnum> orderStates)
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer
+            , List<OrderStateEnum> orderStates)
             throws IOException {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Number> criteriaQuery = cb.createQuery(Number.class);
@@ -228,11 +229,17 @@ public class TouristOrderServiceImpl implements TouristOrderService {
     }
 
     @Override
-    public BigDecimal countOrderTotalcommission(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate, LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer, List<OrderStateEnum> orderStates) throws IOException {
+    public BigDecimal countOrderTotalcommission(TouristSupplier supplier, OrderStateEnum orderState
+            , LocalDateTime createDate, LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood
+            , TouristBuyer touristBuyer, List<OrderStateEnum> orderStates) throws IOException {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Number> criteriaQuery = cb.createQuery(Number.class);
         Root<TouristOrder> root  = criteriaQuery.from(TouristOrder.class);
         Predicate predicate=cb.isTrue(cb.literal(true));
+
+        if (orderStates != null) {
+            predicate = cb.and(predicate, root.get("orderState").in(orderStates));
+        }
 
         if(supplier!=null){
             predicate=cb.and(predicate,cb.equal(root.get("touristGood").get("touristSupplier"),supplier));

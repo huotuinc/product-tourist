@@ -109,7 +109,8 @@ public interface TouristOrderService {
      */
     @Transactional(readOnly = true)
     BigDecimal countOrderTotalMoney(TouristSupplier supplier, OrderStateEnum orderState, LocalDateTime createDate
-            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer, List<OrderStateEnum> orderStates)
+            , LocalDateTime endCreateDate, Boolean settlement, TouristGood touristGood, TouristBuyer touristBuyer
+            , List<OrderStateEnum> orderStates)
             throws IOException;
 
 
